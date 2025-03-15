@@ -1,20 +1,27 @@
 {
-  "name": "tscratch3likejs",
+  "name": "@tscratch3likejs/eslint-plugin",
   "version": "0.0.1",
-  "description": "",
+  "description": "TypeScript eslint plugin",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Amami Harhid",
+      "githubUsername": "amami-harhid",
+      "url": "https://github.com/amami-harhid"
+    }
+  ],
+  "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/amami-harhid/tscratch3likejs.git"
+    "url": "git://github.com/amami-harhid/tscratch3likejs.git",
+    "directory": "eslintPlugin"
   },
-  "main": "./index.js",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "scripts": {},
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "eslint": "^9.22.0"
-  }
+    "@eslint/js": "^9.21.0",
+    "@types/node": "^22.13.4",
+    "eslint": "^9.21.0",
+    "globals": "^16.0.0"
+  },
+  "typeScriptVersion": "5.7"
 }
