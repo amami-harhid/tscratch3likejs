@@ -1,3 +1,4 @@
+import {S3Point} from "../s3Point";
 declare interface S3Monitor {
     /** 表示する */
     show(): void;
@@ -6,7 +7,7 @@ declare interface S3Monitor {
     /** モニターサイズ */
     size: {w: number, h:number};
     /** 位置を設定 */
-    setPosition({x:number, y:number}):void;
+    setPosition(position: S3Point):void;
     /** テキスト設定 */
     balloonText: string;
     /** モニターラベル設定 */

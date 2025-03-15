@@ -1,0 +1,23 @@
+{
+  "name": "@tscratch3likejs/s3monitors",
+  "version": "0.0.1",
+  "description": "TypeScript definitions for s3Monitors",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Amami Harhid",
+      "githubUsername": "amami-harhid",
+      "url": "https://github.com/amami-harhid"
+    }
+  ],
+  "main": "",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/amami-harhid/tscratch3likejs.git",
+    "directory": "types/s3Monitors"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "typeScriptVersion": "5.7"
+}

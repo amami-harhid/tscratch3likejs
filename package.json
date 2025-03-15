@@ -1,0 +1,20 @@
+{
+  "name": "tscratch3likejs",
+  "version": "0.0.1",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/amami-harhid/tscratch3likejs.git"
+  },
+  "main": "./eslintPlugin/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "eslint": "^9.22.0"
+  }
+}

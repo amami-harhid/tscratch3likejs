@@ -1,5 +1,5 @@
-import {S3ImageElem} from "@typeJS/scratchjs/s3Image"
+import {S3ImageElem} from "../s3ImageElem"
 /** イメージ格納用 */
 declare interface S3ImagePool {
-     [key:string] : S3ImageElem 
-};
+     [key:string] : S3ImageElem,
+}

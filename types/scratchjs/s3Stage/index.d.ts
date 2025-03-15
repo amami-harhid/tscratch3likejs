@@ -1,7 +1,8 @@
-import {S3ImageFunctions} from "@typeJS/scratchjs/s3ImageFunctions";
-import {S3SoundFunctions} from "@typeJS/scratchjs/s3SoundFunctions";
-import {S3ControlFunctions} from "@typeJS/scratchjs/s3ControlFunctions";
-import {S3EventFunctions} from "@typeJS/scratchjs/s3EventFunctions";
+import {S3ImageFunctions} from "../s3ImageFunctions";
+import {S3SoundFunctions} from "../s3SoundFunctions";
+import {S3ControlFunctions} from "../s3ControlFunctions";
+import {S3EventFunctions} from "../s3EventFunctions";
+import {S3Entity} from '../s3Entity';
 
 /** イベント処理 */
 declare interface S3StageEventFunctions extends S3EventFunctions{

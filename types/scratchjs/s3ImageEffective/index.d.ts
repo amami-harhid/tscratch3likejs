@@ -6,4 +6,4 @@ export interface S3ImageEffective {
     /** モザイクの効果 */       MOSAIC  : string;
     /** 明るさの効果 */         BRIGHTNESS: string;
     /** 幽霊の効果 */           GHOST: string;
-};
+}

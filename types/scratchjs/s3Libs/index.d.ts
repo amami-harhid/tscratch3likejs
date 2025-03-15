@@ -1,8 +1,9 @@
-import {S3Stage} from "@typeJS/scratchjs/s3Stage"
-import {S3Sprite} from "@typeJS/scratchjs/s3Sprite"
-import {S3Point} from "@typeJS/scratchjs/s3Point";
-import {S3ImageEffective} from "@typeJS/scratchjs/s3ImageEffective";
-import {S3Monitors} from "@typeJS/scratchjs/s3Monitors";
+import {S3Stage} from "../s3Stage"
+import {S3Sprite} from "../s3Sprite"
+import {S3Point} from "../s3Point";
+import {S3Rate} from "../s3Rate";
+import {S3ImageEffective} from "../s3ImageEffective";
+import {S3Monitors} from "../s3Monitors";
 declare interface Loop {
     /** ループ内で breakする */
     break() : void;
@@ -72,8 +73,6 @@ export interface S3Libs {
     Loop: Loop;
     /** サウンドオプション */
     SoundOption: S3SoundOption;
-    /** ステージのランダムな位置 */
-    randomPoint: {x: number, y: number};
     /** 環境設定 */
     Env: S3Env;
 
@@ -99,11 +98,11 @@ export interface S3Libs {
     /**
      * レンダリング率
      */
-    renderRate: {x: number, y: number};
+    renderRate: S3Rate;
     /** マウスの位置 */
-    mousePosition: {x: number, y: number};
+    mousePosition: S3Point;
     /** ステージ上のランダムな位置 */
-    randomPoint: {x: number, y: number};
+    randomPoint: S3Point;
     /** ランダムな向き */
     randomDirection: number;
     /** ステージ幅 */

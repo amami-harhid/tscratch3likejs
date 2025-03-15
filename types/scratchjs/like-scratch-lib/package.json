@@ -1,0 +1,23 @@
+{
+  "name": "@tscratch3likejs/like-scratch-lib",
+  "version": "0.0.1",
+  "description": "TypeScript definitions for like-scratch-lib",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Amami Harhid",
+      "githubUsername": "amami-harhid",
+      "url": "https://github.com/amami-harhid"
+    }
+  ],
+  "main": "",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/amami-harhid/tscratch3likejs.git",
+    "directory": "types/like-scratch-lib"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "typeScriptVersion": "5.7"
+}

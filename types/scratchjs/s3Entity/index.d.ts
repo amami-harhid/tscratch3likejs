@@ -1,5 +1,3 @@
-import { S3SoundOption } from "@typeJS/scratchjs/s3SoundOption";
-
 /** 実体(Entity) */
 export interface S3Entity {
     // /** イメージを追加する */

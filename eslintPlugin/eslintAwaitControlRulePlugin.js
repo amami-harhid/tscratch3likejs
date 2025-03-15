@@ -57,3 +57,4 @@ export const awaitControlRulesPlugin = {
   },
   rules: { "await-control-plugin": awaitControlRule },
 };
+

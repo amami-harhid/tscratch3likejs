@@ -1,16 +1,16 @@
-import {S3Entity} from "@typeJS/scratchjs/s3Entity";
-import {S3Point} from "@typeJS/scratchjs/s3Point";
-import {S3Scale } from "@typeJS/scratchjs/s3Scale";
-import {S3Effect} from "@typeJS/scratchjs/s3Effect";
-import {S3EventFuncsions} from "@typeJS/scratchjs/"
-import {S3ImageFunctions} from "@typeJS/scratchjs/s3ImageFunctions";
-import {S3ControlFunctions} from "@typeJS/scratchjs/s3ControlFunctions";
-import {S3ExtensionsFunctions} from "@typeJS/scratchjs/s3ExtensionsFunctions";
-import {S3SensingFunctions} from "@typeJS/scratchjs/s3SensingFunctions";
-import {S3EventFunctions} from "@typeJS/scratchjs/s3EventFunctions";
-import {S3SoundFunctions} from "@typeJS/scratchjs/s3SoundFunctions";
-import {S3LooksFunctions} from "@typeJS/scratchjs/s3LooksFunctions";
-import {S3LotationStyle} from "@typeJS/scratchjs/s3Libs";
+import {S3Entity} from "../s3Entity";
+import {S3Point} from "../s3Point";
+import {S3Scale } from "../s3Scale";
+import {S3Effect} from "../s3Effect";
+//import {S3EventFuncsions} from "../s3EventFunctions";
+import {S3ImageFunctions} from "../s3ImageFunctions";
+import {S3ControlFunctions} from "../s3ControlFunctions";
+import {S3ExtensionsFunctions} from "../s3ExtensionsFunctions";
+import {S3SensingFunctions} from "../s3SensingFunctions";
+import {S3EventFunctions} from "../s3EventFunctions";
+import {S3SoundFunctions} from "../s3SoundFunctions";
+import {S3LooksFunctions} from "../s3LooksFunctions";
+import {S3RotationStyle} from "../s3Libs";
 
 /** イベント処理 */
 declare interface S3SpriteEventFunctions extends S3EventFunctions{
@@ -62,7 +62,7 @@ declare interface S3MotionFunctions {
     /** 〇度へ向ける */
     pointInDirection(degree: number) : void;
     /** 回転方法を〇にする */
-    setRotationStyle(rotationStyle: S3LotationStyle  ) : void;
+    setRotationStyle(rotationStyle: S3RotationStyle  ) : void;
     /** 指定した位置へ移動 */
     gotoXY(x: number | {x:number,y:number}, y?:number) : void;
     /** 右側回転 */
