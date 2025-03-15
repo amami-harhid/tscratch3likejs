@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git://github.com/amami-harhid/tscratch3likejs.git"
   },
-  "main": "./eslintPlugin/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
