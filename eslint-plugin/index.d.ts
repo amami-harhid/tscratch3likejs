@@ -1,0 +1,1 @@
+declare module 'tscratch3likejs/eslint-plugin';
