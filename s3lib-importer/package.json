@@ -1,0 +1,23 @@
+{
+  "name": "@tscratch3likejs/s3lib-importer",
+  "version": "0.0.1",
+  "description": "TypeScript s3lib importer",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Amami Harhid",
+      "githubUsername": "amami-harhid",
+      "url": "https://github.com/amami-harhid"
+    }
+  ],
+  "main": "index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/amami-harhid/tscratch3likejs.git",
+    "directory": "s3lib-importer"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "typeScriptVersion": "5.7"
+}
