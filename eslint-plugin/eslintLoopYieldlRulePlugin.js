@@ -1,5 +1,5 @@
 'use strict'
-const common = function(node){
+const common = function(context,node){
   if(node.body && node.body.body){
     const statements = node.body.body;
     if(Array.isArray(statements) && statements.length > 0){
@@ -30,17 +30,17 @@ const yieldLoopRule = {
     return {
       WhileStatement(node) {
         if (node.type == 'WhileStatement') {
-          common(node);
+          common(context,node);
         }
       },
       ForStatement(node) {
         if (node.type == 'ForStatement') {
-          common(node);
+          common(context,node);
         }
       },
       DoWhileStatement(node) {
         if (node.type == 'DoWhileStatement') {
-          common(node);
+          common(context,node);
         }
       }
     }
