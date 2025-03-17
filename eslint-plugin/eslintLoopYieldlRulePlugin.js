@@ -17,7 +17,7 @@ const common = function(context,node){
           // fixer() は yield で実行しないと複数回のinsertが発生する。
           // 
           *fix(fixer) {
-            yield fixer.insertTextAfterRange(lastStatement.range, "\nyield;");
+            yield fixer.insertTextAfter(lastStatement, "\nyield;");
           }
 //          fix(fixer) {
 //            return fixer.insertTextAfter(lastStatement, "\n yield;");

@@ -57,7 +57,7 @@ export default [
       loopYield: yieldLoopRulesPlugin,
     },
     rules: {
-      "indent": [1, "tab"],  // indent tab
+      "indent": ["error", 4],  // indent 4 space
       "no-this-alias": ["off"],
       "@typescript-eslint/no-this-alias": [
         "error",
