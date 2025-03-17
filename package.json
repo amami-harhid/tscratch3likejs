@@ -17,9 +17,12 @@
     "@eslint/js": "^9.21.0",
     "@types/node": "^22.13.4",
     "eslint": "^9.21.0",
+    "gitpkg": "^1.0.0-beta.4",
     "globals": "^16.0.0",
-    "tscratch3likejs": "github:amami-harhid/tscratch3likejs",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.26.0"
+  },
+  "dependencies": {
+    "@scratch3likejslib/build": "https://gitpkg.vercel.app/amami-harhid/scratch3likejslib/build?main"
   }
 }
