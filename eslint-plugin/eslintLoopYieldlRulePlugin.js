@@ -13,6 +13,8 @@ const common = function(context,node){
         context.report({
           node,
           messageId: "YieldNeededId",
+          // 次の行に yield; を入れるfixを実行すると 数行のyield; が発生してしまう。なぜ？
+          // かつ、インデントがダメ。
 //          fix(fixer) {
 //            return fixer.insertTextAfter(lastStatement, "\n yield;");
 //          }
