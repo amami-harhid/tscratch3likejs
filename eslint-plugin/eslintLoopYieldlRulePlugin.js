@@ -4,14 +4,18 @@ const common = function(context,node){
     const statements = node.body.body;
     if(Array.isArray(statements) && statements.length > 0){
       const lastStatement = statements[statements.length-1];
-      if(lastStatement.type != 'YieldExpression'){
+      if(lastStatement.type == 'ExpressionStatement' && 
+        lastStatement.expression && 
+        lastStatement.expression.type == 'YieldExpression'){
+          //OK
+      }else{
         // 最終行がYieldでないとき
         context.report({
           node,
           messageId: "YieldNeededId",
-          fix(fixer) {
-             return fixer.insertTextAfterRange(statements, "yield;");
-          }
+//          fix(fixer) {
+//            return fixer.insertTextAfter(lastStatement, "\n yield;");
+//          }
         })
       }
     }
