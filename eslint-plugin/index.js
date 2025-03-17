@@ -7,6 +7,7 @@ import {awaitLibRulesPlugin} from "./eslintAwaitLibRulePlugin.js";
 import {awaitSoundRulesPlugin} from "./eslintAwaitSoundRulePlugin.js";
 import {eventAsyncRulesPlugin} from "./eslintEventAsyncRulePlugin.js";
 import {controlAsyncRulesPlugin} from "./eslintControlAsyncRulePlugin.js";
+import {yieldLoopRulesPlugin} from "./eslintLoopYieldlRulePlugin.js";
 
 export {
     awaitControlRulesPlugin,
@@ -18,4 +19,5 @@ export {
     awaitSoundRulesPlugin,
     eventAsyncRulesPlugin,
     controlAsyncRulesPlugin,
+    yieldLoopRulesPlugin,
 }

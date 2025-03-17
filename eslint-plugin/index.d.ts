@@ -1,1 +1,1 @@
-declare module 'tscratch3likejs/importer';
+declare module 'tscratch3likejs/eslint-plugin';
