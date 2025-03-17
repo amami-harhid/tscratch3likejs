@@ -10,7 +10,7 @@ const common = function(context,node){
           node,
           messageId: "YieldNeededId",
           fix(fixer) {
-             return fixer.insertTextAfterRange(lastStatement, "yield;");
+             return fixer.insertTextAfterRange(statements, "yield;");
           }
         })
       }
