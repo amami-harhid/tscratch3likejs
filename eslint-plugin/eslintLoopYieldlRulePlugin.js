@@ -1,4 +1,5 @@
 'use strict'
+
 const common = function(context,node){
   if(node.body && node.body.body){
     const statements = node.body.body;
@@ -44,6 +45,9 @@ const common = function(context,node){
             context.report({ // Report02
               node,
               messageId: "GeneratorFunctionNeededId",
+//              *fix(fixer){
+//                yield fixer.insertTextAfter(lastStatement, "");
+//              }
             })    
           }
         }else{
@@ -69,6 +73,41 @@ const yieldLoopRule = {
   },
   create(context){
     return {
+      /**
+       * 暫定（試験中）
+       * @param {*} node 
+       * @returns 
+       */
+      FunctionExpression(node){
+        if( node.generator ) return;
+        const srcCode = context.sourceCode || context.getSourceCode();
+        let body = node.body;
+        let _found = false;
+        while(body){
+          if(body.type == 'BlockStatement' && body.body && Array.isArray(body.body)){
+            for(const statement of body.body){
+              if( statement.type == 'ForStatement' ||
+                statement.type == 'WhileStatement' ||
+                statement.type == 'DoWhileStatement'
+              ){
+                _found = true;
+                break;
+              }
+            }
+          }
+          body = body.body;
+        }
+        if(_found){
+          const _srcCode = srcCode.getText(node).replace('function','function*');
+          context.report({ // Report02
+            node,
+            messageId: "GeneratorFunctionNeededId",
+            *fix(fixer){
+              yield fixer.replaceText(node, _srcCode);
+            }
+          })    
+        }
+      },
       WhileStatement(node) {
         if (node.type == 'WhileStatement') {
           common(context,node);
