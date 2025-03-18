@@ -10,10 +10,3 @@ Pg.setting = async function setting() {
     });
 
 }
-const a = 0;
-function* test() {
-    while(true){
-        if(a>10) break;
-        yield;
-    }
-}
