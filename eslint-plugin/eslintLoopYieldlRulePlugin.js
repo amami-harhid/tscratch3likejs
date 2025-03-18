@@ -5,56 +5,60 @@ const common = function(context,node){
     const statements = node.body.body;
     if(Array.isArray(statements) && statements.length > 0){
       const lastStatement = statements[statements.length-1];
+      const lastExpression = lastStatement.expression;
       if(lastStatement.type == 'ExpressionStatement' && 
-        lastStatement.expression && 
-        lastStatement.expression.type == 'YieldExpression'){
+        lastExpression && 
+        lastExpression.type == 'YieldExpression' ){
+          // function*(){  } の中で Loop があり yieldがある
           //OK
       }else{
-        // 最終行がYieldでないとき
-        // 親の方向へ辿っていき type="FunctionExpression"を特定する
-        // 特定できずに type="Program"まで到達するか 親がnull の場合は
-        // Functionを必要とする旨のメッセージを出す        
-        let functionNode = null;
-        let parent = node.parent
-        for(;;){
-          if(parent == undefined || parent.type == 'Program'){
-            break;
-          }else{
-            if(parent.type == 'FunctionExpression') {
-              functionNode = parent;
+
+        // function() {  } の中で Loop があり Loopの最終行に yieldがある場合
+        // (type=Identifier & name=yield) 
+        if(lastExpression && lastExpression.type == 'Identifier' && lastExpression.name == 'yield'){
+          // function() ---> function*() にする
+          let functionNode = null;
+          let parent = node.parent
+          for(;;){
+            if(parent == undefined || parent.type == 'Program'){
+              // Function Node を見つけられない場合
               break;
-            }
-            parent = parent.parent;
-          }
-        }
-        //
-        // 通常functionのときFixer01実行-->yieldが複数個作られてしまう(原因特定できず)
-        // Fixer01実行前に Report02を表示し generator関数に変更してもらったうえで
-        // Report01を表示->Fixer01実行の手順としたい。
-        if(functionNode){
-          if(functionNode.generator) {
-            context.report({ // Report01
-              node,
-              messageId: "YieldNeededId",
-              *fix(fixer) { // Fixer01
-                yield fixer.insertTextAfter(lastStatement, "\nyield;");
+            }else{
+              if(parent.type == 'FunctionExpression') {
+                functionNode = parent; // 最初に見つけた Function Node
+                break;
               }
-            })    
-          }else{
-            // Function はgeneratorではないとき --> 人間の手でgenerator関数にしてもらう
-            context.report({ // Report02
+              parent = parent.parent;
+            }
+          }
+          if(functionNode){
+            const srcCode = context.sourceCode;
+            const srcText = srcCode.getText(functionNode); //Function Node部をソーステキスト化  
+            // function() を function*() に変換する
+            const rplSrc = srcText.replace('function', 'function*');
+            context.report({
               node,
               messageId: "GeneratorFunctionNeededId",
-//              *fix(fixer){
-//                yield fixer.insertTextAfter(lastStatement, "");
-//              }
-            })    
+              fix(fixer) {
+                return fixer.replaceText(functionNode, rplSrc);
+              }
+            })
+          }else{
+            // エラー：Loop があるとき function() {  }の中にする！
+            context.report({
+              node,
+              messageId: "FunctionNeededId",
+            })
           }
         }else{
+          // 改行して yield; を追加
           context.report({
             node,
-            messageId: "FunctionNeededId",
-          })    
+            messageId: "YieldNeededId",
+            fix(fixer) {
+              return fixer.insertTextAfter(lastStatement, "\nyield;");
+            }
+          });
         }
       }
     }
@@ -73,41 +77,6 @@ const yieldLoopRule = {
   },
   create(context){
     return {
-      /**
-       * 暫定（試験中）
-       * @param {*} node 
-       * @returns 
-       */
-      FunctionExpression(node){
-        if( node.generator ) return;
-        const srcCode = context.sourceCode || context.getSourceCode();
-        let body = node.body;
-        let _found = false;
-        while(body){
-          if(body.type == 'BlockStatement' && body.body && Array.isArray(body.body)){
-            for(const statement of body.body){
-              if( statement.type == 'ForStatement' ||
-                statement.type == 'WhileStatement' ||
-                statement.type == 'DoWhileStatement'
-              ){
-                _found = true;
-                break;
-              }
-            }
-          }
-          body = body.body;
-        }
-        if(_found){
-          const _srcCode = srcCode.getText(node).replace('function','function*');
-          context.report({ // Report02
-            node,
-            messageId: "GeneratorFunctionNeededId",
-            *fix(fixer){
-              yield fixer.replaceText(node, _srcCode);
-            }
-          })    
-        }
-      },
       WhileStatement(node) {
         if (node.type == 'WhileStatement') {
           common(context,node);

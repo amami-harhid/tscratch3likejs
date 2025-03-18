@@ -11,10 +11,11 @@ Pg.setting = async function setting() {
     stage.Event.whenFlag(async function(this:S3Stage){
         await this.Sound.playUntilDone();
         let x = 0;
-        const loop = function() {
+        const loop = function*() {
             while(true){
                 if(x>10) break;
                 x+=1;
+                yield;
             }
         }
         loop();
