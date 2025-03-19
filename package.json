@@ -23,6 +23,6 @@
     "typescript-eslint": "^8.26.0"
   },
   "dependencies": {
-    "@scratch3likejslib/build": "https://gitpkg.vercel.app/amami-harhid/scratch3likejslib/build?zantei"
+    "@scratch3likejslib/build": "https://gitpkg.vercel.app/amami-harhid/scratch3likejslib/build?main"
   }
 }
