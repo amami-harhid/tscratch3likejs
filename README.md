@@ -2,7 +2,8 @@
 
 Scratch3LikeJs をTypescriptで利用するためのパッケージです。
 
-npm install --save-dev 
+npm install --save https://gitpkg.vercel.app/amami-harhid/scratch3likejslib/build?main
+
 
 
 # 問題点
