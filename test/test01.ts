@@ -25,7 +25,9 @@ Pg.setting = async function setting() {
         }
         loop();
     });
+    const bubbleTextArr = [1,2,3];
     sprite.Event.whenFlag(async function(this:S3Sprite){
         this.Motion.setRotationStyle(Lib.RotationStyle.DONT_ROTATE);
+        await this.Event.broadcastAndWait("MessageCat1Say", bubbleTextArr[0], 3, 4, 5); 
     });
 }

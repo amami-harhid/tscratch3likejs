@@ -11,5 +11,5 @@ export interface S3EventFunctions {
     /** メッセージを送る */
     broadcast(messageId:string, args?:any[]): void;
     /** メッセージを送って待つ */
-    broadcastAndWait(messageId:string, args?:any[]): Promise<any>;
+    broadcastAndWait(messageId:string, ...args?:any[]): Promise<any>;
 }
