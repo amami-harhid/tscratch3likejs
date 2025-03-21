@@ -87,6 +87,11 @@ const yieldLoopRule = {
           common(context,node);
         }
       },
+      ForOfStatement(node) {
+        if (node.type == 'ForOfStatement') {
+          common(context,node);
+        }
+      },
       DoWhileStatement(node) {
         if (node.type == 'DoWhileStatement') {
           common(context,node);
