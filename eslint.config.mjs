@@ -34,6 +34,7 @@ import {
   eventAsyncRulesPlugin,
   controlAsyncRulesPlugin,
   yieldLoopRulesPlugin,
+  whenRightNowPlugin,
 } from "./eslint-plugin/index.js";
 
 /** @type {import('eslint').Linter.Config[]} */
@@ -55,6 +56,7 @@ export default [
       eventAsync: eventAsyncRulesPlugin,
       controlAsync: controlAsyncRulesPlugin,
       loopYield: yieldLoopRulesPlugin,
+      whenRightNow: whenRightNowPlugin,
     },
     rules: {
       "indent": ["error", 4],  // indent 4 space
@@ -86,6 +88,7 @@ export default [
       'eventAsync/event-async-plugin': 'error',
       'controlAsync/control-async-plugin': 'error',
       'loopYield/yield-loop-plugin' : 'error',
+      'whenRightNow/whenRightNow-plugin' : 'error',
     }
   },
   pluginJs.configs.recommended,

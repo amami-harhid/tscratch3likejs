@@ -62,7 +62,7 @@ declare interface S3MotionFunctions {
     /** 〇度へ向ける */
     pointInDirection(degree: number) : void;
     /** 回転方法を〇にする */
-    setRotationStyle(rotationStyle: S3RotationStyle  ) : void;
+    setRotationStyle(rotationStyle: S3RotationStyleOptionType  ) : void;
     /** 指定した位置へ移動 */
     gotoXY(x: number | {x:number,y:number}, y?:number) : void;
     /** 右側回転 */

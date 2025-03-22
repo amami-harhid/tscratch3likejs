@@ -20,14 +20,16 @@ declare interface S3Env {
     WindowSize : {w: number, h: number},
 }
 
+/** 回転方法タイプ */
+export const S3RotationStyleOptionType : string;
 /** 回転方法 */
 export interface S3RotationStyle {
     /** 左右のみ */
-    LEFT_RIGHT: string;
+    LEFT_RIGHT: S3RotationStyleOptionType;
     /** 回転しない */
-    DONT_ROTATE: string;
+    DONT_ROTATE: S3RotationStyleOptionType;
     /** 自由に回転 */
-    ALL_AROUND: string;
+    ALL_AROUND: S3RotationStyleOptionType;
 }
 
 /** サウンドオプション */
