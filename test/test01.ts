@@ -22,7 +22,7 @@ Pg.setting = async function setting() {
     })
 
     stage.Event.whenFlag(async function*(this:S3Stage){
-        while(true){
+        for(;;){
             await this.Sound.playUntilDone();
             yield;
         }
