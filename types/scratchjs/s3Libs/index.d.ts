@@ -94,6 +94,11 @@ export interface S3Libs {
      */
     keyIsDown(key: string) : boolean;
     /**
+     * 指定したキーが押されていないとき true
+     * @param key 
+     */
+    keyIsNotDown(key: string): boolean;
+    /**
      * 何かのキーが押されているとき true
      */
     anyKeyIsDown() : boolean;
