@@ -98,7 +98,7 @@ declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
     /** 触れているスプライトを取得する */
     getTouchingTarget(): S3Sprite[];
     /** 指定したターゲットに触れているか否かを返す */
-    isTouchingTarget(target: S3Sprite): Promise<boolean>;
+    isTouchingTarget(target: S3Sprite): boolean;
     /**
      * 相手の色に触れていることを判定する
      * @param targetRgb #始まりのRGB色(#始まりの16進数)
@@ -109,7 +109,7 @@ declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
      * @param targetRgb 相手のRGB色 (#始まりの16進数)
      * @param maskRgb 自身のRGB色 (#始まりの16進数)
      */
-    colorIsTouchingToColor(targetRgb: string, maskRgb: string): boolean;
+    colorIsTouchingToColor(targetRgb: string, maskRgb: string): Promise<boolean>;
 
 }
 
