@@ -14,8 +14,8 @@ declare interface S3Monitor {
     label: string;
     /** 表示文字の最大長(デフォルト=5) */
     maxSize: number;
-    /** 表示文字 */
-    value: string;
+    /** 値 */
+    value: string|number;
 
 
 }
