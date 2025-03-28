@@ -13,5 +13,5 @@ export interface S3SensingFunctions {
     /** タイマー値 */
     timer(): number;
     /** タイマーリセット */
-    resetTimer(): void;
+    resetTimer(): void;    
 }
