@@ -39,8 +39,10 @@ declare interface S3CloneOption {
     effect?: S3Effect;    
 }
 declare interface S3MotionFunctions {
-    /** 現在位置を取得する */
+    /** 現在の位置を取得する */
     getCurrentPosition(): {x: number, y: number};
+    /** 現在の向きを取得する */
+    getCurrentDirection(): number,
     /** 指定した距離分移動させる（向きの方向へ） */
     moveSteps(step: number): void;
     /** 指定した位置へ移動させる */
@@ -116,14 +118,14 @@ declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
 /** フキダシのプロパティ */
 declare interface SayProperty {
     /** フキダシのサイズ */
-    scale: {x: number, y: number};
+    scale: {w: number, h: number};
 }
 /** サイズプロパティ */
 declare interface SizeProperty {
     /** サイズ横 */
-    x: number, 
+    w: number, 
     /** サイズ縦 */
-    y: number;
+    h: number;
 }
 declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** 次のコスチュームにする */
@@ -139,11 +141,11 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** 指定した秒数だけ思う(await 必須) */
     thinkForSecs(/** 思うテキスト */text: string, secs: number, properties?: SayProperty): Promise<any>;
     /** 大きさを変える */
-    changeSizeBy(x: number | SizeProperty, y?:number ):void;
+    changeSizeBy(w: number | SizeProperty, h?:number ):void;
     /** サイズを取得する */
     getSize() : SizeProperty;
     /** サイズを設定する */
-    setSize(x: number | SizeProperty, y?: number): void;
+    setSize(w: number | SizeProperty, h?: number): void;
     /** 表示する */
     show(): void;
     /** 隠す */
