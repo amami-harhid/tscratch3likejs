@@ -45,8 +45,8 @@ declare interface S3MotionFunctions {
     getCurrentDirection(): number,
     /** 指定した距離分移動させる（向きの方向へ） */
     moveSteps(step: number): void;
-    /** 指定した位置へ移動させる */
-    moveTo(x: number | {x:number,y:number}, y?: number): void;
+    // /** 指定した位置へ移動させる */
+    // moveTo(x: number | {x:number,y:number}, y?: number): void;
     /** 端にふれていたら跳ね返る */
     ifOnEdgeBounds() : void;
     /** どこかへ移動する */
@@ -66,13 +66,13 @@ declare interface S3MotionFunctions {
     /** 回転方法を〇にする */
     setRotationStyle(rotationStyle: S3RotationStyleOptionType  ) : void;
     /** 指定した位置へ移動 */
-    gotoXY(x: number | {x:number,y:number}, y?:number) : void;
+    gotoXY(x: number , y:number) : void;
     /** 右側回転 */
     turnRightDegrees(degree:number): void;
     /** 左側回転 */
     turnLeftDegrees(degree:number): void;
-    /** 位置を指定する */
-    setXY(x:number|{x:number,y:number}, y?:number): void;
+    // /** 位置を指定する */
+    // setXY(x:number|{x:number,y:number}, y?:number): void;
     /** X座標を指定する */
     setX(x: number) : void;
     /** Y座標を指定する */
