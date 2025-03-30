@@ -6,17 +6,10 @@ import {S3Entity} from '../s3Entity';
 
 /** イベント処理 */
 declare interface S3StageEventFunctions extends S3EventFunctions{
-    /** 次の背景にする */
-    nextBackdrop() : void;
-    /** 背景を切り替える */
-    switchBackdrop(val: string | number ) : void;
 }
 declare interface S3StageLooksFunctions extends S3LooksFunctions{
-    /** 次の背景にする */
-    nextBackdrop(): void;
-    /** 指定した名前(または番号)で背景を切り替える */
-    switchBackdrop(backdrop: string | number): void;
- }
+
+}
 
 /** ステージ（実体[Entity]を継承）*/
 export interface S3Stage extends S3Entity{

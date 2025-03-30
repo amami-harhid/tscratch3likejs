@@ -6,6 +6,8 @@ export interface S3EventFunctions {
     whenFlag(func:CallableFunction) :void;
     /** クリックされたときに実行する */
     whenClicked(func:CallableFunction) :void;
+    /** 背景が切り替わったときに実行する */
+    whenBackdropSwitches(backdropName:string, func:CallableFunction): void;
     /** メッセージを受け取ったときに実行する */
     whenBroadcastReceived(messageId:string, func:CallableFunction):void;
     /** メッセージを送る */
