@@ -10,11 +10,11 @@ export interface S3SensingFunctions {
     /** マウス押された */
     isMouseDown(): boolean;
     /** マウスカーソルのＸ座標 */
-    mouseX(): number;
+    mouseX: number;
     /** マウスカーソルのＹ座標 */
-    mouseY(): number;
+    mouseY: number;
     /** タイマー値 */
-    timer(): number;
+    timer: number;
     /** タイマーリセット */
     resetTimer(): void;    
 }
