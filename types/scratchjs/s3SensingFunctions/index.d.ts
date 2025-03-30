@@ -2,7 +2,10 @@
 export interface S3SensingFunctions {
     /** 質問をして待つ */
     askAndWait(question: string): Promise<any>;
-    /** キーが押された */
+    /**
+     * キーが押された？
+     * @param key キーの名前
+     */
     isKeyDown(key?:string) : boolean;
     /** マウス押された */
     isMouseDown(): boolean;

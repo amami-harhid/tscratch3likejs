@@ -87,31 +87,29 @@ declare interface S3MotionFunctions {
 declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
     /** 端に触れたとき */
     isTouchingEdge(): boolean;
-    /** 左右の端に触れたとき */
-    isTouchingVirticalEdge(): boolean;
     /** 上下の端に触れたとき */
+    isTouchingVirticalEdge(): boolean;
+    /** 左右の端に触れたとき */
     isTouchingHorizontalEdge(): boolean;
-    /** マウスカーソルが触れていないとき */
+    /** マウスポインター触れていないとき */
     isNotMouseTouching(): boolean;
-    /** マウスカーソルが触れたとき */
+    /** マウスポインターに触れたとき */
     isMouseTouching(): boolean;
     /** 指定したスプライトが触れたとき */
-    isTouchingTargetToTarget(sprite:S3Sprite): boolean;
+    isTouchingToSprite(sprites:S3Sprite | S3Sprite[]): boolean;
     /** 触れているスプライトを取得する */
-    getTouchingTarget(): S3Sprite[];
-    /** 指定したターゲットに触れているか否かを返す */
-    isTouchingTarget(target: S3Sprite): boolean;
+    getTouchingSprites(): S3Sprite[];
     /**
      * 相手の色に触れていることを判定する
-     * @param targetRgb #始まりのRGB色(#始まりの16進数)
+     * @param targetRGB #始まりのRGB文字列(#始まりの16進数)
      */
-    isTouchingToColor(targetRgb: string): Promise<boolean>;
+    isTouchingToColor(targetRGB: string): Promise<boolean>;
     /**
      * 自身の色が相手の色に触れていることを判定する
-     * @param targetRgb 相手のRGB色 (#始まりの16進数)
-     * @param maskRgb 自身のRGB色 (#始まりの16進数)
+     * @param targetRGB 相手のRGB文字列 (#始まりの16進数)
+     * @param maskRGB 自身のRGB文字列 (#始まりの16進数)
      */
-    colorIsTouchingToColor(targetRgb: string, maskRgb: string): Promise<boolean>;
+    colorIsTouchingToColor(targetRGB: string, maskRGB: string): Promise<boolean>;
 
 }
 
