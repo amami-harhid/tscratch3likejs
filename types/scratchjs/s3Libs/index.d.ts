@@ -71,6 +71,8 @@ export interface S3Libs {
     ImageEffective: S3ImageEffective;
     /** 回転方法 */
     RotationStyle: S3RotationStyle;
+    /** キーボードキー */
+    Keyboard: S3Keyboard,
     /** ループの制御 */
     Loop: Loop;
     /** サウンドオプション */
