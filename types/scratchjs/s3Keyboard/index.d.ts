@@ -1,3 +1,4 @@
+/** キーボードキー */
 export interface S3Keyboard {
     /** スペースキー */
     SPACE: string;

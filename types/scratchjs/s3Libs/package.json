@@ -2,7 +2,7 @@
   "name": "@tscratch3likejs/s3libs",
   "version": "0.0.1",
   "description": "TypeScript definitions for s3Libs",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "contributors": [
     {
       "name": "Amami Harhid",

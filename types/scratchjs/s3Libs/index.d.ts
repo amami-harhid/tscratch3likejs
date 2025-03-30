@@ -4,6 +4,7 @@ import {S3Point} from "../s3Point";
 import {S3Rate} from "../s3Rate";
 import {S3ImageEffective} from "../s3ImageEffective";
 import {S3Monitors} from "../s3Monitors";
+import {S3Keyboard} from "../s3Keyboard";
 declare interface Loop {
     /** ループ内で breakする */
     break() : void;
