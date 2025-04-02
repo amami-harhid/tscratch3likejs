@@ -1,4 +1,10 @@
 /** 調べる系メソッド */
+declare interface S3Mouse {
+    /** マウスＸ座標 */
+    readonly x : number;
+    /** マウスＹ座標 */
+    readonly y : number;
+}
 export interface S3SensingFunctions {
     /** 質問をして待つ */
     askAndWait(question: string): Promise<string>;
@@ -9,10 +15,8 @@ export interface S3SensingFunctions {
     isKeyDown(key?:string) : boolean;
     /** マウス押された */
     isMouseDown(): boolean;
-    /** マウスカーソルのＸ座標 */
-    mouseX: number;
-    /** マウスカーソルのＹ座標 */
-    mouseY: number;
+    /** マウス */
+    Mouse : S3Mouse;
     /** タイマー値 */
     timer: number;
     /** タイマーリセット */

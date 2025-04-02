@@ -38,7 +38,15 @@ declare interface S3CloneOption {
     /** 表示効果 */
     effect?: S3Effect;    
 }
+declare interface S3SpritePosition {
+    /** スプライトx座標 */
+    x: number;
+    /** スプライトy座標 */
+    y: number;
+}
 declare interface S3MotionFunctions {
+    /** スプライト座標 */
+    Position: S3SpritePosition;
     /** 現在の位置を取得する */
     getCurrentPosition(): {x: number, y: number};
     /** 現在の向きを取得する */
