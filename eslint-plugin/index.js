@@ -28,6 +28,7 @@ import {awaitImageRulesPlugin} from "./eslintAwaitImageRulePlugin.js";
 import {awaitLooksRulesPlugin} from "./eslintAwaitLooksRulePlugin.js";
 import {awaitLibRulesPlugin} from "./eslintAwaitLibRulePlugin.js";
 import {awaitSoundRulesPlugin} from "./eslintAwaitSoundRulePlugin.js";
+import {awaitSensingRulesPlugin} from "./eslintAwaitSensingRulePlugin.js";
 import {eventAsyncRulesPlugin} from "./eslintEventAsyncRulePlugin.js";
 import {controlAsyncRulesPlugin} from "./eslintControlAsyncRulePlugin.js";
 import {s3LoopRulesPlugin} from "./eslintLoopRulePlugin.js";
@@ -48,6 +49,7 @@ const eslint_S3_config = [
             awaitLooks : awaitLooksRulesPlugin,
             awaitLib : awaitLibRulesPlugin,
             awaitSound : awaitSoundRulesPlugin,
+            awaitSensing : awaitSensingRulesPlugin,
             eventAsync: eventAsyncRulesPlugin,
             controlAsync: controlAsyncRulesPlugin,
             loopCheck: s3LoopRulesPlugin,
@@ -84,6 +86,7 @@ const eslint_S3_config = [
             'awaitLib/await-lib-plugin': 'error',
             'awaitLooks/await-looks-plugin': 'error',
             'awaitSound/await-sound-plugin': 'error',
+            'awaitSensing/await-sensing-plugin': 'error',
             'eventAsync/event-async-plugin': 'error',
             'controlAsync/control-async-plugin': 'error',
             'loopCheck/s3-loop-plugin' : 'error',

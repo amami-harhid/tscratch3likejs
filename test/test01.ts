@@ -23,12 +23,13 @@ Pg.setting = async function setting() {
 
     stage.Event.whenFlag(async function*(this:S3Stage){
         for(;;){
-            await this.Sound.playUntilDone();
+            await this.Sound.playUntilDone('pew');
             yield;
         }
     });
     stage.Event.whenFlag(async function(this:S3Stage){
-        await this.Sound.playUntilDone();
+        await this.Sensing.askAndWait('nya');
+        await this.Sound.playUntilDone('Nya');
         let x = 0;
         const loop = function*() {
             while(true){
@@ -41,6 +42,7 @@ Pg.setting = async function setting() {
     });
     const bubbleTextArr = [1,2,3];
     sprite.Event.whenFlag(async function(this:S3Sprite){
+        await this.Sensing.askAndWait('test');
         this.Motion.setRotationStyle(Lib.RotationStyle.DONT_ROTATE);
         await this.Event.broadcastAndWait("MessageCat1Say", bubbleTextArr[0], 3, 4, 5); 
     });
