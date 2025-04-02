@@ -44,9 +44,15 @@ declare interface S3SpritePosition {
     /** スプライトy座標 */
     y: number;
 }
+declare interface S3SpriteDirection {
+    /** 向き */
+    degree: number;
+}
 declare interface S3MotionFunctions {
     /** スプライト座標 */
     Position: S3SpritePosition;
+    /** スプライト向き */
+    Direction: S3SpriteDirection;
     /** 現在の位置を取得する */
     getCurrentPosition(): {x: number, y: number};
     /** 現在の向きを取得する */
