@@ -4,6 +4,8 @@ export interface S3EventFunctions {
     whenRightNow(func:CallableFunction) :void;
     /** 旗が押されたら実行する */
     whenFlag(func:CallableFunction) :void;
+    /** 指定キーが押されたときに実行する */
+    whenKeyPressed(key: string,  func:CallableFunction) : void;
     /** クリックされたときに実行する */
     whenClicked(func:CallableFunction) :void;
     /** 背景が切り替わったときに実行する */

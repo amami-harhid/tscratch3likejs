@@ -22,7 +22,10 @@ const eventAsyncRule = {
                   (
                     calleeProperty.name == 'whenFlag' ||
                     calleeProperty.name == 'whenRightNow' ||
-                    calleeProperty.name == 'whenClicked'
+                    calleeProperty.name == 'whenClicked' ||
+                    calleeProperty.name == 'whenKeyPressed' ||
+                    calleeProperty.name == 'whenBroadcastReceived' ||
+                    calleeProperty.name == 'whenBackdropSwitches' 
                   )
                 ){
                   const _arguments = node.expression.arguments;

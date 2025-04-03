@@ -62,6 +62,12 @@ const yieldCheckCommon = function(context,node){
           });
         }
       }
+    }else{
+      // ループのステートメントが空のとき
+      context.report({
+        node,
+        messageId: "NoLineErrorId",
+      });
     }
   }
 }
@@ -157,6 +163,7 @@ const S3LoopRule = {
     fixable: 'code',
     schema: [],
     messages: {
+      NoLineErrorId: '空の処理は禁止です',
       YieldNeededId: '最終行は yield にしてください',
       FunctionNeededId: 'Functionが必要です',
       GeneratorFunctionNeededId: 'ここを含むfunctionを Generator関数にしてください',
