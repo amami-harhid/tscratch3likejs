@@ -14,4 +14,6 @@ export interface S3ControlFunctions {
     repeat(count: number, process:Function ) : Promise<any>;
     /** 指定した条件が成立するまで、繰り返す(await任意) */
     repeatUntil(condition: Function, process:Function ) : Promise<any>;
+    /** 全てを停止する */
+    stopAll() : void;
 }
