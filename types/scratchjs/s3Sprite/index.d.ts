@@ -93,8 +93,17 @@ declare interface S3MotionFunctions {
     changeY( y: number) : void;
 
 }
+/** 距離 */
+declare interface S3SpriteDistance {
+    /** マウスポインターまでの距離 */
+    toMousePointer : number;
+    /** 他スプライトまでの距離 */
+    to(otherSprite:S3Sprite) : number;
+}
 /** 調べる系メソッド */
 declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
+    /** 距離 */
+    Distance: S3SpriteDistance;
     /** 端に触れたとき */
     isTouchingEdge(): boolean;
     /** 上下の端に触れたとき */
