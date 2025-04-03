@@ -135,7 +135,18 @@ declare interface SizeProperty {
     /** サイズ縦 */
     h: number;
 }
+
+/** コスチューム */
+declare interface S3Costume {
+    /** コスチューム番号 */
+    readonly no : number;
+    /** コスチューム名 */
+    readonly name : string;
+}
+
 declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
+    /** コスチューム */
+    Costume : S3Costume;
     /** 次のコスチュームにする */
     nextCostume(): void;
     /** 指定した名前(または番号)でコスチュームを切り替える */
