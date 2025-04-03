@@ -29,14 +29,17 @@ export interface S3SoundFunctions {
      * 終わるまでサウンドを鳴らす
      * @param soundName サウンド名
      */
-    playUntilDone(soundName: string): Promise<any>;
-    /** サウンドオプション設定 */
+    playUntilDone(soundName: string): Promise<void>;
     /**
-     * サウンドのオプションを設定する
-     * @param key オプションキー
-     * @param value オプション量
+     * サウンドの効果を設定する
+     * @param key 効果キー
+     * @param value 量
      */
-    setOption(key: string, value: number): Promise<any>;
+    setOption(key: string, value: number): Promise<void>;
+    /**
+     * サウンドの効果をなくす
+     */
+    clearEffects() : Promise<void>;
     /**
      * サウンドを停止する
      */
