@@ -152,7 +152,12 @@ declare interface S3Costume {
     /** コスチューム名 */
     readonly name : string;
 }
-
+declare interface S3SpriteSize {
+    /** 横 */
+    w: number;
+    /** 縦 */
+    h: number;
+}
 declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** コスチューム */
     Costume : S3Costume;
@@ -168,11 +173,13 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     think(/** 思うテキスト */text?: string, properties?: SayProperty):void;
     /** 指定した秒数だけ思う(await 必須) */
     thinkForSecs(/** 思うテキスト */text: string, secs: number, properties?: SayProperty): Promise<any>;
+    /** 大きさ */
+    Size: S3SpriteSize;
     /** 大きさを変える */
     changeSizeBy(w: number | SizeProperty, h?:number ):void;
-    /** サイズを取得する */
+    /** 大きさを取得する */
     getSize() : SizeProperty;
-    /** サイズを設定する */
+    /** 大きさを設定する */
     setSize(w: number | SizeProperty, h?: number): void;
     /** 表示する */
     show(): void;
