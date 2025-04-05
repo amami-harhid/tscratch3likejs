@@ -16,7 +16,7 @@ const awaitControlRule = {
            node.name == 'wait' ||
            node.name == 'waitUntil' ||
            node.name == 'waitWhile' ||
-           node.name == 'clone'     ||
+           node.name == 'cloneAndWait' ||
            node.name == 'forever'   ||
            node.name == 'while'     ||
            node.name == 'repeat'    ||
