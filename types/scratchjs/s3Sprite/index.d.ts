@@ -19,7 +19,9 @@ declare interface S3SpriteEventFunctions extends S3EventFunctions{
 /** スプライトの制御用 */
 declare interface S3SpriteControlFunctions extends S3ControlFunctions{
     /** クローンを作る */
-    clone(option?:S3CloneOption): Promise<S3Sprite>
+    clone(option?:S3CloneOption): void;
+    /** クローンを作る */
+    cloneAndWait(option?:S3CloneOption): Promise<S3Sprite>
     /** クローンされたとき */
     whenCloned( func: CallableFunction ): void;
     /** 削除する */
