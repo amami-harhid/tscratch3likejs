@@ -28,6 +28,9 @@ declare interface S3SpriteControlFunctions extends S3ControlFunctions{
     remove() : void;
     /** スプライトが生きている */
     alive() : boolean;
+    /** スプライトの他のスクリプトを止める */
+    stopOtherScripts(): void;
+
 }
 
 declare interface S3CloneOption {
