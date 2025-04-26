@@ -37,6 +37,12 @@ export interface S3SoundFunctions {
      */
     setOption(key: string, value: number): Promise<void>;
     /**
+     * サウンドの効果を value値ずつ変える。
+     * @param key 
+     * @param value 
+     */
+    changeOptionValue(key: string, value: number): Promise<void>;
+    /**
      * サウンドの効果をなくす
      */
     clearEffects() : Promise<void>;
