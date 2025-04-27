@@ -1,5 +1,4 @@
 # tscratch3likejs
-
 Scratch3LikeJs をTypescriptで利用するためのパッケージです。
 ## .npmrc
 ```
