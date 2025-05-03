@@ -1,5 +1,5 @@
 import {S3Point} from "../s3Point";
-declare interface S3Monitor {
+export interface S3Monitor {
     /** モニターＩＤ */
     monitorId: number;
     /** 位置 */

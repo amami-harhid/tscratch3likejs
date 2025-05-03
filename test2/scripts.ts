@@ -3,9 +3,7 @@
  * 質問を出す
  */
 
-import {PlayGround} from '../../../build/index.js'
-const [Pg] = [PlayGround]; // 短縮名にする
-
+import {Pg} from "../s3lib-importer";
 import {StageEx} from './sub/stage';
 import {Cat} from './sub/cat';
 
