@@ -1,35 +1,40 @@
 import {S3Point} from "../s3Point";
 declare interface S3Monitor {
+    /** モニターＩＤ */
+    monitorId: number;
+    /** 位置 */
+    position: {x: number, y: number};
+    /** 大きさ */
+    scale: {w:number, h:number};
+    /** 変数値 */
+    value: string|number;
+    /** 描画されている大きさ */
+    getDrawingDimension(): {w:number, h:number};
     /** 表示する */
     show(): void;
     /** 隠す */
     hide(): void;
-    /** モニターサイズ */
-    size: {w: number, h:number};
-    /** 位置を設定 */
-    setPosition(position: S3Point):void;
-    /** テキスト設定 */
-    balloonText: string;
-    /** モニターラベル設定 */
-    label: string;
-    /** 表示文字の最大長(デフォルト=5) */
-    maxSize: number;
-    /** 値 */
-    value: string|number;
-
-
 }
 /** Monitors*/
 export interface S3Monitors {
     /** コンストラクター */
     new(): S3Monitors;
     /** 名前をつけてモニターを追加 */
-    add(label:string, scale?:{w:number, h:number}): void;
+    add(monitorId:string, label:string): void;
     /** 
-     * 名前でモニターを取得する
+     * モニターＩＤでモニターを取得する
      * 存在しないときは例外発生。
      */
-    get(label:string): S3Monitor;
-    /** 表示位置を自動で整列する */
-    automatic(): void;
+    get(monitorId:string): S3Monitor;
+    /** 
+     * モニターＩＤで指定するモニターを表示する
+     * 存在しないときは例外発生。
+     */
+    show(monitorId:string): void;
+    /** 
+     * モニターＩＤで指定するモニターを隠す
+     * 存在しないときは例外発生。
+     */
+    hide(monitorId:string): void;
+
 }

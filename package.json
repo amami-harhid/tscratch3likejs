@@ -1,6 +1,6 @@
 {
   "name": "@tscratch3/tscratch3likejs",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "",
   "repository": {
     "type": "git",
@@ -22,7 +22,6 @@
   "author": "",
   "license": "AGPL-3.0-only",
   "devDependencies": {
-    "@amami-harhid/scratch3likejslib": "^0.0.2",
     "@eslint/js": "^9.21.0",
     "@types/node": "^22.13.4",
     "eslint": "^9.21.0",
@@ -30,5 +29,8 @@
     "globals": "^16.0.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.26.0"
+  },
+  "dependencies": {
+    "@tscratch3/scratch3likejslib": "^1.0.0-alpha.3"
   }
 }
