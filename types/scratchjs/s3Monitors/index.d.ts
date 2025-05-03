@@ -6,8 +6,10 @@ declare interface S3Monitor {
     position: {x: number, y: number};
     /** 大きさ */
     scale: {w:number, h:number};
-    /** 変数値 */
-    value: string|number;
+    /** 変数の値(数値) */
+    value: number;
+    /** 変数の値(文字列) */
+    text: string;
     /** 描画されている大きさ */
     getDrawingDimension(): {w:number, h:number};
     /** 表示する */

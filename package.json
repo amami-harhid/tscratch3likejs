@@ -1,6 +1,6 @@
 {
   "name": "@tscratch3/tscratch3likejs",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "",
   "repository": {
     "type": "git",
@@ -31,6 +31,6 @@
     "typescript-eslint": "^8.26.0"
   },
   "dependencies": {
-    "@tscratch3/scratch3likejslib": "^1.0.0-alpha.3"
+    "@tscratch3/scratch3likejslib": "^1.0.0-alpha.4"
   }
 }
