@@ -1,14 +1,17 @@
-//@ts-nocheck
+// @ts-nocheck
+/**
+ * PlayGround
+ */
 import { Env } from './env';
 import { FontLoader } from './importer/fontLoader';
 import { ImageLoader } from './importer/imageLoader';
 import { Libs } from './controls/libs';
 import { Render } from './render/render';
 import { Runtime } from './engine/runtime';
+import { Threads } from './controls/threads';
 import { SoundLoader } from './importer/soundLoader';
 import { Sprite } from './entity/sprite';
 import { Stage } from './entity/stage';
-import { Threads } from './controls/threads';
 import { Utils } from './util/utils';
 
 import { S3Element } from './elements/element';
@@ -58,6 +61,7 @@ export class PlayGround {
         this._libs = Libs.getInstance();
         this._libs.p = this;
         this._nowLoading = '';
+        Threads.p = this;
     }
     get monitors() {
         return this._monitors;

@@ -9,7 +9,7 @@ module.exports = {
     mode: 'development',
     context: `${__dirname}/src`,
     entry: {
-        'likeScratchLib': path.join(__dirname, '/src', 'likeScratchLib.ts')
+        'index': path.join(__dirname, '/src', 'index.ts')
     },
     target: "web",
     output: {
