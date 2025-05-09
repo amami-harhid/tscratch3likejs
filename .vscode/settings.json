@@ -5,5 +5,6 @@
     "eslint.run": "onType",
     "eslint.codeAction.showDocumentation": {
         "enable": false
-    }
+    },
+    "liveServer.settings.port": 5501
 }

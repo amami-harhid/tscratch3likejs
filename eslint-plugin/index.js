@@ -39,8 +39,13 @@ const eslint_S3_config = [
         ignores: ["**/*.d.ts"],
     },
     {
-        files: ["**/*.ts"],
-        languageOptions: { globals: globals.browser },
+        files: ["**/*.ts","**/*.js"],
+        languageOptions: { 
+            globals: {
+                "console": "readonly",
+                ...globals.browser 
+            }
+        },
         plugins: {
             awaitControl : awaitControlRulesPlugin,
             awaitEvent : awaitEventRulesPlugin,

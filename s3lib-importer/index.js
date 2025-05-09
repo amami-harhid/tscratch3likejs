@@ -1,9 +1,5 @@
 /**
  * import script
  */
-import {PlayGround, Library} from '@tscratch3/scratch3likejslib/build/index.js';
-
-const Pg = PlayGround;
-const Lib = Library;
-
+import {Pg, Lib} from '../build/index.js';
 export {Pg, Lib}

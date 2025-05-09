@@ -1,13 +1,13 @@
 {
-  "include": ["./test/*.ts"],
+  "include": ["./test/*.ts", "./src/**/*.ts","./lib/**/*/ts"],
   "exclude": ["./node_modules/*"],
   "compilerOptions": {
-    "target": "es2020",         /* es2018,es2019,es2020,esnext が適している */
-    "module": "es2020",
+    "target": "esnext",         /* es2018,es2019,es2020,esnext が適している */
+    "module": "esnext",
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@typeJS/*": ["types/*"],
+      "@typeJS/*": ["types/scratchjs/*"],
     },
     "sourceMap": true,
     "importHelpers": true,

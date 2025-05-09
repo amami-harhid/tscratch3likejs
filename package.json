@@ -1,34 +1,51 @@
 {
   "name": "@tscratch3/tscratch3likejs",
-  "version": "1.0.0-alpha.7",
-  "description": "",
+  "version": "1.0.0-alpha.8",
+  "description": "scratch3-like-js library, written in Typescript",
   "repository": {
     "type": "git",
     "url": "git://github.com/amami-harhid/tscratch3likejs.git"
   },
-  "main": "index.js",
-  "type": "module",
+  "main": "./src.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpackD": "npx webpack --mode development"
   },
   "publishConfig": {
     "access": "public"
   },
   "files": [
+    "build",
     "eslint-plugin",
     "s3lib-importer",
     "types"
   ],
-  "author": "",
+  "author": "amami-harhid",
   "license": "AGPL-3.0-only",
   "devDependencies": {
-    "@eslint/js": "^9.21.0",
-    "@tscratch3/scratch3likejslib": "^1.0.0-alpha.4",
-    "@types/node": "^22.13.4",
-    "eslint": "^9.21.0",
-    "gitpkg": "^1.0.0-beta.4",
-    "globals": "^16.0.0",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.26.0"
+    "@babel/core": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
+    "@eslint/js": "^9.26.0",
+    "@types/node": "^22.15.3",
+    "babel-loader": "^10.0.0",
+    "child_process": "^1.0.2",
+    "eslint": "^9.26.0",
+    "events": "^3.3.0",
+    "exports-loader": "^5.0.0",
+    "globals": "^16.1.0",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.1",
+    "webpack": "^5.99.7",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.27.1",
+    "buffer": "^6.0.3",
+    "core-js": "^3.42.0",
+    "regenerator-runtime": "^0.14.1",
+    "scratch-audio": "^2.0.139",
+    "scratch-render": "^2.0.342",
+    "twgl.js": "^4.4.0"
   }
 }
