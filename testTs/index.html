@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:,">
+    <title>Sample-TScratch3LikeJs</title>
+    <script>
+      function clicked(page){
+        location.href = `./${page}`;
+      }
+    </script>
+    <style>
+.design01 {
+ width: 80%;
+ text-align: left;
+ border-collapse: collapse;
+ border-spacing: 0;
+ border: solid 1px #778ca3;
+}
+.design01 th {
+ padding: 10px;
+ background: #e9faf9;
+}
+.design01 tr {
+  border-top: dashed 1px #778ca3;
+}
+.design01 td {
+ padding: 10px;
+}
+    </style>
+  </head>
+  <body>
+    <div>
+        <table class="design01">
+          <tr>
+            <th>#</th>
+            <th>説明</th>
+            <th></th>
+          </tr>
+          <tr>
+            <td>sample01</td>
+            <td>旗を押す前⇒にステージ背景を表示する</td>
+            <td><button onclick="clicked('sample01');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample02</td>
+            <td>旗を押す⇒背景を表示する</td>
+            <td><button onclick="clicked('sample02');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample03</td>
+            <td>旗を押す⇒サウンドを鳴らしはじめる</td>
+            <td><button onclick="clicked('sample03');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample04</td>
+            <td>旗を押す⇒ステージをタッチすることにより音が鳴り続ける</td>
+            <td><button onclick="clicked('sample04');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample05</td>
+            <td>旗を押す⇒スプライトを表示する</td>
+            <td><button onclick="clicked('sample05');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample06</td>
+            <td>旗を押す⇒スプライトタッチで音が鳴り始める</td>
+            <td><button onclick="clicked('sample06');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample07</td>
+            <td>旗を押す⇒スプライトが左右に動く</td>
+            <td><button onclick="clicked('sample07');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample08</td>
+            <td>旗を押す⇒スプライトが動き、端に触れたらニャーと鳴く</td>
+            <td><button onclick="clicked('sample08');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample09</td>
+            <td>旗を押す⇒スプライトにタッチするとクローンをつくる</td>
+            <td><button onclick="clicked('sample09');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample10</td>
+            <td>旗を押す⇒スプライトにマウスオーバーさせるとクローンをつくる</td>
+            <td><button onclick="clicked('sample10');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample11</td>
+            <td>旗を押す⇒１秒ごとに１秒かけてどこかへ行く</td>
+            <td><button onclick="clicked('sample11');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample12</td>
+            <td>旗を押す⇒クリックした場所へ移動する</td>
+            <td><button onclick="clicked('sample12');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample13</td>
+            <td>旗を押す⇒クリックした位置へ１秒かけて移動する</td>
+            <td><button onclick="clicked('sample13');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample14</td>
+            <td>旗を押す⇒スプライトがマウスカーソルを追いかける</td>
+            <td><button onclick="clicked('sample14');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample15</td>
+            <td>旗を押す⇒スプライトが動く、スプライトは端を越えて進めない</td>
+            <td><button onclick="clicked('sample15');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample16</td>
+            <td>旗を押す⇒３匹のネコがマウスカーソルを追いかける(回転方法３種類）</td>
+            <td><button onclick="clicked('sample16');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample17</td>
+            <td>旗を押す⇒回転する十字にマウスポインターが触れたら蝶のクローンをつくる</td>
+            <td><button onclick="clicked('sample17');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample18</td>
+            <td>旗を押す⇒十字が音を出しながらミニ十字を発射する(左右矢印キー/スペースキー)</td>
+            <td><button onclick="clicked('sample18');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample19</td>
+            <td>旗を押す⇒『言う』『思う』を使ってフキダシを出す</td>
+            <td><button onclick="clicked('sample19');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample20</td>
+            <td>旗を押す⇒メッセージを使って２匹のネコが会話する</td>
+            <td><button onclick="clicked('sample20');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample21</td>
+            <td>旗を押す⇒ネコが音声スピーチをする(ネコに触れた・タッチしたとき）</td>
+            <td><button onclick="clicked('sample21');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample22</td>
+            <td>旗を押す⇒ネコが音声スピーチをする(ネコに触れた・タッチしたとき）<br>※メッセージを送って待つ</td>
+            <td><button onclick="clicked('sample22');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample23</td>
+            <td>旗を押す⇒ボールがパドルに触れたときに跳ね返る動きを続ける<br>※ブロック崩し風</td>
+            <td><button onclick="clicked('sample23');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample24</td>
+            <td>旗を押す⇒上下・左右に10回移動をずっと繰り返す<br>※斜め方向に動き続ける</td>
+            <td><button onclick="clicked('sample24');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample25</td>
+            <td>旗を押す⇒１秒ごとに背景を切り替える</td>
+            <td><button onclick="clicked('sample25');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample26</td>
+            <td>旗を押す⇒スペースキーでコスチューム切り替える<br>※大量画像ロードのため表示までに少し時間がかかる</td>
+            <td><button onclick="clicked('sample26');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample27</td>
+            <td>旗を押す⇒色に触ればカウントアップ<br>※雲(薄い水色), 植物(オレンジ色)</td>
+            <td><button onclick="clicked('sample27');">表示</button></td>
+          </tr>
+          <tr>
+            <td>sample28</td>
+            <td>旗を押す⇒質問をする (ネコクリック、ステージクリック)<br>同時には質問できない</td>
+            <td><button onclick="clicked('sample28');">表示</button></td>
+          </tr>
+        </table>
+    </div>
+  </body>
+</html>
