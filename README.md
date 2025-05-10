@@ -12,7 +12,7 @@ testTs フォルダを参照してください。
 
 ビルド結果を使った動作確認をしたいときは次より参照してください。
 
-https://amami-harhid.github.io/templateTscrach3/testTs
+https://amami-harhid.github.io/tscratch3likejs/testTs
 
 # template 
 git clone https://github.com/amami-harhid/templateTscrach3.git
