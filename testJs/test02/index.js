@@ -41,28 +41,15 @@ Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
     await stage.Image.add( NeonTunnel );
     await stage.Sound.add( Chill );
-    //stage.visible = false;
 
     ball = new Lib.Sprite('ball');
-    const ballDrawableID = ball.drawableID;
-    const ballDrawable = ball.render.renderer._allDrawables[ballDrawableID];
-    console.log( 'ballDrawable._visible = ', ballDrawable._visible );
-    console.log( 'ballDrawable._visible = ', ballDrawable._visible );
     await ball.Image.add( BallA );
-    console.log('ball.costumes', ball.costumes)
-    console.log('ball.costumes.skinId', ball.costumes.skinId)
-    //const ballSkinId = ball.costumes.skinId;
-    //this.render.renderer.updateDrawableProperties( ballDrawableID, {skinId:ballSkinId ,visible:false} );
-    //ball.render.renderer.draw();
-    //ball.Motion.setXY(0,-100);
     ball.Looks.setSize(50, 50);
-    //ball.Looks.hide();
 
     paddle = new Lib.Sprite("paddle");
     //paddle.visible = false;
     await paddle.Image.add( Paddle );
     paddle.Motion.gotoXY(0, -140);
-    //paddle.Looks.hide();
 
     block = new Lib.Sprite( "block");
     await block.Image.add( Block );
@@ -79,7 +66,6 @@ Pg.prepare = async function prepare() {
     await title.Image.add(YouWon);
     await title.Image.add(GameOver);
     title.Looks.hide();
-//    Pg.render.renderer.draw();
 }
 
 Pg.setting = async function setting() {
@@ -133,7 +119,6 @@ Pg.setting = async function setting() {
     });
     // メッセージ(ballTouch)を受け取ったときの動作
     ball.Event.whenBroadcastReceived('ballTouch', async function(){
-        console.log('ballTouch')
         this.Motion.turnRightDegrees( Lib.getRandomValueInRange(-5, 5)+180 );
     });
     // 緑の旗が押されたときの動作
@@ -191,14 +176,9 @@ Pg.setting = async function setting() {
     });
     // クローンされたときの動作
     block.Control.whenCloned(async function*(){
-        console.log('whenCloned---');
         this.Looks.show();
-        const drawableID = this.drawableID;
-        const drawable = this.render.renderer._allDrawables[drawableID];
-        console.log(drawable);
         for(;;){
             if(this.isAlive() && this.Sensing.isTouchingToSprite(ball)){
-                console.log('Touching')
                 //drawable.updateVisible(false);
                 //this.update();
                 score += 1;

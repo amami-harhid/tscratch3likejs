@@ -76,7 +76,6 @@ export class Sprite extends Entity {
         this._isAlive = false;
     }
     $remove() {
-        console.log('this._isAlive=',this._isAlive);
         if(this._isAlive === false) return;
         if(this.isClone === true && this.originalSprite && this.originalSprite.clones) {
             const clones = this.originalSprite.clones;
@@ -94,7 +93,6 @@ export class Sprite extends Entity {
         if(this.costumes)
             this.costumes.destroyAllSkin();
 
-        console.log('befor this.$delete()')
         this.$delete();
     }
 
@@ -175,7 +173,6 @@ export class Sprite extends Entity {
             }
             if(this.soundDatas){
                 for(const d of this.soundDatas) {
-                    console.log("d=",d);
                     // @type {{name?:string, data?:any}}
                     const _soundData:S3SoundData = {};
                     _soundData.name = d.name;
@@ -966,7 +963,6 @@ export class Sprite extends Entity {
         return this.Motion;
     }
     get Position() {
-        //console.log(this);
         const me = this;
         const position = {
             "x" : 0,

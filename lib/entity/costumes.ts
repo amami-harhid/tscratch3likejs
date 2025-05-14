@@ -233,7 +233,7 @@ export class Costumes {
                     return;
                 }     
             }
-            const properties:ScratchRenderProperties = {skinId:-1,position:[0,0],scale:{x:-1,y:-1}, visible:true};
+            const properties:ScratchRenderProperties = {skinId:-1,position:[0,0],scale:{x:-1,y:-1}};
             const skinObj = { skinId: _skinId };
             const directionObj = { direction: this._direction };
             const scaleObj = { scale: [ this._scale.x, this._scale.y ] };

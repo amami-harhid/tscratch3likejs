@@ -9,7 +9,7 @@ export declare type ScratchRenderProperties = {
     skinId: number,
     position: TPositionArray,
     scale: TScaleArr,
-    visible : boolean,
+    visible? : boolean,
 }
 
 

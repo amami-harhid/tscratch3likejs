@@ -968,21 +968,7 @@ export class Entity extends EventEmitter {
     }
     updateVisible( visible: boolean ) {
         this._visible = visible;
-        const drawable = this.render.renderer._allDrawables[this.drawableID];
-        if( drawable && drawable.skin ){
-            const skinId = drawable.skin.id;
-            const properties: ScratchRenderProperties = {
-                skinId: skinId,
-                visible: this._visible,
-                position: [this.$_position.x, this.$_position.y],
-                scale: [ this.$_scale.w, this.$_scale.h ],
-            }
-            console.log("before this.render.renderer.updateDrawableProperties")
-            console.log(this.drawableID, properties);
-            //this.render.renderer.updateDrawableProperties( this.drawableID, properties );
-            //this.render.renderer.updateDrawableSkinId(this.drawableID, skinId); 
-            this.render.renderer.updateDrawableVisible(this.drawableID, visible);
-        }
+        this.render.renderer.updateDrawableVisible(this.drawableID, visible);
 
     }
 
