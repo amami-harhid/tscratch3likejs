@@ -109,7 +109,7 @@ Pg.setting = async function setting() {
                 // 音を鳴らす
                 this.Sound.play(Pew);
                 // クローンを作る
-                //this.Control.clone();
+                this.Control.clone();
                 //次をコメントアウトしているときは キー押下中連続してクローン作る  
                 //await this.Control.waitWhile( ()=>Lib.keyIsDown(Lib.Keyboard.SPACE));
             }
@@ -134,7 +134,7 @@ Pg.setting = async function setting() {
     cross.Control.whenCloned( async function*( this: S3Sprite ) {
         // ずっと繰り返す
         for(;;){
-            this.Motion.changeY(+5); // 5だけ上にする
+            this.Motion.changeY(+15); // 15ずつ上昇する
             // 端にふれたとき
             if(this.Sensing.isTouchingEdge()){
                 // 隠す
