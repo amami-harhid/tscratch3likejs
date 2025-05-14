@@ -38,7 +38,7 @@ export class Monitors {
          * @returns {S3MonitorSkin}
          */
         function getS3Skin(skinId: number) : S3MonitorSkin{
-            return renderer._allSkins[skinId];
+            return renderer._allSkins[skinId] as S3MonitorSkin;
         }
         renderer.s3CreateMonitorSkin = s3CreateMonitorSkin;
         renderer.getS3Skin = getS3Skin;

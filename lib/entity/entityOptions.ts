@@ -8,6 +8,7 @@ export type TEntityOptions = {
     scale?: TScale,
     direction?: number,
     effect?:TEntityEffects,
+    visible?: boolean,
 
 };
 

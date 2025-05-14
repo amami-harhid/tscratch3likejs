@@ -5,7 +5,7 @@ import { Entity } from "../entity/entity";
 import { StageLayering } from "../entity/stageLayering";
 import { Utils } from "../util/utils";
 import { S3MonitorSkin } from "./s3MonitorSkin";
-import type { IRenderWebGL } from "../render/IRenderWebGL";
+import type { IRenderWebGL, ScratchRenderProperties } from "../render/IRenderWebGL";
 import type { TPosition, TScale, TDistance} from "../common/typeCommon";
 export class Monitor extends Entity {
     static Events = {
@@ -198,8 +198,8 @@ export class Monitor extends Entity {
     }
     _render() {
         if(this.drawableID != null && this.renderer != null && this._skinId != null) {
-            const properties = {
-                skindId: this._skinId,
+            const properties: ScratchRenderProperties = {
+                skinId: this._skinId,
                 position: [this._position.x, this._position.y],
                 scale: [ this._scale.w, this._scale.h ],
                 visible : this._visible,

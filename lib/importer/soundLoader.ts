@@ -9,7 +9,7 @@ export class SoundLoader {
      * @param name {string} 
      * @return {{name:string, data:Uint8Array<ArrayBuffer>}} data
      */
-    static async loadSound(sound, name){
+    static async loadSound(sound:string, name:string): Promise<{name:string, data:Uint8Array<ArrayBuffer>}>{
         if(sound) {
             if(typeof sound === 'string') {
                 let responce = await fetch(sound);

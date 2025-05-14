@@ -1,4 +1,6 @@
-//@ts-nocheck
+/**
+ * Sprite
+ */
 import { Bubble } from "./bubble";
 import { Entity } from "./entity";
 import { Env } from "../env";
@@ -6,17 +8,42 @@ import { MathUtil } from "../util/math-util";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
-import { RotationStyle } from "./entityConstant";
+import { Costumes } from "./costumes";
+import type { RotationStyle } from "./entityConstant";
 import { PlayGround } from "lib/playGround";
+import { Stage } from "./stage";
+import type { TEntityEffects, TEntityOptions } from './entityOptions';
+import type { S3ImageData,S3SoundData } from "../common/typeCommon";
 
 export class Sprite extends Entity {
-    constructor(name, options = {}) {
-        if(typeof name != "string") throw "第一パラメータはスプライトの名前が必要"
-        super(name, StageLayering.SPRITE_LAYER, options);
+    private bubble?: Bubble;
+    protected costumes?: Costumes;
+    private stage: Stage;
+    public skinId: number;
+    public skinIdx: number;
+    public z: number;
+    public clones?: Sprite[];
+    public isClone: boolean;
+    private originalSprite?: Sprite|null;
+    private imageDatas?: S3ImageData[];
+    private soundDatas?: S3SoundData[];
+    private touchingEdge: boolean;
+    private bubbleDrawableID: string;
+    private _bubbleTimeout: NodeJS.Timeout|undefined;
+    ;
+    constructor(name?:string, options?:TEntityOptions) {
+        let _name:string|undefined = undefined;
+        if(name){
+            _name = name;
+        }else{
+            _name = "Sprite_"+Utils.generateUUID();
+        }
+        const _options = (options)? options : {};
+        super(_name, StageLayering.SPRITE_LAYER, _options);
         const stage = this.playGround.stage;
         this.stage = stage;
         this.bubble = new Bubble(this);
-        this.costumes = new this._libs.Costumes(this.playGround);
+        this.costumes = new Costumes(this.playGround);
         this.skinId = -1;
         this.skinIdx = -1;
         this.z = -1;
@@ -27,7 +54,7 @@ export class Sprite extends Entity {
         this.soundDatas = [];
         this.touchingEdge = false;
         this.bubbleDrawableID = '';
-        this._bubbleTimeout;
+        this._bubbleTimeout = undefined;
         //this._isAlive = true;
         stage.addSprite(this);
 
@@ -49,6 +76,7 @@ export class Sprite extends Entity {
         this._isAlive = false;
     }
     $remove() {
+        console.log('this._isAlive=',this._isAlive);
         if(this._isAlive === false) return;
         if(this.isClone === true && this.originalSprite && this.originalSprite.clones) {
             const clones = this.originalSprite.clones;
@@ -66,6 +94,7 @@ export class Sprite extends Entity {
         if(this.costumes)
             this.costumes.destroyAllSkin();
 
+        console.log('befor this.$delete()')
         this.$delete();
     }
 
@@ -96,7 +125,7 @@ export class Sprite extends Entity {
         await this.$clone(options);
     }
     async $clone(options = {}) {
-        if(this.isClone == undefined){
+        if(this.isClone == false){
             if(this.clones == undefined) this.clones = [];
             const newName = `${this.name}_${this.clones.length+1}`;
             // クローン時にエフェクトを引き継ぐ。
@@ -113,6 +142,7 @@ export class Sprite extends Entity {
                 'position' : {x: this.$_position.x, y:this.$_position.y}, 
                 'scale' : this.$_scale,
                 'direction' : (this.$_direction)? this.$_direction: 90,
+                'visible': this._visible,
                 COLOR : (this._effect.color)? this._effect.color: 0,
                 FISHEYE : (this._effect.fisheye)? this._effect.fisheye: 0,
                 WHIRL: (this._effect.whirl)? this._effect.whirl: 0,
@@ -127,7 +157,7 @@ export class Sprite extends Entity {
             // デフォでは本体の前に表示されるので、1つ背面へ移動する
             newSprite.$goBackwardLayers(1)
             //const _visible = 
-            newSprite.$setVisible( false );
+            //newSprite.$setVisible( false );
             if(this.clones)
                 this.clones.push(newSprite);
             newSprite.isClone = true;
@@ -145,29 +175,27 @@ export class Sprite extends Entity {
             }
             if(this.soundDatas){
                 for(const d of this.soundDatas) {
+                    console.log("d=",d);
                     // @type {{name?:string, data?:any}}
-                    const _soundData = {};
+                    const _soundData:S3SoundData = {};
                     _soundData.name = d.name;
                     _soundData.data = d.data;
                     //const _options = d.options;
-                    await newSprite.$addSound(_soundData);
+                    if(this.soundDatas) await newSprite.$addSound(_soundData);
+                    //await newSprite.$addSound(_soundData);
                     // options引き継ぐ
                     const _vol = this.$getSoundVolume();
                     const _pitch = this.$getSoundPitch();
-                    newSprite.$setSoundVolume( _vol );
-                    newSprite.$setSoundPitch( _pitch );       
+                    if(newSprite.sounds) newSprite.$setSoundVolume( _vol );
+                    if(newSprite.sounds) newSprite.$setSoundPitch( _pitch );
                 }    
             }
             newSprite.update(); // update() は不要かもしれない。
             newSprite.originalSprite = this;
 
-            // 注意： Scratch3 風に Sprite duplicate をしてみたい。（調べる）
-            // whenClone
-            // ここで emit 
-            // target( = EventEmitter ) を作る。target は renderer を操作するメソッドを持つ。
-            // rendererを操作する処理は emit で行う。
+            // whenClone をemitで起動する。
             const runtime = this.playGround.runtime;
-            const eventId = `whenClone_${this.name}`;
+            const eventId = `whenClone_${this.name}`; // 本体スプライトの名前で定義
             runtime.emit(eventId, newSprite);
             return newSprite;
         }
@@ -407,8 +435,8 @@ export class Sprite extends Entity {
      * @param {Entity[]} targets 
      * @returns 
      */
-    $isTouchingTargetToTarget(src, targets) {
-        let _targets;
+    $isTouchingTargetToTarget(src:Sprite, targets:Sprite[]) {
+        let _targets:Sprite[];
         if(Array.isArray(targets)){
             _targets = [...targets];
         }else{
@@ -481,7 +509,7 @@ export class Sprite extends Entity {
         }
         return [newX + dx , newY + dy];
     }
-    $isTouchingEdge (_callback) {
+    $isTouchingEdge (_callback?: CallableFunction) {
         if(!this.$isAlive()) false;
 
         const judge = this.$_onEdgeBounds();
@@ -542,7 +570,7 @@ export class Sprite extends Entity {
     }
 
     $gotoMousePosition() {
-        const position = libs.default.mousePosition;
+        const position = this._libs.mousePosition;
         this.$setXY(position.x, position.y);
     }
     /**
@@ -586,7 +614,7 @@ export class Sprite extends Entity {
         // _stopper = true にしようとしたが、これがなくても停止するので実装をしない
         const _glideX = _x;
         const _glideY = _y;
-        return new Promise( async (resolve) => {
+        return new Promise<void>( async (resolve) => {
             const framesPerSecond = 1000 / Env.pace;
             const stepX = (_glideX - this.$_position.x) / (sec * framesPerSecond);
             const stepY = (_glideY - this.$_position.y) / (sec * framesPerSecond);
@@ -819,7 +847,7 @@ export class Sprite extends Entity {
         if(!this.$isAlive()) return;
         this.$say(text, properties);
         const me = this;
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             this._bubbleTimeout = setTimeout(() => {
                 // タイムアウトしたときに吹き出しを消す
                 if(me.bubble){
@@ -855,7 +883,7 @@ export class Sprite extends Entity {
     async $thinkForSecs( text, secs, properties={}) {
         if(!this.$isAlive()) return;
         this.$think(text, properties);
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             this._bubbleTimeout = setTimeout(() => {
                 this._bubbleTimeout = undefined;
                 if(this.bubble)
@@ -1203,7 +1231,7 @@ export class Sprite extends Entity {
             "isTouchingHorizontalEdge" : this.$isTouchingHorizontalEdge.bind(this),
             "isNotMouseTouching" : this.$isNotMouseTouching.bind(this),
             "isMouseTouching": this.$isMouseTouching.bind(this),
-            "isTouchingToSprite": this.$isTouchingTargetToTarget.bind(this),
+            "isTouchingToSprite": this.$isTouchingTarget.bind(this),
             "getTouchingSprites": this.$getTouchingTarget.bind(this),
             "isTouchingToColor" : this.$isTouchingColor.bind(this),
             "colorIsTouchingToColor" : this.$colorIsTouchingColor.bind(this),

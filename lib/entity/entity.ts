@@ -22,7 +22,8 @@ import { StageLayering } from './stageLayering';
 import type { TThreadObj } from '../controls/TThreadObj';
 import type { TPosition, TScale } from '../common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from './entityOptions';
-import type { TBroadcastElement, TBroadcastElementFunc } from './TBroadcastElement';
+import type { TBroadcastElement } from './TBroadcastElement';
+import type { ScratchRenderProperties } from '../render/IRenderWebGL';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
 export class Entity extends EventEmitter {
     static clickFirstRegist = true;
@@ -34,51 +35,51 @@ export class Entity extends EventEmitter {
     get SOUND_FORCE_STOP (){
         return "sound_force_stop";
     }
-    protected render: Render;
+    public render: Render;
     public playGround: PlayGround;
-    protected drawableID: number;
-    private _libs: Libs;
+    public drawableID: number;
+    protected _libs: Libs;
     private threads: Threads;
-    private pace?: number;
-    private name: string;
+    public pace?: number;
+    public name: string;
     private layer: StageLayering;
     public id: string;
-    private canvas: HTMLCanvasElement;
-    private flag: HTMLElement|null;
-    private $_position: TPosition;
-    private $_scale: TScale;
-    private $_direction: number;
+    public canvas: HTMLCanvasElement;
+    public flag: HTMLElement|null;
+    protected $_position: TPosition;
+    protected $_scale: TScale;
+    protected $_direction: number;
     protected _visible: boolean;
-    private sounds: Sounds|null;
+    private sounds: Sounds|undefined;
     private importAllDone: boolean[];
     private importIdx: number;
     protected $_prev_position: TPosition;
     protected $_prev_scale: TScale;
     protected $_prev_direction: number;
-    private _effect: TEntityEffects;
+    protected _effect: TEntityEffects;
     public life: number;
-    private modules?: Map<string, Promise<void>[]>;
-    protected _isAlive: boolean;
+    protected modules?: Map<string, Promise<void>[]>;
+    public _isAlive: boolean;
     private _timer: number;
     constructor (name: string, layer: StageLayering, options:TEntityOptions = {} ){
         super();
+        this.id = this._generateUUID();
+        this.name = name;
+
         this._libs = Libs.getInstance();
         this.threads = Threads.getInstance();        
         this.playGround = this._libs.p;
         Threads.playGround = this.playGround;
         this.pace = Env.pace;
         this.render = this.playGround.render;
-        this.name = name;
         this.layer = layer;
         this.drawableID = this.render.createDrawable(this.layer);
-        this.id = this._generateUUID();
         this.canvas = Canvas.canvas;
         this.flag = null;//playGround.flag;
         this.$_position = {x:0, y:0}; // 意味なし
         this.$_scale = {w:100,h:100}; // 意味なし
         this.$_direction = 90; // 意味なし
-        this._visible = true;
-        this.sounds = null;
+        this.sounds = undefined;
         //this.sound = null;
         this.importAllDone = [];
         this.importIdx = -1;
@@ -94,6 +95,7 @@ export class Entity extends EventEmitter {
         this.$_prev_scale = {w:0, h:0};
         this.$_prev_scale.w = this.$_scale.w;
         this.$_prev_scale.h = this.$_scale.h;
+        this._visible = (options.visible)? options.visible : true;
 
         this.life = Infinity;
         this.modules = new Map();
@@ -120,7 +122,7 @@ export class Entity extends EventEmitter {
     }
     $changeSizeBy(changeW, changeH) {
         if(typeof changeW == 'number' ){
-            let _w = changeW;
+            const _w = changeW;
             let _h = changeH;
             if( changeH == undefined){
                 _h = changeW;
@@ -130,8 +132,8 @@ export class Entity extends EventEmitter {
             this.$setScale(w, h);    
         }else{
             const obj = changeW;
-            let _w = obj.w;
-            let _h = obj.h;
+            const _w = obj.w;
+            const _h = obj.h;
             const w = this.$_scale.w + _w;
             const h = this.$_scale.h + _h; 
             this.$setScale(w, h);
@@ -223,7 +225,7 @@ export class Entity extends EventEmitter {
         })
         return _allDone;
     }
-    async _addImage(name ,image, costume) {
+    async _addImage(name:string ,image:string|HTMLImageElement, costume) {
         if(name == undefined || typeof name != "string"){
             throw "【Image.add】正しい name を指定してください"
         }
@@ -258,54 +260,56 @@ export class Entity extends EventEmitter {
     //     const soundData = await this.sounds.importSound( sound );
     //     return soundData;
     // }
-    async _addSound(name, soundData, options={}) {
+    async _addSound(name:string, soundData:Uint8Array<ArrayBuffer>, options={}) {
         if(name == undefined || typeof name != "string"){
             throw "【Sound.add】正しい name を指定してください"
         }
         if(soundData == undefined || soundData.buffer == undefined){
             throw "【Sound.add】正しいサウンドデータを指定してください";
         }
-        if ( this.sounds == null ) this.sounds = new Sounds(this);
-        const me = this;
-        return new Promise(async resolve => {
-            if(this.sounds == undefined) throw 'sounds undefined error';
-            await this.sounds.setSound(name, soundData, options);
-            resolve(me);
-        })
+        if( !this.sounds ) this.sounds = new Sounds(this);
+        //if( !this.sounds ) throw 'sounds undefined error';
+        await this.sounds.setSound(name, soundData, options);
 
     }
     async _loadSound(name, soundUrl, options={}) {
         this.importIdx += 1;
         const _importIdx = this.importIdx;
         this.importAllDone.push(false);
-        if ( this.sounds == null ) this.sounds = new Sounds(this);
+        if ( !this.sounds ) this.sounds = new Sounds(this);
         await this.sounds.loadSound(name,soundUrl, options);
         this.importAllDone[_importIdx] = true;
     }
     $soundSwitch(sound) {
-        if(this.sounds == undefined) throw 'sounds undefined error';
-        if(this.sounds.soundPlayer == undefined) throw 'sounds.soundPlayer undefined error';
-        const name = sound.name;
-        if(this.sounds.soundPlayer.name===name) return;
-        const keys = this.sounds.getSoundKeys();
-        if(keys.includes(name)){
-            this.sounds.switch(name);
-        }else{
-            throw '指定したサウンドは定義されていません('+name+')';
-        }
+        if(this.sounds ){
+            if(this.sounds.soundPlayer == undefined) throw 'sounds.soundPlayer undefined error';
+            const name = sound.name;
+            if(this.sounds.soundPlayer.name===name) return;
+            const keys = this.sounds.getSoundKeys();
+            if(keys.includes(name)){
+                this.sounds.switch(name);
+            }else{
+                throw '指定したサウンドは定義されていません('+name+')';
+            }
+            return;
+        } 
+        throw 'sounds undefined error';
     }
     $nextSound() {
-        if ( this.sounds == null ) return;
-        this.$soundStop();    
-        this.sounds.nextSound();
+        if ( this.sounds ){
+            this.$soundStop();    
+            this.sounds.nextSound();
+        }
     }
     $soundPlay(name) {
-        if(this.sounds == undefined) throw 'sounds undefined error';
-        if( name ) {
-            this.$soundSwitch({name:name});
-        }
-
-        this.sounds.play();
+        if(this.sounds) {
+            if( name ) {
+                this.$soundSwitch({name:name});
+            }
+            this.sounds.play();
+            return;
+        } 
+        throw 'sounds undefined error';
     }
     async $setOption(key, value) {
         if( key == SoundOption.VOLUME ){
@@ -339,50 +343,63 @@ export class Entity extends EventEmitter {
         return 0;
     }
     async $changeOptionValue(key, value) {
-        if(this.sounds == undefined) throw 'sounds undefined error';
-        if( key == SoundOption.VOLUME ){
-            const volume = this.sounds.volume;
-            this.$setSoundVolume(volume + value);
-        }else if(key == SoundOption.PITCH ){
-            const changePitch = this.$pitchScratch2Audio(value);
-            const pitch = this.sounds.pitch + changePitch;
-            if( 12.5 <= pitch && pitch <= 800 ){
-                const pitchScratch = this.$pitchAudio2Scratch(pitch);
-                this.$setSoundPitch( pitchScratch );
+        if(this.sounds ){
+            if( key == SoundOption.VOLUME ){
+                const volume = this.sounds.volume;
+                this.$setSoundVolume(volume + value);
+            }else if(key == SoundOption.PITCH ){
+                const changePitch = this.$pitchScratch2Audio(value);
+                const pitch = this.sounds.pitch + changePitch;
+                if( 12.5 <= pitch && pitch <= 800 ){
+                    const pitchScratch = this.$pitchAudio2Scratch(pitch);
+                    this.$setSoundPitch( pitchScratch );
+                }
             }
-        }
-        // 音量変更時直後の再生にて 最初に雑音「ブッ」が入る。
-        // FPS分待つことで解消させる
-        await this._libs.wait(1000/33*2);
+            // 音量変更時直後の再生にて 最初に雑音「ブッ」が入る。
+            // FPS分待つことで解消させる
+            await this._libs.wait(1000/33*2);
+            return;
+        } 
+        throw 'sounds undefined error';
     }
     $setSoundVolume(volume) {
-        if ( this.sounds == null ) return;
-        this.sounds.volume = volume;
+        if ( this.sounds ) {
+            this.sounds.volume = volume;
+        }
     }
     $getSoundVolume() {
-        if(this.sounds == undefined) throw 'Sounds undefined error';
-        return this.sounds.volume;
+        if(this.sounds ) {
+            return this.sounds.volume;
+        } 
+        throw 'Sounds undefined error';
     }
     // setSoundVolumeByName(name, volume) {
     //     if ( this.sounds == null ) return;
     //     this.sounds.volume = volume;
     // }
     $getSoundPitch() {
-        if(this.sounds == undefined) throw 'sounds undefined error';
-        return this.sounds.pitch;
+        if(this.sounds ) {
+            return this.sounds.pitch;
+        } 
+        throw 'sounds undefined error';
     }
     $setSoundPitch(pitch) {
-        if(this.sounds == undefined) throw 'sounds undefined error';
-        const audioPitch = this.$pitchScratch2Audio(pitch);
-        this.sounds.pitch = audioPitch/100;
+        if(this.sounds ){
+            const audioPitch = this.$pitchScratch2Audio(pitch);
+            this.sounds.pitch = audioPitch/100;
+            return;
+        } 
+        throw 'sounds undefined error';
     }
     $soundStop() {
-        if ( this.sounds == null ) return;
-        this.sounds.stop();
+        if ( this.sounds ){
+            this.sounds.stop();
+        }
     }
     $soundStopImmediately() {
-        if ( this.sounds == null ) return;
-        this.sounds.stopImmediately();
+        if ( this.sounds ){
+            this.sounds.stopImmediately();
+        }
     }
     $speechStopImmediately() {
         this.emit(this.SOUND_FORCE_STOP); // ---> スピーチを停止する Soundの中で。
@@ -447,22 +464,6 @@ export class Entity extends EventEmitter {
     _generateUUID () {
         return Utils.generateUUID();
     }
-
-//    _exec ( f, ...args ) {
-//        const _rewriter = Rewrite.default;
-//        _rewriter.exec( f, this, ...args );
-//    }
-
-//    _execWithEmit ( f, emitterEventId, ...args ){
-//        const _rewriter = Rewrite.default;
-//        _rewriter.execWithEmitter( f, this, emitterEventId, ...args );
-//
-//    }
-//    _execThread ( f, ...args ) {
-//        const _rewriter = Rewrite.default;
-//        let t = _rewriter.execThread( f, this, ...args );
-//        return t;
-//    }
 
     /**
      * Scratch3 Wait Block 風メソッド
@@ -534,14 +535,14 @@ export class Entity extends EventEmitter {
         if( targetIds.length > 0 ) {
             try{
                 const touching = src.render.renderer.isTouchingDrawables(src.drawableID, targetIds);
-                return touching;    
+                return touching;
     
             }catch(e){
             }
         }
         return false;
     }
-    $ifTouchingTarget(target) {
+    $ifTouchingTarget(target: Entity) {
         const touching = this.$isTouchingTargetToTarget(this,[target]);
         return touching;
     }
@@ -579,9 +580,9 @@ export class Entity extends EventEmitter {
      * @param targets {Entity[]} - チェック対象の配列
      * @returns {boolean} - 触れていればTrue.
      */
-    isTouchingTarget(targets: Entity[]): boolean {
+    $isTouchingTarget(targets: Entity[]): boolean {
         const src = this;
-        const touching = this.$isTouchingTargetToTarget(src,targets);
+        const touching = this.$isTouchingTargetToTarget(src, targets);
         return touching;
     }
     /**
@@ -957,7 +958,7 @@ export class Entity extends EventEmitter {
         const runtime = this.playGround.runtime;
         if(runtime){
             const eventId = `whenClone_${this.name}`;
-            runtime.on(eventId, function(clone){
+            runtime.on(eventId, function(clone: Entity){
                 const threadId = clone._generateUUID();
                 const proxy = clone.getProxyForHat();
                 proxy.threadId = threadId;
@@ -965,12 +966,27 @@ export class Entity extends EventEmitter {
             });    
         }
     }
-    updateVisible( visible ) {
+    updateVisible( visible: boolean ) {
         this._visible = visible;
-        this.render.renderer.updateDrawableVisible(this.drawableID, visible);
+        const drawable = this.render.renderer._allDrawables[this.drawableID];
+        if( drawable && drawable.skin ){
+            const skinId = drawable.skin.id;
+            const properties: ScratchRenderProperties = {
+                skinId: skinId,
+                visible: this._visible,
+                position: [this.$_position.x, this.$_position.y],
+                scale: [ this.$_scale.w, this.$_scale.h ],
+            }
+            console.log("before this.render.renderer.updateDrawableProperties")
+            console.log(this.drawableID, properties);
+            //this.render.renderer.updateDrawableProperties( this.drawableID, properties );
+            //this.render.renderer.updateDrawableSkinId(this.drawableID, skinId); 
+            this.render.renderer.updateDrawableVisible(this.drawableID, visible);
+        }
+
     }
 
-    set visible( _visible ){
+    set visible( _visible: boolean ){
         this.updateVisible(_visible);
     }
 

@@ -43,7 +43,7 @@ Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
     await stage.Image.add( NeonTunnel );
     await stage.Sound.add( Chill );
-    ball = new Lib.Sprite("cat");
+    ball = new Lib.Sprite();
     await ball.Image.add( BallA );
     //ball.Motion.setXY(0,-100);
     ball.Looks.setSize(50, 50);
@@ -51,10 +51,10 @@ Pg.prepare = async function prepare() {
     await paddle.Image.add( Paddle );
     paddle.Motion.gotoXY(0, -140);
     block = new Lib.Sprite( "block");
+    block.Looks.hide();
     await block.Image.add( Block );
     await block.Sound.add(Pew);
     block.Motion.gotoXY(-220,180);
-    block.Looks.hide();
     line = new Lib.Sprite( "line" );
     await line.Image.add( Line );
     line.Motion.gotoXY(0, -180);
@@ -173,19 +173,20 @@ Pg.setting = async function setting() {
     // クローンされたときの動作
     block.Control.whenCloned(async function*(this:S3Sprite){
         this.Looks.show();
-        while(true){
+        for(;;){
             if(this.Sensing.isTouchingToSprite(ball)){
                 score += 1;
                 this.Event.broadcast('ballTouch');
                 this.Sound.play(Pew);
-                this.Looks.hide();
                 if(score == blockCount) {
                     this.Event.broadcast(YouWon);
                     this.Control.stopThisScript();
                 }
+                break;
             }    
             yield;
         }
+        this.Control.remove();
     });
     // 緑の旗が押されたときの動作
     title.Event.whenFlag(async function(this:S3Sprite){

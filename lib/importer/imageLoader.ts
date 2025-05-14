@@ -50,7 +50,7 @@ export class ImageLoader {
      * @return {Promise<{name:string,data: any}>} 
      */
     static async loadImage(image:string, name:string, translate:{x:number,y:number}={x:0,y:0}
-            ): Promise<{name:string,data: any}> {
+            ): Promise<{name:string,data: string|HTMLImageElement}> {
         if(image) {
             if(typeof image === 'string') {
                 if(image.match(ImageLoader.REGEX_SVG_DATA_IMAGE_FILE)){

@@ -23,10 +23,17 @@ export declare type TScale = {
     w: number,
     h: number,
 }
+export declare type TScaleArr = TwoNumberArray;
+
 /** サイズ */
 export declare type TSize = {
     width: number,
     height: number,
+}
+/** サイズ (X,Y) */
+export declare type TSizeXY = {
+    x: number,
+    y: number,
 }
 /** 距離 */
 export declare type TDistance = {
@@ -48,3 +55,5 @@ export declare type TVec3 = {
     y: number,
     z: number,
 }
+export declare type S3ImageData = {name:string, data:string|HTMLImageElement};
+export declare type S3SoundData = {name?:string, data?:Uint8Array<ArrayBuffer>};

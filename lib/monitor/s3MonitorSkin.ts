@@ -73,7 +73,7 @@ export class S3MonitorSkin extends EventEmitter {
     private _x: number;
     private _y: number;
     private _visible: boolean;
-    private _canvas: HTMLCanvasElement|null;
+    public _canvas: HTMLCanvasElement|null;
     private _measurementProvider: S3CanvasMeasurementProvider|null;
 
     /** adding */

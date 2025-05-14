@@ -1,13 +1,14 @@
 import { StageLayering } from '../entity/stageLayering';
 import { S3MonitorSkin } from '../monitor/s3MonitorSkin';
+import type { ISkin } from './ISkin';
 import type { IDrawable } from './IDrawable';
-import type { TBounds, TPosition, TPositionArray } from '../common/typeCommon';
+import type { TBounds, TPosition, TPositionArray, TScaleCanEmpty, TSizeXY } from '../common/typeCommon';
 import type { RGBColorArray } from '../util/cast';
 
 export declare type ScratchRenderProperties = {
-    skindId: number,
-    position: number[],
-    scale: number[],
+    skinId: number,
+    position: TPositionArray,
+    scale: TScaleArr,
     visible : boolean,
 }
 
@@ -16,11 +17,24 @@ export declare interface IRenderWebGL {
     /** 全てのDrawableの配列 */
     _allDrawables: IDrawable[];
     /** 全てのskinの配列 */
-    _allSkins: S3MonitorSkin[];
+    _allSkins: ISkin[];
     /** canvas context */
     gl: WebGLRenderingContext;
     /** next skin id */
     _nextSkinId: number;
+    /**
+     * Create a new bitmap skin from a snapshot of the provided bitmap data
+     * @param bitmapData {HTMLImageElement} - new contents for this skin.
+     * @param costumeResolution {number} - The resolution to use for this bitmap
+     * @param rotationCenter {TPositionArray} - rotation center of the skin
+     */
+    createBitmapSkin(bitmapData: HTMLImageElement, costumeResolution?:number, rotationCenter?:TPositionArray): nubmer;
+    /**
+     * Create a new SVG skin.
+     * @param svgData {string} - new SVG to use.
+     * @param rotationCenter {TPositionArray} - rotation center of the skin
+     */
+    createSVGSkin(svgData: string, rotationCenter?: TPositionArray): number;
     /**
      * Bounds 取得
      * @param drawableID { number }

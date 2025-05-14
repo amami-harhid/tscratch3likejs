@@ -45,7 +45,7 @@
     "core-js": "^3.42.0",
     "regenerator-runtime": "^0.14.1",
     "scratch-audio": "^2.0.139",
-    "scratch-render": "^2.0.342",
+    "scratch-render": "^0.1.0-prerelease.20211028200436",
     "twgl.js": "^4.4.0"
   }
 }
