@@ -44,7 +44,7 @@ export class Monitor extends Entity {
         const me = this;
         const runtime = this.playGround.runtime;
         if(runtime == undefined) throw 'Not Found runtime error';
-        runtime.on(Monitor.Events.DROP_START, (senderDrawableID)=>{
+        runtime.on(Monitor.Events.DROP_START, (senderDrawableID:number)=>{
             if( me.drawableID === senderDrawableID) {
                 // DROP開始したモニターは階層最上位にする
                 me.renderer.setDrawableOrder(me.drawableID, Infinity, 

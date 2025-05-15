@@ -32,9 +32,9 @@ const ButtonIconSrc = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmN
 
 export class QuestionBoxElement extends EventEmitter {
     /** 質問ボックス完了フラグ */
-    public static QuestionBoxForceComplete: boolean;
+    public static QuestionBoxForceComplete: string = "QuestionBoxForceComplete";
     /** 入力テキスト */
-    private static TextInputComplete: string;
+    private static TextInputComplete: string = "TextInputComplete";
     private forceComplete: boolean;
     private playGround: PlayGround;
     /**
@@ -181,7 +181,7 @@ export class QuestionBoxElement extends EventEmitter {
         }
         const me = this;
         input.addEventListener('input', inputChange);
-        const keyPress = function(e){
+        const keyPress = function(e: KeyboardEvent){
             if( e.key == 'Enter'){
                 me.emit(QuestionBoxElement.TextInputComplete);
                 return;

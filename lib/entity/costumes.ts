@@ -1,5 +1,5 @@
 /**
- * Render
+ * Costumes
  */
 import { Env } from "../env";
 import { ImageLoader } from "../importer/imageLoader";
@@ -91,9 +91,9 @@ export class Costumes {
         }
         throw 'unable to execute createBitmapSkin';
     }
-    setRotationStyle ( _style: RotationStyle ) {
-        if( this._rotationStylePatterns.includes( _style ) ) {
-            this._rotationStyle = _style;
+    setRotationStyle ( style: RotationStyle ) {
+        if( this._rotationStylePatterns.includes( style ) ) {
+            this._rotationStyle = style;
         }
     }
     setDirection( direction:number) {

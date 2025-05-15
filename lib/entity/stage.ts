@@ -1,10 +1,22 @@
-//@ts-nocheck
+/**
+ * Stage
+ */
+import { Backdrops } from "./backdrops";
 import { Entity } from "./entity";
 import { QuestionBoxElement } from "../io/questionBoxElement";
+import { Sprite } from "./sprite";
 import { StageLayering } from "./stageLayering";
-
+import type { TEntityEffects, TEntityOptions } from './entityOptions';
+import type { TMouse } from "./TMouse";
+import type { TScale } from "../common/typeCommon";
 export class Stage extends Entity {
-    constructor( options ) {
+    private scale: TScale;
+    private direction: number;
+    public backdrops: Backdrops;
+    private _sprites: Sprite[];
+    //private skinIdx: number;
+    public mouse: TMouse;
+    constructor( options:TEntityOptions ) {
         if(typeof options == "string") throw "new Stage() パラメータはオブジェクト型のみ"
         super( "stage", StageLayering.BACKGROUND_LAYER, options );
         this.effect = {
@@ -16,24 +28,24 @@ export class Stage extends Entity {
         this.direction = (options && options.direction)? options.direction : 90;
         this.scale = (options && options.scale)? {w: options.scale.w, h: options.scale.h} : {w:100, h:100};
 
-        this.keysCode = [];
-        this.keysKey = [];
-        this.backdrops = new this._libs.Backdrops(this.playGround);
+        //this.keysCode = [];
+        //this.keysKey = [];
+        this.backdrops = new Backdrops(this.playGround);
         this._sprites = [];
-        this.skinIdx = -1;
+        //this.skinIdx = -1;
         this.mouse = {scratchX:0, scratchY:0, x:0, y:0, down: false, pageX: 0, pageY: 0, clientX: 0, clientY: 0 };
         const me = this;
         // これは Canvasをつくる Element クラスで実行したほうがよさそう（関連性強いため）
         const canvas = this.playGround.canvas;
         const body = document.getElementById('main');
         if(body){
-            body.addEventListener('mousemove', (e) => {
+            body.addEventListener('mousemove', (e:MouseEvent) => {
                 me.mouse.pageX = e.pageX;
                 me.mouse.pageY = e.pageY;
                 e.stopPropagation()
             });    
         }
-        canvas.addEventListener('mousemove', (e) => {
+        canvas.addEventListener('mousemove', (e:MouseEvent) => {
             me.mouse.x = e.offsetX;
             me.mouse.y = e.offsetY;
 
@@ -45,13 +57,13 @@ export class Stage extends Entity {
 
 //            e.stopPropagation()
         }, {});
-        canvas.addEventListener('mousedown', (e) => {
+        canvas.addEventListener('mousedown', (e:MouseEvent) => {
             me.mouse.x = e.offsetX;
             me.mouse.y = e.offsetY;
             me.mouse.down = true;
             e.stopPropagation();
         })
-        canvas.addEventListener('mouseup', (e) => {
+        canvas.addEventListener('mouseup', (e:MouseEvent) => {
             me.mouse.x = e.offsetX;
             me.mouse.y = e.offsetY;
             me.mouse.down = false;
@@ -60,19 +72,19 @@ export class Stage extends Entity {
   
         this.playGround.stage = this;
     }
-    isSprite() {
+    isSprite(): boolean {
         return false;
     }
-    get sprites () {
+    get sprites (): Sprite[] {
         return this._sprites;
     }
-    addSprite (sprite) {
+    addSprite (sprite:Sprite): void {
         const curSprite = sprite;
         this._sprites.push( curSprite );
         curSprite.z = this._sprites.length
         this._sortSprites();
     }
-    _sortSprites() {
+    _sortSprites(): void {
         const n0_sprites = this._sprites;
         const n1_sprites = n0_sprites.sort( function( a, b ) {
             if (a.z > b.z) return -1;
@@ -89,13 +101,13 @@ export class Stage extends Entity {
         this._sprites = n2_sprites;
 
     }
-    removeSprite ( sprite ) {
+    removeSprite ( sprite: Sprite ): void {
         const curSprite = sprite;
         const n_sprites = this._sprites.filter( ( item ) => item !== curSprite );
         this._sprites = n_sprites;
         this._sortSprites();
     }
-    update() {
+    update(): void {
         super.update();
         this.backdrops.setPosition(this.$_position.x, this.$_position.y);
         this.backdrops.setScale(this.scale.w, this.scale.h);
@@ -105,57 +117,66 @@ export class Stage extends Entity {
             _sprite.update();
         }        
     }
-    draw() {
+    draw(): void {
         this.render.renderer.draw();
     }
-    sendSpriteBackwards (sprite) {
-        // 工事中
+    // sendSpriteBackwards (sprite) {
+    //     // 工事中
     
-    }
-    sendSpriteForward (sprite) {
-        // 工事中
-    }
-    sendSpriteToFront (sprite) {
-        // 工事中
-    }
-    sendSpriteToBack (sprite) {
-        // 工事中
-    }
-    isKeyPressed (userKey) {
-        let match = false
-        let check
+    // }
+    // sendSpriteForward (sprite) {
+    //     // 工事中
+    // }
+    // sendSpriteToFront (sprite) {
+    //     // 工事中
+    // }
+    // sendSpriteToBack (sprite) {
+    //     // 工事中
+    // }
+
+    // isKeyPressed (userKey) {
+    //     let match = false
+    //     let check
     
-        typeof userKey === 'string' ? check = userKey.toLowerCase() : check = userKey
-        this.keysKey.indexOf(check) !== -1 ? match = true : null
-        this.keysCode.indexOf(check) !== -1 ? match = true : null
+    //     typeof userKey === 'string' ? check = userKey.toLowerCase() : check = userKey
+    //     this.keysKey.indexOf(check) !== -1 ? match = true : null
+    //     this.keysCode.indexOf(check) !== -1 ? match = true : null
     
-        return match
-    }
-    move(x,y) {
-        this.$_position.x = x;
-        this.$_position.y = y;
-        this.backdrops.setPosition(this.$_position.x, this.$_position.y);
-    }
-    async loadSound(name,soundUrl, options={}) {
-        await this._loadSound(name, soundUrl, options);
-    }
-    async loadImage(name, imageUrl) {
-        this._loadImage(name, imageUrl, this.backdrops);
-    }
-    async $addSound(soundData) {
+    //     return match
+    // }
+
+    // move(x,y) {
+    //     this.$_position.x = x;
+    //     this.$_position.y = y;
+    //     this.backdrops.setPosition(this.$_position.x, this.$_position.y);
+    // }
+
+    // async loadSound(name,soundUrl, options={}) {
+    //     await this._loadSound(name, soundUrl, options);
+    // }
+    // async loadImage(name, imageUrl) {
+    //     this._loadImage(name, imageUrl, this.backdrops);
+    // }
+
+    /**
+     * サウンド名をもとに、ステージへサウンドを追加する
+     * @param soundName {string}
+     * @returns {Promise<void>}
+     */
+    async $addSound(soundName:string): Promise<void> {
         if(arguments.length > 1){
             throw "Sound.add 引数が多い";
         }
         let _soundData;
-        if(soundData == undefined){
+        if(soundName == undefined){
             throw "【Stage.Sound.add】サウンドデータの指定がありません"
-        }else if(soundData == undefined || typeof soundData == "string"){
-            _soundData = this.playGround.loadedSounds[soundData];
+        }else if(soundName == undefined || typeof soundName == "string"){
+            _soundData = this.playGround.loadedSounds[soundName];
             if(_soundData == undefined){
                 throw "【Stage.Sound.add】正しいサウンド名を指定してください"
             }
         }else{
-            _soundData = soundData;
+            throw "【Stage.Sound.add】正しいサウンド名を指定してください"
         }
 
         if(_soundData['name'] == undefined || _soundData['data'] == undefined ){
@@ -166,20 +187,26 @@ export class Stage extends Entity {
         const promise = this._addSound(name, data, {})
         return promise;
     }
-    async $addImage(imageData) {
+    /**
+     * イメージ名を使ってイメージをステージへ追加する
+     * @param imageData {string}
+     * @returns {Promise<void>}
+     */
+    async $addImage(imageName: string): Promise<void> {
         if(arguments.length > 1){
             throw "Image.add 引数が多い";
         }
         let _imageData;
-        if(imageData == undefined){
+        if(imageName == undefined){
             throw "【Stage.Image.add】イメージデータの指定がありません"
-        }else if(typeof imageData == "string"){
-            _imageData = this.playGround.loadedImages[imageData];
+        }else if(typeof imageName == "string"){
+            _imageData = this.playGround.loadedImages[imageName];
             if(_imageData == undefined){
                 throw "【Stage.Image.add】正しいイメージ名を指定してください"
             }
         }else{
-            _imageData = imageData;
+            throw "【Stage.Image.add】正しいイメージ名を指定してください"
+            //_imageData = imageData;
         }        
         if(_imageData['name'] == undefined || _imageData['data'] == undefined ){
             throw "【Stage.Image.add】正しいイメージデータを指定してください"
@@ -190,25 +217,28 @@ export class Stage extends Entity {
 
     }
     /**
-     * 
+     * イメージ名の配列を返す
      * @returns {string[]}
      */
-    $getImageNames() {
+    $getImageNames(): string[] {
         const iterator = this.backdrops.costumes.keys();
         return Array.from(iterator);
     }
     /**
-     * 
+     * 新しい名前の背景に切り替わったとき、イベント通知をする
      * @param {string} backdropName 
      * @param {string} newBackdropName 
      */
-    $emitWhenBackdropChange(backdropName, newBackdropName) {
+    $emitWhenBackdropChange(backdropName: string, newBackdropName: string) {
         // 新しい名前の背景に切り替わったとき
         if(backdropName !== newBackdropName){
             this.$broadCastBackdropSwitch(newBackdropName);
         }
     }
-    $nextBackDrop() {
+    /**
+     * 次の背景に切り替える
+     */
+    $nextBackDrop(): void {
         if(!this.isAlive()) return;
         if(this.backdrops){
             const name_before = this.backdrops.currentSkinName();
@@ -219,22 +249,22 @@ export class Stage extends Entity {
         //this.ifOnEdgeBounds();
     }
     /**
-     * 
-     * @param {string|number} val 
+     * 背景名、または背景番号で背景を切り替える
+     * @param {string|number} backdrop 
      */
-    $switchBackDrop( val ) {
+    $switchBackDrop( backdrop: string|number ): void {
         if(!this.isAlive()) return;
-        if( val ){
-            if( typeof val === 'string') {
-                const _name = val;
+        if( backdrop ){
+            if( typeof backdrop === 'string') {
+                const _name = backdrop;
                 if(this.backdrops) {
                     const name_before = this.backdrops.currentSkinName();
                     this.backdrops.switchCostumeByName(_name);
                     const name_after = this.backdrops.currentSkinName();
                     this.$emitWhenBackdropChange(name_before, name_after);
                 }
-            }else if( Number.isInteger(val)) {
-                const _idx = val;
+            }else if( Number.isInteger(backdrop)) {
+                const _idx = backdrop;
                 if(this.backdrops){
                     const name_before = this.backdrops.currentSkinName();
                     this.backdrops.switchCostumeByNumber(_idx);
@@ -244,6 +274,9 @@ export class Stage extends Entity {
             }    
         }
     }
+    /**
+     * ステージを削除する、同時にスプライトを全て削除する
+     */
     remove() {
         for(const _s of this.sprites){
             _s.remove();
@@ -261,11 +294,11 @@ export class Stage extends Entity {
         this.$delete();
     }
     /**
-     * 
+     * 質問をして答えを待つ
      * @param {string} text 
      * @returns {Promise<string>}
      */
-    async $askAndWait(text) {
+    async $askAndWait(text: string): Promise<string> {
         const question = new QuestionBoxElement();
         const me = this;
         return new Promise<string>(async resolve=>{
@@ -274,9 +307,11 @@ export class Stage extends Entity {
         });
     }
     /**
+     * 背景番号、背景名を取り出すためのオブジェクト
+     * 使用例：this.Backdrop.no, this.Backdrop.name
      * @returns {{no: number, name: string}}
      */
-    get Backdrop() {
+    get Backdrop(): {"no": number, "name": string}{
         const stage = this;
         const backdrop = {"no": 0, "name": ""};
         Object.defineProperty(backdrop, "no", {
@@ -295,9 +330,12 @@ export class Stage extends Entity {
 
     }
 
-    get L() {
-        return this.Looks;
-    }
+    // get L() {
+    //     return this.Looks;
+    // }
+    /**
+     * 見た目
+     */
     get Looks(){
         return {
             "Backdrop" : this.Backdrop,
@@ -309,9 +347,12 @@ export class Stage extends Entity {
 
         };
     }
-    get C() {
-        return this.Control;
-    }
+    // get C() {
+    //     return this.Control;
+    // }
+    /**
+     * 制御
+     */
     get Control() {
         return {
             "wait" : this.$waitSeconds.bind(this),    // Sprite --> Entityへ
@@ -327,6 +368,9 @@ export class Stage extends Entity {
             "stopOtherScripts" : this.$stopOtherScripts.bind(this),
         };
     }
+    /**
+     * 調べる
+     */
     get Sensing() {
         return {
             "askAndWait": this.$askAndWait.bind(this),
@@ -343,9 +387,14 @@ export class Stage extends Entity {
 //            "getTouchingTarget": this.getTouchingTarget.bind(this),
         }
     }
-    get E() {
-        return this.Event;
-    }
+
+    // get E() {
+    //     return this.Event;
+    // }
+
+    /**
+     * イベント
+     */
     get Event() {
         return {
             "broadcast" : this.$broadcast.bind(this),
@@ -366,12 +415,20 @@ export class Stage extends Entity {
 
         }
     }
+
+    /**
+     * イメージ
+     */
     get Image() {
         return {
             "add": this.$addImage.bind(this),
             "names" : this.$getImageNames.bind(this),
         }
     }
+
+    /**
+     * サウンド
+     */
     get Sound() {
         return {
             "add": this.$addSound.bind(this),

@@ -5,7 +5,7 @@ import { Monitor } from "./monitor";
 import { Libs } from "../controls/libs";
 import { S3MonitorSkin } from "./s3MonitorSkin";
 import { PlayGround } from "../playGround";
-import type { IRenderWebGL } from "lib/render/IRenderWebGL";
+//import type { IRenderWebGL } from "lib/render/IRenderWebGL";
 
 export class Monitors {
     private _monitors: Monitor[];
@@ -45,11 +45,12 @@ export class Monitors {
         this._playGround.monitors = this;
     }
     /**
-     * add
+     * IDとラベルを指定して モニターを追加する.
+     * IDが重複する場合は追加しない.
      * @param {string} monitorId - Monitor id 
      * @param {string} label - Monitor label 
      */
-    add(monitorId, label) {
+    add(monitorId: string, label: string): void {
         for(const _monitor of this._monitors){
             if(monitorId === _monitor.monitorId) {
                 return;
@@ -59,7 +60,12 @@ export class Monitors {
         monitor.createTextSkin();
         this._monitors.push(monitor);
     }
-    get(monitorId){
+    /**
+     * 指定したIDのモニターを返す
+     * @param monitorId {string}
+     * @returns {Monitor}
+     */
+    get(monitorId: string): Monitor{
         for(const _monitor of this._monitors){
             if(monitorId === _monitor.monitorId){
                 return _monitor;
@@ -67,7 +73,11 @@ export class Monitors {
         }
         throw `指定した${monitorId}のMonitorはありません`;
     }
-    show(monitorId){
+    /**
+     * 指定したIDのモニターを表示する
+     * @param monitorId 
+     */
+    show(monitorId: string){
         for(const _monitor of this._monitors){
             if(monitorId === _monitor.monitorId){
                 _monitor.show();
@@ -76,7 +86,11 @@ export class Monitors {
         }
         throw `指定した${monitorId}のMonitorはありません`;
     }
-    hide(monitorId){
+    /**
+     * 指定したIDのモニターを隠す
+     * @param monitorId {string}
+     */
+    hide(monitorId: string){
         for(const _monitor of this._monitors){
             if(monitorId === _monitor.monitorId){
                 _monitor.hide();
@@ -85,6 +99,9 @@ export class Monitors {
         }
         throw `指定した${monitorId}のMonitorはありません`;
     }
+    /**
+     * 全てのMonitorを描画する
+     */
     draw() {
         for(const _monitor of this._monitors){
             _monitor.draw();

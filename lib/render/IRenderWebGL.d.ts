@@ -91,6 +91,10 @@ export declare interface IRenderWebGL {
      */
     destroySkin(skinId: number): void;
     /**
+     * Draw all current drawables and present the frame on the canvas
+     */
+    draw(): void;
+    /**
      * Update the position object's x & y members to keep the drawable fenced in view.
      * @param drawableID {number} - the id of the Drawable to update.
      * @param position {TPositionArray} - position to be fenced - An array of type [x, y]

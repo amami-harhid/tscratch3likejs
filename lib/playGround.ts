@@ -34,6 +34,7 @@ export class PlayGround {
     private _lib: Libs;
     private _nowLoading: string;
     public runningGame: boolean;
+    private _stage: Stage;
     constructor () {
         this._render = null;
         this._id = this._generateUUID();
