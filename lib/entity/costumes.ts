@@ -242,7 +242,7 @@ export class Costumes {
             this.render.renderer.updateDrawableProperties( drawableID, properties );
         }
     }
-    isSvgSkin( skinId ) {
+    isSvgSkin( skinId: number ): boolean {
         if(this.render && this.render.renderer){
             const _skin = this.render.renderer._allSkins[ skinId ];
             if( _skin && _skin.constructor.name == 'SVGSkin' ) {
@@ -251,7 +251,7 @@ export class Costumes {
         }
         return false;
     }
-    isSvgComplete( skinId: number) {
+    isSvgComplete( skinId: number): boolean {
         if(this.render && this.render.renderer){
             const _skin = this.render.renderer._allSkins[ skinId ];
             if(_skin && _skin.constructor.name == 'SVGSkin'){

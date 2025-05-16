@@ -2,6 +2,7 @@
  * Sprite
  */
 import { Bubble } from "./bubble";
+import { DroppableEntity } from "./droppableEntity";
 import { Entity } from "./entity";
 import { Env } from "../env";
 import { MathUtil } from "../util/math-util";
@@ -16,7 +17,7 @@ import type { TEntityEffects, TEntityOptions } from './entityOptions';
 import type { S3ImageData,S3SoundData } from "../common/typeCommon";
 //import { Backdrops } from "./backdrops";
 
-export class Sprite extends Entity {
+export class Sprite extends DroppableEntity {
     private bubble?: Bubble;
     protected costumes?: Costumes;
     private stage: Stage;
@@ -168,7 +169,7 @@ export class Sprite extends Entity {
             if(this.imageDatas){
                 for(const d of this.imageDatas) {
                     // svg image の場合、createSVGSkin の中で非同期になることに注意すること
-                    await newSprite.$addImage(d); 
+                    await newSprite.$addImage(d.name); 
                 }    
             }
             if(this.costumes){
@@ -184,7 +185,7 @@ export class Sprite extends Entity {
                     _soundData.name = d.name;
                     _soundData.data = d.data;
                     //const _options = d.options;
-                    if(this.soundDatas) await newSprite.$addSound(_soundData);
+                    if(this.soundDatas) await newSprite.$addSound(_soundData.name);
                     //await newSprite.$addSound(_soundData);
                     // options引き継ぐ
                     const _vol = this.$getSoundVolume();
@@ -262,15 +263,17 @@ export class Sprite extends Entity {
      */
     update() {
         super.update();
-        //const _renderer = this.render.renderer;
-        this._costumeProperties(this);
-        //_renderer.updateDrawablePosition(this.drawableID, this.$_position);
-        // スプライトを消すとき bubbleを参照できない
-        if(this.bubble){
-            if(Env.bubbleScaleLinkedToSprite === true) {
-                this.bubble.updateScale(this.$_scale.w, this.$_scale.h);
+        if(this.dropping === false) {
+            //const _renderer = this.render.renderer;
+            this._costumeProperties(this);
+            //_renderer.updateDrawablePosition(this.drawableID, this.$_position);
+            // スプライトを消すとき bubbleを参照できない
+            if(this.bubble){
+                if(Env.bubbleScaleLinkedToSprite === true) {
+                    this.bubble.updateScale(this.$_scale.w, this.$_scale.h);
+                }
+                this.bubble.moveWithSprite();    
             }
-            this.bubble.moveWithSprite();    
         }
     }
     /**
@@ -905,7 +908,7 @@ export class Sprite extends Entity {
      * @returns 
      */
     async $addImage(imageName: string): Promise<void> {
-        let _imageData;
+        let _imageData:S3ImageData;
         if(imageName == undefined){
             throw "【Sprite.Image.add】イメージデータの指定がありません"
         }else if(typeof imageName == "string"){

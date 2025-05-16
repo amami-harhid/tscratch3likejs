@@ -1154,13 +1154,25 @@ export class Entity extends EventEmitter {
         this.$_direction = direction;
     }
     /**
+     * SkinId を返す
+     * @param drawableID {number}
+     * @returns 
+     */
+    getSkinId(drawableID: number) : number {
+        const drawable = this.render.renderer._allDrawables[drawableID];
+        if( drawable && drawable.skin ){
+            return drawable.skin.id;
+        }
+        return -1;
+
+    }
+    /**
      * Drawable が存在してSkinがあるかを判定する
      * @param drawableID {number}
      * @returns {boolean}
      */
     $_isDrawableActive(drawableID: number): boolean {
-        const drawable = this.render.renderer._allDrawables[drawableID];
-        if( drawable && drawable.skin ){
+        if( this.getSkinId(drawableID) > 0 ){
             return true;
         }
         return false;

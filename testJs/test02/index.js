@@ -45,6 +45,7 @@ Pg.prepare = async function prepare() {
     ball = new Lib.Sprite('ball');
     await ball.Image.add( BallA );
     ball.Looks.setSize(50, 50);
+    ball.dropEnable = true;
 
     paddle = new Lib.Sprite("paddle");
     //paddle.visible = false;
