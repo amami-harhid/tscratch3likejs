@@ -11,39 +11,39 @@ export class DroppableEntity extends Entity {
     }
     private _eventRegisted: boolean;
     private _moveDistance: {x?:number, y?:number};
-    private _dropEnable : boolean;
-    private _dropping: boolean;
+    private _draggable : boolean;
+    private _nowDragging: boolean;
     constructor(name: string, layer: string, options?:TEntityOptions) {
         super(name, layer, options);
         this._moveDistance = {};
         this._eventRegisted = false;
-        this._dropEnable = false;
-        this._dropping = false;
+        this._draggable = false;
+        this._nowDragging = false;
     }
     /**
-     * dropping getter
+     * nowDragging getter
      */
-    get dropping() : boolean {
-        return this._dropping;
+    get nowDragging() : boolean {
+        return this._nowDragging;
     }
     /**
-     * dropping setter
+     * nowDragging setter
      */
-    set dropping(_dropping: boolean) {
-        this._dropping = _dropping;
+    set nowDragging(_nowDragging: boolean) {
+        this._nowDragging = _nowDragging;
     }
     /**
-     * dropEnable getter
+     * draggable getter
      */
-    get dropEnable() : boolean {
-        return this._dropEnable;
+    get draggable() : boolean {
+        return this._draggable;
     }
     /**
      * dropEnable setter
      */
-    set dropEnable(_dropEnable: boolean) {
-        this._dropEnable = _dropEnable;
-        this._event(_dropEnable);
+    set draggable(_draggable: boolean) {
+        this._draggable = _draggable;
+        this._event(_draggable);
     }
     eventFunction() : {[key:string] : CallableFunction}{
         const me = this;
@@ -73,33 +73,36 @@ export class DroppableEntity extends Entity {
      */
     _event( regist : boolean = true ) {
         const runtime = this.playGround.runtime;
-        if(runtime == undefined) throw 'Not Found runtime error';
-        const {dropStart, dropComplete} = this.eventFunction();       
-        // イベント登録未のとき
-        if(this._eventRegisted === false){
-            if(regist===true){
-                runtime.on(DroppableEntity.Events.DROP_START, dropStart);
-                runtime.on(DroppableEntity.Events.DROP_COMPLETE, dropComplete);
-                // イベント登録済
-                this._eventRegisted = true;     
+        if(runtime){
+            const {dropStart, dropComplete} = this.eventFunction();       
+            // イベント登録未のとき
+            if(this._eventRegisted === false){
+                if(regist===true){
+                    runtime.on(DroppableEntity.Events.DROP_START, dropStart);
+                    runtime.on(DroppableEntity.Events.DROP_COMPLETE, dropComplete);
+                    // イベント登録済
+                    this._eventRegisted = true;     
+                }
+            }else{
+                if(regist === false) {
+                    runtime.removeListener(DroppableEntity.Events.DROP_START, dropStart);
+                    runtime.removeListener(DroppableEntity.Events.DROP_COMPLETE, dropComplete);
+                    // イベント登録無し
+                    this._eventRegisted = false;
+                }
             }
         }else{
-            if(regist === false) {
-                runtime.removeEventListener(DroppableEntity.Events.DROP_START, dropStart);
-                runtime.removeEventListener(DroppableEntity.Events.DROP_COMPLETE, dropComplete);
-                // イベント登録無し
-                this._eventRegisted = false;
-            }
-        }
+            throw 'Not Found runtime error';
+        } 
     }
     _drop() {
-        if(this._dropEnable === false) return;
+        if(this._draggable === false) return;
         const runtime = this.playGround.runtime;
         if(runtime == undefined) throw 'Not found runtime error';
         if( this._moveDistance.x == undefined && this._moveDistance.y == undefined ) {
             if(this.$isMouseTouching() && this.$isMouseDown()){
                 runtime.emit(DroppableEntity.Events.DROP_START, this.drawableID);
-                this._dropping = true;
+                this._nowDragging = true;
             }
         }else{
             if(this.$isMouseDown() && this._moveDistance.x && this._moveDistance.y){
@@ -109,7 +112,7 @@ export class DroppableEntity extends Entity {
             }else{
                 runtime.emit(DroppableEntity.Events.DROP_COMPLETE);
                 this._moveDistance = {};
-                this._dropping = false;
+                this._nowDragging = false;
             }
         }
     }
@@ -131,8 +134,27 @@ export class DroppableEntity extends Entity {
     
     update() {
         super.update();
-        if( this._dropEnable === true){
+        if( this._draggable === true){
             this._drop();
         }
+    }
+
+    /**
+     * DragModeを設定するためのオブジェクト
+     * @returns {{draggable: boolean}}
+     */
+    get DragMode(): {"draggable": boolean} {
+        const draggable = {"draggable": false};
+        const me = this;
+        Object.defineProperty(draggable, "draggable", {
+            get : function() {
+                return me.draggable;
+            },
+            set : function(_draggable) {
+                return me.draggable = _draggable;
+            },
+        });
+        return draggable;
+
     }
 }

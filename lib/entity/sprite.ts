@@ -110,6 +110,16 @@ export class Sprite extends DroppableEntity {
         this.$delete();
     }
     /**
+     * クローンを全て削除する。
+     */
+    $removeClones() {
+        if(this.clones) {
+            for(const clone of this.clones) {
+                clone.$remove();
+            }
+        }
+    }
+    /**
      * スプライトが生存していることを判定する
      * @returns {boolean}
      */
@@ -263,7 +273,7 @@ export class Sprite extends DroppableEntity {
      */
     update() {
         super.update();
-        if(this.dropping === false) {
+        if(this.nowDragging === false) {
             //const _renderer = this.render.renderer;
             this._costumeProperties(this);
             //_renderer.updateDrawablePosition(this.drawableID, this.$_position);
@@ -1320,6 +1330,7 @@ export class Sprite extends DroppableEntity {
             "waitWhile": this.$waitWhile.bind(this),
             "cloneAndWait": this.$cloneAndWait.bind(this),
             "clone": this.$clone.bind(this),
+            "removeAllClones": this.$removeClones.bind(this),
             "whenCloned": this.$whenCloned.bind(this),
             //---- Entity
             "forever": this.forever.bind(this),
@@ -1404,6 +1415,7 @@ export class Sprite extends DroppableEntity {
             "getTouchingSprites": this.$getTouchingTarget.bind(this),
             "isTouchingToColor" : this.$isTouchingColor.bind(this),
             "colorIsTouchingToColor" : this.$colorIsTouchingColor.bind(this),
+            "DragMode": this.DragMode,
         }
     }
     // get E() {

@@ -45,7 +45,7 @@ Pg.prepare = async function prepare() {
     ball = new Lib.Sprite('ball');
     await ball.Image.add( BallA );
     ball.Looks.setSize(50, 50);
-    ball.dropEnable = true;
+    ball.Sensing.DragMode.draggable = true;
 
     paddle = new Lib.Sprite("paddle");
     //paddle.visible = false;
@@ -79,7 +79,7 @@ Pg.setting = async function setting() {
         }
     });
     // 緑の旗が押されたときの動作
-    ball.Event.whenFlag(async function(){
+    ball.Event.whenFlag(async function*(){
         this.Motion.gotoXY(0,-100);
         this.Looks.setSize(50, 50);
     });
@@ -157,6 +157,7 @@ Pg.setting = async function setting() {
     let blockCount = 0;
     // 緑の旗が押されたときの動作
     block.Event.whenFlag( async function*(){
+        this.Control.removeAllClones();
         this.Looks.hide();
         this.Looks.setSize({w:50, h:50});
         this.Motion.gotoXY(-220,180);

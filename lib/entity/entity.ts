@@ -710,7 +710,7 @@ export class Entity extends EventEmitter {
      * @param {*} messageId 
      * @param {*} func 
      */
-    $whenBroadcastReceived(messageId, func){
+    $whenBroadcastReceived(messageId: string, func: CallableFunction){
         //const me = this;
         const me = this.getProxyForHat();
         const threadId = me._generateUUID();
@@ -768,13 +768,15 @@ export class Entity extends EventEmitter {
             }    
         }
     };
-    _whenBroadcastReceivedStartThread(eventId, modules, funcElement,...args){
+    _whenBroadcastReceivedStartThread(eventId:string, modules, funcElement,...args){
         const arr = modules.get(eventId);
         const func = funcElement.func;
         const threadId = funcElement.threadId;
         const proxy = funcElement.target;
         //const proxy = me.getProxyForHat();
         proxy.threadId = threadId;
+        // [stopThisScriptSwitch]初期化しておかないと再度のBroadcastReceived時に例外発生する。
+        proxy.stopThisScriptSwitch = false;
         const obj = proxy.startThreadMessageRecieved(func, proxy, false, ...args);                    
         obj.originalF = func;
         const promise = new Promise<void>(async resolve=>{
@@ -789,7 +791,7 @@ export class Entity extends EventEmitter {
         arr.push(promise);
     }
     // すぐに実行する
-    $whenRightNow(func) {
+    $whenRightNow(func: CallableFunction) {
         const functionDeclareType = FunctionChecker.getFunctionDeclares(func);
         if( functionDeclareType.isArrow === true ){
             // アロー関数は許可しない
@@ -820,7 +822,7 @@ export class Entity extends EventEmitter {
             _p._draw();
         },0);
     }
-    $broadCastBackdropSwitch(backdropName) {
+    $broadCastBackdropSwitch(backdropName: string) {
         const messageId = `BackdropSwitches_${backdropName}`;
         this.$broadcast(messageId, backdropName);
     }
@@ -829,7 +831,7 @@ export class Entity extends EventEmitter {
      * @param {*} backdropName 
      * @param {*} func 
      */
-    $whenBackdropSwitches(backdropName, func) {
+    $whenBackdropSwitches(backdropName: string, func: CallableFunction) {
         // Stage#nextBackDrop(), Stage#switchBackDrop() にて
         // 変更前のbackdropName と 変更後のbackdropName を比較し
         // 異なる場合、変更後のbackdropNameを使ったメッセージID で emit する

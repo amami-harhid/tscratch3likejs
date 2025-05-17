@@ -47,6 +47,7 @@ Pg.prepare = async function prepare() {
     await ball.Image.add( BallA );
     //ball.Motion.setXY(0,-100);
     ball.Looks.setSize(50, 50);
+
     paddle = new Lib.Sprite("paddle");
     await paddle.Image.add( Paddle );
     paddle.Motion.gotoXY(0, -140);
@@ -84,12 +85,16 @@ Pg.setting = async function setting() {
     // メッセージ(Start)を受け取ったときの動作
     ball.Event.whenBroadcastReceived('Start', async function*(this:S3Sprite){
         score = 0;
+        this.Sensing.DragMode.draggable = true;
         this.Motion.pointInDirection(InitDirection);
         this.Motion.gotoXY(0,-100);
         // フキダシを出す
-        this.Looks.say('パドルはマウスで動くよ。何かのキーを押すと始まるよ');
+        await this.Looks.sayForSecs('パドルはマウスで動くよ。', 1);
+        await this.Looks.sayForSecs('ボールはドラッグして位置を変更できるよ', 1);
+        await this.Looks.sayForSecs('何かのキーを押すと始まるよ', 1);
         // 何かキーが押されるまで待つ
         await this.Control.waitUntil(()=>Lib.anyKeyIsDown());
+        this.Sensing.DragMode.draggable = false;
         // フキダシを消す
         this.Looks.say('');
         for(;;){
@@ -105,8 +110,20 @@ Pg.setting = async function setting() {
     // メッセージ(Start)を受け取ったときの動作
     ball.Event.whenBroadcastReceived('Start', async function*(this:S3Sprite){
         for(;;){
+            // パドルに触れたとき跳ね返る
             if( this.Sensing.isTouchingToSprite(paddle)){
-                this.Motion.turnRightDegrees( Lib.getRandomValueInRange(-2, 2)+180 );
+                const degree = this.Motion.Direction.degree;
+                const paddleDemensions = paddle.Looks.drawingDimensions();
+                const paddleLimitWidth = paddleDemensions.width * 0.3;
+                const paddleX = paddle.Motion.Position.x;
+                const ballX = this.Motion.Position.x;
+                if(ballX < (paddleX - paddleLimitWidth)){
+                    this.Motion.turnRightDegrees( Lib.getRandomValueInRange(-30, -15) -degree );
+                }else if((paddleX+paddleLimitWidth)<ballX){
+                    this.Motion.turnRightDegrees( Lib.getRandomValueInRange(15, 30) -degree );
+                }else{
+                    this.Motion.turnRightDegrees( Lib.getRandomValueInRange(-15, 15) -degree );
+                }
                 this.Motion.moveSteps(BallSpeed*2);
                 await this.Control.wait(0.2); // 0.2秒待つ
             }
@@ -137,7 +154,7 @@ Pg.setting = async function setting() {
     })
     // メッセージ(Start)を受け取ったときの動作
     paddle.Event.whenBroadcastReceived('Start', async function*(this:S3Sprite){
-        while(true){
+        for(;;){
             const mousePos = Lib.mousePosition;
             const selfPosition = this.Motion.getCurrentPosition();
             this.Motion.gotoXY(mousePos.x, selfPosition.y);
@@ -152,6 +169,8 @@ Pg.setting = async function setting() {
     let blockCount = 0;
     // 緑の旗が押されたときの動作
     block.Event.whenFlag( async function*(this:S3Sprite){
+        // blockのクローンを全て削除(旗クリックを再度行うときにキレイな状態で始めるため)
+        this.Control.removeAllClones();
         this.Looks.hide();
         this.Looks.setSize({w:50, h:50});
         this.Motion.gotoXY(-220,180);
@@ -178,14 +197,15 @@ Pg.setting = async function setting() {
                 score += 1;
                 this.Event.broadcast('ballTouch');
                 this.Sound.play(Pew);
+                this.Looks.hide();
                 if(score == blockCount) {
                     this.Event.broadcast(YouWon);
-                    this.Control.stopThisScript();
                 }
                 break;
             }    
             yield;
         }
+        await this.Control.wait(0.5);
         this.Control.remove();
     });
     // 緑の旗が押されたときの動作

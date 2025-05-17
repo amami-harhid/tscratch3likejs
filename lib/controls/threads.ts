@@ -96,6 +96,16 @@ export class Threads {
         this.threadArr.push( obj );
     }
     async startAll() {
+        // 自動例外発生設定をクリアする
+        // for(const obj of this.threadArr){
+        //     if(obj.entity){
+        //         // @ts-ignore undefined error (setStopThisScriptSwitch) 
+        //         obj.entity.setStopThisScriptSwitch(false);
+        //         // @ts-ignore undefined error (stopThisScriptSwitch) 
+        //         obj.entity.stopThisScriptSwitch = false;
+        //         console.log('自動例外発生設定をクリア')
+        //     }
+        // }
         this._startSwitch = true;
         if(this._intervalId != null) return; // この行の扱いは注意せよ！
         this._intervalId = setInterval(this.interval, INTERVAL, this);
@@ -170,7 +180,7 @@ export class Threads {
                 // 実行中のスレッドの途中の場合、
                 // Motion,Looks,Sound,Event,Control,Sensingを使ったときは
                 // Proxyのなかで例外を発生させる
-                // @ts-ignore undefined error (setStopThisScriptSwitch) 
+                // @ts-ignore undefined error (stopThisScriptSwitch) 
                 obj.entity.setStopThisScriptSwitch(true); // 【A】
                 // 「終わるまで音を鳴らす」が実行中の場合、音を強制停止させる
                 obj.entity.emit(obj.entity.SOUND_FORCE_STOP);

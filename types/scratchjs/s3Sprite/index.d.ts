@@ -26,6 +26,8 @@ declare interface S3SpriteControlFunctions extends S3ControlFunctions{
     whenCloned( func: CallableFunction ): void;
     /** 削除する */
     remove() : void;
+    /** クローンを全て削除する */
+    removeAllClones() : void;
     /** スプライトが生きている */
     alive() : boolean;
     /** スプライトの他のスクリプトを止める */
@@ -81,7 +83,7 @@ declare interface S3MotionFunctions {
     /** 〇度へ向ける */
     pointInDirection(degree: number) : void;
     /** 回転方法を〇にする */
-    setRotationStyle(rotationStyle: S3RotationStyleOptionType  ) : void;
+    setRotationStyle(rotationStyle: S3RotationStyle  ) : void;
     /** 指定した位置へ移動 */
     gotoXY(x: number , y:number) : void;
     /** 右側回転 */
@@ -104,6 +106,11 @@ declare interface S3SpriteDistance {
     toMousePointer : number;
     /** 他スプライトまでの距離 */
     to(otherSprite:S3Sprite) : number;
+}
+/** ドラッグモード */
+declare interface S3DragMode {
+    /** ドラッグできるときTRUE,ドラッグさせないときFALSE */
+    draggable : boolean;
 }
 /** 調べる系メソッド */
 declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
@@ -134,6 +141,8 @@ declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
      * @param maskRGB 自身のRGB文字列 (#始まりの16進数)
      */
     colorIsTouchingToColor(targetRGB: string, maskRGB: string): Promise<boolean>;
+    /** ドラッグモード */
+    DragMode: S3DragMode;
 
 }
 
