@@ -5,6 +5,7 @@ const twgl = require('twgl.js');
 import { EventEmitter } from "events";
 import { S3CanvasMeasurementProvider } from "./s3CanvasMeasurementProvider";
 import { MonitorRenderingConstants } from "./s3RenderConstants";
+import type { IDrawable } from "../render/IDrawable";
 import { S3Silhouette } from "./s3Silhouette";
 import type { IRenderWebGL } from "../render/IRenderWebGL";
 import type { TSize, TVec3 } from "../common/typeCommon";
@@ -199,16 +200,16 @@ export class S3MonitorSkin extends EventEmitter {
     /**
      * @return {int} the unique ID for this Skin.
      */
-    get id () {
+    get id () : number{
         return this._id;
     }
-    get rotationCenter () {
+    get rotationCenter () : TVec3 {
         return this._rotationCenter;
     }
     /**
      * @return {Array<number>} the "native" size, in texels, of this skin.
      */
-    get size () {
+    get size () : number[]{
         if (this._textDirty) {
             this._reflowLines();
         }
@@ -218,44 +219,44 @@ export class S3MonitorSkin extends EventEmitter {
      * Should this skin's texture be filtered with nearest-neighbor or linear interpolation at the given scale?
      * @param {?Array<Number>} scale The screen-space X and Y scaling factors at which this skin's texture will be
      * displayed, as percentages (100 means 1 "native size" unit is 1 screen pixel; 200 means 2 screen pixels, etc).
-     * @param {S3Drawable} drawable The drawable that this skin's texture will be applied to.
+     * @param {IDrawable} drawable The drawable that this skin's texture will be applied to.
      * @return {boolean} True if this skin's texture, as returned by {@link getTexture}, should be filtered with
      * nearest-neighbor interpolation.
      */
-    useNearest (scale, drawable) {
+    useNearest (scale: number[], drawable: IDrawable) :boolean {
         return true;
     }
 
-    get x () {
+    get x () :number{
         return this._x;
     }
-    get y () {
+    get y () :number{
         return this._y;
     }
-    set x (_x) {
+    set x (_x: number) {
         this._x = _x;
     }
-    set y (_y) {
+    set y (_y: number) {
         this._y = _y;
     }
     /**
      * textAreaSize
      * @return {{width:number, height:number}} textAreaSize 
      */
-    get textAreaSize() {
+    get textAreaSize() : TSize{
         return this._textAreaSize;
     }
     /**
      * Get the center of the current bounding box
      * @returns {Array<number>} the center of the current bounding box
      */
-    calculateRotationCenter () {
+    calculateRotationCenter (): number[] {
         return [this.size[0] / 2, this.size[1] / 2];
     }
     /**
      * @returns {HTMLCanvasElement}
      */
-    get canvas()  {
+    get canvas() : HTMLCanvasElement {
         if(this._canvas == undefined) throw 'canvas null error';
         return this._canvas;
 
