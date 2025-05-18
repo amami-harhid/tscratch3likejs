@@ -38,7 +38,7 @@ export class DragSprite {
     }
     async update(sprite:Sprite) : Promise<void> {
         if(this.draggable === false) return;
-        if(sprite.Sensing.isMouseTouching()) {
+        if(sprite.Sensing.isMouseTouching() && this.img == null) {
             const mouse = this.p.stage.mouse;
             if(!mouse.down) return;
             if(this.drag == null) {
@@ -48,11 +48,11 @@ export class DragSprite {
                 this.drag = this.dragging(this.img);
                 const main = this.p.main;
                 main.appendChild(this.img);
-                await this.libs.wait(500);
+                this.img.classList.remove('spriteDraggingHide');
+                //await this.libs.wait(500);
             }
         }
         if(this.drag && this.img) {
-            this.img.classList.remove('spriteDraggingHide');
             const ret = this.drag.next();
             if(ret.done === true) {
                 if(this.moveDistance){
@@ -62,6 +62,7 @@ export class DragSprite {
                 this.dropComplete();
                 sprite.Looks.show();
                 if(this.img) this.img.remove();
+                this.img = null;
                 this.drag = null;
                 return;
             }
@@ -93,6 +94,7 @@ export class DragSprite {
         const renderer = this.p.render.renderer;
         const drawableID = sprite.drawableID;
         const image = renderer.extractDrawableScreenSpace(drawableID);
+        sprite.$hide()
         const canvas = document.createElement('canvas');
         canvas.width = image.width;
         canvas.height = image.height;
@@ -104,14 +106,18 @@ export class DragSprite {
         const text = canvas.toDataURL();
         canvas.remove();
         const imgTag = document.createElement('img');
+        imgTag.onload = ()=>{
+            const pos = this.mousePositionOnWrapper(imgTag);
+            if(this.moveDistance){
+                // imgTag.style.left = `${pos.x-this.moveDistance.rX}px`;
+                // imgTag.style.top = `${pos.y+this.moveDistance.rY}px`;
+                imgTag.style.left = `${pos.x-this.moveDistance.rX}px`;
+                imgTag.style.top = `${pos.y+this.moveDistance.rY}px`;
+            }
+        }
         imgTag.classList.add('spriteDragging'); // CSS でFILTERなどを定義
         imgTag.classList.add('spriteDraggingHide');
         imgTag.src = text;
-        const pos = this.mousePositionOnWrapper(imgTag);
-        if(this.moveDistance){
-            imgTag.style.left = `${pos.x-this.moveDistance.rX}px`;
-            imgTag.style.top = `${pos.y+this.moveDistance.rY}px`;
-        }
        // imgTag.style.position = 'absolute'
         // imgTag.style.border = 'none';
         // imgTag.style.zIndex = '99999'; // <-- zIndex の数は整理しておくこと。
