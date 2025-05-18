@@ -90,14 +90,16 @@ Pg.setting = async function setting() {
         const main = document.getElementById('main');        
         const mousePositionOnWrapper = (imgTag) => {
             const renderRate = Lib.renderRate;
-            const x = Lib.mousePosition.x / renderRate.x + Pg.canvas.width/2;
-            const y = (Lib.mousePosition.y / renderRate.y - Pg.canvas.height/2)*(-1);
+            const mousePosition = {x:Pg.stage.mouse.pageX,y:Pg.stage.mouse.pageY};
+            const x = mousePosition.x;//Lib.mousePosition.x / renderRate.x + Pg.canvas.width/2;
+            const y = mousePosition.y;//(Lib.mousePosition.y / renderRate.y - Pg.canvas.height/2)*(-1);
             const canvas = document.getElementById('canvas');
             const rect = canvas.getBoundingClientRect();
             //const dimension = this.Looks.drawingDimensions();
             //const imgTag = document.getElementById('dragImg');
             const imgRect = imgTag.getBoundingClientRect();
-            return {x:x+rect.x-imgRect.width/2,y:y+rect.y-imgRect.height/2};
+            //return {x:x+rect.x-imgRect.width/2,y:y+rect.y-imgRect.height/2};
+            return {x:x-imgRect.width/2,y:y-imgRect.height/2};
         }
         const self = this;
         const createImg = function() {
@@ -123,15 +125,17 @@ Pg.setting = async function setting() {
         }
         const imgTag = createImg();
         imgTag.setAttribute('draggable', false);
-
+        const mouse = () => {
+            return Pg.stage.mouse;
+        }
         for(;;){
             if(this.Sensing.isMouseTouching()){
-                if(Lib.mouseIsPressed()){
+                if(mouse().down){
                     //main.addEventListener("mousemove", mouseOver);
                     //console.log('Mouse Touch and pressed')
                     main.appendChild(imgTag);
                     this.Looks.hide();
-                    for(;Lib.mouseIsPressed();){
+                    for(;mouse().down;){
                         const pos = mousePositionOnWrapper(imgTag);
                         imgTag.style.left = `${pos.x}px`;
                         imgTag.style.top = `${pos.y}px`;
