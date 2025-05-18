@@ -89,16 +89,10 @@ Pg.setting = async function setting() {
         //let imgTag;
         const main = document.getElementById('main');        
         const mousePositionOnWrapper = (imgTag) => {
-            const renderRate = Lib.renderRate;
             const mousePosition = {x:Pg.stage.mouse.pageX,y:Pg.stage.mouse.pageY};
             const x = mousePosition.x;//Lib.mousePosition.x / renderRate.x + Pg.canvas.width/2;
             const y = mousePosition.y;//(Lib.mousePosition.y / renderRate.y - Pg.canvas.height/2)*(-1);
-            const canvas = document.getElementById('canvas');
-            const rect = canvas.getBoundingClientRect();
-            //const dimension = this.Looks.drawingDimensions();
-            //const imgTag = document.getElementById('dragImg');
             const imgRect = imgTag.getBoundingClientRect();
-            //return {x:x+rect.x-imgRect.width/2,y:y+rect.y-imgRect.height/2};
             return {x:x-imgRect.width/2,y:y-imgRect.height/2};
         }
         const self = this;
@@ -116,26 +110,25 @@ Pg.setting = async function setting() {
             const text = canvas.toDataURL();
             canvas.remove();
             const imgTag = document.createElement('img');
-            imgTag.id = 'dragImg'
+            imgTag.classList.add('spriteDragging'); // CSS でFILTERなどを定義
             imgTag.src = text;
-            imgTag.style.position = 'absolute'
-            imgTag.style.border = 'none';
-            imgTag.style.zIndex = '99999';
+            // imgTag.style.position = 'absolute'
+            // imgTag.style.border = 'none';
+            // imgTag.style.zIndex = '99999'; // <-- zIndex の数は整理しておくこと。
+            imgTag.setAttribute('draggable', false);
             return imgTag;
         }
         const imgTag = createImg();
-        imgTag.setAttribute('draggable', false);
-        const mouse = () => {
-            return Pg.stage.mouse;
-        }
+        //imgTag.setAttribute('draggable', false);
         for(;;){
             if(this.Sensing.isMouseTouching()){
-                if(mouse().down){
+                const mouse = Pg.stage.mouse;
+                if(mouse.down){
                     //main.addEventListener("mousemove", mouseOver);
                     //console.log('Mouse Touch and pressed')
                     main.appendChild(imgTag);
                     this.Looks.hide();
-                    for(;mouse().down;){
+                    for(;mouse.down;){
                         const pos = mousePositionOnWrapper(imgTag);
                         imgTag.style.left = `${pos.x}px`;
                         imgTag.style.top = `${pos.y}px`;
