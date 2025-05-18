@@ -36,12 +36,12 @@ Pg.preload = async function preload() {
     this.Image.load('../../assets/GameOver.svg', GameOver );
 }
 Pg.prepare = async function prepare() {
-    const renderer = Pg.render.renderer;
-    const drawThese = renderer._drawThese;
-    renderer._drawThese = function(drawables, drawMode, projection, opts) {
-        const Silhouette = 'silhouette';
-        drawThese.bind(renderer)(drawables, Silhouette, projection, opts);
-    };
+    // const renderer = Pg.render.renderer;
+    // const drawThese = renderer._drawThese;
+    // renderer._drawThese = function(drawables, drawMode, projection, opts) {
+    //     const Silhouette = 'silhouette';
+    //     drawThese.bind(renderer)(drawables, Silhouette, projection, opts);
+    // };
  
 
     stage = new Lib.Stage();
@@ -51,7 +51,7 @@ Pg.prepare = async function prepare() {
     ball = new Lib.Sprite('ball');
     await ball.Image.add( BallA );
     ball.Looks.setSize(50, 50);
-    ball.Sensing.DragMode.draggable = true;
+    //ball.Sensing.DragMode.draggable = true;
 
     paddle = new Lib.Sprite("paddle");
     //paddle.visible = false;
@@ -81,6 +81,68 @@ Pg.setting = async function setting() {
         await this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
         for(;;){
             await this.Sound.playUntilDone(Chill);
+            yield;
+        }
+    });
+    // 緑の旗が押されたときの動作
+    ball.Event.whenFlag(async function*(){
+        //let imgTag;
+        const main = document.getElementById('main');        
+        const mousePositionOnWrapper = (imgTag) => {
+            const renderRate = Lib.renderRate;
+            const x = Lib.mousePosition.x / renderRate.x + Pg.canvas.width/2;
+            const y = (Lib.mousePosition.y / renderRate.y - Pg.canvas.height/2)*(-1);
+            const canvas = document.getElementById('canvas');
+            const rect = canvas.getBoundingClientRect();
+            //const dimension = this.Looks.drawingDimensions();
+            //const imgTag = document.getElementById('dragImg');
+            const imgRect = imgTag.getBoundingClientRect();
+            return {x:x+rect.x-imgRect.width/2,y:y+rect.y-imgRect.height/2};
+        }
+        const self = this;
+        const createImg = function() {
+            const renderer = Pg.render.renderer;
+            const drawableID = self.drawableID;
+            const image = renderer.extractDrawableScreenSpace(drawableID);
+            const canvas = document.createElement('canvas');
+            canvas.width = image.width;
+            canvas.height = image.height;
+            const ctx = canvas.getContext('2d');
+            const imageData = new ImageData(image.imageData.data, image.width, image.height);
+            ctx.putImageData(imageData, 0, 0);
+            ctx.drawImage(canvas, image.width, image.height);
+            const text = canvas.toDataURL();
+            canvas.remove();
+            const imgTag = document.createElement('img');
+            imgTag.id = 'dragImg'
+            imgTag.src = text;
+            imgTag.style.position = 'absolute'
+            imgTag.style.border = 'none';
+            imgTag.style.zIndex = '99999';
+            return imgTag;
+        }
+        const imgTag = createImg();
+        imgTag.setAttribute('draggable', false);
+
+        for(;;){
+            if(this.Sensing.isMouseTouching()){
+                if(Lib.mouseIsPressed()){
+                    //main.addEventListener("mousemove", mouseOver);
+                    //console.log('Mouse Touch and pressed')
+                    main.appendChild(imgTag);
+                    this.Looks.hide();
+                    for(;Lib.mouseIsPressed();){
+                        const pos = mousePositionOnWrapper(imgTag);
+                        imgTag.style.left = `${pos.x}px`;
+                        imgTag.style.top = `${pos.y}px`;
+                        yield;
+                    }
+                    this.Motion.Position.x = Lib.mousePosition.x;
+                    this.Motion.Position.y = Lib.mousePosition.y;
+                    this.Looks.show();
+                    imgTag.remove();
+                }
+            }
             yield;
         }
     });

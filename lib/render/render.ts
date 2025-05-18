@@ -53,7 +53,7 @@ export class Render {
         return Render.playGround;
     }
     /** PlayGroundのSetter @param {PlayGround} playGround */
-    static set p(playGround){
+    static set p(playGround: PlayGround){
         Render.playGround = playGround;
     }
     private layerGroups: StageLayering[];
