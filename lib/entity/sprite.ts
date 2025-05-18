@@ -3,6 +3,7 @@
  */
 import { Bubble } from "./bubble";
 import { DroppableEntity } from "./droppableEntity";
+import {DragSprite} from "./dragSprite";
 import { Entity } from "./entity";
 import { Env } from "../env";
 import { MathUtil } from "../util/math-util";
@@ -17,7 +18,7 @@ import type { TEntityEffects, TEntityOptions } from './entityOptions';
 import type { S3ImageData,S3SoundData } from "../common/typeCommon";
 //import { Backdrops } from "./backdrops";
 
-export class Sprite extends DroppableEntity {
+export class Sprite extends Entity {
     private bubble?: Bubble;
     protected costumes?: Costumes;
     private stage: Stage;
@@ -32,6 +33,7 @@ export class Sprite extends DroppableEntity {
     private touchingEdge: boolean;
     public bubbleDrawableID: string;
     public _bubbleTimeout: NodeJS.Timeout|undefined;
+    private dragSprite : DragSprite;
     /**
      * コンストラクター
      * @param name {string} - 名前
@@ -62,6 +64,7 @@ export class Sprite extends DroppableEntity {
         this.touchingEdge = false;
         this.bubbleDrawableID = '';
         this._bubbleTimeout = undefined;
+        this.dragSprite = new DragSprite();
         //this._isAlive = true;
         stage.addSprite(this);
 
@@ -273,17 +276,18 @@ export class Sprite extends DroppableEntity {
      */
     update() {
         super.update();
-        if(this.nowDragging === false) {
-            //const _renderer = this.render.renderer;
-            this._costumeProperties(this);
-            //_renderer.updateDrawablePosition(this.drawableID, this.$_position);
-            // スプライトを消すとき bubbleを参照できない
-            if(this.bubble){
-                if(Env.bubbleScaleLinkedToSprite === true) {
-                    this.bubble.updateScale(this.$_scale.w, this.$_scale.h);
-                }
-                this.bubble.moveWithSprite();    
+        if(this.dragSprite.draggable === true) {
+            this.dragSprite.update(this);
+        }
+        //const _renderer = this.render.renderer;
+        this._costumeProperties(this);
+        //_renderer.updateDrawablePosition(this.drawableID, this.$_position);
+        // スプライトを消すとき bubbleを参照できない
+        if(this.bubble){
+            if(Env.bubbleScaleLinkedToSprite === true) {
+                this.bubble.updateScale(this.$_scale.w, this.$_scale.h);
             }
+            this.bubble.moveWithSprite();    
         }
     }
     /**
@@ -1483,4 +1487,24 @@ export class Sprite extends DroppableEntity {
 
         }
     }
+
+        /**
+     * DragModeを設定するためのオブジェクト
+     * @returns {{draggable: boolean}}
+     */
+    get DragMode(): {"draggable": boolean} {
+        const draggable = {"draggable": false};
+        const me = this;
+        Object.defineProperty(draggable, "draggable", {
+            get : function() {
+                return me.dragSprite.draggable;
+            },
+            set : function(_draggable) {
+                return me.dragSprite.draggable = _draggable;
+            },
+        });
+        return draggable;
+
+    }
+
 };

@@ -277,7 +277,19 @@ html, body{
     right: -7px;
     left: -7px;
 }    
-    `
-
+`,
+    spriteDrag :
+`
+.spriteDragging {
+    pointer-events: none;
+    filter: drop-shadow(5px 5px 5px hsla(0, 93%, 47%, 0.55));
+    z-index: 99020;
+    position : absolute;
+    border: none;
+}
+.spriteDraggingHide {
+    opacity: 1.0;
+}
+`
 
 };

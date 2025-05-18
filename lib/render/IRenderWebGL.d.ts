@@ -36,6 +36,11 @@ export declare interface IRenderWebGL {
      */
     createSVGSkin(svgData: string, rotationCenter?: TPositionArray): number;
     /**
+     * Return a drawable's pixel data and bounds in screen space.
+     * @param drawableID {number}
+     */
+    extractDrawableScreenSpace(drawableID: number): {imageData:ImageData,x:number, y:number, width:number, height:number};
+    /**
      * Bounds 取得
      * @param drawableID { number }
      * @returns {TBounds}
