@@ -46,7 +46,7 @@ export class Entity extends EventEmitter {
     public id: string;
     public canvas: HTMLCanvasElement;
     public flag: HTMLElement|null;
-    protected $_position: TPosition;
+    public $_position: TPosition;
     protected $_scale: TScale;
     protected $_direction: number;
     protected _visible: boolean;
@@ -1174,7 +1174,7 @@ export class Entity extends EventEmitter {
      * @returns {boolean}
      */
     $_isDrawableActive(drawableID: number): boolean {
-        if( this.getSkinId(drawableID) > 0 ){
+        if( this.getSkinId(drawableID) > -1 ){
             return true;
         }
         return false;
@@ -1344,11 +1344,11 @@ export class Entity extends EventEmitter {
     $isKeyNotDown( key ) {
         return this._libs.keyIsNotDown(key);
     }
-    protected get $mouseX() {
+    public get $mouseX() {
         const mousePosition = this._libs.mousePosition;
         return mousePosition.x;
     }
-    protected get $mouseY() {
+    public get $mouseY() {
         const mousePosition = this._libs.mousePosition;
         return mousePosition.y;
     }

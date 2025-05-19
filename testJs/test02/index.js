@@ -29,7 +29,7 @@ const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 Pg.preload = async function preload() {
     this.Image.load('../../assets/Neon Tunnel.png', NeonTunnel );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
-    this.Image.load(AssetHost+'/assets/ball-a.svg', BallA );
+    this.Image.load(AssetHost+'/assets/cat.svg', BallA );
     this.Image.load('../../assets/Paddle.svg', Paddle );
     this.Image.load('../../assets/Button3-b.svg', Block );
     this.Image.load('../../assets/Line.svg', Line );
@@ -81,7 +81,7 @@ Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     ball.Event.whenFlag(async function*(){
         this.Motion.gotoXY(0,-100);
-        this.Looks.setSize(50, 50);
+        this.Looks.setSize(100, 50);
     });
     
     const BallSpeed = 10;
@@ -110,6 +110,7 @@ Pg.setting = async function setting() {
     // メッセージ(Start)を受け取ったときの動作
     ball.Event.whenBroadcastReceived('Start', async function*(){
         for(;;){
+            this.Motion.Direction.degree +=5;
             if( this.Sensing.isTouchingToSprite(paddle)){
                 this.Motion.turnRightDegrees( Lib.getRandomValueInRange(-2, 2)+180 );
                 this.Motion.moveSteps(BallSpeed*2);

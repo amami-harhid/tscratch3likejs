@@ -1,3 +1,4 @@
+import type {S3RotationStyle} from '../../types/scratchjs/s3Libs'
 export class ImageEffective {
     /**
      * 色の効果
@@ -45,14 +46,12 @@ export class SoundOption {
         return "pitch";
     }
 }
-export class RotationStyle {
-    static get LEFT_RIGHT () {
-        return 'left-right';
-    }
-    static get DONT_ROTATE () {
-        return 'do-not-rotate';
-    }
-    static get ALL_AROUND () {
-        return 'all-around';
-    }    
+export const RotationStyle : S3RotationStyle = {
+    
+    LEFT_RIGHT : 'left-right',
+    
+    DONT_ROTATE : 'do-not-rotate',
+    
+    ALL_AROUND : 'all-around',
+
 };

@@ -23,8 +23,8 @@ export class Costumes {
     public _position: TPosition;
     private _direction: number;
     private _scale: TSizeXY;
-    private _rotationStyle: RotationStyle;
-    private _rotationStylePatterns: RotationStyle[];
+    private _rotationStyle: string;
+    private _rotationStylePatterns: string[];
     /**
      * @constructor
      */
@@ -91,7 +91,7 @@ export class Costumes {
         }
         throw 'unable to execute createBitmapSkin';
     }
-    setRotationStyle ( style: RotationStyle ) {
+    setRotationStyle ( style: string ) {
         if( this._rotationStylePatterns.includes( style ) ) {
             this._rotationStyle = style;
         }

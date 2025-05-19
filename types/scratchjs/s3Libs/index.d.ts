@@ -22,13 +22,13 @@ declare interface S3Env {
 }
 
 /** 回転方法 */
-export interface S3RotationStyle {
+export declare type S3RotationStyle = {
     /** 左右のみ */
-    LEFT_RIGHT: string;
+    LEFT_RIGHT: "left-right",
     /** 回転しない */
-    DONT_ROTATE: string;
+    DONT_ROTATE: "do-not-rotate",
     /** 自由に回転 */
-    ALL_AROUND: string;
+    ALL_AROUND: "all-around",
 }
 
 /** サウンドオプション */

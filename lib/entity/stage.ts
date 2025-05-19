@@ -33,17 +33,30 @@ export class Stage extends Entity {
         this.backdrops = new Backdrops(this.playGround);
         this._sprites = [];
         //this.skinIdx = -1;
-        this.mouse = {scratchX:0, scratchY:0, x:0, y:0, down: false, pageX: 0, pageY: 0, clientX: 0, clientY: 0 };
+        this.mouse = {scratchX:0, scratchY:0, x:0, y:0, down: false, pageX: 0, pageY: 0, clientX: 0, clientY: 0};
         const me = this;
         // これは Canvasをつくる Element クラスで実行したほうがよさそう（関連性強いため）
         const canvas = this.playGround.canvas;
         const body = document.getElementById('main');
         if(body){
+            body.addEventListener('mousedown', (e:MouseEvent) => {
+                me.mouse.pageX = e.pageX;
+                me.mouse.pageY = e.pageY;
+                me.mouse.down = true;
+                e.stopPropagation()
+            });
             body.addEventListener('mousemove', (e:MouseEvent) => {
                 me.mouse.pageX = e.pageX;
                 me.mouse.pageY = e.pageY;
+                //me.mouse.down = true;
                 e.stopPropagation()
-            });    
+            });
+            body.addEventListener('mouseup', (e:MouseEvent)=>{
+                me.mouse.pageX = e.pageX;
+                me.mouse.pageY = e.pageY;
+                me.mouse.down = false;
+                e.stopPropagation()
+            })
         }
         canvas.addEventListener('mousemove', (e:MouseEvent) => {
             me.mouse.x = e.offsetX;
@@ -54,6 +67,8 @@ export class Stage extends Entity {
             
             me.mouse.scratchX = e.offsetX - this.playGround.canvas.width/2;
             me.mouse.scratchY = this.playGround.canvas.height/2 - e.offsetY;
+
+//            me.mouse.down = true;
 
 //            e.stopPropagation()
         }, {});
