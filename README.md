@@ -1,7 +1,6 @@
 # summary
-Scratch3風Javascriptをコンセプトにして作られているScratch3LikeJsを本レポジトリにて
-Typescriptで書き直しました(移植しました)。
-また、Eslintで独自の構文チェックを書けていますので、想定範囲内のコードに強制します。
+Scratch3風Javascriptをコンセプトとして作成されたScratch3LikeJsをTypescriptで書き直しました(移植しました)。
+また、EslintでTscratch3独自の構文チェックをかけていますので、適切なコードに強制します。
 
 # npm install
 npm install --save-dev @amami-harhid/tscratch3likejs

@@ -2,8 +2,7 @@
  * Sprite
  */
 import { Bubble } from "./bubble";
-import { DroppableEntity } from "./droppableEntity";
-import {DragSprite} from "./dragSprite";
+import { DragSprite } from "./dragSprite";
 import { Entity } from "./entity";
 import { Env } from "../env";
 import { MathUtil } from "../util/math-util";
