@@ -27,7 +27,7 @@ const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 Pg.preload = async function preload() {
     this.Image.load('../../assets/Neon Tunnel.png', NeonTunnel );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
-    this.Image.load(AssetHost+'/assets/ball-a.svg', BallA );
+    this.Image.load(AssetHost+'/assets/cat.svg', BallA );
     this.Image.load('../../assets/Paddle.svg', Paddle );
     this.Image.load('../../assets/Button3-b.svg', Block );
     this.Image.load('../../assets/Line.svg', Line );
@@ -50,8 +50,8 @@ Pg.prepare = async function prepare() {
 
     ball = new Lib.Sprite('ball');
     await ball.Image.add( BallA );
-    ball.Looks.setSize(50, 50);
-    //ball.Sensing.DragMode.draggable = true;
+    ball.Looks.setSize(50, 150);
+    ball.Sensing.DragMode.draggable = true;
 
     paddle = new Lib.Sprite("paddle");
     //paddle.visible = false;

@@ -1174,7 +1174,7 @@ export class Entity extends EventEmitter {
      * @returns {boolean}
      */
     $_isDrawableActive(drawableID: number): boolean {
-        if( this.getSkinId(drawableID) > 0 ){
+        if( this.getSkinId(drawableID) > -1 ){
             return true;
         }
         return false;

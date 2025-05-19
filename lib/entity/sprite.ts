@@ -322,20 +322,6 @@ export class Sprite extends Entity {
             }
         }
         this.update();
-        // if(Utils.isNumber(w)){
-        //     super.$setScale(w,h);
-        //     if(this.bubble){
-        //         const _w = w as number;
-        //         this.bubble.setScale(_w, h);
-        //     }
-        // }else{
-        //     // @type {{w:number, h:number}}
-        //     const obj = w as {w:number,h:number};
-        //     super.$setScale(obj.w,obj.h);
-        //     if(this.bubble)
-        //         this.bubble.setScale(obj.w, obj.h);
-        // }
-        //this.update();
     }
     /** X座標 */
     get x() {
@@ -373,19 +359,6 @@ export class Sprite extends Entity {
             const _x = x;
             this.$setXY( _x, y );
         }
-        // if(Utils.isNumber(x)) {
-        //     if ( !Utils.isNumber(y)) {
-        //         return;
-        //     }
-        //     // @type {number}
-        //     const _x = x;
-        //     this.$setXY( _x, y );    
-        // }else{
-        //     // @type {{x: number, y: number}}
-        //     const obj = x as {x:number,y:number};
-        //     this.$setXY( obj.x, obj.y );    
-        // }
-
     }
     /**
      * 指定した座標へ行く.
@@ -436,11 +409,6 @@ export class Sprite extends Entity {
         }
         return {'minDist': minDist, 'nearestEdge':nearestEdge};
     }
-    // #_ifOnEdgeBounds() {
-    //     const judge = this.#onEdgeBounds();
-    //     if(judge &&  judge.minDist && judge.minDist == Infinity) return null;
-    //     return judge;
-    // }
     /**
      * もし端に触れたら跳ね返る
      */
@@ -507,15 +475,6 @@ export class Sprite extends Entity {
 //            this.$_keepInFence(this.costumes._position.x, this.costumes._position.y);
             this.$_keepInFence(this.$_position.x, this.$_position.y);
         }
-        /* 
-        for(;;) {
-            this.keepInFence(this.costumes._position.x, this.costumes._position.y);
-            const touch = this.isTouchingEdge();
-            if( touch === false ) break;
-            await Utils.wait(0);
-        }
-        */
-
     }
     /**
      * 指定したターゲットのどれかにソースがタッチしていることを判定する
@@ -810,10 +769,10 @@ export class Sprite extends Entity {
     }
     /**
      * 回転方向を指定する
-     * @param {RotationStyle} style 
+     * @param {string} style 
      * @returns {void}
      */
-    $setRotationStyle( style: RotationStyle ): void {
+    $setRotationStyle( style: string ): void {
         if(!this.$isAlive()) return;
         if(this.costumes){
             this.costumes.setRotationStyle( style );

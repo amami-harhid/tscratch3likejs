@@ -20,6 +20,10 @@ export class ImageLoader {
     static get REGEX_SVG_DATA_IMAGE_URL(): RegExp {
         return /^<svg\s/;
     }
+    static get REGEX_DATA_IMAGE_SVG (): RegExp {
+        return /^data:image\/svg\+xml/;
+    }
+
     /**
      * REGEX_SVG_DATA_IMAGE_FILE
      * svg file 名 の判定のRegExpを返す
@@ -53,7 +57,8 @@ export class ImageLoader {
             ): Promise<{name:string,data: string|HTMLImageElement}> {
         if(image) {
             if(typeof image === 'string') {
-                if(image.match(ImageLoader.REGEX_SVG_DATA_IMAGE_FILE)){
+                if(image.match(ImageLoader.REGEX_SVG_DATA_IMAGE_FILE) ||
+                    image.match(ImageLoader.REGEX_DATA_IMAGE_SVG)){
                     let _text = await ImageLoader._svgText(image);
                     if(_text == "ERROR"){
                         throw "ローディングエラー。SVG画像データの指定を確認してください。("+image+")";

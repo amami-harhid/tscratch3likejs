@@ -288,7 +288,7 @@ html, body{
     border: none;
 }
 .spriteDraggingHide {
-    opacity: 1.0;
+    opacity: 0.0;
 }
 `
 
