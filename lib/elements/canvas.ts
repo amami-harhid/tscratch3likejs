@@ -4,9 +4,9 @@
 const StageCanvasWrapperID = "stageCanvasWrapper";
 const CanvasText2dId = "canvas-text2D";
 const CanvasText2dClassName = "likeScratch-text-canvas";
-const CanvasText2dZIndex = 90;
+const CanvasText2dZIndex = 5100;
 const CanvasMonitor2dClassName = 'likeScratch-monitor-canvas';
-const CanvasMonitor2dZIndex = 100;
+const CanvasMonitor2dZIndex = 5200;
 export class Canvas {
 
     static canvas: HTMLCanvasElement;

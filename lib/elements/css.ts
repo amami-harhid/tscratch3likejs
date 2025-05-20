@@ -283,7 +283,7 @@ html, body{
 .spriteDragging {
     pointer-events: none;
     filter: drop-shadow(5px 5px 5px hsla(0, 93%, 47%, 0.55));
-    z-index: 99020;
+    z-index: 5500;
     position : absolute;
     border: none;
 }
