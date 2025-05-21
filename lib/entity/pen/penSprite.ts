@@ -21,18 +21,11 @@ export class PenSprite {
         this._sprite = sprite;
         this.render = sprite.render;
         this._penDown = false;
-        this._penAttributes = {color4f:[0,0,1,1], diameter: 5};
+        this._penAttributes = {color4f:[0,0,1,1], diameter: 1};
         this._penSize = 1;
         this._penDrawableId = this.render.renderer.createDrawable(StageLayering.PEN_LAYER);
         this._skinId = this.render.renderer.createPenSkin();
         this.render.renderer.updateDrawableSkinId(this._penDrawableId, this._skinId);
-    }
-    /**
-     * Pen Skin 作成
-     */
-    createSkin(){
-        // Pen Skin 作成
-        this._skinId = this.render.renderer.createPenSkin();
     }
     penClear() {
         if(this._skinId > -1){

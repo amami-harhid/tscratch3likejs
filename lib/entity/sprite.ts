@@ -1449,16 +1449,6 @@ export class Sprite extends Entity {
         }
     }
 
-    get Pen() {
-        const pen = this._penSprite;
-        return {
-            'drawLine' : this._penSprite.drawLine.bind(pen),
-            'penClear': this._penSprite.penClear.bind(pen),
-            'penUp': this._penSprite.penUp.bind(pen),
-            'penDown': this._penSprite.penDown.bind(pen),
-            'stamp': this._penSprite.stamp.bind(pen),
-        }
-    }
     /**
      * DragModeを設定するためのオブジェクト
      * @returns {{draggable: boolean}}
@@ -1476,6 +1466,31 @@ export class Sprite extends Entity {
         });
         return draggable;
 
+    }
+    /**
+     * ペン機能
+     */
+    get Pen() {
+        const pen = this._penSprite;
+        return {
+            'drawLine' : pen.drawLine.bind(pen),
+            'drawPoint': pen.drawPoint.bind(pen),
+            'penClear': pen.penClear.bind(pen),
+            'penUp': pen.penUp.bind(pen),
+            'penDown': pen.penDown.bind(pen),
+            'stamp': pen.stamp.bind(pen),
+            'setPenHue': pen.setPenHue.bind(pen),
+            'changePenHue': pen.changePenHue.bind(pen),
+            'setPenSaturation': pen.setPenSaturation.bind(pen),
+            'changePenSaturation': pen.changePenSaturation.bind(pen),
+            'setPenBrightness': pen.setPenBrightness.bind(pen),
+            'changePenBrightness': pen.changePenBrightness.bind(pen),
+            'setPenTransparency': pen.setPenTransparency.bind(pen),
+            'changePenTransparency': pen.changePenTransparency.bind(pen),
+            'setPenSize': pen.setPenSize.bind(pen),
+            'changePenSize': pen.changePenSize.bind(pen),
+
+        }
     }
 
 };
