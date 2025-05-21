@@ -100,7 +100,7 @@ export class Color {
 
     /**
      * Convert an HSV color to RGB format.
-     * @param {HSVObject} hsv - {h: hue [0,360), s: saturation [0,1], v: value [0,1]}
+     * @param {HSVObject} hsv - {h: hue [0,360), s: saturation [0,1], v: value [0,1], t: transparency [0, 1]}
      * @return {RGBObject} rgb - {r: red [0,255], g: green [0,255], b: blue [0,255]}.
      */
     static hsvToRgb (hsv) {
@@ -118,6 +118,7 @@ export class Color {
         let r;
         let g;
         let b;
+        let a = hsv.t;
 
         switch (i) {
         default:
@@ -156,7 +157,8 @@ export class Color {
         return {
             r: Math.floor(r * 255),
             g: Math.floor(g * 255),
-            b: Math.floor(b * 255)
+            b: Math.floor(b * 255),
+            a: Math.floor(a * 100),
         };
     }
 

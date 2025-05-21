@@ -2,10 +2,12 @@
  * Sprite
  */
 import { Bubble } from "./bubble";
-import { DragSprite } from "./dragSprite";
+import { DragSprite } from "./drag/dragSprite";
 import { Entity } from "./entity";
 import { Env } from "../env";
 import { MathUtil } from "../util/math-util";
+import { PenSprite } from './pen/penSprite';
+import type { IPenAttributes } from "./pen/IPenAttributes";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
@@ -32,7 +34,8 @@ export class Sprite extends Entity {
     private touchingEdge: boolean;
     public bubbleDrawableID: string;
     public _bubbleTimeout: NodeJS.Timeout|undefined;
-    private dragSprite : DragSprite;
+    public dragSprite : DragSprite;
+    private _penSprite: PenSprite;
     /**
      * コンストラクター
      * @param name {string} - 名前
@@ -64,9 +67,9 @@ export class Sprite extends Entity {
         this.bubbleDrawableID = '';
         this._bubbleTimeout = undefined;
         this.dragSprite = new DragSprite();
+        this._penSprite = new PenSprite(this);
         //this._isAlive = true;
         stage.addSprite(this);
-
     }
     /**
      * 完全に削除する
@@ -1446,7 +1449,17 @@ export class Sprite extends Entity {
         }
     }
 
-        /**
+    get Pen() {
+        const pen = this._penSprite;
+        return {
+            'drawLine' : this._penSprite.drawLine.bind(pen),
+            'penClear': this._penSprite.penClear.bind(pen),
+            'penUp': this._penSprite.penUp.bind(pen),
+            'penDown': this._penSprite.penDown.bind(pen),
+            'stamp': this._penSprite.stamp.bind(pen),
+        }
+    }
+    /**
      * DragModeを設定するためのオブジェクト
      * @returns {{draggable: boolean}}
      */

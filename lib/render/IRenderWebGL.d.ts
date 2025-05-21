@@ -1,5 +1,6 @@
 import { StageLayering } from '../entity/stageLayering';
 import { S3MonitorSkin } from '../monitor/s3MonitorSkin';
+import type { IPenAttribues } from '../entity/pen/IPenAttributes';
 import type { ISkin } from './ISkin';
 import type { IDrawable } from './IDrawable';
 import type { TBounds, TPosition, TPositionArray, TScaleCanEmpty, TSizeXY } from '../common/typeCommon';
@@ -29,6 +30,10 @@ export declare interface IRenderWebGL {
      * @param rotationCenter {TPositionArray} - rotation center of the skin
      */
     createBitmapSkin(bitmapData: HTMLImageElement, costumeResolution?:number, rotationCenter?:TPositionArray): nubmer;
+    /**
+     * Create a new PenSkin - a skin which implements a Scratch pen layer.
+     */
+    createPenSkin(): number;
     /**
      * Create a new SVG skin.
      * @param svgData {string} - new SVG to use.
@@ -119,6 +124,35 @@ export declare interface IRenderWebGL {
      * @param candidateIDs {number[]} - The Drawable IDs to check, otherwise all visible drawables in the renderer
      */
     isTouchingDrawables(drawableID: number, candidateIDs?: number[]): boolean;
+    /**
+     * Clear a pen layer.
+     * @param penSkinID {number}
+     */
+    penClear(penSkinID: number): void;
+    /**
+     * Draw a line on a pen layer.
+     * @param penSkinID {number} - the unique ID of a Pen Skin.
+     * @param penAttributes {IPenAttributes} - how the line should be drawn.
+     * @param x0 {number} - the X coordinate of the beginning of the line.
+     * @param y0 {number} - the Y coordinate of the beginning of the line.
+     * @param x1 {number} - the X coordinate of the end of the line.
+     * @param y1 {number} - the Y coordinate of the end of the line.
+     */
+    penLine (penSkinID: number, penAttributes: IPenAttribues, x0:number, y0:number, x1:number, y1:number): void;
+    /**
+     * Draw a point on a pen layer.
+     * @param penSkinID {number} - the unique ID of a Pen Skin.
+     * @param penAttributes {IPenAttributes} - how the line should be drawn.
+     * @param x {number} - the X coordinate of the point to draw.
+     * @param y {number} - the Y coordinate of the point to draw.
+     */
+    penPoint (penSkinID: number, penAttributes: IPenAttribues, x:number, y:number): void;
+    /**
+     * Stamp a Drawable onto a pen layer.
+     * @param penSkinID {number} - the unique ID of a Pen Skin.
+     * @param stampID {number} - the unique ID of the Drawable to use as the stamp.
+     */
+    penStamp (penSkinID: number, stampID: number) : void;
     /**
      * Detect which sprite, if any, is at the given location.
      * This function will pick all drawables that are visible,
