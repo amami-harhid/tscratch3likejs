@@ -66,7 +66,7 @@ export class Sprite extends Entity {
         this.touchingEdge = false;
         this.bubbleDrawableID = '';
         this._bubbleTimeout = undefined;
-        this.dragSprite = new DragSprite();
+        this.dragSprite = new DragSprite(this);
         this._penSprite = new PenSprite(this);
         //this._isAlive = true;
         stage.addSprite(this);
@@ -279,7 +279,7 @@ export class Sprite extends Entity {
     update() {
         super.update();
         if(this.dragSprite.draggable === true) {
-            this.dragSprite.update(this);
+            this.dragSprite.update();
         }
         //const _renderer = this.render.renderer;
         this._costumeProperties(this);
@@ -474,6 +474,10 @@ export class Sprite extends Entity {
         this.$_direction = newDirection;
         // Keep within the stage.
         if(this.costumes ) {
+            // drag中のとき
+            if(this.dragSprite.dragging){
+                this.emit(DragSprite.PROPERTIES_CHANGE);
+            }
 //            this.$_keepInFence(this.costumes._position.x, this.costumes._position.y);
             this.$_keepInFence(this.$_position.x, this.$_position.y);
         }

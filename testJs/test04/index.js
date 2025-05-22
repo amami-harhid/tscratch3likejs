@@ -52,7 +52,7 @@ Pg.setting = async function setting() {
         this.Looks.setEffect(Lib.ImageEffective.GHOST, 0);
         for(const _ of Lib.Iterator(5000)){
             //this.Motion.Direction.degree += 5;
-            this.Motion.moveSteps(10);
+            this.Motion.moveSteps(2);
             this.Motion.ifOnEdgeBounds();
             this.Pen.drawLine();
             this.Looks.changeEffectBy(Lib.ImageEffective.COLOR, 25);
