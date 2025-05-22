@@ -162,11 +162,9 @@ export class DragSprite {
         imgTag.src = text;
     }
     updateImg() : void {
-        console.log('updateImg #001')
         const element = document.getElementById('spriteDragImg');
         if(element){
             const imgTag = element as HTMLImageElement;
-            console.log('updateImg #002')
             const text = this.extractDrawableImgUrl();
             imgTag.src = text;
             this.img = imgTag;
