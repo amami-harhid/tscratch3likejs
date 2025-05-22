@@ -128,7 +128,8 @@ export class PenSprite {
         this._penSize = (penSize<1)? 1: penSize;
         this._penAttributes.diameter = this._penSize;
     }
-    stamp(stampDrowingID: number) {
+    stamp() {
+        const stampDrowingID = this._sprite.drawableID;
         if(this._skinId > -1 && stampDrowingID > -1 && this._sprite.dragSprite.dragging == false){
             this.render.renderer.penStamp(this._skinId, stampDrowingID);
         }

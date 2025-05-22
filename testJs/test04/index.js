@@ -48,7 +48,6 @@ Pg.setting = async function setting() {
         this.Pen.penClear();
         this.Pen.setPenTransparency(98);
         this.Pen.penDown();
-        const drawableId = this.drawableID;
         this.Looks.setEffect(Lib.ImageEffective.GHOST, 50);
         for(const _ of Lib.Iterator(5000)){
             //this.Motion.Direction.degree += 5;
@@ -57,7 +56,7 @@ Pg.setting = async function setting() {
             this.Motion.ifOnEdgeBounds();
             this.Pen.drawLine();
             this.Looks.changeEffectBy(Lib.ImageEffective.COLOR, 25);
-            this.Pen.stamp(drawableId);
+            this.Pen.stamp();
 
             yield;
         }

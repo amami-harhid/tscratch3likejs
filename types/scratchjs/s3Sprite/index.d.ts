@@ -210,7 +210,40 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** 自分自身の縦横表示サイズを得る */
     drawingDimensions() : {width: number, height: number};
 }
-
+declare interface S3Pen {
+    /** 線を引く */
+    drawLine(): void;
+    /** 点をうつ */
+    drawPoint(): void;
+    /** ペンクリア */
+    penClear(): void;
+    /** ペンを上げる */
+    penUp(): void;
+    /** ペンを下げる */
+    penDown(): void;
+    /** スタンプ */
+    stamp(): void;
+    /** 色相を設定[0 - 360] */
+    setPenHue(hue: number): void;
+    /** 色相を変える */
+    changePenHue(hue: number): void;
+    /** 彩度を設定[0 - 100] */
+    setPenSaturation(saturation: number): void;
+    /** 彩度を変える */
+    changePenSaturation(saturation: number): void;
+    /** 明度を設定[0 - 100] */
+    setPenBrightness(brightness: number): void;
+    /** 明度を変える */
+    changePenBrightness(brightness: number): void;
+    /** 透明度を設定[0 - 100] 100%で完全透明 */
+    setPenTransparency(transparency: number): void;
+    /** 透明度を変える */
+    changePenTransparency(transparency: number): void;
+    /** ペンサイズを設定 */
+    setPenSize(penSize: number): void;
+    /** ペンサイズを変える */
+    changePenSize(penSize: number): void;
+} 
 /** スプライト（実体[Entity]を継承）*/
 export interface S3Sprite extends S3Entity{
     new(...args:any[]): S3Sprite;
@@ -239,5 +272,7 @@ export interface S3Sprite extends S3Entity{
     life : number;
     /** 指定した秒数をかけて指定した座標(x,y)へ移動する (await必須) */
     glideToPosition(second:number, x:number, y:number): Promise<any>;
+    /** ペン */
+    Pen: S3Pen;
     
 }
