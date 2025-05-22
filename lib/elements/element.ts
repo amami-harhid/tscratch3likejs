@@ -151,7 +151,6 @@ export class S3Element {
             ${S3CSS.textCanvasCss}\n\n
             ${S3CSS.mainTmpCss}\n\n
             ${S3CSS.askCss}\n\n
-            ${S3CSS.spriteDrag}\n\n
         `;
         document.getElementsByTagName('head')[0].appendChild(style);
     }

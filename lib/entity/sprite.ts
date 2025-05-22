@@ -2,10 +2,12 @@
  * Sprite
  */
 import { Bubble } from "./bubble";
-import { DragSprite } from "./dragSprite";
+import { DragSprite } from "./drag/dragSprite";
 import { Entity } from "./entity";
 import { Env } from "../env";
 import { MathUtil } from "../util/math-util";
+import { PenSprite } from './pen/penSprite';
+import type { IPenAttributes } from "./pen/IPenAttributes";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
@@ -32,7 +34,8 @@ export class Sprite extends Entity {
     private touchingEdge: boolean;
     public bubbleDrawableID: string;
     public _bubbleTimeout: NodeJS.Timeout|undefined;
-    private dragSprite : DragSprite;
+    public dragSprite : DragSprite;
+    private _penSprite: PenSprite;
     /**
      * コンストラクター
      * @param name {string} - 名前
@@ -63,10 +66,10 @@ export class Sprite extends Entity {
         this.touchingEdge = false;
         this.bubbleDrawableID = '';
         this._bubbleTimeout = undefined;
-        this.dragSprite = new DragSprite();
+        this.dragSprite = new DragSprite(this);
+        this._penSprite = new PenSprite(this);
         //this._isAlive = true;
         stage.addSprite(this);
-
     }
     /**
      * 完全に削除する
@@ -276,7 +279,7 @@ export class Sprite extends Entity {
     update() {
         super.update();
         if(this.dragSprite.draggable === true) {
-            this.dragSprite.update(this);
+            this.dragSprite.update();
         }
         //const _renderer = this.render.renderer;
         this._costumeProperties(this);
@@ -1446,7 +1449,7 @@ export class Sprite extends Entity {
         }
     }
 
-        /**
+    /**
      * DragModeを設定するためのオブジェクト
      * @returns {{draggable: boolean}}
      */
@@ -1463,6 +1466,31 @@ export class Sprite extends Entity {
         });
         return draggable;
 
+    }
+    /**
+     * ペン機能
+     */
+    get Pen() {
+        const pen = this._penSprite;
+        return {
+            'drawLine' : pen.drawLine.bind(pen),
+            'drawPoint': pen.drawPoint.bind(pen),
+            'penClear': pen.penClear.bind(pen),
+            'penUp': pen.penUp.bind(pen),
+            'penDown': pen.penDown.bind(pen),
+            'stamp': pen.stamp.bind(pen),
+            'setPenHue': pen.setPenHue.bind(pen),
+            'changePenHue': pen.changePenHue.bind(pen),
+            'setPenSaturation': pen.setPenSaturation.bind(pen),
+            'changePenSaturation': pen.changePenSaturation.bind(pen),
+            'setPenBrightness': pen.setPenBrightness.bind(pen),
+            'changePenBrightness': pen.changePenBrightness.bind(pen),
+            'setPenTransparency': pen.setPenTransparency.bind(pen),
+            'changePenTransparency': pen.changePenTransparency.bind(pen),
+            'setPenSize': pen.setPenSize.bind(pen),
+            'changePenSize': pen.changePenSize.bind(pen),
+
+        }
     }
 
 };

@@ -42,11 +42,23 @@ Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     ball.Event.whenFlag(async function*(){
         //this.Motion.gotoXY(0,0);
-        //this.Motion.Direction.degree = 90;
+        this.Motion.Direction.degree = 45;
         await this.Control.waitUntil(()=>Lib.anyKeyIsDown());
-        for(;;){
+        this.Pen.setPenSize(1500);
+        this.Pen.penClear();
+        this.Pen.setPenTransparency(98);
+        this.Pen.penDown();
+        const drawableId = this.drawableID;
+        this.Looks.setEffect(Lib.ImageEffective.GHOST, 50);
+        for(const _ of Lib.Iterator(5000)){
             //this.Motion.Direction.degree += 5;
-            this.Motion.moveSteps(5);
+            this.Motion.moveSteps(10);
+            //this.Motion.Direction.degree += 5;
+            this.Motion.ifOnEdgeBounds();
+            this.Pen.drawLine();
+            this.Looks.changeEffectBy(Lib.ImageEffective.COLOR, 25);
+            this.Pen.stamp(drawableId);
+
             yield;
         }
     });

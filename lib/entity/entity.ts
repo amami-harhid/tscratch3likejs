@@ -86,6 +86,7 @@ export class Entity extends EventEmitter {
 
         const _effect = (options.effect)? options.effect: {};
         this._effect = {};
+        this.$clearEffect();
         this.setEffectsEachProperties(_effect);
         this.$_position = (options.position)? {x: options.position.x, y: options.position.y}:{x:0, y:0};
         this.$_prev_position = this.$_position;
@@ -140,28 +141,36 @@ export class Entity extends EventEmitter {
         }
 
     }
-    $changeEffectBy( target, changeVal) {
+    $changeEffectBy( target:ImageEffective, changeVal:number) {
         if(target == ImageEffective.COLOR){
-            const v = this._effect.color;
+            const v = (this._effect.color)? this._effect.color: 0;
             this._effect.color = v + changeVal;
+            this._effect.color = this._effect.color % 200;
         }else if(target == ImageEffective.FISHEYE ){
-            const v = this._effect.fisheye;
+            const v = (this._effect.fisheye)?this._effect.fisheye:0;
             this._effect.fisheye = v + changeVal;
         }else if(target == ImageEffective.WHIRL ){
-            const v = this._effect.whirl;
+            const v = (this._effect.whirl)?this._effect.whirl:0;
             this._effect.whirl = v + changeVal;
         }else if(target == ImageEffective.PIXELATE ){
-            const v = this._effect.pixelate;
+            const v = (this._effect.pixelate)?this._effect.pixelate:0;
             this._effect.pixelate = v + changeVal;
         }else if(target == ImageEffective.MOSAIC ){
-            const v = this._effect.mosaic;
+            const v = (this._effect.mosaic)?this._effect.mosaic:0;
             this._effect.mosaic = v + changeVal;
         }else if(target == ImageEffective.BRIGHTNESS ){
-            const v = this._effect.brightness;
+            const v = (this._effect.brightness)?this._effect.brightness:0;
             this._effect.brightness = v + changeVal;
         }else if(target == ImageEffective.GHOST ){
-            const v = this._effect.ghost;
-            this._effect.ghost = v + changeVal;
+            const v = (this._effect.ghost)?this._effect.ghost:0;
+            const nv = v + changeVal;
+            if(nv < 0 ){
+                this._effect.ghost = 0;
+            }else if(nv > 100) {
+                this._effect.ghost = 100;
+            }else{
+                this._effect.ghost = nv;
+            }
         }
 
     }
