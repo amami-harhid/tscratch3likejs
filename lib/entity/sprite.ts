@@ -474,10 +474,6 @@ export class Sprite extends Entity {
         this.$_direction = newDirection;
         // Keep within the stage.
         if(this.costumes ) {
-            // drag中のとき
-            if(this.dragSprite.dragging){
-                this.emit(DragSprite.PROPERTIES_CHANGE);
-            }
 //            this.$_keepInFence(this.costumes._position.x, this.costumes._position.y);
             this.$_keepInFence(this.$_position.x, this.$_position.y);
         }

@@ -46,13 +46,14 @@ Pg.setting = async function setting() {
         await this.Control.waitUntil(()=>Lib.anyKeyIsDown());
         this.Pen.setPenSize(1500);
         this.Pen.penClear();
-        this.Pen.setPenTransparency(99.9);
+        this.Pen.setPenTransparency(98);
         this.Pen.penDown();
         const drawableId = this.drawableID;
-        this.Looks.setEffect(Lib.ImageEffective.GHOST, 0);
+        this.Looks.setEffect(Lib.ImageEffective.GHOST, 50);
         for(const _ of Lib.Iterator(5000)){
             //this.Motion.Direction.degree += 5;
-            this.Motion.moveSteps(2);
+            this.Motion.moveSteps(10);
+            //this.Motion.Direction.degree += 5;
             this.Motion.ifOnEdgeBounds();
             this.Pen.drawLine();
             this.Looks.changeEffectBy(Lib.ImageEffective.COLOR, 25);
