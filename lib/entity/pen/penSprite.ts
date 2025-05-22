@@ -43,14 +43,14 @@ export class PenSprite {
         this._penAttributes.color4f[0] = color.r;
         this._penAttributes.color4f[1] = color.g;
         this._penAttributes.color4f[2] = color.b;
-        this._penAttributes.color4f[3] = color.a / 100;        
+        this._penAttributes.color4f[3] = color.a;
     }
     _penAttributsColorToColorObject() {
         const rgba = {
             r: this._penAttributes.color4f[0],
             g: this._penAttributes.color4f[1],
             b: this._penAttributes.color4f[2],
-            a: this._penAttributes.color4f[3] * 100,
+            a: this._penAttributes.color4f[3],
         }
         return rgba;
     }
@@ -100,10 +100,24 @@ export class PenSprite {
         this._colorObjectToPenAttributesColor4f(changedRgb);
     }
     setPenTransparency(transparency: number): void{
-        this._penAttributes.color4f[3] = transparency;        
+        const _transparency = 100 - transparency;
+        if(_transparency>100){
+            this._penAttributes.color4f[3] = 1;
+        }else if(_transparency<0){
+            this._penAttributes.color4f[3] = 0;
+        }else{
+            this._penAttributes.color4f[3] = _transparency/100;
+        }
     }
     changePenTransparency(transparency: number): void{
-        this._penAttributes.color4f[3] += transparency;
+        const _transparency = this._penAttributes.color4f[3]*100+transparency;
+        if(_transparency>100){
+            this._penAttributes.color4f[3] = 1;
+        }else if(_transparency<0){
+            this._penAttributes.color4f[3] = 0;
+        }else{
+            this._penAttributes.color4f[3] = _transparency/100;
+        }
     }
     setPenSize( size: number) {
         this._penSize = size;
@@ -115,7 +129,7 @@ export class PenSprite {
         this._penAttributes.diameter = this._penSize;
     }
     stamp(stampDrowingID: number) {
-        if(this._skinId > -1 && stampDrowingID > -1){
+        if(this._skinId > -1 && stampDrowingID > -1 && this._sprite.dragSprite.dragging == false){
             this.render.renderer.penStamp(this._skinId, stampDrowingID);
         }
     }
