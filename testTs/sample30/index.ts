@@ -1,13 +1,13 @@
 /**
- * test of sample29
- * クラス定義のサンプル（StageEx,Catクラス定義) 
+ * test of sample30
+ * スプライトをドラッグする
  */
 import {Pg, Lib} from "../../s3lib-importer";
 import type {S3PlayGround} from "@typeJS/s3PlayGround";
 import type {S3Stage} from "@typeJS/s3Stage";
 import type {S3Sprite} from "@typeJS/s3Sprite";
 
-Pg.title = "【Sample29】クラス定義のサンプル"
+Pg.title = "【Sample30】スプライトをドラッグする"
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
