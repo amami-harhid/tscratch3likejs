@@ -8,6 +8,7 @@ export class PenSprite {
     private _skinId: number
     private _penDown: boolean;
     private _penAttributes: IPenAttributes;
+    private _penRgbAttributes: IPenAttributes;
     private _penSize: number;
     private _x0?: number;
     private _y0?: number;
@@ -21,7 +22,8 @@ export class PenSprite {
         this._sprite = sprite;
         this.render = sprite.render;
         this._penDown = false;
-        this._penAttributes = {color4f:[0,0,1,1], diameter: 1};
+        this._penAttributes = {color4f:[240,1,1,1], diameter: 1};
+        this._penRgbAttributes = {color4f:[0,0,1,1], diameter: 1};
         this._penSize = 1;
         this._penDrawableId = this.render.renderer.createDrawable(StageLayering.PEN_LAYER);
         this._skinId = this.render.renderer.createPenSkin();
@@ -39,94 +41,83 @@ export class PenSprite {
         this._penDown = true;
         this.drawPoint();
     }
-    _colorObjectToPenAttributesColor4f(color: {r: number, g: number, b: number, a: number}):void {
-        this._penAttributes.color4f[0] = color.r;
-        this._penAttributes.color4f[1] = color.g;
-        this._penAttributes.color4f[2] = color.b;
-        this._penAttributes.color4f[3] = color.a;
-    }
-    _penAttributsColorToColorObject() {
-        const rgba = {
-            r: this._penAttributes.color4f[0],
-            g: this._penAttributes.color4f[1],
-            b: this._penAttributes.color4f[2],
-            a: this._penAttributes.color4f[3],
+    /**
+     * HSV のPenAttirubtesをRGBのPenAttributesに変換する
+     * @returns 
+     */
+    convertAttribues2Rgb(): void {
+        const hsv = {
+            h: this._penAttributes.color4f[0],
+            s: this._penAttributes.color4f[1],
+            v: this._penAttributes.color4f[2],
+            t: this._penAttributes.color4f[3],
         }
-        return rgba;
+        const {rgb} = Color.hsv2rgb(hsv);
+        this._penRgbAttributes.color4f[0] = rgb.r/255;
+        this._penRgbAttributes.color4f[1] = rgb.g/255;
+        this._penRgbAttributes.color4f[2] = rgb.b/255;
+        this._penRgbAttributes.color4f[3] = rgb.a;
+        this._penRgbAttributes.diameter = this._penAttributes.diameter;
+
+    }
+    setColor(idx: number, value:number){
+        this._penAttributes.color4f[idx] = value;
+        this.convertAttribues2Rgb();
+    }
+    changeColor(idx: number, value:number, limit: number){
+        const _value = this._penAttributes.color4f[idx] + value;
+        this._penAttributes.color4f[idx] = _value % limit;
+        this.convertAttribues2Rgb();
     }
     setPenHue(hue: number): void{
-        const rgba = this._penAttributsColorToColorObject();
-        const hsv = Color.rgbToHsv(rgba);
-        hsv.h = hue % 360;
-        const changedRgb = Color.hsvToRgb(hsv);
-        this._colorObjectToPenAttributesColor4f(changedRgb);
+        this.setColor(0, hue);
+        this.convertAttribues2Rgb();
     }
     changePenHue(hue: number): void{
-        const rgb = this._penAttributsColorToColorObject();
-        const hsv = Color.rgbToHsv(rgb);
-        hsv.h += hue;
-        hsv.h = hsv.h % 360;
-        const changedRgb = Color.hsvToRgb(hsv);
-        this._colorObjectToPenAttributesColor4f(changedRgb);
+        this.changeColor(0, hue, 360);
+        this.convertAttribues2Rgb();
     }
     setPenSaturation(saturation: number): void{
-        const rgb = this._penAttributsColorToColorObject();
-        const hsv = Color.rgbToHsv(rgb);
-        hsv.s = ((saturation*100) % 100)/100;
-        const changedRgb = Color.hsvToRgb(hsv);
-        this._colorObjectToPenAttributesColor4f(changedRgb);
+        this.setColor(1, saturation/100);
+        this.convertAttribues2Rgb();
     }
     changePenSaturation(saturation: number): void{
-        const rgb = this._penAttributsColorToColorObject();
-        const hsv = Color.rgbToHsv(rgb);
-        hsv.s += saturation;
-        hsv.s = ((hsv.s*100) % 100)/100;
-        const changedRgb = Color.hsvToRgb(hsv);
-        this._colorObjectToPenAttributesColor4f(changedRgb);
+        this.changeColor(1, saturation/100, 1.0);
+        this.convertAttribues2Rgb();
     }
     setPenBrightness(brightness: number): void{
-        const rgb = this._penAttributsColorToColorObject();
-        const hsv = Color.rgbToHsv(rgb);
-        hsv.v = ((brightness*100) % 100)/100;
-        const changedRgb = Color.hsvToRgb(hsv);
-        this._colorObjectToPenAttributesColor4f(changedRgb);
+        this.setColor(2, brightness/100);
+        this.convertAttribues2Rgb();
     }
     changePenBrightness(brightness: number): void{
-        const rgb = this._penAttributsColorToColorObject();
-        const hsv = Color.rgbToHsv(rgb);
-        hsv.v += brightness;
-        hsv.v = ((hsv.v*100) % 100)/100;
-        const changedRgb = Color.hsvToRgb(hsv);
-        this._colorObjectToPenAttributesColor4f(changedRgb);
+        this.changeColor(2, brightness/100, 1.0);
+        this.convertAttribues2Rgb();
     }
     setPenTransparency(transparency: number): void{
-        const _transparency = 100 - transparency;
-        if(_transparency>100){
-            this._penAttributes.color4f[3] = 1;
-        }else if(_transparency<0){
-            this._penAttributes.color4f[3] = 0;
+        if(transparency>100.0){
+            this.setColor(3, 0);
+        }else if(transparency<0){
+            this.setColor(3, 100);
         }else{
-            this._penAttributes.color4f[3] = _transparency/100;
+            const opacity = (100.0 - transparency)/100;
+            this.setColor(3, opacity);
         }
+        this.convertAttribues2Rgb();
     }
     changePenTransparency(transparency: number): void{
-        const _transparency = this._penAttributes.color4f[3]*100+transparency;
-        if(_transparency>100){
-            this._penAttributes.color4f[3] = 1;
-        }else if(_transparency<0){
-            this._penAttributes.color4f[3] = 0;
-        }else{
-            this._penAttributes.color4f[3] = _transparency/100;
-        }
+        this.changeColor(3, (100 - transparency)/100, 1);
+        this.convertAttribues2Rgb();
     }
     setPenSize( size: number) {
         this._penSize = size;
         this._penAttributes.diameter = size;
+        this.convertAttribues2Rgb();
     }
     changePenSize( size: number) {
         const penSize = this._penSize + size;
         this._penSize = (penSize<1)? 1: penSize;
         this._penAttributes.diameter = this._penSize;
+        this.convertAttribues2Rgb();
     }
     stamp() {
         const stampDrowingID = this._sprite.drawableID;
@@ -142,7 +133,7 @@ export class PenSprite {
                 if(this._x0 != undefined && this._y0 != undefined){
                     const x0 = this._x0;
                     const y0 = this._y0;
-                    this.render.renderer.penLine(this._skinId, this._penAttributes, x0, y0, x1, y1);
+                    this.render.renderer.penLine(this._skinId, this._penRgbAttributes, x0, y0, x1, y1);
                 }
                 this._x0 = x1;
                 this._y0 = y1;
@@ -156,7 +147,7 @@ export class PenSprite {
         if(this._skinId > -1 && this._sprite.dragSprite.dragging == false){
             const x0 = this._sprite.$_position.x;
             const y0 = this._sprite.$_position.y;
-            this.render.renderer.penPoint(this._skinId, this._penAttributes, x0, y0);
+            this.render.renderer.penPoint(this._skinId, this._penRgbAttributes, x0, y0);
             this._x0 = x0;
             this._y0 = y0;
         }

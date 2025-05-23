@@ -97,68 +97,30 @@ export class Color {
     static hexToDecimal (hex) {
         return Color.rgbToDecimal(Color.hexToRgb(hex));
     }
-
     /**
-     * Convert an HSV color to RGB format.
-     * @param {HSVObject} hsv - {h: hue [0,360), s: saturation [0,1], v: value [0,1], t: transparency [0, 1]}
-     * @return {RGBObject} rgb - {r: red [0,255], g: green [0,255], b: blue [0,255]}.
+     * Convert hsv to rgb
+     * @param hsv 
+     * @returns 
      */
-    static hsvToRgb (hsv) {
-        let h = hsv.h % 360;
-        if (h < 0) h += 360;
-        const s = Math.max(0, Math.min(hsv.s, 1));
-        const v = Math.max(0, Math.min(hsv.v, 1));
+    static hsv2rgb(hsv:{h:number,s:number,v:number,t:number}) {
+        const h = hsv.h;
+        const s = hsv.s;
+        const v = hsv.v;
+        const t = hsv.t;
+        // 引数処理
+        const _h = (h < 0 ? h % 360 + 360 : h) % 360 / 60;
+        const _s = s < 0 ? 0 : s > 1 ? 1 : s;
+        const _v = v < 0 ? 0 : v > 1 ? 1 : v;
+        const _t = t < 0 ? 0 : t > 1 ? 1 : t;
 
-        const i = Math.floor(h / 60);
-        const f = (h / 60) - i;
-        const p = v * (1 - s);
-        const q = v * (1 - (s * f));
-        const t = v * (1 - (s * (1 - f)));
+        // HSV to RGB 変換
+        const c = [5, 3, 1].map(n =>
+            Math.round((_v - Math.max(0, Math.min(1, 2 - Math.abs(2 - (_h + n) % 6))) * _s * _v) * 255));
 
-        let r;
-        let g;
-        let b;
-        let a = hsv.t;
-
-        switch (i) {
-        default:
-        case 0:
-            r = v;
-            g = t;
-            b = p;
-            break;
-        case 1:
-            r = q;
-            g = v;
-            b = p;
-            break;
-        case 2:
-            r = p;
-            g = v;
-            b = t;
-            break;
-        case 3:
-            r = p;
-            g = q;
-            b = v;
-            break;
-        case 4:
-            r = t;
-            g = p;
-            b = v;
-            break;
-        case 5:
-            r = v;
-            g = p;
-            b = q;
-            break;
-        }
-
+        // 戻り値
         return {
-            r: Math.floor(r * 255),
-            g: Math.floor(g * 255),
-            b: Math.floor(b * 255),
-            a: Math.floor(a * 100),
+            hex: `#${(c[0] << 16 | c[1] << 8 | c[2]).toString(16).padStart(6, '0')}`,
+            rgb: {r: c[0], g: c[1], b: c[2], a: _t},
         };
     }
 

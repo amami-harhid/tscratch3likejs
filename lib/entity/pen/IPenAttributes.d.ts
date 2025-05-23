@@ -1,4 +1,4 @@
 export declare type IPenAttributes = {
     diameter?: number;
-    color4f: [number, number, number, number],
+    color4f: number[],
 };

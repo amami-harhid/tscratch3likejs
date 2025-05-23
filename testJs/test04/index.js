@@ -46,7 +46,10 @@ Pg.setting = async function setting() {
         await this.Control.waitUntil(()=>Lib.anyKeyIsDown());
         this.Pen.setPenSize(1500);
         this.Pen.penClear();
-        this.Pen.setPenTransparency(98);
+        this.Pen.setPenHue(240);
+        this.Pen.setPenSaturation(50);
+        this.Pen.setPenBrightness(50);
+        this.Pen.setPenTransparency(95);
         this.Pen.penDown();
         this.Looks.setEffect(Lib.ImageEffective.GHOST, 50);
         for(const _ of Lib.Iterator(5000)){
@@ -57,7 +60,6 @@ Pg.setting = async function setting() {
             this.Pen.drawLine();
             this.Looks.changeEffectBy(Lib.ImageEffective.COLOR, 25);
             this.Pen.stamp();
-
             yield;
         }
     });

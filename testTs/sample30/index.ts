@@ -42,8 +42,11 @@ Pg.setting = async function () {
         this.Looks.setSize(150,150);
         this.Sensing.DragMode.draggable = true;
         this.Pen.penClear();
-        this.Pen.setPenSize(1500);
+        this.Pen.setPenHue(370);
+        this.Pen.setPenSaturation(50);
+        this.Pen.setPenBrightness(25);
         this.Pen.setPenTransparency(98);
+        this.Pen.setPenSize(1500);
         this.Looks.setEffect(Lib.ImageEffective.GHOST, 50);
         for(;;){
             this.Pen.drawPoint();
