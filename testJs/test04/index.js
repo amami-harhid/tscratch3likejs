@@ -46,9 +46,10 @@ Pg.setting = async function setting() {
         await this.Control.waitUntil(()=>Lib.anyKeyIsDown());
         this.Pen.setPenSize(1500);
         this.Pen.penClear();
-        this.Pen.setPenHue(240);
-        this.Pen.setPenSaturation(50);
-        this.Pen.setPenBrightness(50);
+        let hue = 240;
+        this.Pen.setPenHue(hue);
+        this.Pen.setPenSaturation(100);
+        this.Pen.setPenBrightness(100);
         this.Pen.setPenTransparency(95);
         this.Pen.penDown();
         this.Looks.setEffect(Lib.ImageEffective.GHOST, 50);
@@ -57,8 +58,10 @@ Pg.setting = async function setting() {
             this.Motion.moveSteps(10);
             //this.Motion.Direction.degree += 5;
             this.Motion.ifOnEdgeBounds();
+            hue = (hue+5)%360;
+            this.Pen.setPenHue(hue);
             this.Pen.drawLine();
-            this.Looks.changeEffectBy(Lib.ImageEffective.COLOR, 25);
+            this.Looks.changeEffectBy(Lib.ImageEffective.COLOR, 5);
             this.Pen.stamp();
             yield;
         }
