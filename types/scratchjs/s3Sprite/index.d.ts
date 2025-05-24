@@ -212,9 +212,9 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
 }
 declare interface S3Pen {
     /** 線を引く */
-    drawLine(): void;
+    //drawLine(): void;
     /** 点をうつ */
-    drawPoint(): void;
+    //drawPoint(): void;
     /** ペンクリア */
     penClear(): void;
     /** ペンを上げる */

@@ -1,10 +1,10 @@
 /**
- * sample24
- * シルエットを描く
+ * test03
+ * スプライトをIMGタグにする
  */
 import {Pg, Lib} from '../../build/index.js';
 
-Pg.title = "【Sample24】シルエットを描く"
+Pg.title = "【Test03】スプライトをイメージタグにする"
 
 const NeonTunnel = "NeonTunnel";
 const Chill = "Chill";

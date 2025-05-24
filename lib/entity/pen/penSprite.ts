@@ -41,6 +41,9 @@ export class PenSprite {
         this._penDown = true;
         this.drawPoint();
     }
+    isPenDown() : boolean {
+        return this._penDown;
+    }
     /**
      * HSV のPenAttirubtesをRGBのPenAttributesに変換する
      * @returns 

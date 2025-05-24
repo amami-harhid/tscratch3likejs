@@ -1,10 +1,10 @@
 /**
- * sample24
- * ステージ背景がないとき
+ * test04
+ * DragとPenのテスト
  */
 import {Pg, Lib} from '../../build/index.js';
 
-Pg.title = "【Sample24】ステージ背景がないとき"
+Pg.title = "【Test05】DragとPenのテスト"
 
 //dconst NeonTunnel = "NeonTunnel";
 const Chill = "Chill";

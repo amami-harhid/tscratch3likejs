@@ -42,14 +42,14 @@ Pg.setting = async function () {
         this.Looks.setSize(150,150);
         this.Sensing.DragMode.draggable = true;
         this.Pen.penClear();
-        this.Pen.setPenHue(370);
-        this.Pen.setPenSaturation(50);
-        this.Pen.setPenBrightness(25);
-        this.Pen.setPenTransparency(98);
+        this.Pen.setPenHue(200);
+        this.Pen.setPenSaturation(90);
+        this.Pen.setPenBrightness(85);
+        this.Pen.setPenTransparency(60);
         this.Pen.setPenSize(1500);
-        this.Looks.setEffect(Lib.ImageEffective.GHOST, 50);
+        this.Looks.setEffect(Lib.ImageEffective.GHOST, 80);
+        this.Pen.penDown();
         for(;;){
-            this.Pen.drawPoint();
             this.Motion.Direction.degree += 5;
             this.Looks.changeEffectBy(Lib.ImageEffective.COLOR,25);
             this.Pen.stamp();

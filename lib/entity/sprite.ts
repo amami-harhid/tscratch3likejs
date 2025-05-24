@@ -292,6 +292,12 @@ export class Sprite extends Entity {
             this.bubble.moveWithSprite();    
         }
     }
+    $setXY( x: number|{x:number,y:number}, y?: number ) {
+        if(this._penSprite.isPenDown()){
+            this._penSprite.drawLine();
+        }
+        super.$setXY(x,y);
+    }
     /**
      * 動かす
      * @param steps {number}
@@ -424,10 +430,15 @@ export class Sprite extends Entity {
     $_ifOnEdgeBounds(): void {
 //        this._ifOnEdgeBoundsFlag = false;
         if(!this.$isAlive()) return;
+        
         const drawable = this.render.renderer._allDrawables[this.drawableID];
         if( drawable == null || drawable.skin == null) return;
         const bounds = this.render.renderer.getBounds(this.drawableID);
         if (!bounds) return;
+
+        const oldX = this.$_position.x;
+        const oldY = this.$_position.y;
+
         const stageWidth = this.render.stageWidth;
         const stageHeight = this.render.stageHeight;
         const distLeft = Math.max(0, (stageWidth / 2) + bounds.left);
@@ -513,8 +524,10 @@ export class Sprite extends Entity {
         if(fencedPosition){
             // this._ifOnEdgeBoundsPosition.x = fencedPosition[0];
             // this._ifOnEdgeBoundsPosition.y = fencedPosition[1];
-            this.$_position.x = fencedPosition[0];
-            this.$_position.y = fencedPosition[1];
+            
+            //this.$_position.x = fencedPosition[0];
+            //this.$_position.y = fencedPosition[1];
+            this.$setXY(fencedPosition[0],fencedPosition[1]);
         }
     }
     /**
@@ -789,12 +802,6 @@ export class Sprite extends Entity {
         if(this.costumes){
             this.costumes.nextCostume();
         }
-        //サイズが大きなコスチュームに切り替えた後
-        //$_ifOnEdgeBounds()をすると位置と向きが変化
-        //してしまう。
-        //$_ifOnEdgeBounds()はその場しのぎで入れた記憶が
-        //あるのではずしてみる。
-        //this.$_ifOnEdgeBounds();
     }
     /**
      * コスチュームを切り替える

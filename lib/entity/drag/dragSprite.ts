@@ -95,6 +95,9 @@ export class DragSprite {
             sprite.Motion.Position.y = this.libs.mousePosition.y - this.moveDistance.y;
             const ret = this.drag.next();
             if(ret.done === true) {
+                sprite.$setXY(
+                    this.libs.mousePosition.x - this.moveDistance.x, 
+                    this.libs.mousePosition.y - this.moveDistance.y);
                 this.dragComplete();
                 this.drag = null;
                 return;
