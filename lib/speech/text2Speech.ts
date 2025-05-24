@@ -4,6 +4,7 @@
 import { Entity } from 'lib/entity/entity';
 import { SoundLoader } from '../importer/soundLoader';
 import { Sounds } from '../sounds/sounds';
+import { TSoundPlayerOption } from '../sounds/IAudioEngine';
 
 //const SERVER = 'https://synthesis-service.scratch.mit.edu';
 
@@ -80,12 +81,14 @@ export class Speech {
     public gender: string;
     private cache;
     public locale: string|null;
+    private properties: {[type:string]: {gender:string, locale:string, properties:TSoundPlayerOption}};
     constructor() {
         //this.voice = ALTO_ID;
         //this.language =  JAPANESE_ID;
         this.gender = GENDER.FEMALE;
         this.cache = new Map();
         this.locale = null;
+        this.properties = {};
     }
     // /**
     //  * An object with info for each voice.
@@ -170,45 +173,58 @@ export class Speech {
     get DEFAULT_LANGUAGE (){
         return JAPANESE_ID;
     }
-
-    speech(entity:Entity, words:string, properties={}) {
+    setSpeechProperties(type:string, gender:string, locale:string ,properties:TSoundPlayerOption){
+        const prop = this.properties[type];
+        if(prop){
+            prop.gender = gender;
+            prop.locale = locale;
+            prop.properties = properties;
+        }else{
+            this.properties[type] = {gender:gender, locale:locale, properties:properties};
+        }
+    }
+    speech(entity:Entity, words:string, type: string) {
+        const _prop = this.properties[type];
+        if(_prop == undefined) return;
         // 128文字までしか許容しないとする
         const text = encodeURIComponent(words.substring(0, 128));
-        let path = `${SERVER_HOST}/synth?locale=${this.locale}&gender=${this.gender}&text=${text}`;
+        let path = `${SERVER_HOST}/synth?locale=${_prop.locale}&gender=${_prop.gender}&text=${text}`;
         if(!this.cache.has(path)) {
             const name = 'ScratchSpeech'; // <-- なんでもよいが、変数に使える文字であること
             const me = this;
             SoundLoader.loadSound(path,name).then(_sound=>{
                 me.cache.set(path, _sound);
-                me._speechPlay(entity, _sound.name, _sound.data, properties);
+                me._speechPlay(entity, _sound.name, _sound.data, _prop.properties);
             });
         }else{
             const _sound = this.cache.get(path);
-            this._speechPlay(entity, _sound.name, _sound.data, properties);
+            this._speechPlay(entity, _sound.name, _sound.data, _prop.properties);
         }
     }
     
-    _speechPlay(entity:Entity, name:string, data, properties) {
+    _speechPlay(entity:Entity, name:string, data: Uint8Array<ArrayBuffer>, properties: TSoundPlayerOption) {
         const sounds = new Sounds(entity);
         sounds.setSound(name, data, properties).then(_=>{
             sounds.play();
         });
     }
 
-    async speechAndWait(entity:Entity, words:string, properties={}) {
+    async speechAndWait(entity:Entity, words:string, type:string) {
+        const _prop = this.properties[type];
+        if(_prop == undefined) return;
         // 128文字までしか許容しないとする
         const text = encodeURIComponent(words.substring(0, 128));
-        let path = `${SERVER_HOST}/synth?locale=${this.locale}&gender=${this.gender}&text=${text}`;
+        let path = `${SERVER_HOST}/synth?locale=${_prop.locale}&gender=${_prop.gender}&text=${text}`;
         if(!this.cache.has(path)) {
             const name = 'ScratchSpeech'; // <-- なんでもよいが、変数に使える文字であること
             const sound = await SoundLoader.loadSound(path, name);
             this.cache.set(path, sound);
         }
         const sound = this.cache.get(path);
-        await this._speechPlayUntilDone(entity, sound.name, sound.data, properties);
+        await this._speechPlayUntilDone(entity, sound.name, sound.data, _prop.properties);
     }
     
-    async _speechPlayUntilDone(entity:Entity, name:string, data, properties) {
+    async _speechPlayUntilDone(entity:Entity, name:string, data: Uint8Array<ArrayBuffer>, properties: TSoundPlayerOption) {
         const sounds = new Sounds(entity);
         await sounds.setSound(name, data, properties);
         await sounds.startSoundUntilDone(entity);

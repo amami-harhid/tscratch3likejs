@@ -60,11 +60,13 @@ Pg.setting = async function setting() {
     
     // ネコにさわったらお話する
     cat.Event.whenFlag( async function*( this: S3Sprite ){
+        const OTTO_TYPE = 'OTTO';
         const words = `おっと`;
         const properties = {'pitch': 2, 'volume': 100}
+        this.TextToSpeech.setSpeechProperties(OTTO_TYPE, properties, 'male');
         while(true){
             if( this.Sensing.isMouseTouching() ) {
-                this.Event.broadcast('SPEAK', words, properties, 'male');
+                this.Event.broadcast('SPEAK', words, OTTO_TYPE);
                 
                 // 「送って待つ」ではないので次のループに進ませないように、
                 // 「マウスタッチしない迄待つ」をする。
@@ -75,20 +77,20 @@ Pg.setting = async function setting() {
     });
     // ネコをクリックしたらお話する
     cat.Event.whenClicked(async function( this: S3Sprite ){
+        const SOKOSOKO_TYPE = "SOKOSOKO";
         const words = `そこそこ`;
         const properties = {'pitch': 1.7, 'volume': 500}
-        this.Event.broadcast('SPEAK', words, properties, 'female')
+        this.TextToSpeech.setSpeechProperties(SOKOSOKO_TYPE, properties, 'female', 'ja-JP');
+        this.Event.broadcast('SPEAK', words, SOKOSOKO_TYPE);
     });
     
     /** SPEAK を受信したらスピーチする */
     cat.Event.whenBroadcastReceived('SPEAK', 
         async function(this:S3Sprite, 
             words:string, 
-            properties:{'pitch': number, 'volume': number}, 
-            gender='male', 
-            locale='ja-JP'
+            type: string
         ) {
-            this.Extensions.speech(words, properties, gender, locale);
+            this.TextToSpeech.speech(words, type);
 
         });
 }

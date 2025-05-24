@@ -1444,15 +1444,15 @@ export class Sprite extends Entity {
         }
     }
     /**
-     * 拡張機能
+     * 音声合成
      */
-    get Extensions() {
+    get TextToSpeech() {
         return {
             //---Entity
+            "setSpeechProperties": this.$setSpeechProperties.bind(this),
             "speech": this.$speech.bind(this),
             "speechAndWait" : this.$speechAndWait.bind(this),
             "speechStopAll": this.$speechStopImmediately.bind(this),
-
         }
     }
 

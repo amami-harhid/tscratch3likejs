@@ -23,6 +23,7 @@ import type { TThreadObj } from '../controls/TThreadObj';
 import type { TPosition, TScale } from '../common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from './entityOptions';
 import type { TBroadcastElement } from './TBroadcastElement';
+import type { TSoundPlayerOption } from 'lib/sounds/IAudioEngine';
 import type { ScratchRenderProperties } from '../render/IRenderWebGL';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
 export class Entity extends EventEmitter {
@@ -1274,23 +1275,20 @@ export class Entity extends EventEmitter {
             this.$_position.y += y;
         }
     }
-    $speech(words, properties, gender='male', locale='ja-JP') {
+    $setSpeechProperties(type:string, properties: TSoundPlayerOption, gender='male', locale='ja-JP'){
         const _properties = (properties)? properties : {};
-
         const speech = Speech.getInstance();
-        speech.gender = gender;
-        speech.locale = locale;
-        speech.speech(this, words, _properties);
+        speech.setSpeechProperties(type, gender, locale, _properties);
+    }
+    $speech(words:string, type:string) {
+        const speech = Speech.getInstance();
+        speech.speech(this, words, type);
 
     }
 
-    async $speechAndWait(words, properties, gender='male', locale='ja-JP') {
-        const _properties = (properties)? properties : {};
-
+    async $speechAndWait(words:string, type:string) {
         const speech = Speech.getInstance();
-        speech.gender = gender;
-        speech.locale = locale;
-        await speech.speechAndWait(this, words, _properties);
+        await speech.speechAndWait(this, words, type);
     }
 
     update() {

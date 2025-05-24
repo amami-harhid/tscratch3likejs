@@ -41,12 +41,14 @@ Pg.setting = async function setting() {
     
     // ネコにさわったらお話する
     cat.Event.whenFlag( async function*(this:S3Sprite){
+        const NANINANI_TYPE = 'NANINANI';
         const words = `なになに？どうしたの？`;
         const properties = {'pitch': 2, 'volume': 100}
+        this.TextToSpeech.setSpeechProperties(NANINANI_TYPE,properties,'male');
         while(true){
             if( this.Sensing.isMouseTouching() ) {
                 this.Looks.say(words);
-                await this.Event.broadcastAndWait('SPEECH', words, properties, 'male');
+                await this.Event.broadcastAndWait('SPEECH', words, NANINANI_TYPE);
                 
                 // 「送って待つ」を使うことで スピーチが終わるまで次のループに進まないため、
                 // 以下の「マウスタッチしている間、待つ」のコードが不要である。
@@ -60,11 +62,13 @@ Pg.setting = async function setting() {
     // ネコをクリックしたらお話する
     let catSpeeking = false;
     cat.Event.whenClicked(async function(this:S3Sprite){
+        const SOKOSOKO = 'SOKOSOKO';
         const words = `そこそこ。そこがかゆいの。`;
-        const properties = {'pitch': 1.7, 'volume': 500}
+        const properties = {'pitch': 1.7, 'volume': 500};
+        this.TextToSpeech.setSpeechProperties(SOKOSOKO,properties,'female');
         if(catSpeeking === false){
             catSpeeking = true;
-            await this.Event.broadcastAndWait('SPEECH', words, properties, 'female');
+            await this.Event.broadcastAndWait('SPEECH', words, SOKOSOKO);
             catSpeeking = false;
         }
     });
@@ -72,12 +76,10 @@ Pg.setting = async function setting() {
     cat.Event.whenBroadcastReceived('SPEECH', 
         async function(this:S3Sprite, 
             words:string, 
-            properties:{'pitch': number, 'volume': number}, 
-            gender:string='male', 
-            locale:string='ja-JP'
+            type: string
         ) {
             // speechAndWait に await をつけて、音声スピーチが終わるまで待つ。
-            await this.Extensions.speechAndWait(words, properties, gender, locale);
+            await this.TextToSpeech.speechAndWait(words, type);
         });
 
 }

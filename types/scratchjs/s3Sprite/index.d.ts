@@ -5,7 +5,7 @@ import {S3Effect} from "../s3Effect";
 //import {S3EventFuncsions} from "../s3EventFunctions";
 import {S3ImageFunctions} from "../s3ImageFunctions";
 import {S3ControlFunctions} from "../s3ControlFunctions";
-import {S3ExtensionsFunctions} from "../s3ExtensionsFunctions";
+import {S3TextToSpeechFunctions} from "../s3TextToSpeechFunctions";
 import {S3SensingFunctions} from "../s3SensingFunctions";
 import {S3EventFunctions} from "../s3EventFunctions";
 import {S3SoundFunctions} from "../s3SoundFunctions";
@@ -251,7 +251,7 @@ export interface S3Sprite extends S3Entity{
     Motion: S3MotionFunctions;
     Event: S3SpriteEventFunctions;
     Control: S3SpriteControlFunctions;
-    Extensions: S3ExtensionsFunctions;
+    TextToSpeech: S3TextToSpeechFunctions;
     Sensing: S3SpriteSensingFunctions;
     Sound: S3SoundFunctions;
     Looks: S3SpriteLooksFunctions;
