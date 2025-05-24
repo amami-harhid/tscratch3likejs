@@ -124,7 +124,7 @@ export class Stage extends Entity {
     }
     update(): void {
         super.update();
-        this.backdrops.setPosition(this.$_position.x, this.$_position.y);
+        this.backdrops.setPosition(this.position.x, this.position.y);
         this.backdrops.setScale(this.scale.w, this.scale.h);
         this.backdrops.setDirection(this.direction);
         this.backdrops.update(this.drawableID);

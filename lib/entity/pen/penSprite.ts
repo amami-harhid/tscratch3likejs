@@ -131,8 +131,8 @@ export class PenSprite {
     drawLine() {
         if(this._penDown === true){
             if(this._skinId > -1 && this._sprite.dragSprite.dragging == false){
-                const x1 = this._sprite.$_position.x;
-                const y1 = this._sprite.$_position.y;
+                const x1 = this._sprite.position.x;
+                const y1 = this._sprite.position.y;
                 if(this._x0 != undefined && this._y0 != undefined){
                     const x0 = this._x0;
                     const y0 = this._y0;
@@ -148,8 +148,8 @@ export class PenSprite {
     }
     drawPoint() {
         if(this._skinId > -1 && this._sprite.dragSprite.dragging == false){
-            const x0 = this._sprite.$_position.x;
-            const y0 = this._sprite.$_position.y;
+            const x0 = this._sprite.position.x;
+            const y0 = this._sprite.position.y;
             this.render.renderer.penPoint(this._skinId, this._penRgbAttributes, x0, y0);
             this._x0 = x0;
             this._y0 = y0;

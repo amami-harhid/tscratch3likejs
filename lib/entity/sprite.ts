@@ -2,6 +2,7 @@
  * Sprite
  */
 import { Bubble } from "./bubble";
+import type {BubbleProperties} from "./bubble";
 import { DragSprite } from "./drag/dragSprite";
 import { Entity } from "./entity";
 import { Env } from "../env";
@@ -33,7 +34,7 @@ export class Sprite extends Entity {
     private soundDatas?: S3SoundData[];
     private touchingEdge: boolean;
     public bubbleDrawableID: string;
-    public _bubbleTimeout: NodeJS.Timeout|undefined;
+    private _bubbleTimeout?: NodeJS.Timeout;
     public dragSprite : DragSprite;
     private _penSprite: PenSprite;
     /**
@@ -65,7 +66,6 @@ export class Sprite extends Entity {
         this.soundDatas = [];
         this.touchingEdge = false;
         this.bubbleDrawableID = '';
-        this._bubbleTimeout = undefined;
         this.dragSprite = new DragSprite(this);
         this._penSprite = new PenSprite(this);
         //this._isAlive = true;
@@ -928,10 +928,10 @@ export class Sprite extends Entity {
     /**
      * 言う
      * @param {string} text 
-     * @param {*} properties 
+     * @param {BubbleProperties} properties 
      * @returns 
      */
-    $say( text: string, properties = {} ): void {
+    private $say( text: string, properties: BubbleProperties = {} ): void {
         if(!this.$isAlive() || !this.bubble) return;
         if( text && (typeof text) == 'string') {
             this.bubble.say( text , properties );
@@ -944,10 +944,10 @@ export class Sprite extends Entity {
      * 指定した秒数だけ言う。
      * @param {string} text 
      * @param {number} secs 
-     * @param {*} properties 
+     * @param {BubbleProperties} properties 
      * @returns 
      */
-    async $sayForSecs( text:string, secs:number, properties={}): Promise<void> {
+    private async $sayForSecs( text:string, secs:number, properties: BubbleProperties={}): Promise<void> {
         if(!this.$isAlive()) return;
         this.$say(text, properties);
         const me = this;
@@ -965,10 +965,10 @@ export class Sprite extends Entity {
     /**
      * 考える
      * @param {string} text 
-     * @param {*} properties 
+     * @param {BubbleProperties} properties 
      * @returns 
      */
-    $think( text: string, properties = {} ): void {
+    private $think( text: string, properties: BubbleProperties = {} ): void {
         if(!this.$isAlive() || this.bubble==undefined) return;
         if( text && (typeof text) == 'string') {
             this.bubble.think( text , properties );
@@ -981,10 +981,10 @@ export class Sprite extends Entity {
      * 指定した秒数だけ考える
      * @param {string} text 
      * @param {number} secs 
-     * @param {[any]} properties 
+     * @param {BubbleProperties} properties 
      * @returns {Promise<void>}
      */
-    async $thinkForSecs( text:string, secs:number, properties={}): Promise<void> {
+    private async $thinkForSecs( text:string, secs:number, properties:BubbleProperties={}): Promise<void> {
         if(!this.$isAlive()) return;
         this.$think(text, properties);
         return new Promise<void>(resolve => {
@@ -1121,7 +1121,9 @@ export class Sprite extends Entity {
      */
     get Motion() {
         return {
+            /** 位置 */
             "Position" : this.Position,
+            /** 向き */
             "Direction": this.Direction,
             "getCurrentPosition": this.$getCurrentPosition.bind(this),
             "getCurrentDirection": this.$getCurrentDirection.bind(this),

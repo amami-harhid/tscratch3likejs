@@ -41,13 +41,13 @@ export class Entity extends EventEmitter {
     public drawableID: number;
     protected _libs: Libs;
     private threads: Threads;
-    public pace?: number;
+    public pace: number;
     public name: string;
     private layer: StageLayering;
     public id: string;
     public canvas: HTMLCanvasElement;
     public flag: HTMLElement|null;
-    public $_position: TPosition;
+    protected $_position: TPosition;
     protected $_scale: TScale;
     protected $_direction: number;
     protected _visible: boolean;
@@ -60,7 +60,7 @@ export class Entity extends EventEmitter {
     protected _effect: TEntityEffects;
     public life: number;
     protected modules?: Map<string, Promise<void>[]>;
-    public _isAlive: boolean;
+    protected _isAlive: boolean;
     private _timer: number;
     constructor (name: string, layer: StageLayering, options:TEntityOptions = {} ){
         super();
@@ -105,6 +105,9 @@ export class Entity extends EventEmitter {
         this._isAlive = true;
         // タイマー用
         this._timer = performance.now();
+    }
+    get position() {
+        return this.$_position;
     }
     isAlive() {
         // スプライトの場合はオーバーライドしている
@@ -988,10 +991,10 @@ export class Entity extends EventEmitter {
         this.updateVisible(_visible);
     }
 
-    $show() {
+    protected $show() {
         this.visible = true;
     }
-    $hide() {
+    protected $hide() {
         this.visible = false;
     }
 
@@ -1107,13 +1110,17 @@ export class Entity extends EventEmitter {
     /**
      * @throws THROW_STOP_THIS_SCRIPTS
      */
-    $stopThisScript() {
+    protected $stopThisScript() {
         throw Threads.THROW_STOP_THIS_SCRIPTS;
     }
-    $stopOtherScripts() {
+    protected $stopOtherScripts() {
         this.threads.stopOtherScripts(this);
     }
     // これは使わない
+    /**
+     * @param t 
+     * @deprecated
+     */
     stopThread( t ) {
         clearTimeout( t );
     }
@@ -1183,7 +1190,7 @@ export class Entity extends EventEmitter {
      * @param drawableID {number}
      * @returns {boolean}
      */
-    $_isDrawableActive(drawableID: number): boolean {
+    protected $_isDrawableActive(drawableID: number): boolean {
         if( this.getSkinId(drawableID) > -1 ){
             return true;
         }
@@ -1194,7 +1201,7 @@ export class Entity extends EventEmitter {
      * @param {number} x 
      * @param {number} y 
      */
-    $setForceXY(x, y)  {
+    protected $setForceXY(x:number, y:number): void  {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             const _position = _renderer.getFencedPositionOfDrawable(this.drawableID, [x, y]);
@@ -1351,19 +1358,19 @@ export class Entity extends EventEmitter {
     $isKeyNotDown( key ) {
         return this._libs.keyIsNotDown(key);
     }
-    public get $mouseX() {
+    protected get $mouseX() {
         const mousePosition = this._libs.mousePosition;
         return mousePosition.x;
     }
-    public get $mouseY() {
+    protected get $mouseY() {
         const mousePosition = this._libs.mousePosition;
         return mousePosition.y;
     }
 
-    $resetTimer() {
+    protected $resetTimer() {
         this._timer = performance.now();
     }
-    get $timer() {
+    protected get $timer() {
         return performance.now() - this._timer;
     }
 

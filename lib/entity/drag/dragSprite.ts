@@ -55,8 +55,8 @@ export class DragSprite {
         const canvasMouse = {x:mouseX-canvasX, y:mouseY-canvasY};
 
         const moveDistance = {
-            x: canvasMouse.x*renderRate.x - stageWidthHalf - sprite.$_position.x,
-            y: stageHeightHalf - canvasMouse.y*renderRate.y - sprite.$_position.y,
+            x: canvasMouse.x*renderRate.x - stageWidthHalf - sprite.position.x,
+            y: stageHeightHalf - canvasMouse.y*renderRate.y - sprite.position.y,
         };
         this.moveDistance = {
             x: moveDistance.x,
