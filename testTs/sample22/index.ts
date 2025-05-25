@@ -40,7 +40,7 @@ Pg.setting = async function setting() {
     })
     
     // ネコにさわったらお話する
-    cat.Event.whenFlag( async function*(this:S3Sprite){
+    cat.Event.whenFlag( async function*(this:typeof Lib.Sprite){
         const NANINANI_TYPE = 'NANINANI';
         const words = `なになに？どうしたの？`;
         const properties = {'pitch': 2, 'volume': 100}

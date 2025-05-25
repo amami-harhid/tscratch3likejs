@@ -1,0 +1,17 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": 
+            ["./lib/playGround.ts", 
+            "./lib/entity/entityConstant.ts",
+            "./lib/entity/bubble.ts",
+            "./lib/entity/stage*.ts",
+            "./lib/entity/sprite*.ts",
+            "./lib/entity/rotationStyle.ts",
+            "./lib/entity/entityOptions.ts",
+            "./lib/controls/libs.ts",
+            "./lib/entity/pen/penSprite.ts",
+            "./lib/entity/drag/dragSprite.ts",
+            "./lib/monitor/monitor*.ts",
+        ],
+    "out": "docs"
+}

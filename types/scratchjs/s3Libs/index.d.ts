@@ -73,7 +73,7 @@ export interface S3Libs {
     /** キーボードキー */
     Keyboard: S3Keyboard,
     /** ループの制御 */
-    Loop: Loop;
+    //Loop: Loop;
     /** サウンドオプション */
     SoundOption: S3SoundOption;
     /** 環境設定 */

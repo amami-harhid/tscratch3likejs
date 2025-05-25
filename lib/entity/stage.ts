@@ -12,9 +12,11 @@ import type { TScale } from "../common/typeCommon";
 export class Stage extends Entity {
     private scale: TScale;
     private direction: number;
+    /** @internal */
     public backdrops: Backdrops;
     private _sprites: Sprite[];
     //private skinIdx: number;
+    /** @internal */
     public mouse: TMouse;
     constructor( options:TEntityOptions ) {
         if(typeof options == "string") throw "new Stage() パラメータはオブジェクト型のみ"
@@ -254,7 +256,7 @@ export class Stage extends Entity {
      * 次の背景に切り替える
      */
     $nextBackDrop(): void {
-        if(!this.isAlive()) return;
+        if(!this.$isAlive()) return;
         if(this.backdrops){
             const name_before = this.backdrops.currentSkinName();
             this.backdrops.nextCostume();
@@ -268,7 +270,7 @@ export class Stage extends Entity {
      * @param {string|number} backdrop 
      */
     $switchBackDrop( backdrop: string|number ): void {
-        if(!this.isAlive()) return;
+        if(!this.$isAlive()) return;
         if( backdrop ){
             if( typeof backdrop === 'string') {
                 const _name = backdrop;
@@ -322,6 +324,7 @@ export class Stage extends Entity {
         });
     }
     /**
+     * 
      * 背景番号、背景名を取り出すためのオブジェクト
      * 使用例：this.Backdrop.no, this.Backdrop.name
      * @returns {{no: number, name: string}}
@@ -367,6 +370,7 @@ export class Stage extends Entity {
     // }
     /**
      * 制御
+     * @internal
      */
     get Control() {
         return {

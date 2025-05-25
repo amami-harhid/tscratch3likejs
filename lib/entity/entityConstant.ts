@@ -1,57 +1,43 @@
-import type {S3RotationStyle} from '../../types/scratchjs/s3Libs'
-export class ImageEffective {
+/** イメージ効果 */
+export enum ImageEffective {
     /**
      * 色の効果
      */
-    static get COLOR () {
-        return 'color';
-    }
+    COLOR = 'color',
     /**
      * 魚眼レンズの効果
      */
-    static get FISHEYE () {
-        return 'fisheye';
-    }
+    FISHEYE = 'fisheye',
     /**
      * 渦巻きの効果
      */
-    static get WHIRL () {
-        return 'whirl';
-    }
+    WHIRL = 'whirl',
     /**
      * ピクセル化の効果
      */
-    static get PIXELATE () {
-        return 'pixelate';
-    }
-    // モザイクの効果
-    static get MOSAIC () {
-        return 'mosaic';
-    }
-    // 明るさの効果
-    static get BRIGHTNESS () {
-        return 'brightness';
-    }
-    // 幽霊の効果
-    static get GHOST () {
-        return 'ghost';
-    }
+    PIXELATE = 'pixelate',
+    /**
+     * モザイクの効果
+     */
+    MOSAIC = 'mosaic',
+    /**
+     * 明るさの効果
+     */
+    BRIGHTNESS = 'brightness',
+    /**
+     * 幽霊の効果
+     */ 
+    GHOST = 'ghost',
 };
-
-export class SoundOption {
-    static get VOLUME (){
-        return "volume";
-    }
-    static get PITCH () {
-        return "pitch";
-    }
+/** サウンド効果 */
+export enum SoundOption {
+    /**
+     * 音量
+     */
+    VOLUME = "volume",
+    
+    /**
+     * ピッチ
+     */
+    PITCH = "pitch",
 }
-export const RotationStyle : S3RotationStyle = {
-    
-    LEFT_RIGHT : 'left-right',
-    
-    DONT_ROTATE : 'do-not-rotate',
-    
-    ALL_AROUND : 'all-around',
-
-};

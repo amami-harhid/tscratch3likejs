@@ -222,7 +222,7 @@ export class Threads {
     }
     async interval(me: Threads) {
         for(const obj of me.threadArr){
-            if(obj.entity && !obj.entity.isAlive()){ // Entity生きていないとき
+            if(obj.entity && !obj.entity.$isAlive()){ // Entity生きていないとき
                 obj.forceExit = true; // 強制終了とする
             }
             if(obj.status != me.STOP){

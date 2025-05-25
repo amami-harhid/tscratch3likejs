@@ -29,7 +29,7 @@ declare interface S3SpriteControlFunctions extends S3ControlFunctions{
     /** クローンを全て削除する */
     removeAllClones() : void;
     /** スプライトが生きている */
-    alive() : boolean;
+    isAlive() : boolean;
     /** スプライトの他のスクリプトを止める */
     stopOtherScripts(): void;
 
@@ -192,9 +192,9 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** 大きさを変える */
     changeSizeBy(w: number | SizeProperty, h?:number ):void;
     /** 大きさを取得する */
-    getSize() : SizeProperty;
+    //getSize() : SizeProperty;
     /** 大きさを設定する */
-    setSize(w: number | SizeProperty, h?: number): void;
+    //setSize(w: number | SizeProperty, h?: number): void;
     /** 表示する */
     show(): void;
     /** 隠す */

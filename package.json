@@ -9,8 +9,8 @@
   "main": "./src.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "webpackD": "npx webpack --mode development",
-    "typedoc": "typedoc --out ./docs/ ./lib/**/*.ts"
+    "webpack": "npx webpack --mode development",
+    "typedoc": "typedoc --excludeInternal --options ./jsdoc.json"
   },
   "publishConfig": {
     "access": "public"

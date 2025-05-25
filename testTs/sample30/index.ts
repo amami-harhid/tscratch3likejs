@@ -13,7 +13,7 @@ const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
 let stage: S3Stage;
 let cat: S3Sprite;
-
+const Sprite = Lib.Sprite;
 const Jurassic = 'Jurassic';
 const Chill = 'Chill';
 const Cat = 'Cat';
@@ -26,7 +26,7 @@ Pg.preload = async function (this:S3PlayGround) {
 Pg.prepare = async function () {
     stage = new Lib.Stage();
     await stage.Sound.add(Chill);
-    cat = new Lib.Sprite(Cat);
+    cat = new Sprite(Cat);
     await cat.Image.add(Cat);
 }
 
@@ -38,7 +38,7 @@ Pg.setting = async function () {
             yield;
         }
     })
-    cat.Event.whenFlag(async function*(this:S3Sprite){
+    cat.Event.whenFlag(async function*(this:typeof Lib.Sprite){
         this.Looks.setSize(150,150);
         this.Sensing.DragMode.draggable = true;
         this.Pen.penClear();

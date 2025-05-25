@@ -2,19 +2,38 @@ import { Libs } from '../../controls/libs';
 import { PlayGround } from '../../playGround';
 import { Sprite } from '../sprite';
 import { StageLayering } from '../stageLayering';
+/**
+ * DragSprite
+ */
 export class DragSprite {
+    /** @internal */
     static PROPERTIES_CHANGE = "properties_change";
     private sprite: Sprite;
     private libs: Libs;
     private p: PlayGround;
+    /**
+     * draggable {boolean} - trueのときDragできる。デフォルト値はfalse.
+     * 
+     * ```ts
+     *   sprite.dragSprite.draggable = true;
+     * ```
+     */
     public draggable: boolean;
     private drag : Generator|null;
     private moveDistance?: {x:number, y:number};
-    private img : HTMLImageElement | null;
+    /**
+     * dragging {boolean} - Drag中のときTrue.
+     * 
+     * ```ts
+     *   if( sprite.dragSprite.dragging === true ) {
+     *       console.log('Drag中です');
+     *   }
+     * ```
+     */
     public dragging: boolean;
-    private pos: {x:number,y:number};
     
     /**
+     * @internal
      * @constructor
      */
     constructor(sprite: Sprite) {
@@ -25,11 +44,12 @@ export class DragSprite {
         this.draggable = false;
         this.drag = null;
         this.dragComplete();
-        this.img = null;
+        //this.img = null;
         this.dragging = false;
-        this.pos = {x:0, y:0};
+        //this.pos = {x:0, y:0};
     }
     /**
+     * @internal
      * ドラッグ開始処理
      */
     dragStart(): void {
@@ -55,8 +75,8 @@ export class DragSprite {
         const canvasMouse = {x:mouseX-canvasX, y:mouseY-canvasY};
 
         const moveDistance = {
-            x: canvasMouse.x*renderRate.x - stageWidthHalf - sprite.position.x,
-            y: stageHeightHalf - canvasMouse.y*renderRate.y - sprite.position.y,
+            x: canvasMouse.x*renderRate.x - stageWidthHalf - sprite.Position.x,
+            y: stageHeightHalf - canvasMouse.y*renderRate.y - sprite.Position.y,
         };
         this.moveDistance = {
             x: moveDistance.x,
@@ -65,6 +85,7 @@ export class DragSprite {
         this.dragging = true;
     }
     /**
+     * @internal
      * ドラッグ完了の処理（初期化としても使う）
      */
     dragComplete() {
@@ -72,6 +93,7 @@ export class DragSprite {
         this.dragging = false;
     }
     /**
+     * @internal
      * Update処理.
      * SpriteのUpdateの中で呼ばれる前提です
      * (1) ドラッグ開始したら スプライトの画像を取り出しImgタグを追加し、スプライトを非表示にする
@@ -95,9 +117,8 @@ export class DragSprite {
             sprite.Motion.Position.y = this.libs.mousePosition.y - this.moveDistance.y;
             const ret = this.drag.next();
             if(ret.done === true) {
-                sprite.$setXY(
-                    this.libs.mousePosition.x - this.moveDistance.x, 
-                    this.libs.mousePosition.y - this.moveDistance.y);
+                sprite.Motion.Position.x = this.libs.mousePosition.x - this.moveDistance.x;
+                sprite.Motion.Position.y = this.libs.mousePosition.y - this.moveDistance.y;
                 this.dragComplete();
                 this.drag = null;
                 return;
@@ -106,6 +127,7 @@ export class DragSprite {
 
     }
     /**
+     * @internal
      * マウスダウンしている間、スプライト画像をドラッグする
      */
     *dragger() : Generator {
