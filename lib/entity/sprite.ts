@@ -11,7 +11,7 @@ import { PenSprite } from './pen/penSprite';
 import type { IPenAttributes } from "./pen/IPenAttributes";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { SpriteControl } from './spriteControl';
-import { SpriteMotion } from './spriteMotion';
+import { SpriteMotion, ISpriteMotion } from './spriteMotion';
 import { SpriteLooks } from './spriteLooks';
 import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
@@ -62,7 +62,7 @@ export class Sprite extends Entity {
     public dragSprite : DragSprite;
     private _penSprite: PenSprite;
     /** 動き */
-    public Motion: SpriteMotion;
+    public Motion: ISpriteMotion;
     /** 見た目 */
     public Looks: SpriteLooks;
     /** 制御 */
@@ -1415,7 +1415,7 @@ export class Sprite extends Entity {
 
     //     };
     // }
-    
+
     /**
      * 距離
      * 使用例：マウスポインターとの距離 

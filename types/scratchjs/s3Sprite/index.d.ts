@@ -194,7 +194,7 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** 大きさを取得する */
     //getSize() : SizeProperty;
     /** 大きさを設定する */
-    //setSize(w: number | SizeProperty, h?: number): void;
+    setSize(w: number ,h: number): void;
     /** 表示する */
     show(): void;
     /** 隠す */
