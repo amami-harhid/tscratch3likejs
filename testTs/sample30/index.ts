@@ -38,7 +38,7 @@ Pg.setting = async function () {
         }
     })
     cat.Event.whenFlag(async function*(this:Sprite){
-        this.Looks.setSize(150, 150);
+        this.Looks.Size.scale = {w:150, h:150};
         this.Sensing.DragMode.draggable = true;
         this.Pen.penClear();
         this.Pen.setPenHue(200);

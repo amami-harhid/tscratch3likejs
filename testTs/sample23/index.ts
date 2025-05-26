@@ -46,7 +46,7 @@ Pg.prepare = async function prepare() {
     ball = new Lib.Sprite();
     await ball.Image.add( BallA );
     //ball.Motion.setXY(0,-100);
-    ball.Looks.setSize(50, 50);
+    ball.Looks.Size.scale = {w: 50, h: 50};
 
     paddle = new Lib.Sprite("paddle");
     await paddle.Image.add( Paddle );
@@ -77,7 +77,7 @@ Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     ball.Event.whenFlag(async function(this:Sprite){
         this.Motion.gotoXY(0,-100);
-        this.Looks.setSize(50, 50);
+        this.Looks.Size.scale = {w: 50, h: 50};
     });
     
     const BallSpeed = 10;
@@ -172,7 +172,7 @@ Pg.setting = async function setting() {
         // blockのクローンを全て削除(旗クリックを再度行うときにキレイな状態で始めるため)
         this.Control.removeAllClones();
         this.Looks.hide();
-        this.Looks.setSize(50, 50);
+        this.Looks.Size.scale = {w: 50, h: 50};
         this.Motion.gotoXY(-220,180);
 
         const pos = this.Motion.getCurrentPosition();

@@ -90,7 +90,7 @@ export class SpriteLooks {
     /**
      * サイズオブジェクト
      */
-    get Size() : {scale:{w:number, h:number}} {
+    get Size() :{w:number, h:number, scale:{w:number, h:number}} {
         return this.entity.Size;
     }
     /**

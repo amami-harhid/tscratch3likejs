@@ -104,7 +104,7 @@ Pg.prepare = async function prepare() {
 
     await sprite.Sound.add( Constant.Rip );
     // 縦横 200%のサイズにする
-    sprite.Looks.setSize(200, 200); 
+    sprite.Looks.Size.scale = {w: 200, h: 200}; 
 
 }
 
@@ -128,7 +128,7 @@ Pg.setting = async function setting() {
         // 初期設定
         this.Motion.gotoXY( 0, 0 );
         // サイズ
-        this.Looks.setSize( 200, 200 ); 
+        this.Looks.Size.scale = {w: 200, h: 200 }; 
         // 表示
         this.Looks.show();
         // 回転しない

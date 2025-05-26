@@ -44,7 +44,7 @@ Pg.prepare = async function() {
     cross = new Lib.Sprite("Cross");
     await cross.Image.add( Cross01 );
     await cross.Image.add( Cross02 );
-    cross.Looks.setSize(300, 300);
+    cross.Looks.Size.scale = {w: 300, h: 300};
     // 蝶を作る
     butterfly = new Lib.Sprite("Butterfly");
     await butterfly.Image.add( Butterfly01 );
@@ -70,7 +70,7 @@ Pg.setting = async function() {
         // 位置の初期化
         cross.Motion.gotoXY(0, 0);
         // サイズを３倍にする
-        cross.Looks.setSize(300, 300);
+        cross.Looks.Size.scale = {w: 300, h: 300};
         // ずっと繰り返す
         for(;;){
             // 右へ回転する
@@ -122,7 +122,7 @@ Pg.setting = async function() {
         // 取得した位置へ蝶を移動させる
         clone.Motion.gotoXY(mousePosition.x, mousePosition.y);
         // 蝶のサイズを 縦横 15% にする
-        clone.Looks.setSize(15, 15);
+        clone.Looks.Size.scale = {w: 15, h: 15};
         // ランダムな方向へ蝶を向ける
         clone.Motion.pointInDirection(Lib.randomDirection);
         // ミリ秒。クローンが生きている時間。（およその時間）

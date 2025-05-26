@@ -345,6 +345,14 @@ declare interface S3SpriteSize {
     w: number;
     /** 縦 */
     h: number;
+    /** スケール */
+    scale : S3SpriteScale;
+}
+declare interface S3SpriteScale {
+    /** 横 */
+    w: number;
+    /** 縦 */
+    h: number;
 }
 declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** コスチューム */
@@ -365,10 +373,6 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     Size: S3SpriteSize;
     /** 大きさを変える */
     changeSizeBy(w: number, h:number ):void;
-    /** 大きさを取得する */
-    getSize() : SizeProperty;
-    /** 大きさを設定する */
-    setSize(w: number ,h: number): void;
     /** 表示する */
     show(): void;
     /** 隠す */

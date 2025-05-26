@@ -44,7 +44,7 @@ Pg.prepare = async function prepare() {
     await cross.Image.add( Cross01 );
     await cross.Image.add( Cross02 );
     await cross.Sound.add( Pew );
-    cross.Looks.setSize(100, 100);
+    cross.Looks.Size.scale = {w: 100, h: 100};
     // 座標x を ステージの真ん中にする 
     cross.Motion.setX(0); 
     // 座標y を ステージの高さの半分×0.6だけ下げる 
@@ -71,7 +71,7 @@ Pg.setting = async function setting() {
         // 黒いコスチューム
         this.Looks.switchCostume(Cross01);
         // サイズを 100%にする
-        this.Looks.setSize(100, 100);
+        this.Looks.Size.scale = {w: 100, h: 100};
         // 座標x を ステージの真ん中にする 
         this.Motion.setX(0); 
         // 座標y を ステージの高さの半分×0.6だけ下げる 
@@ -119,7 +119,7 @@ Pg.setting = async function setting() {
     // クローンが作られたときの動作(十字)
     cross.Control.whenCloned( async function( this: Sprite ){
         // サイズを 20%にしておく
-        this.Looks.setSize(20, 20);
+        this.Looks.Size.scale = {w: 20, h: 20};
         // 上方向にしておく
         this.Motion.pointInDirection(0);
         // スプライトの大きさを取得（高さのみ）

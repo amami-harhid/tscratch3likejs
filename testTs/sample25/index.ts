@@ -41,7 +41,7 @@ Pg.prepare = async function prepare() {
     // コスチュームを追加
     await ball.Image.add( BallA );
     // 大きさを 横120%,縦120% にする
-    ball.Looks.setSize(120, 120);
+    ball.Looks.Size.scale = {w: 120, h: 120};
 }
 
 Pg.setting = async function setting() {
@@ -90,7 +90,7 @@ Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     ball.Event.whenFlag(async function(this:Sprite){
         this.Motion.gotoXY( 0, 0 );
-        this.Looks.setSize(120, 120);
+        this.Looks.Size.scale = {w: 120, h: 120};
     });
 
     /**

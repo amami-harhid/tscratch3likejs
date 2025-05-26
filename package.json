@@ -1,6 +1,6 @@
 {
   "name": "@tscratch3/tscratch3likejs",
-  "version": "1.0.0-alpha.23",
+  "version": "1.0.0-alpha.24",
   "description": "scratch3-like-js library, written in Typescript",
   "repository": {
     "type": "git",
@@ -10,6 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "webpack": "npx webpack --mode development",
+    "buildTestJs": "node ./build.js",
     "typedoc": "typedoc --excludeInternal --options ./jsdoc.json"
   },
   "publishConfig": {

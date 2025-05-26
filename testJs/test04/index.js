@@ -26,7 +26,7 @@ Pg.prepare = async function prepare() {
 
     ball = new Lib.Sprite('ball');
     await ball.Image.add( BallA );
-    ball.Looks.setSize(150, 150);
+    ball.Looks.Size.scale = {w: 150, h: 150};
     ball.Sensing.DragMode.draggable = true;
 }
 
