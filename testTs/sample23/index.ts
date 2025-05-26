@@ -114,7 +114,7 @@ Pg.setting = async function setting() {
             if( this.Sensing.isTouchingToSprite(paddle)){
                 const degree = this.Motion.Direction.degree;
                 const paddleDemensions = paddle.Looks.drawingDimensions();
-                const paddleLimitWidth = paddleDemensions.width * 0.3;
+                const paddleLimitWidth = paddleDemensions.w * 0.3;
                 const paddleX = paddle.Motion.Position.x;
                 const ballX = this.Motion.Position.x;
                 if(ballX < (paddleX - paddleLimitWidth)){
@@ -180,7 +180,7 @@ Pg.setting = async function setting() {
         blockCount = 0;
         for(let y=0; y<3; y++){
             for(let x=0; x<10; x++){
-                const blkPos = { x: pos.x + x*dimension.width, y: pos.y + (-y)*dimension.height };
+                const blkPos = { x: pos.x + x*dimension.w, y: pos.y + (-y)*dimension.h };
                 blockCount+=1;
                 this.Control.clone({position: blkPos});
                 yield;

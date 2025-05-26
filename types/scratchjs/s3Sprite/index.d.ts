@@ -357,9 +357,69 @@ declare interface S3SpriteScale {
 declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** コスチューム */
     Costume : S3Costume;
-    /** 次のコスチュームにする */
+    /** 
+     * 次のコスチュームにする 
+     * ```ts
+     *  cat = new Lib.Sprite('cat');
+     *  // 画像CAT01を追加
+     *  await cat.Image.add(CAT01);
+     *  // 画像CAT02を追加
+     *  await cat.Image.add(CAT02);
+     *  
+     *  cat.Event.whenFlag(async function*(this:Sprite){
+     *      for(;;) {
+     *          // 次のコスチュームにする
+     *          this.Looks.nextCostume();
+     *          // 0.5秒待つ
+     *          await this.Control.wait(0.5);
+     *          yield;
+     *      }
+     *  });
+     * ```
+     */
     nextCostume(): void;
-    /** 指定した名前(または番号)でコスチュームを切り替える */
+    /** 
+     * 指定した名前(または番号)でコスチュームを切り替える 
+     * ```ts
+     *  cat = new Lib.Sprite('cat');
+     *  // 画像CAT01を追加
+     *  await cat.Image.add(CAT01);
+     *  // 画像CAT02を追加
+     *  await cat.Image.add(CAT02);
+     * ```
+     * ```ts
+     *  // 旗を押したときの動作
+     *  cat.Event.whenFlag(async function*(this:Sprite){
+     *      for(;;) {
+     *          // CAT01にする
+     *          this.Looks.switchCostume(CAT01);
+     *          // 0.5秒待つ
+     *          await this.Control.wait(0.5);
+     *          // CAT02にする
+     *          this.Looks.switchCostume(CAT02);
+     *          // 0.5秒待つ
+     *          await this.Control.wait(0.5);
+     *          yield;
+     *      }
+     *  });
+     * ```
+     * ```ts
+     *  // 旗を押したときの動作
+     *  cat.Event.whenFlag(async function*(this:Sprite){
+     *      for(;;) {
+     *          // CAT01にする
+     *          this.Looks.switchCostume(0);
+     *          // 0.5秒待つ
+     *          await this.Control.wait(0.5);
+     *          // CAT02にする
+     *          this.Looks.switchCostume(1);
+     *          // 0.5秒待つ
+     *          await this.Control.wait(0.5);
+     *          yield;
+     *      }
+     *  });
+     * ```
+     */
     switchCostume(costume: string | number): void;
     /** 話す */
     say(/** 話すテキスト */text?: string, properties?: SayProperty): void;
@@ -369,13 +429,40 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     think(/** 思うテキスト */text?: string, properties?: SayProperty):void;
     /** 指定した秒数だけ思う(await 必須) */
     thinkForSecs(/** 思うテキスト */text: string, secs: number, properties?: SayProperty): Promise<any>;
-    /** 大きさ */
+    /**
+     *  大きさ
+     * ```ts
+     *  this.Looks.Size.w = 150; //幅を150%にする
+     *  this.Looks.Size.h = 150; //高さを150%にする
+     *  this.Looks.Size.w += 10; //幅を10ずつ変える
+     *  this.Looks.Size.h += 10; //高さを10ずつ変える
+     *  const w = this.Looks.Size.w; // 幅を取り出す
+     *  const h = this.Looks.Size.h; // 高さを取り出す
+     * ``` 
+     * ```ts
+     *  this.Looks.Size.scale = {w: 200, h: 100};//幅を200%, 高さを100%にする
+     *  const {w,h} = this.Looks.Size.scale; // w,hを取り出す
+     *  this.Looks.Size.scale = {w: w+10, h: h+10}; // w,h を10ずつ変える
+     * ``` 
+     */
     Size: S3SpriteSize;
     /** 大きさを変える */
     changeSizeBy(w: number, h:number ):void;
-    /** 表示する */
+    /** 
+     * 表示する
+     * ```ts
+     *  // 表示する
+     *  this.Looks.show();
+     * ``` 
+     */
     show(): void;
-    /** 隠す */
+    /** 
+     * 隠す
+     * ```ts
+     *  // 隠す
+     *  this.Looks.hide();
+     * ``` 
+     */
     hide(): void;
     /** 最前面にする */
     goToFront(): void;
@@ -386,7 +473,7 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** 指定階層分、後ろにする */
     goBackwardLayers(layers: number): void;
     /** 自分自身の縦横表示サイズを得る */
-    drawingDimensions() : {width: number, height: number};
+    drawingDimensions() : {w: number, h: number};
 }
 declare interface S3Pen {
     /** 線を引く */

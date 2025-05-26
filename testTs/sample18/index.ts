@@ -123,9 +123,9 @@ Pg.setting = async function setting() {
         // 上方向にしておく
         this.Motion.pointInDirection(0);
         // スプライトの大きさを取得（高さのみ）
-        const {height} = this.Looks.drawingDimensions();
+        const {h} = this.Looks.drawingDimensions();
         // Y座標を 高さの半分だけ変える
-        this.Motion.changeY( height / 2);
+        this.Motion.changeY( h / 2);
         // 次のコスチュームにする（本体とは別のコスチュームにする）
         this.Looks.nextCostume();
         // 表示する

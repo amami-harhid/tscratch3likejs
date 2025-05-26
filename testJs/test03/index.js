@@ -232,7 +232,7 @@ Pg.setting = async function setting() {
         blockCount = 0;
         for(let y=0; y<3; y++){
             for(let x=0; x<10; x++){
-                const blkPos = { x: pos.x + x*dimension.width, y: pos.y + (-y)*dimension.height };
+                const blkPos = { x: pos.x + x*dimension.w, y: pos.y + (-y)*dimension.h };
                 blockCount+=1;
                 this.Control.clone({position: blkPos});
                 yield;

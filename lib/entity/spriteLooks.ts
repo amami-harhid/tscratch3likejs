@@ -155,9 +155,9 @@ export class SpriteLooks {
     }
     /**
      * 自分自身の縦横表示サイズを得る
-     * @returns dimensions {width: number, height: number}
+     * @returns dimensions {w: number, h: number}
      */
-    drawingDimensions() : {width: number, height: number}{
+    drawingDimensions() : {w: number, h: number}{
         return this.entity.$drawingDimensions();
     }
 };

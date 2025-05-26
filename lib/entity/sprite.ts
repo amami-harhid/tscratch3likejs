@@ -1091,16 +1091,16 @@ export class Sprite extends Entity {
     /**
      * @internal
      * 自分自身の縦横表示サイズを得る
-     * @returns {{width:number, height: number}}
+     * @returns {{w:number, h: number}}
      */
-    $drawingDimensions(): {width: number, height: number} {
+    $drawingDimensions(): {w: number, h: number} {
         return this.$getDrawingDimensions();
     }
     /**
      * 自分自身の縦横表示サイズを得る
-     * @returns {{width:number, height: number}}
+     * @returns {{w:number, h: number}}
      */
-    protected $getDrawingDimensions(): {width: number, height: number} {
+    protected $getDrawingDimensions(): {w: number, h: number} {
         let width = 0;
         let height = 0  
         if(this.$_isDrawableExist()){
@@ -1108,7 +1108,7 @@ export class Sprite extends Entity {
             height = Math.abs(bounds.top - bounds.bottom);
             width = Math.abs(bounds.left - bounds.right);    
         }   
-        return {width, height};
+        return {w:width, h:height};
     }
     /**
      * @internal

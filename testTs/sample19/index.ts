@@ -102,7 +102,7 @@ Pg.setting = async function setting() {
             for(;;){
                 // サイズを指定した量だけ変える（減らす）
                 this.Looks.changeSizeBy(-CHANGE_SIZE, -CHANGE_SIZE);
-                const scale = this.Looks.getSize();
+                const scale = this.Looks.Size.scale;
                 // サイズが決めた値より小さくなったとき繰り返しを抜ける
                 if(scale.w < SCALE.MIN) break;
                 yield;
@@ -111,7 +111,7 @@ Pg.setting = async function setting() {
             for(;;){
                 // サイズを指定した量だけ変える（増やす）
                 this.Looks.changeSizeBy(+CHANGE_SIZE, +CHANGE_SIZE);
-                const scale = this.Looks.getSize();
+                const scale = this.Looks.Size.scale;
                 // サイズが決めた値より大きくなったとき繰り返しを抜ける
                 if(scale.w > SCALE.MAX) break;
                 yield;
