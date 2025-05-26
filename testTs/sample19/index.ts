@@ -5,9 +5,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample19】いろんな文字列でフキダシ(言う, 思う)。20秒間。"
 
@@ -15,16 +15,16 @@ const Jurassic:string = "Jurassic";
 const Cat1:string = "Cat1";
 const Cat2:string = "Cat2";
 
-let stage: S3Stage;
-let cat: S3Sprite;
-let cat2: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
+let cat2: Sprite;
 
 import {bubble, bubbleTextArr, bubble2, bubbleTextArr2} from './bubble'
 
 const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
 
 // 事前ロード処理
-Pg.preload = async function(this: S3PlayGround) {
+Pg.preload = async function(this: PlayGround) {
     this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
     this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat1);
     this.Image.load(`${ASSETS_HOST}/assets/cat2.svg`, Cat2);
@@ -49,7 +49,7 @@ Pg.prepare = async function prepare() {
 Pg.setting = async function setting() {
 
     // 旗が押されたときの動作(ステージ)
-    stage.Event.whenFlag( async function(this:S3Stage) {
+    stage.Event.whenFlag( async function(this:Stage) {
         bubble.exit = false;
         bubble2.exit = false;
         await this.Control.wait(20); // 20秒たったらバブルループを終わらせる。
@@ -60,7 +60,7 @@ Pg.setting = async function setting() {
     // 歩く速さ
     const WALK_STEP = 1;
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function*( this: S3Sprite ) {
+    cat.Event.whenFlag( async function*( this: Sprite ) {
         // 位置の設定
         this.Motion.gotoXY( 0, 0 );
         // 向きの設定
@@ -76,7 +76,7 @@ Pg.setting = async function setting() {
     });
 
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function*( this: S3Sprite ) {
+    cat.Event.whenFlag( async function*( this: Sprite ) {
         // ちょっとだけ待つ
         await this.Control.wait(0.1);
         // ずっと繰り返す
@@ -89,7 +89,7 @@ Pg.setting = async function setting() {
         }
     });
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function*( this: S3Sprite ) {
+    cat.Event.whenFlag( async function*( this: Sprite ) {
         // ちょっとだけ待つ
         await this.Control.wait(0.1);
         // サイズの変更量
@@ -101,7 +101,7 @@ Pg.setting = async function setting() {
             // ずっと繰り返す(入れ子)
             for(;;){
                 // サイズを指定した量だけ変える（減らす）
-                this.Looks.changeSizeBy({w:-CHANGE_SIZE, h: -CHANGE_SIZE});
+                this.Looks.changeSizeBy(-CHANGE_SIZE, -CHANGE_SIZE);
                 const scale = this.Looks.getSize();
                 // サイズが決めた値より小さくなったとき繰り返しを抜ける
                 if(scale.w < SCALE.MIN) break;
@@ -110,7 +110,7 @@ Pg.setting = async function setting() {
             // ずっと繰り返す(入れ子)
             for(;;){
                 // サイズを指定した量だけ変える（増やす）
-                this.Looks.changeSizeBy({w: +CHANGE_SIZE, h: +CHANGE_SIZE});
+                this.Looks.changeSizeBy(+CHANGE_SIZE, +CHANGE_SIZE);
                 const scale = this.Looks.getSize();
                 // サイズが決めた値より大きくなったとき繰り返しを抜ける
                 if(scale.w > SCALE.MAX) break;
@@ -120,7 +120,7 @@ Pg.setting = async function setting() {
         }
     });
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function*( this: S3Sprite ) {
+    cat.Event.whenFlag( async function*( this: Sprite ) {
         // 言う・思う を切り替えるためのフラグ的な変数
         let counter = 0;
         // ずっと繰り返す
@@ -157,7 +157,7 @@ Pg.setting = async function setting() {
         }
     });
     // 旗が押されたときの動作(ネコ２)
-    cat2.Event.whenFlag( async function*( this: S3Sprite ) {
+    cat2.Event.whenFlag( async function*( this: Sprite ) {
         // 位置の設定
         this.Motion.gotoXY( -20, -120 );
         // 向きの設定
@@ -172,7 +172,7 @@ Pg.setting = async function setting() {
         }
     });
     // 旗が押されたときの動作(ネコ２)
-    cat2.Event.whenFlag( async function*( this: S3Sprite ) {
+    cat2.Event.whenFlag( async function*( this: Sprite ) {
         // 大きさ 60 %
         const scale = {w: 60, h:60};
         // ずっと繰り返す

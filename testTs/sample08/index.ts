@@ -3,9 +3,9 @@
  * スプライトを 動かす( 端に触れたら ミャーと鳴く)
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample08】スプライトが動き、端に触れたらミャーと鳴く";
 
@@ -16,11 +16,11 @@ const Cat1:string = "Cat1";
 const Cat2:string = "Cat2";
 const SpriteCatName:string = "cat";
 
-let stage: S3Stage;
-let cat: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
 
 // 事前ロード処理
-Pg.preload = async function preload(this: S3PlayGround) {
+Pg.preload = async function preload(this: PlayGround) {
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Jurassic.svg', Jurassic);
     this.Sound.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Chill.wav', Chill);
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/cat.svg', Cat1);
@@ -45,7 +45,7 @@ Pg.prepare = async function prepare() {
 Pg.setting = async function setting() {
 
     // 旗が押されたときの動作(ステージ)
-    stage.Event.whenFlag(async function*(this:S3Stage){
+    stage.Event.whenFlag(async function*(this:Stage){
         // 音量= 20
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
         // ずっと繰り返す
@@ -57,7 +57,7 @@ Pg.setting = async function setting() {
     });
 
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function(this:S3Sprite){
+    cat.Event.whenFlag( async function(this:Sprite){
         // 位置の初期化
         this.Motion.gotoXY( 0, 0 );
         // 向きの初期化
@@ -67,7 +67,7 @@ Pg.setting = async function setting() {
     });
 
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function*(this:S3Sprite){
+    cat.Event.whenFlag( async function*(this:Sprite){
         // ずっと繰り返す
         for(;;){
             // 次のコスチュームに切り替える
@@ -79,7 +79,7 @@ Pg.setting = async function setting() {
     });
 
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function*(this:S3Sprite){
+    cat.Event.whenFlag( async function*(this:Sprite){
         // ネコが進む速さ
         const catStep = 5;
         // 音量=50

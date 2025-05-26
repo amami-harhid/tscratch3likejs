@@ -13,7 +13,7 @@ declare interface S3StageControl {
 }
 
 /** PlayGround */
-export interface S3PlayGround {
+export interface PlayGround {
     /** タイトル */
     title: string;
     /** 事前ロード処理をするところ */
@@ -27,5 +27,5 @@ export interface S3PlayGround {
     /** サウンド処理 */
     Sound: S3PgSound;
     /** 制御処理 */
-    Control: S3StageControl;
+    //Control: S3StageControl;
 }

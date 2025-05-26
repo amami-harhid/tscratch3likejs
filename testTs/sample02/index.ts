@@ -1,16 +1,16 @@
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
 
 Pg.title = "【Sample02】旗クリックで背景を表示する";
 
 const White = "White";
 const Jurassic = "Jurassic";
 
-let stage:S3Stage;
+let stage:Stage;
 
 // 事前ロード処理
-Pg.preload = function(this:S3PlayGround) {
+Pg.preload = function(this:PlayGround) {
     this.Image.load('./assets/white.svg', White);
     this.Image.load('../../assets/Jurassic.svg', Jurassic);
 }
@@ -25,7 +25,7 @@ Pg.prepare = async function() {
 Pg.setting = function() {
     
     // 旗が押されたときの動作(ステージ)
-    stage.Event.whenFlag( async function(this:S3Stage){
+    stage.Event.whenFlag( async function(this:Stage){
         this.Looks.switchBackdrop(Jurassic);
     });
 };

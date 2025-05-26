@@ -1,4 +1,6 @@
-/** ループ処理用関数 */
+/** 
+ * ループ処理用関数
+ */
 export interface Loop {
     /** 『break』する */
     break(): void;

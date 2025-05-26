@@ -4,9 +4,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample15】端を越えては進めない。"
 
@@ -14,13 +14,13 @@ const Jurassic:string = "Jurassic";
 const Chill:string = "Chill";
 const Cat:string = "Cat";
 
-let stage: S3Stage;
-let cat: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
 
 const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
 
 // 事前ロード処理
-Pg.preload = async function(this: S3PlayGround) {
+Pg.preload = async function(this: PlayGround) {
     this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
     this.Sound.load(`${ASSETS_HOST}/assets/Chill.wav`, Chill);
     this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat);
@@ -39,7 +39,7 @@ Pg.prepare = async function prepare() {
 Pg.setting = async function setting() {
 
     // 旗が押されたときの動作(ステージ)
-    stage.Event.whenFlag(async function*(this: S3Stage) {
+    stage.Event.whenFlag(async function*(this: Stage) {
         // 音量=50
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 50);
         // ずっと繰り返す
@@ -50,7 +50,7 @@ Pg.setting = async function setting() {
         }
     });
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function(this: S3Sprite){
+    cat.Event.whenFlag( async function(this: Sprite){
         // (0,0)へ移動する
         this.Motion.gotoXY( 0, 0 );
     });
@@ -58,7 +58,7 @@ Pg.setting = async function setting() {
     // 進む速さ
     const CAT_WALK_STEP = 5;
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function*(this: S3Sprite){
+    cat.Event.whenFlag( async function*(this: Sprite){
         // ずっと繰り返す
         for(;;){
             // 進む

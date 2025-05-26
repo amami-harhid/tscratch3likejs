@@ -3,18 +3,18 @@
  * スペースキーでコスチューム切り替え
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 import {Constant} from './sub/constants';
 
 Pg.title = "【Sample26】スペースキーでコスチューム切り替え"
     
 
-let stage: S3Stage;
-let sprite: S3Sprite;
+let stage: Stage;
+let sprite: Sprite;
 
-Pg.preload = async function preload(this:S3PlayGround) {
+Pg.preload = async function preload(this:PlayGround) {
     this.Image.load('../../assets/Jurassic.svg', Constant.Jurassic );
     this.Sound.load('../../assets/Chill.wav', Constant.Chill );
     this.Sound.load('../../assets/Rip.wav', Constant.Rip);
@@ -104,7 +104,7 @@ Pg.prepare = async function prepare() {
 
     await sprite.Sound.add( Constant.Rip );
     // 縦横 200%のサイズにする
-    sprite.Looks.setSize({w:200, h:200}); 
+    sprite.Looks.setSize(200, 200); 
 
 }
 
@@ -113,7 +113,7 @@ Pg.setting = async function setting() {
 
     
     // 旗が押されたときの動作
-    stage.Event.whenFlag(async function*(this:S3Stage){
+    stage.Event.whenFlag(async function*(this:Stage){
         await this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
         // ずっと繰り返す
         for(;;){
@@ -124,7 +124,7 @@ Pg.setting = async function setting() {
     });
     
     // 旗が押されたときの動作
-    sprite.Event.whenFlag(async function(this:S3Sprite){
+    sprite.Event.whenFlag(async function(this:Sprite){
         // 初期設定
         this.Motion.gotoXY( 0, 0 );
         // サイズ
@@ -136,7 +136,7 @@ Pg.setting = async function setting() {
     });
 
     // 旗が押されたときの動作
-    sprite.Event.whenFlag(async function*(this:S3Sprite){
+    sprite.Event.whenFlag(async function*(this:Sprite){
         // スプライトに登録されている画像の名前を配列として取り出す
         const SpriteImageNames = this.Image.names();
 

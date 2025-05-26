@@ -5,9 +5,9 @@
  * 
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample17】十字にマウスポインターが触れたら 蝶のクローンを作る"
 
@@ -18,14 +18,14 @@ const Cross02:string = "Cross02";
 const Butterfly01:string = "Butterfly01";
 const Butterfly02:string = "Butterfly02";
 
-let stage: S3Stage;
-let cross: S3Sprite;
-let butterfly: S3Sprite;
+let stage: Stage;
+let cross: Sprite;
+let butterfly: Sprite;
 
 const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
 
 // 事前ロード処理
-Pg.preload = async function(this: S3PlayGround) {
+Pg.preload = async function(this: PlayGround) {
     this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
     this.Sound.load(`${ASSETS_HOST}/assets/Chill.wav`, Chill);
     this.Image.load(`${ASSETS_HOST}/assets/cross1.svg`, Cross01);
@@ -44,7 +44,7 @@ Pg.prepare = async function() {
     cross = new Lib.Sprite("Cross");
     await cross.Image.add( Cross01 );
     await cross.Image.add( Cross02 );
-    cross.Looks.setSize({w:300, h:300});
+    cross.Looks.setSize(300, 300);
     // 蝶を作る
     butterfly = new Lib.Sprite("Butterfly");
     await butterfly.Image.add( Butterfly01 );
@@ -54,7 +54,7 @@ Pg.prepare = async function() {
 // イベント定義処理
 Pg.setting = async function() {
     // 旗が押されたときの動作(ステージ)
-    stage.Event.whenFlag( async function*( this:S3Stage ) {
+    stage.Event.whenFlag( async function*( this:Stage ) {
         // 音量=20
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 20 )
         // ずっと繰り返す
@@ -66,7 +66,7 @@ Pg.setting = async function() {
     });
     const ChangeDirection = 1;
     // 旗が押されたときの動作(十字)
-    cross.Event.whenFlag( async function*( this: S3Sprite ){
+    cross.Event.whenFlag( async function*( this: Sprite ){
         // 位置の初期化
         cross.Motion.gotoXY(0, 0);
         // サイズを３倍にする
@@ -79,7 +79,7 @@ Pg.setting = async function() {
         }
     });
     // 旗が押されたときの動作(十字)
-    cross.Event.whenFlag( async function*( this: S3Sprite ){
+    cross.Event.whenFlag( async function*( this: Sprite ){
         // ずっと繰り返す
         for(;;){
             // マウスカーソルに触ったとき
@@ -95,7 +95,7 @@ Pg.setting = async function() {
         }
     });
     // 旗が押されたときの動作(十字)
-    cross.Event.whenFlag(async function*( this: S3Sprite ){
+    cross.Event.whenFlag(async function*( this: Sprite ){
         // ずっと繰り返す
         for(;;){
             // マウスカーソルに触ったとき( this は cross である)
@@ -111,12 +111,12 @@ Pg.setting = async function() {
         }
     });
     // 旗が押されたときの動作（蝶）
-    butterfly.Event.whenFlag(async function(this:S3Sprite){
+    butterfly.Event.whenFlag(async function(this:Sprite){
         this.Looks.hide();
     })
     // 蝶がクローンされたときの動作
-    butterfly.Control.whenCloned( async function*( this: S3Sprite ) {
-        const clone: S3Sprite = this;
+    butterfly.Control.whenCloned( async function*( this: Sprite ) {
+        const clone: Sprite = this;
         // マウス位置を取得する
         const mousePosition = Lib.mousePosition;
         // 取得した位置へ蝶を移動させる
@@ -131,9 +131,9 @@ Pg.setting = async function() {
         clone.Looks.show();
     });
     // 蝶がクローンされたときの動作
-    butterfly.Control.whenCloned( async function*( this: S3Sprite ) {
+    butterfly.Control.whenCloned( async function*( this: Sprite ) {
         // this がクローンであることを明示するために 変数cloneに入れる
-        const clone: S3Sprite = this;
+        const clone: Sprite = this;
         // ずっと繰り返す
         for(;;){
             // lifeが尽きたら『繰り返し』を抜ける
@@ -146,9 +146,9 @@ Pg.setting = async function() {
         }
     });
     // 蝶がクローンされたときの動作
-    butterfly.Control.whenCloned( async function*( this: S3Sprite ) {
+    butterfly.Control.whenCloned( async function*( this: Sprite ) {
         // this がクローンであることを明示するために 変数cloneに入れる
-        const clone: S3Sprite = this;
+        const clone: Sprite = this;
         // ずっと繰り返す
         for(;;){
             // lifeが尽きたら『繰り返し』を抜ける
@@ -163,9 +163,9 @@ Pg.setting = async function() {
         }
     });
     // 蝶がクローンされたときの動作
-    butterfly.Control.whenCloned( async function*( this: S3Sprite ) {
+    butterfly.Control.whenCloned( async function*( this: Sprite ) {
         // this がクローンであることを明示するために 変数cloneに入れる
-        const clone: S3Sprite = this;
+        const clone: Sprite = this;
         // ずっと繰り返す
         for(;;){
             // ランダムな位置を取得する

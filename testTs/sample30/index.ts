@@ -3,21 +3,21 @@
  * スプライトをドラッグする
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample30】スプライトをドラッグする"
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
-let stage: S3Stage;
-let cat: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
 const Jurassic = 'Jurassic';
 const Chill = 'Chill';
 const Cat = 'Cat';
 
-Pg.preload = async function (this:S3PlayGround) {
+Pg.preload = async function (this:PlayGround) {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic);
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill);
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
@@ -31,13 +31,13 @@ Pg.prepare = async function () {
 
 Pg.setting = async function () {
 
-    stage.Event.whenFlag(async function*(this:S3Stage){
+    stage.Event.whenFlag(async function*(this:Stage){
         for(;;){
             await this.Sound.playUntilDone(Chill);
             yield;
         }
     })
-    cat.Event.whenFlag(async function*(this:S3Sprite){
+    cat.Event.whenFlag(async function*(this:Sprite){
         this.Looks.setSize(150, 150);
         this.Sensing.DragMode.draggable = true;
         this.Pen.penClear();

@@ -1,4 +1,4 @@
-import {S3Entity} from "../s3Entity";
+import {Entity, S3EntityOption} from "../s3Entity";
 import {S3Point} from "../s3Point";
 import {S3Scale } from "../s3Scale";
 import {S3Effect} from "../s3Effect";
@@ -18,32 +18,152 @@ declare interface S3SpriteEventFunctions extends S3EventFunctions{
 }
 /** スプライトの制御用 */
 declare interface S3SpriteControlFunctions extends S3ControlFunctions{
-    /** クローンを作る */
+    /**
+     * クローンを作る.
+     * 引数でプロパティにしたがってクローンを作る。
+     * 引数省略すると本体のプロパティを引き継いだクローンが作られる。
+     * @param option {S3CloneOption} 
+     * ```ts
+     * // 旗が押されたときの動作（cat)
+     * cat.whenFlag(async function*(this:Sprite){
+     *  // スペースキーが押されているとき
+     *  if(Lib.keyIsDown(Lib.Keyboard.SPACE)){
+     *      // クローンを作る
+     *      this.Control.clone();
+     *      // スペースキーが押されている間、待つ。
+     *      await this.Control.waitWhile(Lib.keyIsDown(Lib.Keyboard.SPACE))    
+     *  })
+     *  yield;
+     * })
+     * ```
+     * ```ts
+     * import type { S3CloneOption } from '@typeS3/s3Sprite';
+     * const cloneProperties:S3CloneOption  = {
+     *  position: { x: 0, y: 0}, // クローン座標は (0,0)固定
+     *  direction: 45,  // クローンの向きは45度
+     *  scale: {x: 150, y:150}, // クローンサイズは縦横150%
+     *  effect: {ghost: 50 }, // クローン幽霊効果 50
+     * };
+     * // クローンを作る
+     * this.Control.clone(cloneProperties);
+     * ```
+     */
     clone(option?:S3CloneOption): void;
     /** クローンを作る */
     cloneAndWait(option?:S3CloneOption): Promise<S3Sprite>
-    /** クローンされたとき */
+    /**
+     * クローンされたときの動作
+     * @param func 
+     * ```ts
+     * cat.whenFlag(async function*(this:Sprite){
+     *  for(;;) {
+     *      if(Lib.isKeyDown(Lib.Keyboard.SPACE{
+     *          // クローンを作る
+     *          this.Control.clone();
+     *      });
+     *      yield;
+     *  }
+     * });
+     * // クローンされたときの動作
+     * cat.whenCloned(async function(this:Sprite){
+     *      for(;;) {
+     *          // 10歩進む
+     *          this.Motion.moveSteps(10);
+     *          // もし端に触れたら跳ね返る
+     *          this.Motion.ifOnEdgeBounds();
+     *          yield;
+     *      }
+     * });
+     * ```
+     */
     whenCloned( func: CallableFunction ): void;
     /** 削除する */
+    /**
+     * 削除する。クローンを消すときに利用する。
+     * 
+     * ```ts
+     * cat.whenFlag(async function*(this:Sprite){
+     *  for(;;) {
+     *      if(Lib.isKeyDown(Lib.Keyboard.SPACE{
+     *          // クローンを作る
+     *          this.Control.clone();
+     *      });
+     *      yield;
+     *  }
+     * });
+     * // クローンされたときの動作
+     * cat.whenCloned(async function(this:Sprite){
+     *      for(;;) {
+     *          // 10歩進む
+     *          this.Motion.moveSteps(10);
+     *          // 端に触れたとき
+     *          if( this.Sensing.isTouchingEdge() ){
+     *              // 繰返しを抜ける
+     *              break;
+     *          }
+     *          yield;
+     *      }
+     *      // クローンを削除する
+     *      this.Control.remove();
+     * });
+     * ```
+     */
     remove() : void;
     /** クローンを全て削除する */
+    /**
+     * クローンを全て削除する. 
+     * 他スクリプト内から自分(クローン)を削除されることがあるため、
+     * isAlive() と組み合わせて、クローンの生死を確認しておく必要がある。
+     * 
+     * ```ts
+     * // クローンを作る箇所のコードは省略する
+     * 
+     * cat.whenCloned(async function(this:Sprite){
+     *      for(;;) {
+     *          // クローンが端に触れたとき
+     *          if( this.Sensing.isTouchingEdge() ){
+     *              // 繰返しを抜ける
+     *              break;
+     *          }
+     *          yield;
+     *      }
+     *      // 全てのクローンを削除する
+     *      this.Control.removeAllClones();
+     * });
+     * cat.whenCloned(async function(this:Sprite){
+     *      for(;;) {
+     *          // 生きているとき( removeされていないとき )
+     *          if(this.Control.isAlive()) {
+     *              // 10歩進む
+     *              this.Motion.moveSteps(10);
+     *          }
+     *          yield;
+     *      }
+     * });
+     * ```
+     */
     removeAllClones() : void;
     /** スプライトが生きている */
+    /**
+     * スプライト（クローン）が生きているかを判定する
+     * removeAllClones()の説明を参照すること。
+     * ```ts
+     *  // 他スクリプトでremoveされる可能性があるとき生死を判定
+     *  // しておくほうが安全である
+     *  if( this.Control.isAlive() ) {
+     *      // 15度回転
+     *      this.Motion.Direction.degree += 15;
+     *  }
+     * 
+     * ```
+     */
     isAlive() : boolean;
-    /** スプライトの他のスクリプトを止める */
-    stopOtherScripts(): void;
 
 }
 
-declare interface S3CloneOption {
-    /** 位置指定 */
-    position?: S3Point;
-    /** 向き指定 */
-    direction?: number;
-    /** 大きさ指定 */
-    scale?: S3Scale;
-    /** 表示効果 */
-    effect?: S3Effect;    
+declare interface S3SpriteOption implements S3EntityOption {
+}
+declare interface S3CloneOption implements S3EntityOption {
 }
 declare interface S3SpritePosition {
     /** スプライトx座標 */
@@ -56,19 +176,73 @@ declare interface S3SpriteDirection {
     degree: number;
 }
 declare interface S3MotionFunctions {
-    /** スプライト座標 */
+    /** 
+     * スプライト座標
+     * ```ts
+     *  // 座標、x=10, y=15 にする
+     *  this.Motion.Position.x = 10;
+     *  this.Motion.Position.y = 15;
+     * ``` 
+     * ```ts
+     *  // 座標(X)を 10 増やす
+     *  this.Motion.Position.x += 10;
+     * ``` 
+     */
     Position: S3SpritePosition;
-    /** スプライト向き */
+    /** 
+     * スプライト向き 
+     * ```ts
+     *  // 向きを45度にする
+     *  this.Motion.Direction.degree = 45;
+     * ```
+     * ```ts
+     *  // 向きを5度,増やす
+     *  this.Motion.Direction.degree += 5;
+     * ```
+     */
     Direction: S3SpriteDirection;
-    /** 現在の位置を取得する */
+    /** 
+     * 現在の位置を取得する
+     * ```ts
+     *  const pos = this.Motion.getCurrentPosition();
+     *  console.log(pos.x, pos.y);
+     * ``` 
+     */
     getCurrentPosition(): {x: number, y: number};
-    /** 現在の向きを取得する */
+    /** 
+     * 現在の向きを取得する
+     * ```ts
+     *  // 向き
+     *  const direction = this.Motion.getCurrentDirection();
+     *  console.log('direction=', direction);
+     * ``` 
+     */
     getCurrentDirection(): number,
-    /** 指定した距離分移動させる（向きの方向へ） */
+    /** 
+     * 指定した距離分移動させる（向きの方向へ）
+     * ```ts
+     *  // 現在の向きへ、10歩進む
+     *  this.Motion.moveSteps(10);
+     * ``` 
+     */
     moveSteps(step: number): void;
-    /** 端にふれていたら跳ね返る */
+    /** 
+     * 端にふれたら跳ね返る
+     * ```ts
+     *  // 10歩進む
+     *  this.Motion.moveSteps(10);
+     *  // 端に触れたら跳ね返る
+     *  this.Motion.ifOnEdgeBounds();
+     * ``` 
+     */
     ifOnEdgeBounds() : void;
-    /** どこかへ移動する */
+    /** 
+     * どこかへ移動する
+     * ```ts
+     *  // ステージ上のどこかへ移動する
+     *  this.Motion.gotoRandomPosition();
+     * ``` 
+     */
     gotoRandomPosition(): void;
     /** マウスカーソルの場所へ移動する */
     gotoMousePosition(): void;
@@ -190,9 +364,9 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** 大きさ */
     Size: S3SpriteSize;
     /** 大きさを変える */
-    changeSizeBy(w: number | SizeProperty, h?:number ):void;
+    changeSizeBy(w: number, h:number ):void;
     /** 大きさを取得する */
-    //getSize() : SizeProperty;
+    getSize() : SizeProperty;
     /** 大きさを設定する */
     setSize(w: number ,h: number): void;
     /** 表示する */
@@ -245,34 +419,53 @@ declare interface S3Pen {
     changePenSize(penSize: number): void;
 } 
 /** スプライト（実体[Entity]を継承）*/
-export interface S3Sprite extends S3Entity{
-    new(...args:any[]): S3Sprite;
+export interface Sprite extends Entity{
+    /**
+     * @constructor
+     * @param name {string} - 名前
+     * @param option? {S3SpriteOption} - オプション
+     * ```ts
+     * let cat : Sprite;
+     * cat = new Lib.Sprite('tama');
+     * ```
+     */
+    new(name?:string, option?: S3SpriteOption): Sprite;
+    /** 
+     * イメージ(画像)
+     */
     Image: S3ImageFunctions;
-    Motion: S3MotionFunctions;
-    Event: S3SpriteEventFunctions;
-    Control: S3SpriteControlFunctions;
-    TextToSpeech: S3TextToSpeechFunctions;
-    Sensing: S3SpriteSensingFunctions;
+    /** サウンド(音) */
     Sound: S3SoundFunctions;
+    /** 動き */
+    Motion: S3MotionFunctions;
+    /** 見た目 */
     Looks: S3SpriteLooksFunctions;
+    /** イベント */
+    Event: S3SpriteEventFunctions;
+    /** 制御 */
+    Control: S3SpriteControlFunctions;
+    /** 調べる */
+    Sensing: S3SpriteSensingFunctions;
+    /** 音声合成 */
+    TextToSpeech: S3TextToSpeechFunctions;
+    /** ペン */
+    Pen: S3Pen;
     
 
     /** 次のコスチュームにする */
-    nextCostume(): void;
+    //nextCostume(): void;
+    /** 指定した秒数をかけて指定した座標(x,y)へ移動する (await必須) */
+    //glideToPosition(second:number, x:number, y:number): Promise<any>;
     /** 表示非表示を設定する(trueのとき表示) */
-    setVisible(condition:boolean): void;
+    //setVisible(condition:boolean): void;
     /** 
      * 大きさを変える(縦横をx,yで指定、100が初期値)
      * 第二引数省略時は 縦横ともに第一引数を充てる 
      */
-    setScale(x:number,y?:number): void;
+    //setScale(x:number,y?:number): void;
     /** ステージ内でランダムな位置を返す */
-    randomPoint: S3Point;
+    //randomPoint: S3Point;
     /** 生きている秒数(マイナス値になったら死亡) */
     life : number;
-    /** 指定した秒数をかけて指定した座標(x,y)へ移動する (await必須) */
-    glideToPosition(second:number, x:number, y:number): Promise<any>;
-    /** ペン */
-    Pen: S3Pen;
     
 }

@@ -7,9 +7,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample18】左右矢印でシップが左右に動き、スペースキーで弾を発射。"
 
@@ -19,13 +19,13 @@ const Cross01:string = "Cross01";
 const Cross02:string = "Cross02";
 const Pew:string = "Pew";
 
-let stage: S3Stage;
-let cross: S3Sprite;
+let stage: Stage;
+let cross: Sprite;
 
 const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
 
 // 事前ロード処理
-Pg.preload = async function(this: S3PlayGround) {
+Pg.preload = async function(this: PlayGround) {
     this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
     this.Sound.load(`${ASSETS_HOST}/assets/Chill.wav`, Chill);
     this.Image.load(`${ASSETS_HOST}/assets/cross1.svg`, Cross01);
@@ -44,7 +44,7 @@ Pg.prepare = async function prepare() {
     await cross.Image.add( Cross01 );
     await cross.Image.add( Cross02 );
     await cross.Sound.add( Pew );
-    cross.Looks.setSize({w:100,h:100});
+    cross.Looks.setSize(100, 100);
     // 座標x を ステージの真ん中にする 
     cross.Motion.setX(0); 
     // 座標y を ステージの高さの半分×0.6だけ下げる 
@@ -54,7 +54,7 @@ Pg.prepare = async function prepare() {
 Pg.setting = async function setting() {
 
     // 旗が押されたときの動作(ステージ)
-    stage.Event.whenFlag(async function*( this: S3Stage) {
+    stage.Event.whenFlag(async function*( this: Stage) {
         // 音量=50
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 50 );
         // ずっと繰り返す
@@ -65,13 +65,13 @@ Pg.setting = async function setting() {
         }
     });
     // 旗が押されたときの動作(十字)
-    cross.Event.whenFlag(async function*( this: S3Sprite ){
+    cross.Event.whenFlag(async function*( this: Sprite ){
         // 向き初期化
         this.Motion.pointInDirection( 90 );
         // 黒いコスチューム
         this.Looks.switchCostume(Cross01);
         // サイズを 100%にする
-        this.Looks.setSize({w:100,h:100});
+        this.Looks.setSize(100, 100);
         // 座標x を ステージの真ん中にする 
         this.Motion.setX(0); 
         // 座標y を ステージの高さの半分×0.6だけ下げる 
@@ -85,7 +85,7 @@ Pg.setting = async function setting() {
     // 進む速さ
     const MoveSteps = 15;
     // 旗が押されたときの動作(十字)
-    cross.Event.whenFlag( async function*( this: S3Sprite ){
+    cross.Event.whenFlag( async function*( this: Sprite ){
         // ずっと繰り返す
         for(;;){
             // キー(右矢印)が押されているとき
@@ -101,7 +101,7 @@ Pg.setting = async function setting() {
     });
     // 矢印キーを押しながら、スペースキー押していることが分かることを実証
     // 旗が押されたときの動作(十字)
-    cross.Event.whenFlag( async function*( this: S3Sprite ){
+    cross.Event.whenFlag( async function*( this: Sprite ){
         // ずっと繰り返す
         for(;;){
             // キー(スペース)が押されているとき
@@ -117,7 +117,7 @@ Pg.setting = async function setting() {
         }
     });
     // クローンが作られたときの動作(十字)
-    cross.Control.whenCloned( async function( this: S3Sprite ){
+    cross.Control.whenCloned( async function( this: Sprite ){
         // サイズを 20%にしておく
         this.Looks.setSize(20, 20);
         // 上方向にしておく
@@ -131,7 +131,7 @@ Pg.setting = async function setting() {
         // 表示する
         this.Looks.show();
     });
-    cross.Control.whenCloned( async function*( this: S3Sprite ) {
+    cross.Control.whenCloned( async function*( this: Sprite ) {
         // ずっと繰り返す
         for(;;){
             this.Motion.changeY(+15); // 15ずつ上昇する
@@ -149,7 +149,7 @@ Pg.setting = async function setting() {
     // 右回転する量
     const TURN_RIGHT_DEGREE= 25;
     // クローンされたときの動作（十字）
-    cross.Control.whenCloned( async function*( this: S3Sprite ) {
+    cross.Control.whenCloned( async function*( this: Sprite ) {
         // 音量 50
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 50 );
         // ピッチ 50 ( 低音にする )

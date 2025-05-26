@@ -2,9 +2,9 @@
  * Sample06 スプライトをタッチしたらＢＧＭを繰返し鳴らす
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample06】スプライトをタッチしたらＢＧＭを繰返し鳴らす";
 
@@ -12,11 +12,11 @@ const Jurassic = "Jurassic";
 const Chill = "Chill";
 const Cat = "Cat";
 
-let stage: S3Stage;
-let cat: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
 
 // 事前ロード処理
-Pg.preload = async function preload(this:S3PlayGround) {
+Pg.preload = async function preload(this:PlayGround) {
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Jurassic.svg', Jurassic);
     this.Sound.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Chill.wav', Chill);
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/cat.svg', Cat);
@@ -33,13 +33,13 @@ Pg.prepare = async function prepare() {
 Pg.setting = async function setting() {
 
     // 旗が押されたときの動作(ネコ)
-    cat.Event.whenFlag( async function(this:S3Sprite) {
+    cat.Event.whenFlag( async function(this:Sprite) {
         // 音量 10
         await cat.Sound.setOption( Lib.SoundOption.VOLUME, 10 );
     });
     
     // スプライト（ネコ）をクリックしたときの動作
-    cat.Event.whenClicked( async function*(this:S3Sprite){
+    cat.Event.whenClicked( async function*(this:Sprite){
         // 「終わるまで音を鳴らす」をずっと繰り返す
         for(;;){
             // 処理が終わるまで待つために await をつける

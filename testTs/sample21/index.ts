@@ -18,9 +18,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 
 Pg.title = "【Sample21】スピーチ機能：ネコに触る、タッチするとお話しをする"
@@ -29,12 +29,12 @@ const Jurassic:string = "Jurassic";
 const Chill:string = "Chill";
 const Cat:string = "Cat";
 
-let stage: S3Stage;
-let cat: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
 
 const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
 
-Pg.preload = async function preload(this: S3PlayGround) {
+Pg.preload = async function preload(this: PlayGround) {
     this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
     this.Sound.load(`${ASSETS_HOST}/assets/Chill.wav`, Chill);
     this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat);
@@ -49,7 +49,7 @@ Pg.prepare = async function prepare() {
 }
 Pg.setting = async function setting() {
 
-    stage.Event.whenFlag(async function*( this: S3Stage ){
+    stage.Event.whenFlag(async function*( this: Stage ){
 
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 20 )
         while(true){
@@ -59,7 +59,7 @@ Pg.setting = async function setting() {
     })
     
     // ネコにさわったらお話する
-    cat.Event.whenFlag( async function*( this: S3Sprite ){
+    cat.Event.whenFlag( async function*( this: Sprite ){
         const OTTO_TYPE = 'OTTO';
         const words = `おっと`;
         const properties = {'pitch': 2, 'volume': 100}
@@ -76,7 +76,7 @@ Pg.setting = async function setting() {
         }
     });
     // ネコをクリックしたらお話する
-    cat.Event.whenClicked(async function( this: S3Sprite ){
+    cat.Event.whenClicked(async function( this: Sprite ){
         const SOKOSOKO_TYPE = "SOKOSOKO";
         const words = `そこそこ`;
         const properties = {'pitch': 1.7, 'volume': 500}
@@ -86,7 +86,7 @@ Pg.setting = async function setting() {
     
     /** SPEAK を受信したらスピーチする */
     cat.Event.whenBroadcastReceived('SPEAK', 
-        async function(this:S3Sprite, 
+        async function(this:Sprite, 
             words:string, 
             type: string
         ) {
