@@ -170,11 +170,63 @@ declare interface S3SpritePosition {
     x: number;
     /** スプライトy座標 */
     y: number;
+    /** スプライト(x,y)座標 */
+    xy: {x:number, y:number},
 }
 declare interface S3SpriteDirection {
     /** 向き */
     degree: number;
 }
+declare interface S3SpriteMotionMove {
+    /** 
+     * 指定した距離分移動させる（向きの方向へ）
+     * ```ts
+     *  // 現在の向きへ、10歩進む
+     *  this.Motion.moveSteps(10);
+     * ``` 
+     */
+    moveSteps(step: number): void;
+    /** 
+     * 端にふれたら跳ね返る
+     * ```ts
+     *  // 10歩進む
+     *  this.Motion.moveSteps(10);
+     *  // 端に触れたら跳ね返る
+     *  this.Motion.ifOnEdgeBounds();
+     * ``` 
+     */
+    ifOnEdgeBounds() : void;
+    /** 指定した位置へ移動 */
+    gotoXY(x: number , y:number) : void;
+    /** 
+     * どこかへ移動する
+     * ```ts
+     *  // ステージ上のどこかへ移動する
+     *  this.Motion.Goto.randomPosition();
+     * ``` 
+     */
+    randomPosition(): void;
+    /** マウスカーソルの場所へ移動する */
+    gotoMousePosition(): void;
+    /** 指定したスプライトの場所へ移動する */
+    gotoSprite(target:S3Sprite): void;
+    /** 〇秒で指定した場所へ移動する(await必須) */
+    glideToPosition(secs: number, x: number|{x:number, y:number}, y?:number): Promise<any>;
+
+}
+declare interface S3SpriteMotionStyle {
+    /** 回転方法を〇にする */
+    style: string;
+}
+declare interface S3SpriteMotionPoint {
+    /** マウスの位置へ向く */
+    pointToMouse() : void;
+    /** 指定したターゲットの位置へ向く */
+    pointToTarget(target: S3Sprite): void;
+    /** 〇度へ向ける */
+    pointInDirection(degree: number) : void;
+}
+
 declare interface S3MotionFunctions {
     /** 
      * スプライト座標
@@ -201,78 +253,42 @@ declare interface S3MotionFunctions {
      * ```
      */
     Direction: S3SpriteDirection;
-    /** 
-     * 現在の位置を取得する
-     * ```ts
-     *  const pos = this.Motion.getCurrentPosition();
-     *  console.log(pos.x, pos.y);
-     * ``` 
-     */
-    getCurrentPosition(): {x: number, y: number};
-    /** 
-     * 現在の向きを取得する
-     * ```ts
-     *  // 向き
-     *  const direction = this.Motion.getCurrentDirection();
-     *  console.log('direction=', direction);
-     * ``` 
-     */
-    getCurrentDirection(): number,
-    /** 
-     * 指定した距離分移動させる（向きの方向へ）
-     * ```ts
-     *  // 現在の向きへ、10歩進む
-     *  this.Motion.moveSteps(10);
-     * ``` 
-     */
-    moveSteps(step: number): void;
-    /** 
-     * 端にふれたら跳ね返る
-     * ```ts
-     *  // 10歩進む
-     *  this.Motion.moveSteps(10);
-     *  // 端に触れたら跳ね返る
-     *  this.Motion.ifOnEdgeBounds();
-     * ``` 
-     */
-    ifOnEdgeBounds() : void;
-    /** 
-     * どこかへ移動する
-     * ```ts
-     *  // ステージ上のどこかへ移動する
-     *  this.Motion.gotoRandomPosition();
-     * ``` 
-     */
-    gotoRandomPosition(): void;
-    /** マウスカーソルの場所へ移動する */
-    gotoMousePosition(): void;
-    /** 指定したスプライトの場所へ移動する */
-    gotoSprite(target:S3Sprite): void;
-    /** 〇秒で指定した場所へ移動する(await必須) */
-    glideToPosition(secs: number, x: number|{x:number, y:number}, y?:number): Promise<any>;
-    /** マウスの位置へ向く */
-    pointToMouse() : void;
-    /** 指定したターゲットの位置へ向く */
-    pointToTarget(target: S3Sprite): void;
-    /** 〇度へ向ける */
-    pointInDirection(degree: number) : void;
-    /** 回転方法を〇にする */
-    setRotationStyle(rotationStyle: string  ) : void;
-    /** 指定した位置へ移動 */
-    gotoXY(x: number , y:number) : void;
-    /** 右側回転 */
-    turnRightDegrees(degree:number): void;
-    /** 左側回転 */
-    turnLeftDegrees(degree:number): void;
-    /** X座標を指定する */
-    setX(x: number) : void;
-    /** Y座標を指定する */
-    setY(y: number) : void;
-    /** X座標を〇ずつ変える */
-    changeX( x: number) : void;
-    /** Y座標を〇ずつ変える */
-    changeY( y: number) : void;
+    // /** 
+    //  * 現在の位置を取得する
+    //  * ```ts
+    //  *  const pos = this.Motion.getCurrentPosition();
+    //  *  console.log(pos.x, pos.y);
+    //  * ``` 
+    //  */
+    // getCurrentPosition(): {x: number, y: number};
+    // /** 
+    //  * 現在の向きを取得する
+    //  * ```ts
+    //  *  // 向き
+    //  *  const direction = this.Motion.getCurrentDirection();
+    //  *  console.log('direction=', direction);
+    //  * ``` 
+    //  */
+    // getCurrentDirection(): number,
 
+    /**
+     * 移動する
+     */
+    Move: S3SpriteMotionMove;
+
+    Point: S3SpriteMotionPoint;
+    // /** 右側回転 */
+    // turnRightDegrees(degree:number): void;
+    // /** 左側回転 */
+    // turnLeftDegrees(degree:number): void;
+    // /** X座標を〇ずつ変える */
+    // changeX( x: number) : void;
+    // /** Y座標を〇ずつ変える */
+    // changeY( y: number) : void;
+    /**
+     * 回転方法
+     */
+    Rotation: S3SpriteMotionStyle,
 }
 /** 距離 */
 declare interface S3SpriteDistance {
@@ -319,7 +335,6 @@ declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
     DragMode: S3DragMode;
 
 }
-
 /** フキダシのプロパティ */
 declare interface SayProperty {
     /** フキダシのサイズ */
@@ -475,39 +490,90 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** 自分自身の縦横表示サイズを得る */
     drawingDimensions() : {w: number, h: number};
 }
+declare interface S3PenSize {
+    /**
+     * ペンの太さ
+     * ```ts
+     *  this.Pen.Size.thickness
+     * ```
+     */
+    thickness: number,
+}
+/**
+ * HSV色空間
+ */
+declare interface S3PenHSVColor {
+    /**
+     * 色相[0 - 360]
+     * ```ts
+     *  this.Pen.HSVColor.hue;
+     * ```
+     */
+    hue: number,
+    /**
+     * 彩度[0-100]
+     * ```ts
+     *  this.Pen.HSVColor.saturation;
+     * ```
+     */
+    saturation: number,
+    /**
+     * 明度[0-100]
+     * ```ts
+     *  this.Pen.HSVColor.brightness
+     * ```
+     */
+    brightness: number,
+    /**
+     * 透明度[0-100]
+     * ```ts
+     *  this.Pen.HSVColor.transparency;
+     * ```
+     */
+    transparency: number,
+}
 declare interface S3Pen {
-    /** 線を引く */
-    //drawLine(): void;
-    /** 点をうつ */
-    //drawPoint(): void;
-    /** ペンクリア */
+    /** 
+     * ペンクリア
+     * ```ts
+     *  this.Pen.penClear();
+     * ```
+     */
     penClear(): void;
-    /** ペンを上げる */
+    /** 
+     * ペンを上げる 
+     * ```ts
+     *  this.Pen.penUp();
+     * ```
+     */
     penUp(): void;
-    /** ペンを下げる */
+    /** 
+     * ペンを下げる 
+     * ```ts
+     *  this.Pen.penDown();
+     * ```
+     */
     penDown(): void;
-    /** スタンプ */
+    /** 
+     * スタンプ
+     * ```ts
+     *  this.Pen.stamp();
+     * ```
+     */
     stamp(): void;
-    /** 色相を設定[0 - 360] */
-    setPenHue(hue: number): void;
-    /** 色相を変える */
-    changePenHue(hue: number): void;
-    /** 彩度を設定[0 - 100] */
-    setPenSaturation(saturation: number): void;
-    /** 彩度を変える */
-    changePenSaturation(saturation: number): void;
-    /** 明度を設定[0 - 100] */
-    setPenBrightness(brightness: number): void;
-    /** 明度を変える */
-    changePenBrightness(brightness: number): void;
-    /** 透明度を設定[0 - 100] 100%で完全透明 */
-    setPenTransparency(transparency: number): void;
-    /** 透明度を変える */
-    changePenTransparency(transparency: number): void;
-    /** ペンサイズを設定 */
-    setPenSize(penSize: number): void;
-    /** ペンサイズを変える */
-    changePenSize(penSize: number): void;
+    /** 
+     * HSV色空間
+     * @property {number} hue
+     * @property {number} saturation
+     * @property {number} brightness
+     * @property {number} transparency
+     */
+    HSVColor: S3PenHSVColor;
+    /** 
+     * Pen サイズ 
+     * @property {number} thickness
+     */
+    Size: S3PenSize,
 } 
 /** スプライト（実体[Entity]を継承）*/
 export interface Sprite extends Entity{
@@ -515,6 +581,7 @@ export interface Sprite extends Entity{
      * @constructor
      * @param name {string} - 名前
      * @param option? {S3SpriteOption} - オプション
+     * @example
      * ```ts
      * let cat : Sprite;
      * cat = new Lib.Sprite('tama');
@@ -541,22 +608,9 @@ export interface Sprite extends Entity{
     TextToSpeech: S3TextToSpeechFunctions;
     /** ペン */
     Pen: S3Pen;
-    
-
-    /** 次のコスチュームにする */
-    //nextCostume(): void;
-    /** 指定した秒数をかけて指定した座標(x,y)へ移動する (await必須) */
-    //glideToPosition(second:number, x:number, y:number): Promise<any>;
-    /** 表示非表示を設定する(trueのとき表示) */
-    //setVisible(condition:boolean): void;
     /** 
-     * 大きさを変える(縦横をx,yで指定、100が初期値)
-     * 第二引数省略時は 縦横ともに第一引数を充てる 
+     * 生きている秒数(マイナス値になったら死亡)
      */
-    //setScale(x:number,y?:number): void;
-    /** ステージ内でランダムな位置を返す */
-    //randomPoint: S3Point;
-    /** 生きている秒数(マイナス値になったら死亡) */
     life : number;
     
 }

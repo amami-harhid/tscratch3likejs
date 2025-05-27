@@ -91,6 +91,9 @@ export class Costumes {
         }
         throw 'unable to execute createBitmapSkin';
     }
+    getRotationStyle (): RotationStyle {
+        return this._rotationStyle;
+    }
     setRotationStyle ( style: RotationStyle ) {
         if( this._rotationStylePatterns.includes( style ) ) {
             this._rotationStyle = style;

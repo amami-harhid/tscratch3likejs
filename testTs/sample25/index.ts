@@ -89,7 +89,7 @@ Pg.setting = async function setting() {
     });
     // 緑の旗が押されたときの動作
     ball.Event.whenFlag(async function(this:Sprite){
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
         this.Looks.Size.scale = {w: 120, h: 120};
     });
 

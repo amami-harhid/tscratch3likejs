@@ -14,8 +14,6 @@ declare interface S3StageLooksFunctions extends S3LooksFunctions{
 declare interface S3StageSensingFunctions extends S3SensingFunctions{
 }
 declare interface S3StageContorlFunctions extends S3ControlFunctions {
-    /** ステージの他のスクリプトを止める */
-    stopOtherScripts(): void;
 }
 
 /** ステージ（実体[Entity]を継承）*/
@@ -28,10 +26,16 @@ export interface Stage extends Entity{
      * ```
      */
     new(): Stage;
+    /** イメージ */
     Image: S3ImageFunctions;
-    Event: S3StageEventFunctions;
-    Control: S3StageContorlFunctions;
+    /** サウンド */
     Sound: S3SoundFunctions;
+    /** 見た目 */
     Looks: S3StageLooksFunctions;
+    /** イベント */
+    Event: S3StageEventFunctions;
+    /** 制御 */
+    Control: S3StageContorlFunctions;
+    /** 調べる */
     Sensing: S3StageSensingFunctions;
 }

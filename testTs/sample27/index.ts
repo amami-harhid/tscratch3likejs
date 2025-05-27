@@ -112,9 +112,9 @@ Pg.setting = async function setting() {
             // マウスカーソルへ向く
             this.Motion.pointToMouse();
             // 進む
-            this.Motion.moveSteps(5);
+            this.Motion.Move.moveSteps(5);
             // 現在座標を取得してログ出力
-            const {x,y} = this.Motion.getCurrentPosition();
+            const {x,y} = this.Motion.Position.xy;
             const mx = this.Sensing.Mouse.x;
             const my = this.Sensing.Mouse.y;
             console.log(`x=${x}, y=${y}, mx=${mx},my=${my}`);

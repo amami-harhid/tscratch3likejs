@@ -2,7 +2,17 @@
 export interface S3EventFunctions {
     /** すぐに実行する */
     whenRightNow(func:CallableFunction) :void;
-    /** 旗が押されたら実行する */
+    /** 
+     * 旗が押されたときの動作を定義
+     * ```ts
+     * stage.Event.whenFlag(async function(this:Stage){
+     *  console.log('旗が押された');
+     * });
+     * sprite.Event.whenFlag(async function(this:Sprite){
+     *  console.log('旗が押された');
+     * });
+     * ``` 
+     */
     whenFlag(func:CallableFunction) :void;
     /** 指定キーが押されたときに実行する */
     whenKeyPressed(key: string,  func:CallableFunction) : void;

@@ -8,16 +8,20 @@ export interface ISpriteMotion {
     /**
      * 位置
      * ```ts
-     * // X座標を取得
-     * const posX = this.Motion.Position.x;
-     * // Y座標を取得
-     * const posY = this.Motion.Position.y;
+     *  // X座標を取得
+     *  const posX:number = this.Motion.Position.x;
+     *  // Y座標を取得
+     *  const posY:number = this.Motion.Position.y;
+     *  // XY座標を取得
+     *  const posXY:{x:number,y:number} = this.Motion.Position.xy;
      * ```
      * ```ts
-     * // X座標を設定
-     * this.Motion.Position.x = 150;
-     * // Y座標を設定
-     * this.Motion.Position.y = -100;
+     *  // X座標を設定
+     *  this.Motion.Position.x = 150;
+     *  // Y座標を設定
+     *  this.Motion.Position.y = -100;
+     *  // XY座標を設定
+     *  this.Motion.Position.xy = {x:150, y:-100};
      * ```
      * ```ts
      * // X座標を10だけ増やす
@@ -25,7 +29,7 @@ export interface ISpriteMotion {
      * ```
      * @returns { x: number, y: number} - 座標
      */
-    get Position(): {x:number, y:number};
+    get Position(): {x:number, y:number, xy:{x:number, y:number}};
     /**
      * 向き
      * ```ts
@@ -93,6 +97,7 @@ export interface ISpriteMotion {
      * ```
      */
     ifOnEdgeBounds(): void;
+
     /**
      * ランダムな位置へ移動する
      * ```ts
@@ -159,7 +164,7 @@ export interface ISpriteMotion {
      * this.Motion.pointInDerection(45);
      * ```
      */
-    pointInDerection(direction: number): void;
+    pointInDirection(direction: number): void;
     /**
      * 回転方向を指定する
      * @param rotationStyle {string} - 回転方向
@@ -244,7 +249,7 @@ export class SpriteMotion implements ISpriteMotion {
     constructor(entity:Sprite){
         this.entity = entity;
     }
-    get Position(): {x:number, y:number} {
+    get Position(): {x:number, y:number, xy:{x:number,y:number}} {
         return this.entity.Position;
     }
     get Direction(): {degree: number} {
@@ -293,6 +298,42 @@ export class SpriteMotion implements ISpriteMotion {
      */
     ifOnEdgeBounds(): void {
         this.entity.$ifOnEdgeBounds();
+    }
+    get Rotation() {
+        const method = {style : RotationStyle.ALL_AROUND};
+        const me = this.entity;
+        Object.defineProperty(method, "style", {
+            get : function() {
+                return me.$getRotationStyle();
+            },
+            set : function(style) {
+                me.$setRotationStyle(style);
+            }
+        })
+
+        return method;
+    }
+    get Move() {
+        const move = {
+            moveSteps: this.entity.$moveSteps.bind(this.entity),
+            //moveTo: this.entity.$moveTo.bind(this.entity),
+            gotoXY: this.entity.$goToXY.bind(this.entity),
+            ifOnEdgeBounds: this.entity.$ifOnEdgeBounds.bind(this.entity),
+            gotoRandomPosition: this.entity.$gotoRandomPosition.bind(this.entity),
+            gotoMousePosition: this.entity.$gotoMousePosition.bind(this.entity),
+            gotoSprite: this.entity.$gotoSprite.bind(this.entity),
+            glideToPosition: this.entity.$glideToPosition.bind(this.entity),
+
+        };
+        return move;
+    }
+    get Point() {
+        const point = {
+            pointToMouse: this.entity.$pointToMouse.bind(this.entity),
+            pointToTarget: this.entity.$pointToTarget.bind(this.entity),
+            pointInDirection: this.entity.$pointInDirection.bind(this.entity),
+        }
+        return point;
     }
     /**
      * ランダムな位置へ移動する
@@ -372,8 +413,8 @@ export class SpriteMotion implements ISpriteMotion {
      * this.Motion.pointInDerection(45);
      * ```
      */
-    pointInDerection(direction: number): void {
-        this.entity.$pointInDerection(direction);
+    pointInDirection(direction: number): void {
+        this.entity.$pointInDirection(direction);
     }
     /**
      * 回転方向を指定する
@@ -396,7 +437,7 @@ export class SpriteMotion implements ISpriteMotion {
      * 
      */
     gotoXY(x: number, y:number): void {
-        this.entity.Motion.gotoXY(x,y);
+        this.entity.$goToXY(x,y);
     }
     /**
      * 右向きに回転する

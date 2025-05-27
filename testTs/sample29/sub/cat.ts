@@ -16,7 +16,7 @@ export class Cat extends Lib.Sprite {
     async *walkToMouse(this:Cat, step:number){
         for(;;){
             this.Motion.pointToMouse();
-            this.Motion.moveSteps(step);
+            this.Motion.Move.moveSteps(step);
             yield;
         }    
     }

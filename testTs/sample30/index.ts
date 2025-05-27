@@ -41,11 +41,11 @@ Pg.setting = async function () {
         this.Looks.Size.scale = {w:150, h:150};
         this.Sensing.DragMode.draggable = true;
         this.Pen.penClear();
-        this.Pen.setPenHue(200);
-        this.Pen.setPenSaturation(90);
-        this.Pen.setPenBrightness(85);
-        this.Pen.setPenTransparency(60);
-        this.Pen.setPenSize(1500);
+        this.Pen.HSVColor.hue = 200;
+        this.Pen.HSVColor.saturation = 90;
+        this.Pen.HSVColor.brightness = 85;
+        this.Pen.HSVColor.transparency = 60;
+        this.Pen.Size.thickness = 1500;
         this.Looks.setEffect(Lib.ImageEffective.GHOST, 80);
         this.Pen.penDown();
         for(;;){

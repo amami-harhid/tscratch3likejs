@@ -72,6 +72,48 @@ export class PenSprite {
         this._penAttributes.color4f[idx] = _value % limit;
         this.convertAttribues2Rgb();
     }
+    get HSVColor() {
+        const color = {
+            hue: 0,
+            saturation: 0,
+            brightness: 0,
+            transparency: 0,
+        };
+        const me = this;
+        Object.defineProperty(color, "hue", {
+            get : function() {
+                return this._penAttributes.color4f[0];
+            },
+            set : function(h:number){
+                me.setPenHue(h);
+            }
+        });
+        Object.defineProperty(color, "saturation", {
+            get : function() {
+                return this._penAttributes.color4f[1];
+            },
+            set : function(s:number){
+                me.setPenSaturation(s);
+            }
+        });
+        Object.defineProperty(color, "brightness", {
+            get : function() {
+                return this._penAttributes.color4f[2];
+            },
+            set : function(v:number){
+                me.setPenBrightness(v);
+            }
+        });
+        Object.defineProperty(color, "transparency", {
+            get : function() {
+                return this._penAttributes.color4f[3];
+            },
+            set : function(t:number){
+                me.setPenTransparency(t);
+            }
+        });
+        return color;
+    }
     setPenHue(hue: number): void{
         this.setColor(0, hue);
         this.convertAttribues2Rgb();
@@ -111,17 +153,6 @@ export class PenSprite {
         this.changeColor(3, (100 - transparency)/100, 1);
         this.convertAttribues2Rgb();
     }
-    setPenSize( size: number) {
-        this._penSize = size;
-        this._penAttributes.diameter = size;
-        this.convertAttribues2Rgb();
-    }
-    changePenSize( size: number) {
-        const penSize = this._penSize + size;
-        this._penSize = (penSize<1)? 1: penSize;
-        this._penAttributes.diameter = this._penSize;
-        this.convertAttribues2Rgb();
-    }
     stamp() {
         const stampDrowingID = this._sprite.drawableID;
         if(this._skinId > -1 && stampDrowingID > -1 && this._sprite.dragSprite.dragging == false){
@@ -154,6 +185,30 @@ export class PenSprite {
             this._x0 = x0;
             this._y0 = y0;
         }
+    }
+    get Size(): {thickness:number} {
+        const size: {thickness:number} = {thickness: 1};
+        const me = this;
+        Object.defineProperty(size, "thickness", {
+            get : function() {
+                return me._penSize;
+            },
+            set : function(thisckness){
+                me.setPenSize(thisckness);
+            }
+        });
+        return size;
+    }
+    setPenSize( size: number) {
+        this._penSize = size;
+        this._penAttributes.diameter = size;
+        this.convertAttribues2Rgb();
+    }
+    changePenSize( size: number) {
+        const penSize = this._penSize + size;
+        this._penSize = (penSize<1)? 1: penSize;
+        this._penAttributes.diameter = this._penSize;
+        this.convertAttribues2Rgb();
     }
 
 }

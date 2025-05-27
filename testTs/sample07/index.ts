@@ -48,9 +48,9 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite){
         // (0,0)へ移動
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
         // 向き=90
-        this.Motion.pointInDirection( 90 );
+        this.Motion.Point.pointInDirection( 90 );
     });
 
     // 旗が押されたときの動作(ネコ)
@@ -60,9 +60,9 @@ Pg.setting = async function setting() {
         // ずっと繰り返す。
         for(;;){
             // 進む
-            this.Motion.moveSteps(catStep);
+            this.Motion.Move.moveSteps(catStep);
             // もし端に触れたら跳ね返る
-            this.Motion.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounds();
             yield;
         }
     });

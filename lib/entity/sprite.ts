@@ -16,7 +16,7 @@ import { SpriteLooks } from './spriteLooks';
 import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
 import { Costumes } from "./costumes";
-import type { RotationStyle } from "./rotationStyle";
+import { RotationStyle } from "./rotationStyle";
 //import { PlayGround } from "lib/playGround";
 import { Stage } from "./stage";
 import type { TEntityEffects, TEntityOptions } from './entityOptions';
@@ -26,6 +26,7 @@ import type { S3ImageData,S3SoundData } from "../common/typeCommon";
 export class Sprite extends Entity {
     private bubble?: Bubble;
     protected costumes?: Costumes;
+    private _rotationStyle: RotationStyle;
     private stage: Stage;
     /** @internal */
     public skinId: number;
@@ -86,6 +87,8 @@ export class Sprite extends Entity {
         this.stage = stage;
         this.bubble = new Bubble(this);
         this.costumes = new Costumes(this.playGround);
+        this._rotationStyle = RotationStyle.ALL_AROUND;
+        this.costumes.setRotationStyle(this._rotationStyle);
         this.skinId = -1;
         this.skinIdx = -1;
         this.z = -1;
@@ -829,7 +832,7 @@ export class Sprite extends Entity {
         if(direction > 180) {
             direction -= 360;
         }
-        this.$pointInDerection( direction );
+        this.$pointInDirection( direction );
     }
     /**
      * @internal
@@ -837,7 +840,7 @@ export class Sprite extends Entity {
      * @param {number} d 
      * @returns {void}
      */
-    $pointInDerection( d: number ): void {
+    $pointInDirection( d: number ): void {
         if(!this.$isAlive()) return;
 
         if(d < 0) {
@@ -862,10 +865,14 @@ export class Sprite extends Entity {
      * @returns {void}
      */
     $setRotationStyle( style: RotationStyle ): void {
+        this._rotationStyle = style;
         if(!this.$isAlive()) return;
         if(this.costumes){
             this.costumes.setRotationStyle( style );
         }
+    }
+    $getRotationStyle() : RotationStyle {
+        return this._rotationStyle;
     }
     /**
      * @internal
@@ -1158,6 +1165,7 @@ export class Sprite extends Entity {
         const position = {
             "x" : 0,
             "y" : 0,
+            "xy" : {x:0, y:0},
         };
         Object.defineProperty(position, "x", {
             get : function() {
@@ -1177,6 +1185,16 @@ export class Sprite extends Entity {
                 me.Motion.setY(y);
             }
         })
+        Object.defineProperty(position, "xy", {
+            get : function() {
+                const pos = me.Motion.getCurrentPosition();
+                return pos;
+            },
+            set : function(xy: {x:number, y:number}) {
+                me.Motion.setX(xy.x);
+                me.Motion.setX(xy.y);
+            }
+        })
 
         return position;
     }
@@ -1191,7 +1209,7 @@ export class Sprite extends Entity {
                 return me.$getCurrentDirection();
             },
             set : function(degree) {
-                me.$pointInDerection(degree);
+                me.$pointInDirection(degree);
             }
         })
 

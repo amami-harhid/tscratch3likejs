@@ -44,18 +44,20 @@ Pg.prepare = async function prepare() {
     await stage.Image.add( BackDrop );
 
     cat = new Lib.Sprite("Cat");
-    cat.Motion.setRotationStyle( Lib.RotationStyle.LEFT_RIGHT );
+    cat.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
+    //cat.Motion.setRotationStyle( Lib.RotationStyle.LEFT_RIGHT );
     await cat.Image.add( Cat1 );
     await cat.Image.add( Cat2 );
-    cat.Motion.gotoXY( -150, 0 );
-    cat.Motion.pointInDirection( 90 );
+    cat.Motion.Move.gotoXY( -150, 0 );
+    console.log(cat.Motion.Point);
+    cat.Motion.Point.pointInDirection( 90 );
     cat.Looks.hide();
     cat2 = new Lib.Sprite("Cat2");
-    cat2.Motion.setRotationStyle( Lib.RotationStyle.LEFT_RIGHT );
+    cat2.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
     await cat2.Image.add( Cat1 );
     await cat2.Image.add( Cat2 );
-    cat2.Motion.pointInDirection( -90 );
-    cat2.Motion.gotoXY( 150, 0 );
+    cat2.Motion.Point.pointInDirection( -90 );
+    cat2.Motion.Move.gotoXY( 150, 0 );
     cat2.Looks.hide();
 }
 // イベント定義処理
@@ -86,19 +88,19 @@ Pg.setting = async function setting() {
     });
     // 緑の旗が押されたときの動作
     cat.Event.whenFlag(async function(this:Sprite){
-        this.Motion.gotoXY( -150, 0 );
-        this.Motion.pointInDirection( 90 );
+        this.Motion.Move.gotoXY( -150, 0 );
+        this.Motion.Point.pointInDirection( 90 );
         this.Looks.show();
     });
     // MessageCat1Say を受け取る。引数は受け取らずに 上下に変化させるだけ。
     cat.Event.whenBroadcastReceived(MessageCat1Say, async function*(this:Sprite) {
         // 上下に揺らす。
         for(let count=0; count<10; count++){
-            this.Motion.changeY(+2);
+            this.Motion.Position.y += 2;
             yield;
         }
         for(let count=0; count<10; count++){
-            this.Motion.changeY(-2);
+            this.Motion.Position.y -= 2;
             yield;
         }
     });
@@ -118,9 +120,9 @@ Pg.setting = async function setting() {
         const self = this;
         // Cat 退場
         self.Looks.say('');
-        self.Motion.turnRightDegrees(180); // 反対方向へ
+        self.Motion.Direction.degree += 180; // 反対方向へ
         for(;;){
-            self.Motion.moveSteps(5);
+            self.Motion.Move.moveSteps(5);
             if(self.Sensing.isTouchingEdge()) {
                 break;
             }
@@ -130,8 +132,8 @@ Pg.setting = async function setting() {
     });
     // 緑の旗が押されたときの動作
     cat2.Event.whenFlag(async function(this:Sprite){
-        this.Motion.pointInDirection( -90 );
-        this.Motion.gotoXY( 150, 0 );
+        this.Motion.Point.pointInDirection( -90 );
+        this.Motion.Move.gotoXY( 150, 0 );
         this.Looks.show();
     });
     // MessageTAIJYO を受け取る。引数を受け取り、フキダシを表示したあと、退場する
@@ -140,9 +142,9 @@ Pg.setting = async function setting() {
         // Cat2 退場
         //console.log('Cat2 退場');
         self.Looks.say('');
-        self.Motion.turnRightDegrees(180); // 反対方向へ
+        self.Motion.Direction.degree += 180; // 反対方向へ
         for(;;){
-            self.Motion.moveSteps(5);
+            self.Motion.Move.moveSteps(5);
             if(self.Sensing.isTouchingEdge()) {
                 break;
             }
@@ -154,11 +156,11 @@ Pg.setting = async function setting() {
     cat2.Event.whenBroadcastReceived(MessageCat2Say, async function*(this:Sprite) {
         // 上下に揺らす。
         for(let count=0; count<10; count++){
-            this.Motion.changeY(+2);
+            this.Motion.Position.y += 2;
             yield;
         }
         for(let count=0; count<10; count++){
-            this.Motion.changeY(-2);
+            this.Motion.Position.y -= 2;
             yield;
         }
     });

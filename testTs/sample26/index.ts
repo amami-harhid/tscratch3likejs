@@ -126,7 +126,7 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作
     sprite.Event.whenFlag(async function(this:Sprite){
         // 初期設定
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
         // サイズ
         this.Looks.Size.scale = {w: 200, h: 200 }; 
         // 表示
