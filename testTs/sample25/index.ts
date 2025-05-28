@@ -27,12 +27,13 @@ Pg.preload = async function preload(this:PlayGround) {
     this.Image.load(AssetHost+'/assets/ball-a.svg', BallA );
 }
 Pg.prepare = async function prepare() {
-
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
     await stage.Image.add( Jurassic01 );
     await stage.Image.add( Jurassic02 );
+    stage.Looks.switchBackdrop(Jurassic01);
+    stage.Looks.switchBackdrop(Jurassic02);
     // Chill を追加
     await stage.Sound.add( Chill );
 
@@ -42,6 +43,7 @@ Pg.prepare = async function prepare() {
     await ball.Image.add( BallA );
     // 大きさを 横120%,縦120% にする
     ball.Looks.Size.scale = {w: 120, h: 120};
+
 }
 
 Pg.setting = async function setting() {
@@ -101,19 +103,19 @@ Pg.setting = async function setting() {
         
         // 上に5回移動
         for(const _ of Lib.Iterator(5)){
-            this.Motion.changeY(+10);
+            this.Motion.Position.y += 10;
             yield;
         }
         // ずっと繰り返す
         for(;;){
             // 下に10回移動
             for(const _ of Lib.Iterator(10)){
-                this.Motion.changeY(-10);
+                this.Motion.Position.y -= 10;
                 yield;
             }
             // 上に10回移動
             for(const _ of Lib.Iterator(10)){
-                this.Motion.changeY(+10);
+                this.Motion.Position.y += 10;
                 yield;
             }
             yield;
@@ -127,19 +129,19 @@ Pg.setting = async function setting() {
         
         // 右に5回移動
         for(const _ of Lib.Iterator(5)){
-            this.Motion.changeX(+10);
+            this.Motion.Position.x += 10;
             yield;
         }
         // ずっと繰り返す
         for(;;){
             // 左に10回移動
             for(const _ of Lib.Iterator(10)){
-                this.Motion.changeX(-10);
+                this.Motion.Position.x -= 10;
                 yield;
             }
             // 右に10回移動
             for(const _ of Lib.Iterator(10)){
-                this.Motion.changeX(+10);
+                this.Motion.Position.x += 10;
                 yield;
             }
             yield;

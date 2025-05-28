@@ -68,13 +68,13 @@ Pg.setting = async function() {
     // 旗が押されたときの動作(十字)
     cross.Event.whenFlag( async function*( this: Sprite ){
         // 位置の初期化
-        cross.Motion.gotoXY(0, 0);
+        cross.Motion.Move.gotoXY(0, 0);
         // サイズを３倍にする
         cross.Looks.Size.scale = {w: 300, h: 300};
         // ずっと繰り返す
         for(;;){
             // 右へ回転する
-            this.Motion.turnRightDegrees(ChangeDirection);
+            this.Motion.Direction.degree += ChangeDirection;
             yield;
         }
     });
@@ -120,13 +120,13 @@ Pg.setting = async function() {
         // マウス位置を取得する
         const mousePosition = Lib.mousePosition;
         // 取得した位置へ蝶を移動させる
-        clone.Motion.gotoXY(mousePosition.x, mousePosition.y);
+        clone.Motion.Move.gotoXY(mousePosition.x, mousePosition.y);
         // 蝶のサイズを 縦横 15% にする
         clone.Looks.Size.scale = {w: 15, h: 15};
         // ランダムな方向へ蝶を向ける
-        clone.Motion.pointInDirection(Lib.randomDirection);
+        clone.Motion.Point.pointInDirection(Lib.randomDirection);
         // ミリ秒。クローンが生きている時間。（およその時間）
-        clone.life = 5000; 
+        clone.life = 5000;
         // 表示する
         clone.Looks.show();
     });
@@ -171,7 +171,7 @@ Pg.setting = async function() {
             // ランダムな位置を取得する
             const randomPoint = Lib.randomPoint;
             // 取得した位置へ１秒で移動する
-            await clone.Motion.glideToPosition(5, randomPoint.x, randomPoint.y);
+            await clone.Motion.Move.glideToPosition(5, randomPoint.x, randomPoint.y);
             // lifeが尽きたら『繰り返し』を抜ける
             if( clone.life < 0) {
                 break;

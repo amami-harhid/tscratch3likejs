@@ -54,7 +54,7 @@ Pg.setting = async function() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function( this: Sprite ){
         // (0,0)へ移動する
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
     })
 
     // ms の値
@@ -79,17 +79,17 @@ Pg.setting = async function() {
         // ずっと繰り返す
         for(;;){
             // マウスの方向へ向く
-            this.Motion.pointToMouse();
+            this.Motion.Point.pointToMouse();
             // 5秒経過しているとき
             if(_5SecondsTimerOn){
                 // マウスカーソルの位置（枠内にあった最後の位置）
                 const mousePosition = Lib.mousePosition;
                 // 取得した位置へ1秒かけて移動する
-                await this.Motion.glideToPosition( 1, mousePosition.x, mousePosition.y );
+                await this.Motion.Move.glideToPosition( 1, mousePosition.x, mousePosition.y );
             }else{
                 // 5秒経過していないときは
                 // マウスカーソルのある方向へ移動する
-                this.Motion.moveSteps(catStep);
+                this.Motion.Move.moveSteps(catStep);
             }
             yield;
         }

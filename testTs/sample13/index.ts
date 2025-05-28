@@ -68,14 +68,14 @@ Pg.setting = async function() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag(async function( this:Sprite ){
         // (0,0)へ移動する
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
     });
 
     // メッセージ(MOUSE_CLICK)を受け取ったときの動作
     cat.Event.whenBroadcastReceived('MOUSE_CLICK', 
         async function(this:Sprite, mousePosition:S3Point){
             // 取得した位置へ1秒で移動させる
-            await cat.Motion.glideToPosition( 1, mousePosition );
+            await cat.Motion.Move.glideToPosition( 1, mousePosition.x, mousePosition.y );
         }
     );
 }

@@ -33,8 +33,8 @@ Pg.prepare = async function prepare() {
     cat = new Lib.Sprite("Cat");
     await cat.Image.add( Cat );
     await cat.Sound.add( Mya );
-    cat.Motion.gotoXY( 200, 150 );
-    cat.Motion.pointInDirection( 90 );
+    cat.Motion.Move.gotoXY( 200, 150 );
+    cat.Motion.Point.pointInDirection( 90 );
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -54,9 +54,9 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite) {
         // 位置初期化
-        this.Motion.gotoXY( 200, 150 );
+        this.Motion.Move.gotoXY( 200, 150 );
         // 向き初期化
-        this.Motion.pointInDirection( 90 );
+        this.Motion.Point.pointInDirection( 90 );
         // 音量 20
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
     });
@@ -67,7 +67,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 右へ回転する
-            this.Motion.turnRightDegrees(_changeDirection);// 外側Scope 参照可能を実証
+            this.Motion.Direction.degree += _changeDirection;// 外側Scope 参照可能を実証
             yield;
         }
     });
@@ -88,7 +88,7 @@ Pg.setting = async function setting() {
     const steps = 10;
     // クローンされたときの動作(ネコ)
     cat.Control.whenCloned(async function*(this:Sprite){
-        this.Motion.gotoXY( 100, -100 );    // 位置
+        this.Motion.Move.gotoXY( 100, -100 );    // 位置
         this.Looks.Size.scale = {w: 50, h: 50};         // 大きさを縦横50%
         this.Looks.setEffect(Lib.ImageEffective.COLOR, 50); //色の効果
         
@@ -96,9 +96,9 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 進む
-            this.Motion.moveSteps( steps );
+            this.Motion.Move.moveSteps( steps );
             // 端に触れたら跳ね返る
-            this.Motion.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounds();
             if(this.Sensing.isTouchingEdge() ){
                 // ミャーと鳴く。
                 this.Sound.play(Mya)

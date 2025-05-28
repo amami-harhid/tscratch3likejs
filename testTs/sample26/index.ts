@@ -132,7 +132,7 @@ Pg.setting = async function setting() {
         // 表示
         this.Looks.show();
         // 回転しない
-        this.Motion.setRotationStyle(Lib.RotationStyle.DONT_ROTATE);
+        this.Motion.Rotation.style = Lib.RotationStyle.DONT_ROTATE;
     });
 
     // 旗が押されたときの動作

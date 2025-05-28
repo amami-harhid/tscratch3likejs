@@ -30,7 +30,7 @@ Pg.prepare = async function prepare() {
     await stage.Image.add( Jurassic );
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");
-    cat.Motion.gotoXY( 0, 0 );
+    cat.Motion.Move.gotoXY( 0, 0 );
     await cat.Image.add( Cat );
 }
 // イベント定義処理
@@ -50,7 +50,7 @@ Pg.setting = async function setting() {
 
     cat.Event.whenFlag(async function(this:Sprite){
         // 初期位置
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
     });
 
     // 旗が押されたときの動作(ネコ)
@@ -62,7 +62,7 @@ Pg.setting = async function setting() {
             // 場所をランダムに決める
             const randomPoint = Lib.randomPoint;
             // 1秒で決めた場所へ移動する
-            await this.Motion.glideToPosition(1,  randomPoint.x, randomPoint.y);
+            await this.Motion.Move.glideToPosition(1,  randomPoint.x, randomPoint.y);
             yield;
         }
     });

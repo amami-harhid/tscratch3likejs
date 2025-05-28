@@ -83,19 +83,19 @@ Pg.setting = async function setting() {
         
         // 上に5回移動
         for(const _ of Lib.Iterator(5)){
-            this.Motion.changeY(+10);
+            this.Motion.Position.y += 10;
             yield;
         }
         // ずっと繰り返す
         for(;;){
             // 下に10回移動
             for(const _ of Lib.Iterator(10)){
-                this.Motion.changeY(-10);
+                this.Motion.Position.y -= 10;
                 yield;
             }
             // 上に10回移動
             for(const _ of Lib.Iterator(10)){
-                this.Motion.changeY(+10);
+                this.Motion.Position.y += 10;
                 yield;
             }
             yield;
@@ -109,19 +109,19 @@ Pg.setting = async function setting() {
         
         // 右に5回移動
         for(const _ of Lib.Iterator(5)){
-            this.Motion.changeX(+10);
+            this.Motion.Position.x += 10;
             yield;
         }
         // ずっと繰り返す
         for(;;){
             // 左に10回移動
             for(const _ of Lib.Iterator(10)){
-                this.Motion.changeX(-10);
+                this.Motion.Position.x -= 10;
                 yield;
             }
             // 右に10回移動
             for(const _ of Lib.Iterator(10)){
-                this.Motion.changeX(+10);
+                this.Motion.Position.x += 10;
                 yield;
             }
             yield;

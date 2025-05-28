@@ -32,7 +32,7 @@ Pg.prepare = async function prepare() {
     await stage.Image.add( Jurassic );
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");
-    cat.Motion.gotoXY( 0, 0 );
+    cat.Motion.Move.gotoXY( 0, 0 );
     await cat.Image.add( Cat );
 }
 // イベント定義処理
@@ -59,13 +59,13 @@ Pg.setting = async function setting() {
 
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag(async function( this:Sprite ){
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
     });
 
     // メッセージ(MOUSE_CLICK)を受け取ったときの動作
     cat.Event.whenBroadcastReceived('MOUSE_CLICK', 
         async function(this:Sprite, mousePosition:S3Point){
-            this.Motion.gotoXY(mousePosition.x, mousePosition.y);
+            this.Motion.Move.gotoXY(mousePosition.x, mousePosition.y);
         }
     );
 

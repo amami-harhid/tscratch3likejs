@@ -38,12 +38,12 @@ Pg.prepare = async function prepare() {
     cat = new Lib.Sprite("Cat");
     await cat.Image.add( Cat1 );
     await cat.Image.add( Cat2 );
-    cat.Motion.pointInDirection(75);
+    cat.Motion.Point.pointInDirection(75);
     cat2 = new Lib.Sprite("Cat2");
     await cat2.Image.add( Cat1 );
     await cat2.Image.add( Cat2 );
-    cat2.Motion.pointInDirection(115);
-    cat2.Motion.gotoXY( -20, -120 );
+    cat2.Motion.Point.pointInDirection(115);
+    cat2.Motion.Move.gotoXY( -20, -120 );
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -62,15 +62,15 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function*( this: Sprite ) {
         // 位置の設定
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
         // 向きの設定
-        this.Motion.pointInDirection(75);
+        this.Motion.Point.pointInDirection(75);
         // ずっと繰り返す
         for(;;){
             // もし端に着いたら跳ね返る
-            this.Motion.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounds();
             // 進む
-            this.Motion.moveSteps(WALK_STEP);
+            this.Motion.Move.moveSteps(WALK_STEP);
             yield;
         }
     });
@@ -101,19 +101,19 @@ Pg.setting = async function setting() {
             // ずっと繰り返す(入れ子)
             for(;;){
                 // サイズを指定した量だけ変える（減らす）
-                this.Looks.changeSizeBy(-CHANGE_SIZE, -CHANGE_SIZE);
-                const scale = this.Looks.Size.scale;
+                const size = this.Looks.Size;
+                size.scale = {w: size.w -CHANGE_SIZE, h: size.h -CHANGE_SIZE};
                 // サイズが決めた値より小さくなったとき繰り返しを抜ける
-                if(scale.w < SCALE.MIN) break;
+                if(size.w < SCALE.MIN) break;
                 yield;
             }
             // ずっと繰り返す(入れ子)
             for(;;){
                 // サイズを指定した量だけ変える（増やす）
-                this.Looks.changeSizeBy(+CHANGE_SIZE, +CHANGE_SIZE);
-                const scale = this.Looks.Size.scale;
+                const size = this.Looks.Size;
+                size.scale = {w: size.w +CHANGE_SIZE, h: size.h +CHANGE_SIZE};
                 // サイズが決めた値より大きくなったとき繰り返しを抜ける
-                if(scale.w > SCALE.MAX) break;
+                if(size.w > SCALE.MAX) break;
                 yield;
             }
             yield;
@@ -159,15 +159,15 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ２)
     cat2.Event.whenFlag( async function*( this: Sprite ) {
         // 位置の設定
-        this.Motion.gotoXY( -20, -120 );
+        this.Motion.Move.gotoXY( -20, -120 );
         // 向きの設定
-        this.Motion.pointInDirection( 115 );
+        this.Motion.Point.pointInDirection( 115 );
         // ずっと繰り返す
         for(;;){
             // もし端に着いたら跳ね返る
-            this.Motion.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounds();
             // 進む
-            this.Motion.moveSteps(WALK_STEP);
+            this.Motion.Move.moveSteps(WALK_STEP);
             yield;
         }
     });

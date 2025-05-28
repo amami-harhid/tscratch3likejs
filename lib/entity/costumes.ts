@@ -39,6 +39,7 @@ export class Costumes {
         this._rotationStyle = RotationStyle.ALL_AROUND;
         this._rotationStylePatterns = [RotationStyle.LEFT_RIGHT, RotationStyle.DONT_ROTATE, RotationStyle.ALL_AROUND];
    }
+   
    async addImage(name:string, image: string|HTMLImageElement) {
         await this._setSkin(name, image);
         await Utils.wait(Env.pace);
@@ -222,7 +223,7 @@ export class Costumes {
     }
     getSkinId( name : string){
         const _skinId = this.costumes.get(name);
-        if(_skinId){
+        if(_skinId != undefined){
             return _skinId;
         }else{
             return -1;
@@ -231,7 +232,7 @@ export class Costumes {
     update( drawableID: number, effect = {} ) {
         if(this.render && this.render.renderer){
             const _skinId = this.skinId;
-            if( _skinId && this.isSvgSkin( _skinId ) ) {
+            if( _skinId > -1 && this.isSvgSkin( _skinId ) ) {
                 if( !this.isSvgComplete( _skinId )) {
                     return;
                 }     

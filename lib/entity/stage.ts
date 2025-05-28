@@ -7,7 +7,7 @@ import { QuestionBoxElement } from "../io/questionBoxElement";
 import { Sprite } from "./sprite";
 import { StageLayering } from "./stageLayering";
 import type { TEntityEffects, TEntityOptions } from './entityOptions';
-import type { TMouse } from "./TMouse";
+import type { TMouse } from "@typeJS/s3Mouse";
 import type { TScale } from "../common/typeCommon";
 export class Stage extends Entity {
     private scale: TScale;

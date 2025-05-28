@@ -22,10 +22,18 @@ import { StageLayering } from './stageLayering';
 import type { TThreadObj } from '../controls/TThreadObj';
 import type { TPosition, TScale } from '../common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from './entityOptions';
-import type { TBroadcastElement } from './TBroadcastElement';
 import type { TSoundPlayerOption } from 'lib/sounds/IAudioEngine';
 import type { ScratchRenderProperties } from '../render/IRenderWebGL';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
+declare type TBroadcastElementFunc = {
+    func: CallableFunction,
+    threadId: string,
+    target: Entity,
+}
+declare type TBroadcastElement = {
+    "eventId": string, 
+    "funcArr": TBroadcastElementFunc[],
+}
 export class Entity extends EventEmitter {
     /** @internal */
     static clickFirstRegist = true;
@@ -491,7 +499,7 @@ export class Entity extends EventEmitter {
         }
     }
 
-    protected $setScale(w, h) {
+    protected $setScale(w:number, h:number): void {
         if(typeof w == 'number'){
             this.$_scale.w = w;
             if( h == undefined) {
@@ -501,7 +509,7 @@ export class Entity extends EventEmitter {
                 this.$_scale.h = h;
             }    
         }else{
-            const obj = w;
+            const obj = w as {w:number, h:number};
             this.$_scale.w = obj.w;
             this.$_scale.h = obj.h;
 

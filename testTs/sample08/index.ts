@@ -37,9 +37,9 @@ Pg.prepare = async function prepare() {
     await cat.Image.add( Cat2 );
     await cat.Sound.add( Mya );
     // 位置の初期化
-    cat.Motion.gotoXY( 0, 0 );
+    cat.Motion.Move.gotoXY( 0, 0 );
     // 向きの初期化
-    cat.Motion.pointInDirection( 40 );
+    cat.Motion.Point.pointInDirection( 40 );
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -59,9 +59,9 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite){
         // 位置の初期化
-        this.Motion.gotoXY( 0, 0 );
+        this.Motion.Move.gotoXY( 0, 0 );
         // 向きの初期化
-        this.Motion.pointInDirection( 40 );
+        this.Motion.Point.pointInDirection( 40 );
         // コスチューム
         this.Looks.switchCostume(Cat1);
     });
@@ -87,14 +87,14 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // ネコが進む
-            this.Motion.moveSteps(catStep);
+            this.Motion.Move.moveSteps(catStep);
             // もし端に触れていたら
             if(this.Sensing.isTouchingEdge()){
                 // ネコの音を鳴らす
                 this.Sound.play(Mya);
             }
             // もし端に触れたら跳ね返る
-            this.Motion.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounds();
             yield;
         }
     });

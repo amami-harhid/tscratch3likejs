@@ -46,9 +46,9 @@ Pg.prepare = async function prepare() {
     await cross.Sound.add( Pew );
     cross.Looks.Size.scale = {w: 100, h: 100};
     // 座標x を ステージの真ん中にする 
-    cross.Motion.setX(0); 
+    cross.Motion.Position.x = 0; 
     // 座標y を ステージの高さの半分×0.6だけ下げる 
-    cross.Motion.setY(-Lib.stageHeight/2 * 0.6); 
+    cross.Motion.Position.y = -Lib.stageHeight/2 * 0.6; 
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -67,15 +67,15 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(十字)
     cross.Event.whenFlag(async function*( this: Sprite ){
         // 向き初期化
-        this.Motion.pointInDirection( 90 );
+        this.Motion.Point.pointInDirection( 90 );
         // 黒いコスチューム
         this.Looks.switchCostume(Cross01);
         // サイズを 100%にする
         this.Looks.Size.scale = {w: 100, h: 100};
         // 座標x を ステージの真ん中にする 
-        this.Motion.setX(0); 
+        this.Motion.Position.x = 0; 
         // 座標y を ステージの高さの半分×0.6だけ下げる 
-        this.Motion.setY(-Lib.stageHeight/2 * 0.6); 
+        this.Motion.Position.y = -Lib.stageHeight/2 * 0.6; 
         // 音量=200
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 200 );
         // ピッチ=150 (再生速度をあげる = 音を短く高く)
@@ -90,11 +90,11 @@ Pg.setting = async function setting() {
         for(;;){
             // キー(右矢印)が押されているとき
             if(Lib.keyIsDown(Lib.Keyboard.RIGHT)){
-                this.Motion.moveSteps(MoveSteps);
+                this.Motion.Move.moveSteps(MoveSteps);
             }
             // キー(左矢印)が押されているとき
             if(Lib.keyIsDown(Lib.Keyboard.LEFT)){
-                this.Motion.moveSteps(-MoveSteps);
+                this.Motion.Move.moveSteps(-MoveSteps);
             }
             yield;
         }
@@ -121,20 +121,21 @@ Pg.setting = async function setting() {
         // サイズを 20%にしておく
         this.Looks.Size.scale = {w: 20, h: 20};
         // 上方向にしておく
-        this.Motion.pointInDirection(0);
+        this.Motion.Point.pointInDirection(0);
         // スプライトの大きさを取得（高さのみ）
         const {h} = this.Looks.drawingDimensions();
         // Y座標を 高さの半分だけ変える
-        this.Motion.changeY( h / 2);
+        this.Motion.Position.y += h / 2;
         // 次のコスチュームにする（本体とは別のコスチュームにする）
         this.Looks.nextCostume();
         // 表示する
         this.Looks.show();
     });
+    // クローンが作られたときの動作(十字)
     cross.Control.whenCloned( async function*( this: Sprite ) {
         // ずっと繰り返す
         for(;;){
-            this.Motion.changeY(+15); // 15ずつ上昇する
+            this.Motion.Position.y += 15; // 15ずつ上昇する
             // 端にふれたとき
             if(this.Sensing.isTouchingEdge()){
                 // 隠す
@@ -157,7 +158,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 右へ回転する
-            this.Motion.turnRightDegrees(TURN_RIGHT_DEGREE);
+            this.Motion.Direction.degree += TURN_RIGHT_DEGREE;
             // 端に触れたとき
             if(this.Sensing.isTouchingEdge()){
                 // 音を鳴らす

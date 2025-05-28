@@ -49,7 +49,6 @@ Pg.prepare = async function prepare() {
     await cat.Image.add( Cat1 );
     await cat.Image.add( Cat2 );
     cat.Motion.Move.gotoXY( -150, 0 );
-    console.log(cat.Motion.Point);
     cat.Motion.Point.pointInDirection( 90 );
     cat.Looks.hide();
     cat2 = new Lib.Sprite("Cat2");

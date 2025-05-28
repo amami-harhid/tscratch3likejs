@@ -110,7 +110,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返し、マウスカーソルへ向いて進む
         for(;;){
             // マウスカーソルへ向く
-            this.Motion.pointToMouse();
+            this.Motion.Point.pointToMouse();
             // 進む
             this.Motion.Move.moveSteps(5);
             // 現在座標を取得してログ出力

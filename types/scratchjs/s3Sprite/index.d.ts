@@ -57,7 +57,7 @@ declare interface S3SpriteControlFunctions extends S3ControlFunctions{
      * ```ts
      * cat.whenFlag(async function*(this:Sprite){
      *  for(;;) {
-     *      if(Lib.isKeyDown(Lib.Keyboard.SPACE{
+     *      if(Lib.isKeyDown(Lib.Keyboard.SPACE)){
      *          // クローンを作る
      *          this.Control.clone();
      *      });
@@ -68,9 +68,9 @@ declare interface S3SpriteControlFunctions extends S3ControlFunctions{
      * cat.whenCloned(async function(this:Sprite){
      *      for(;;) {
      *          // 10歩進む
-     *          this.Motion.moveSteps(10);
+     *          this.Motion.Move.moveSteps(10);
      *          // もし端に触れたら跳ね返る
-     *          this.Motion.ifOnEdgeBounds();
+     *          this.Motion.Move.ifOnEdgeBounds();
      *          yield;
      *      }
      * });
@@ -95,7 +95,7 @@ declare interface S3SpriteControlFunctions extends S3ControlFunctions{
      * cat.whenCloned(async function(this:Sprite){
      *      for(;;) {
      *          // 10歩進む
-     *          this.Motion.moveSteps(10);
+     *          this.Motion.Move.moveSteps(10);
      *          // 端に触れたとき
      *          if( this.Sensing.isTouchingEdge() ){
      *              // 繰返しを抜ける
@@ -135,7 +135,7 @@ declare interface S3SpriteControlFunctions extends S3ControlFunctions{
      *          // 生きているとき( removeされていないとき )
      *          if(this.Control.isAlive()) {
      *              // 10歩進む
-     *              this.Motion.moveSteps(10);
+     *              this.Motion.Move.moveSteps(10);
      *          }
      *          yield;
      *      }
@@ -182,7 +182,7 @@ declare interface S3SpriteMotionMove {
      * 指定した距離分移動させる（向きの方向へ）
      * ```ts
      *  // 現在の向きへ、10歩進む
-     *  this.Motion.moveSteps(10);
+     *  this.Motion.Move.moveSteps(10);
      * ``` 
      */
     moveSteps(step: number): void;
@@ -190,40 +190,87 @@ declare interface S3SpriteMotionMove {
      * 端にふれたら跳ね返る
      * ```ts
      *  // 10歩進む
-     *  this.Motion.moveSteps(10);
+     *  this.Motion.Move.moveSteps(10);
      *  // 端に触れたら跳ね返る
-     *  this.Motion.ifOnEdgeBounds();
+     *  this.Motion.Move.ifOnEdgeBounds();
      * ``` 
      */
     ifOnEdgeBounds() : void;
-    /** 指定した位置へ移動 */
+    /** 
+     * 指定した位置へ移動
+     * @param x {number} - x座標 
+     * @param y {number} - y座標
+     * ```ts
+     *  // 座標( X:100, Y:150 )へ移動する
+     *  this.Motion.Move.gotoXY(100, 150);
+     * ```
+     */
     gotoXY(x: number , y:number) : void;
     /** 
      * どこかへ移動する
      * ```ts
      *  // ステージ上のどこかへ移動する
-     *  this.Motion.Goto.randomPosition();
+     *  this.Motion.Move.randomPosition();
      * ``` 
      */
     randomPosition(): void;
-    /** マウスカーソルの場所へ移動する */
+    /** 
+     * マウスカーソルの場所へ移動する
+     * ```ts
+     *  this.Motion.Move.gotoMousePosition();
+     * ``` 
+     */
     gotoMousePosition(): void;
-    /** 指定したスプライトの場所へ移動する */
+    /** 
+     * 指定したスプライトの位置へ移動する
+     * @param target {Sprite} - 他スプライト
+     * ```ts
+     *  // 他スプライトの位置へ移動する
+     *  this.Motion.Move.gotoSprite(otherSprite);
+     * ``` 
+     */
     gotoSprite(target:S3Sprite): void;
-    /** 〇秒で指定した場所へ移動する(await必須) */
-    glideToPosition(secs: number, x: number|{x:number, y:number}, y?:number): Promise<any>;
+    /** 
+     * 〇秒で指定した場所へ移動する
+     * @param secs {number} - 秒数
+     * @param x {number} - x座標
+     * @param y {number} - y座標
+     */
+    glideToPosition(secs: number, x: number, y:number): Promise<any>;
 
 }
 declare interface S3SpriteMotionStyle {
-    /** 回転方法を〇にする */
+    /** 
+     * 回転方法
+     * ```ts
+     *  this.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
+     * ``` 
+     * RotationStyle {@link S3RotationStyle }
+     */
     style: string;
 }
 declare interface S3SpriteMotionPoint {
-    /** マウスの位置へ向く */
+    /** 
+     * マウスの位置へ向く
+     * ```ts
+     *  this.Motion.Point.pointToMouse();
+     * ``` 
+     */
     pointToMouse() : void;
-    /** 指定したターゲットの位置へ向く */
+    /** 
+     * 指定したターゲットの位置へ向く 
+     * ```ts
+     *  this.Motion.Point.pointToTarget(targetSprite);
+     * ```
+     */
     pointToTarget(target: S3Sprite): void;
-    /** 〇度へ向ける */
+    /** 
+     * 〇度へ向ける 
+     * ```ts
+     *  // 45度に向ける
+     *  this.Motion.Point.pointInDirection(45);
+     * ```
+     */
     pointInDirection(degree: number) : void;
 }
 
@@ -287,6 +334,10 @@ declare interface S3MotionFunctions {
     // changeY( y: number) : void;
     /**
      * 回転方法
+     * ```ts
+     *  this.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
+     * ``` 
+     * RotationStyle {@link S3RotationStyle }
      */
     Rotation: S3SpriteMotionStyle,
 }
@@ -304,34 +355,137 @@ declare interface S3DragMode {
 }
 /** 調べる系メソッド */
 declare interface S3SpriteSensingFunctions extends S3SensingFunctions {
-    /** 距離 */
+    /** 
+     * 距離
+     * ```ts
+     *  // マウスポインターまでの距離
+     *  const toMousePointerDistance = this.Sensing.Distance.toMousePointer;
+     * ``` 
+     * ```ts
+     *  // 指定したスプライトまでの距離
+     *  const toSpriteDistance = this.Sensing.Distance.to(otherSprite);
+     * ``` 
+     */
     Distance: S3SpriteDistance;
-    /** 端に触れたとき */
+    /** 
+     * 端に触れたとき 
+     * ```ts
+     *  for(;;) {
+     *      if( this.Sensing.isTouchingEdge()){
+     *          break;
+     *      }
+     *      yield;
+     *  }
+     *  console.log('端に触れた');
+     * ``` 
+     */
     isTouchingEdge(): boolean;
-    /** 上下の端に触れたとき */
+    /** 
+     * 左右の端に触れたとき 
+     * ```ts
+     *  for(;;) {
+     *      if( this.Sensing.isTouchingVirticalEdge()){
+     *          break;
+     *      }
+     *      yield;
+     *  }
+     *  console.log('左右の端に触れた');
+     * ``` 
+     */
     isTouchingVirticalEdge(): boolean;
-    /** 左右の端に触れたとき */
+    /** 
+     * 上下の端に触れたとき
+     * ```ts
+     *  for(;;) {
+     *      if( this.Sensing.isTouchingHorizontalEdge()){
+     *          break;
+     *      }
+     *      yield;
+     *  }
+     *  console.log('上下の端に触れた');
+     * ``` 
+     */
     isTouchingHorizontalEdge(): boolean;
-    /** マウスポインター触れていないとき */
+    /** 
+     * マウスポインター触れていないとき
+     * ```ts
+     *  if( this.Sensing.isMouseTouching()) {
+     *      console.log('このスプライトがマウスポインターに触れた！');
+     *      // マウスポインターが離れるまで待つ。
+     *      await this.Control.waitUntil( this.Sensing.isNotMouseTouching );
+     *  }
+     */
     isNotMouseTouching(): boolean;
-    /** マウスポインターに触れたとき */
+    /** 
+     * マウスポインターに触れたとき
+     * ```ts
+     *  if( this.Sensing.isMouseTouching()) {
+     *      console.log('このスプライトがマウスポインターに触れた！');
+     *  }
+     * ``` 
+     */
     isMouseTouching(): boolean;
-    /** 指定したスプライトが触れたとき */
-    isTouchingToSprite(sprites:S3Sprite | S3Sprite[]): boolean;
-    /** 触れているスプライトを取得する */
+    /** 
+     * 指定したスプライトが触れたとき
+     * @param sprites {Sprite[]} - スプライトの配列
+     * ```ts
+     *  let cat = new Lib.Sprite('cat');
+     *  cat.Image.add(Cat);
+     *  let ball01 = new Lib.Sprite('ball01');
+     *  ball01.Image.add(Ball);
+     *  let ball02 = new Lib.Sprite('ball02');
+     *  ball02.Image.add(Ball);
+     * 
+     *  cat.Event.whenClicked(async function(this:Sprite){
+     *      const sprites = [ball01, ball02];
+     *      if( this.Sensing.isTouchingToSprite( sprites )) {
+     *          console.log( '触れています' );
+     *      }
+     *  });
+     *  
+     * ```
+     */
+    isTouchingToSprite(sprites: S3Sprite[]): boolean;
+    /** 
+     * 触れているスプライトを取得する
+     * ```ts
+     *  const sprites: Sprite[] = this.Sensing.getTouchingSprites();
+     *  console.log('このスプライトが触れている他スプライトの数', sprites.length);
+     * ```
+     */
     getTouchingSprites(): S3Sprite[];
     /**
      * 相手の色に触れていることを判定する
      * @param targetRGB #始まりのRGB文字列(#始まりの16進数)
+     * ```ts
+     *  const targetRGB = '#ff0000'; // 赤色
+     *  if( await this.Sensing.isTouchingToColor(targetRGB) ) {
+     *      console.log('赤色に触れた！');
+     *  }
+     * 
+     * ```
      */
     isTouchingToColor(targetRGB: string): Promise<boolean>;
     /**
      * 自身の色が相手の色に触れていることを判定する
      * @param targetRGB 相手のRGB文字列 (#始まりの16進数)
      * @param maskRGB 自身のRGB文字列 (#始まりの16進数)
+     * ```ts
+     *  const targetRGB = '#ff0000'; // 赤色
+     *  const maskRGB = '#0000ff'; // 青色
+     *  if( await this.Sensing.colorIsTouchingToColor(targetRGB,maskRGB) ) {
+     *      console.log('青色が赤色に触れた！');
+     *  }
+     * ```
      */
     colorIsTouchingToColor(targetRGB: string, maskRGB: string): Promise<boolean>;
-    /** ドラッグモード */
+    /** 
+     * ドラッグモード
+     * ```ts
+     *  // Drag可能にする
+     *  this.Sensing.DragMode.draggable = true;
+     * ``` 
+     */
     DragMode: S3DragMode;
 
 }
@@ -355,6 +509,27 @@ declare interface S3Costume {
     /** コスチューム名 */
     readonly name : string;
 }
+/**
+ * スプライトのサイズ
+ * ```ts
+ *  const width = this.Looks.Size.w;
+ *  const height = this.Looks.Size.h;
+ *  const scale = this.Looks.Size.scale;
+ *  console.log(scale.w, scale.h); 
+ * ```
+ * ```ts
+ *  this.Looks.Size.w = 150; // 150%
+ *  this.Looks.Size.h = 200; // 200%
+ *  this.Looks.Size.scale = {w:150, h:200};
+ *  this.Looks.Size.w += 10; // 10ずつ増やす
+ *  this.Looks.Size.h -= 10; // 10ずつ減らす
+ * ```
+ * ```ts
+ *  const width = this.Looks.Size.w;
+ *  const height = this.Looks.Size.h;
+ *  this.Looks.Size.scale = {w:width+10, h:height+10};// w,h を10ずつ増やす
+ * ```
+ */
 declare interface S3SpriteSize {
     /** 横 */
     w: number;
@@ -440,10 +615,20 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     say(/** 話すテキスト */text?: string, properties?: SayProperty): void;
     /** 指定した秒数だけ話す(await 必須) */
     sayForSecs(/** 話すテキスト */text: string, secs: number, properties?: SayProperty): Promise<any>;
-    /** 思う */
-    think(/** 思うテキスト */text?: string, properties?: SayProperty):void;
-    /** 指定した秒数だけ思う(await 必須) */
-    thinkForSecs(/** 思うテキスト */text: string, secs: number, properties?: SayProperty): Promise<any>;
+    /** 
+     * 考える
+     * @param text? {string} - フキダシへ表示する文字列、省略時はフキダシを消す
+     * @param properties? {SayProperty} - フキダシのプロパティ（サイズ） 
+     * 
+     */
+    think(text?: string, properties?: SayProperty):void;
+    /** 
+     * 指定した秒数だけ考える
+     * @param text {string} - フキダシへ表示する文字列
+     * @param secs {number} - フキダシを表示する秒数
+     * @param properties? {SayProperty} - フキダシのプロパティ（サイズ）
+     */
+    thinkForSecs(text: string, secs: number, properties?: SayProperty): Promise<any>;
     /**
      *  大きさ
      * ```ts
@@ -461,8 +646,10 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
      * ``` 
      */
     Size: S3SpriteSize;
-    /** 大きさを変える */
-    changeSizeBy(w: number, h:number ):void;
+    // /** 
+    //  * 大きさを変える 
+    //  */
+    // changeSizeBy(w: number, h:number ):void;
     /** 
      * 表示する
      * ```ts
@@ -479,15 +666,48 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
      * ``` 
      */
     hide(): void;
-    /** 最前面にする */
+    /** 
+     * 最前面にする
+     * ```ts
+     *  this.Looks.goToFront();
+     * ``` 
+     */
     goToFront(): void;
-    /** 最背面にする */
+    /** 
+     * 最背面にする
+     * ```ts
+     *  this.Looks.goToBack();
+     * ``` 
+     */
     goToBack(): void;
-    /** 指定階層分、前にする */
+    /** 
+     * 指定階層分、前にする
+     * @param layers {number} - 移動する階層数
+     * ```ts
+     *  // 1階層分、前面にする
+     *  this.Looks.goForwardLayers(1);
+     * ```
+     */
     goForwardLayers(layers: number): void;
-    /** 指定階層分、後ろにする */
+    /** 
+     * 指定階層分、背面にする 
+     * @param layers {number} - 移動する階層数
+     * ```ts
+     *  // 1階層分、背面にする
+     *  this.Looks.goBackwardLayers(1);
+     * ```
+     */
     goBackwardLayers(layers: number): void;
-    /** 自分自身の縦横表示サイズを得る */
+    /** 
+     * 自分自身の縦横表示サイズを得る
+     * @returns {{w: number, h: number}} - サイズ
+     * ```ts
+     *  // 表示サイズ
+     *  const dimensions = this.Looks.drawingDimensions();
+     *  console.log('横幅',dimensions.w); 
+     *  console.log('縦幅',dimensions.h); 
+     * ```
+     */
     drawingDimensions() : {w: number, h: number};
 }
 declare interface S3PenSize {

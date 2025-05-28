@@ -2,13 +2,13 @@ import { Color } from '../../util/color';
 import { Render } from '../../render/render';
 import { Sprite } from '../sprite';
 import { StageLayering } from '../stageLayering';
-import type { IPenAttributes } from './IPenAttributes';
+import type { TPenAttributes } from '@typeJS/s3Pen';
 export class PenSprite {
     private render: Render;
     private _skinId: number
     private _penDown: boolean;
-    private _penAttributes: IPenAttributes;
-    private _penRgbAttributes: IPenAttributes;
+    private _penAttributes: TPenAttributes;
+    private _penRgbAttributes: TPenAttributes;
     private _penSize: number;
     private _x0?: number;
     private _y0?: number;
@@ -25,6 +25,10 @@ export class PenSprite {
         this._penAttributes = {color4f:[240,1,1,1], diameter: 1};
         this._penRgbAttributes = {color4f:[0,0,1,1], diameter: 1};
         this._penSize = 1;
+        this._penDrawableId = -1;
+        this._skinId = -1;
+    }
+    _createPen() {
         this._penDrawableId = this.render.renderer.createDrawable(StageLayering.PEN_LAYER);
         this._skinId = this.render.renderer.createPenSkin();
         this.render.renderer.updateDrawableSkinId(this._penDrawableId, this._skinId);
@@ -38,6 +42,9 @@ export class PenSprite {
         this._penDown = false;
     }
     penDown() {
+        if(this._skinId == -1){
+            this._createPen();
+        }
         this._penDown = true;
         this.drawPoint();
     }

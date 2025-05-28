@@ -8,10 +8,9 @@ import { Entity } from "./entity";
 import { Env } from "../env";
 import { MathUtil } from "../util/math-util";
 import { PenSprite } from './pen/penSprite';
-import type { IPenAttributes } from "./pen/IPenAttributes";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { SpriteControl } from './spriteControl';
-import { SpriteMotion, ISpriteMotion } from './spriteMotion';
+import { SpriteMotion } from './spriteMotion';
 import { SpriteLooks } from './spriteLooks';
 import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
@@ -20,7 +19,7 @@ import { RotationStyle } from "./rotationStyle";
 //import { PlayGround } from "lib/playGround";
 import { Stage } from "./stage";
 import type { TEntityEffects, TEntityOptions } from './entityOptions';
-import type { S3ImageData,S3SoundData } from "../common/typeCommon";
+import type { S3ImageData, S3SoundData } from "../common/typeCommon";
 //import { Backdrops } from "./backdrops";
 
 export class Sprite extends Entity {
@@ -63,7 +62,7 @@ export class Sprite extends Entity {
     public dragSprite : DragSprite;
     private _penSprite: PenSprite;
     /** 動き */
-    public Motion: ISpriteMotion;
+    public Motion: SpriteMotion;
     /** 見た目 */
     public Looks: SpriteLooks;
     /** 制御 */
@@ -214,6 +213,12 @@ export class Sprite extends Entity {
             const newOptions = Object.assign(_options, options);
             // @ts-ignore this.constructor()エラーを抑止する
             const newSprite = new this.constructor(newName, newOptions);
+            if(this.visible){
+                newSprite.$show();
+            }else{
+                newSprite.$hide();
+            }
+
             // デフォでは本体の前に表示されるので、1つ背面へ移動する
             newSprite.$goBackwardLayers(1)
             //const _visible = 
@@ -374,9 +379,9 @@ export class Sprite extends Entity {
                 this.bubble.setScale(obj.w, obj.h);
 
         }else if(Utils.isNumber(w)){
-            super.$setScale(w,h);
+            const _w = w as number;
+            super.$setScale(_w,h);
             if(this.bubble){
-                const _w = w as number;
                 this.bubble.setScale(_w, h);
             }
         }
@@ -1613,7 +1618,8 @@ export class Sprite extends Entity {
             'changePenTransparency': pen.changePenTransparency.bind(pen),
             'setPenSize': pen.setPenSize.bind(pen),
             'changePenSize': pen.changePenSize.bind(pen),
-
+            'HSVColor': pen.HSVColor,
+            'Size': pen.Size,
         }
     }
 

@@ -53,8 +53,8 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite){
         // 初期化
-        this.Motion.gotoXY( 0, 0 );  // 配置中央
-        this.Motion.pointInDirection( 90 );  // 向き90度
+        this.Motion.Move.gotoXY( 0, 0 );  // 配置中央
+        this.Motion.Point.pointInDirection( 90 );  // 向き90度
         // ネコの音を 音量=20 とする
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
     });
@@ -66,7 +66,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 右向きに回転する
-            this.Motion.turnRightDegrees(direction01+direction02);
+            this.Motion.Direction.degree += direction01+direction02;
             yield;
         }
     });
@@ -84,9 +84,9 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 進む。
-            this.Motion.moveSteps(catStep);
+            this.Motion.Move.moveSteps(catStep);
             // 端に触れたら跳ね返る
-            this.Motion.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounds();
             // 端にタッチしたとき
             if(this.Sensing.isTouchingEdge() ){
                 // ミャーと鳴く。

@@ -241,7 +241,7 @@ export class S3Element {
             for(const s of S3Element.p.stage.sprites){
                 if(s && s.clones){
                     for(const c of s.clones){
-                        if(c && c.isAlive()){
+                        if(c && c.$isAlive && c.$isAlive()){
                             c.$remove();
                         }
                     }    
