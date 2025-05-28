@@ -1,7 +1,7 @@
 {
   "name": "@tscratch3/tscratch3likejs",
   "version": "1.0.0-alpha.24",
-  "description": "scratch3-like-js library, written in Typescript",
+  "description": "scratch3-like-js library, written by Typescript",
   "repository": {
     "type": "git",
     "url": "git://github.com/amami-harhid/tscratch3likejs.git"
