@@ -38,7 +38,7 @@ Pg.prepare = async function prepare() {
     // コスチュームを追加
     await cat.Image.add( Cat01 );
     await cat.Image.add( Cat02 );
-    cat.Motion.setY(100);
+    cat.Motion.Position.y = 100;
     monitors = new Lib.Monitors();
     monitors.add('M01', '秒数');
     monitors.add('M02', '回数');

@@ -2,6 +2,7 @@
  * test00
  * 空
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {Pg, Lib} from '../../build/index.js';
 
 Pg.title = "【test00】空"
