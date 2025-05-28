@@ -4,9 +4,9 @@
  * 質問を出す。
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 import type {S3Monitors,S3Monitor} from "@typeJS/s3Monitors";
 
 Pg.title = "【Sample28】質問をする(ネコをクリック、ステージをクリック)"
@@ -16,8 +16,8 @@ const Chill:string = "Chill";
 const Cat01:string = "Cat01";
 const Cat02:string = "Cat02";
 
-let stage: S3Stage;
-let cat: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
 let monitors: S3Monitors;
 let who: S3Monitor;
 let answer: S3Monitor;
@@ -29,7 +29,7 @@ const MonitorId = {
     ANSER: 'answer',
 }
 
-Pg.preload = async function preload(this:S3PlayGround) {
+Pg.preload = async function preload(this:PlayGround) {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic01 );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', Cat01 );
@@ -70,7 +70,7 @@ Pg.setting = async function setting() {
      * 旗を押されたときの動き
      * STARTメッセージを送る
      */
-    cat.Event.whenFlag(async function*(this:S3Sprite){
+    cat.Event.whenFlag(async function*(this:Sprite){
         this.Looks.switchCostume(Cat01);
         await this.Looks.sayForSecs('ステージやネコをクリックすると質問をするよ',1);
         await this.Looks.sayForSecs('連続してクリックすると前回の質問応答の後に質問が続くよ',1);
@@ -91,7 +91,7 @@ Pg.setting = async function setting() {
     /**
      * STARTを受け取ったときの動き（ステージ） 
      */ 
-    stage.Event.whenBroadcastReceived('START', async function*(this:S3Stage){
+    stage.Event.whenBroadcastReceived('START', async function*(this:Stage){
         // 音量 10
         await this.Sound.setOption(Lib.SoundOption.VOLUME, 10);
         // ずっと繰り返す
@@ -105,9 +105,9 @@ Pg.setting = async function setting() {
     /**
      * STARTを受け取ったときの動き（ステージ） 
      */ 
-    stage.Event.whenBroadcastReceived('START', async function(this:S3Stage){
+    stage.Event.whenBroadcastReceived('START', async function(this:Stage){
         // STARTを受け取ったら クリックの動きを始める
-        this.Event.whenClicked(async function(this:S3Stage){
+        this.Event.whenClicked(async function(this:Stage){
             who.text = 'ステージ';
             answer.text = '';
             const answerValue = await this.Sensing.askAndWait('ステージから質問をするよ');
@@ -118,9 +118,9 @@ Pg.setting = async function setting() {
     /**
      * STARTを受け取ったときの動き（ネコ） 
      */ 
-    cat.Event.whenBroadcastReceived('START', async function(this:S3Sprite){
+    cat.Event.whenBroadcastReceived('START', async function(this:Sprite){
         // STARTを受け取ったら クリックの動きを始める
-        this.Event.whenClicked(async function(this:S3Sprite){
+        this.Event.whenClicked(async function(this:Sprite){
             who.text = 'ネコ';
             answer.text = '';
             const answerValue = await this.Sensing.askAndWait('ネコから質問をするよ');
@@ -131,7 +131,7 @@ Pg.setting = async function setting() {
     /**
      * STARTを受け取ったときの動き（ネコ） 
      */ 
-    cat.Event.whenBroadcastReceived('START', async function*(this:S3Sprite){
+    cat.Event.whenBroadcastReceived('START', async function*(this:Sprite){
         this.Looks.switchCostume(Cat02);
         this.Looks.Size.w = -100;
         for(;;){
@@ -160,7 +160,7 @@ Pg.setting = async function setting() {
     /**
      * ANSWERを受け取ったときの動き（ネコ） 
      */ 
-    cat.Event.whenBroadcastReceived('ANSWER', async function(this:S3Sprite, answerValue:string, from:string){
+    cat.Event.whenBroadcastReceived('ANSWER', async function(this:Sprite, answerValue:string, from:string){
         // 1秒間、答えを考える。
         const message = `${from}の質問への答えは 『${answerValue}』でした`;
         console.log(message);

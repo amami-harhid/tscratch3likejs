@@ -1,7 +1,7 @@
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite, SizeProperty} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite, SizeProperty} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample22】スピーチ機能：「お話しを終わるまで待つ」を続ける"
 
@@ -9,18 +9,18 @@ const Jurassic:string = "Jurassic";
 const Chill:string = "Chill";
 const Cat:string = "Cat";
 
-let stage: S3Stage;
-let cat: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
 
 const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
 
-Pg.preload = async function preload(this: S3PlayGround) {
+Pg.preload = async function preload(this: PlayGround) {
     this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
     this.Sound.load(`${ASSETS_HOST}/assets/Chill.wav`, Chill);
     this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat);
 }
 
-Pg.prepare = async function prepare(this:S3PlayGround) {
+Pg.prepare = async function prepare(this:PlayGround) {
     stage = new Lib.Stage();
     await stage.Image.add( Jurassic );
     await stage.Sound.add( Chill );
@@ -31,7 +31,7 @@ Pg.prepare = async function prepare(this:S3PlayGround) {
 
 Pg.setting = async function setting() {
 
-    stage.Event.whenFlag(async function*(this:S3Stage){
+    stage.Event.whenFlag(async function*(this:Stage){
         await this.Sound.setOption(Lib.SoundOption.VOLUME, 20);
         for(;;){
             await this.Sound.playUntilDone(Chill);
@@ -40,7 +40,7 @@ Pg.setting = async function setting() {
     })
     
     // ネコにさわったらお話する
-    cat.Event.whenFlag( async function*(this:S3Sprite){
+    cat.Event.whenFlag( async function*(this:typeof Lib.Sprite){
         const NANINANI_TYPE = 'NANINANI';
         const words = `なになに？どうしたの？`;
         const properties = {'pitch': 2, 'volume': 100}
@@ -61,7 +61,7 @@ Pg.setting = async function setting() {
     });
     // ネコをクリックしたらお話する
     let catSpeeking = false;
-    cat.Event.whenClicked(async function(this:S3Sprite){
+    cat.Event.whenClicked(async function(this:Sprite){
         const SOKOSOKO = 'SOKOSOKO';
         const words = `そこそこ。そこがかゆいの。`;
         const properties = {'pitch': 1.7, 'volume': 500};
@@ -74,7 +74,7 @@ Pg.setting = async function setting() {
     });
     
     cat.Event.whenBroadcastReceived('SPEECH', 
-        async function(this:S3Sprite, 
+        async function(this:Sprite, 
             words:string, 
             type: string
         ) {

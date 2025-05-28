@@ -1,4 +1,11 @@
-/** キーボードキー */
+/** 
+ * キーボードキー 
+ * ```ts
+ *  if( this.Sensing.isKeyDown( Lib.Keyboard.LEFT )) {
+ *      console.log('左矢印キーがおされている');
+ *  }
+ * ```
+ * */
 export interface S3Keyboard {
     /** スペースキー */
     SPACE: string;

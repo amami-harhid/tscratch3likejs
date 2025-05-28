@@ -9,11 +9,12 @@ import { Env } from '../env';
 import { EventEmitter } from "events";
 import { FunctionChecker } from '../util/functionChecker';
 import { Keyboard } from '../io/keyboard';
-import { ImageEffective, SoundOption, RotationStyle } from '../entity/entityConstant';
+import { ImageEffective, SoundOption } from '../entity/entityConstant';
 import { MathUtil } from '../util/math-util';
 import { Monitors } from '../monitor/monitors';
 import { PlayGround } from '../playGround';
 import { Render } from '../render/render';
+import { RotationStyle } from '../entity/rotationStyle';
 import { Sounds } from '../sounds/sounds';
 import { Sprite } from '../entity/sprite';
 import { Stage } from '../entity/stage';
@@ -22,27 +23,35 @@ import { SVGParser } from '../svgParser/parser';
 import { Utils } from '../util/utils';
 export class Libs {
 
+    /** @internal */
     get Backdrops () {
         return Backdrops;
     }
+    /** @internal */
     get Cast () {
         return Cast;
     }
+    /** @internal */
     get Costumes () {
         return Costumes;
     }
+    /** @internal */
     get Controls () {
         return Controls;
     }
+    /** @internal */
     get Env () {
         return Env;
     }
+    /** @internal */
     get EventEmitter () {
         return EventEmitter;
     }
+    /** @internal */
     get FunctionChecker () {
         return FunctionChecker;
     }
+    /** @internal */
     get Keyboard () {
         return Keyboard;
     }
@@ -55,6 +64,7 @@ export class Libs {
     get RotationStyle () {
         return RotationStyle;
     }
+    /** @internal */
     get Loop () {
         return Loop;
     }
@@ -64,6 +74,7 @@ export class Libs {
     get MathUtil () {
         return MathUtil;
     }
+    /** @internal */
     get svgParser () {
         return SVGParser.getInstance();
     }
@@ -72,8 +83,9 @@ export class Libs {
      * key 省略時は 何かのキーが押されているとき TRUE
      * @param {*} key 
      * @returns {boolean} TRUE/FALSE
+     * @internal
      */
-    keyIsDown(key?) {
+    keyIsDown(key?: string): boolean {
         const _r = this.p.runtime;
         if(_r){
             return _r.keyIsDown(key);
@@ -87,7 +99,7 @@ export class Libs {
      * @param {*} key 
      * @returns TRUE/FALSE
      */
-    keyIsNotDown(key) {
+    keyIsNotDown(key:string): boolean {
         return !(this.keyIsDown(key));        
     }
 
@@ -106,16 +118,21 @@ export class Libs {
         const mouse = this.p.stage.mouse;       
         return mouse.down;
     }
-
-    get stageWidth () {
+    /**
+     * ステージ幅
+     */
+    get stageWidth (): number {
         return  this.p.$stageWidth;
     }
-
-    get stageHeight () {
+    /**
+     * ステージ高さ
+     */
+    get stageHeight (): number {
         return this.p.$stageHeight;
     }
     /**
      * get rendering rate object
+     * @internal
      */
     get renderRate() {
         if(this.p.render != null && this.p.canvas){
@@ -149,20 +166,28 @@ export class Libs {
         }
         return direction;
     }
-
-    getRandomValueInRange( from , to, forceAsDecimal=false ){
+    /**
+     * 
+     * @param from {number} ランダム範囲の最小値
+     * @param to {number} ランダム範囲の最大値
+     * @param forceAsDecimal {boolean} False/省略時は整数、True時は10進数
+     * @returns 
+     */
+    getRandomValueInRange( from:number , to:number, forceAsDecimal=false ){
         return Utils.randomizeInRange( from , to, forceAsDecimal);
     }
-
+    /** @internal */
     get Render () {
         return Render;
     }
+    /** @internal */
     get Sounds () {
         return Sounds;
     }
     get Stage () {
         return Stage;
     }
+    /** @internal */
     get StageLayering () {
         return StageLayering;
     }
@@ -182,13 +207,23 @@ export class Libs {
     async wait ( t ) {
         await Utils.wait( t );
     }
-    async waitWhile( condition, entity) {
+    /**
+     * 条件成立する間、待つ
+     * @param condition {CallableFunction} 条件式を返す関数
+     * @param entity {object} condition内のthisを指すオブジェクト
+     */
+    async waitWhile( condition: CallableFunction, entity: object):Promise<void> {
         const _condition = (entity)?condition.bind(entity):condition;
         while(_condition()){
             await Utils.wait(Env.pace);
         }
     }
-    async waitUntil( condition , entity) {
+    /**
+     * 条件成立するまで待つ
+     * @param condition {CallableFunction} 条件式を返す関数
+     * @param entity {object} condition内のthisを指すオブジェクト
+     */
+    async waitUntil( condition: CallableFunction , entity: object): Promise<void> {
         const _condition = (entity)?condition.bind(entity):condition;
         for(;;) {
             if( _condition() ) {
@@ -197,16 +232,28 @@ export class Libs {
             await Utils.wait(Env.pace);
         }
     }
-
-    toScratchPosition(x, y) {
+    /**
+     * @internal
+     * ブラウザ座標をScratch3の座標に変換する
+     * @param x {number} - Canvas上の実座標(X)
+     * @param y {number} - Canvas上の実座標(Y)
+     * @returns {{x:number,y:number}} - Canvas上の実座標
+     */
+    toScratchPosition(x:number, y:number): {x:number,y:number} {
         // Base position -> canvas 
         const rate = this.renderRate;
         const _x = x * rate.x;
         const _y = y * rate.y;
         return {x: _x, y: _y};
     }
-
-    toActualPosition( x, y ) {
+    /**
+     * @internal
+     * Canvasの実座標へ変換する
+     * @param x {number} - Scratch3の座標(X)
+     * @param y {number} - Scratch3の座標(Y)
+     * @returns {{x:number,y:number}} - Canvas上の実座標
+     */
+    toActualPosition( x:number, y:number ): {x:number, y:number} {
 
         const rate = this.renderRate;
         const _x = x / rate.x;
@@ -215,12 +262,13 @@ export class Libs {
 
     }
     /**
+     * @internal
      * change scratch position to local position
      * @param {number} x  scratch x position
      * @param {number} y  scratch y position
      * @returns local position
      */
-    scratchToLocalPos( x, y ) {
+    scratchToLocalPos( x:number, y:number ): {x:number, y:number} {
         if(this.p.render){
             const w = this.p.render.stageWidth;
             const h = this.p.render.stageHeight;
@@ -233,12 +281,13 @@ export class Libs {
     }
 
     /**
+     * @internal
      * change local position to scratch position
      * @param {number} x  local x position
      * @param {number} y  local y position
      * @returns {x:number, y:number} scratch position
      */
-    localToScratchPos( x, y ) {
+    localToScratchPos( x:number, y:number ): {x:number,y:number} {
         if(this.p.render){
             const w = this.p.render.stageWidth;
             const h = this.p.render.stageHeight;
@@ -248,26 +297,34 @@ export class Libs {
         }
         throw 'unable calculate localToScratchPos';
     }
-
-    *Iterator(n) {
+    /**
+     * 繰り返し回数のイテレーター(Generator)
+     * @param n {number} - 繰り返し回数
+     */
+    *Iterator(n:number): Generator<number> {
         for(let i=0; i<n; i++){
             yield(i);
         }
     }
-    static _instance;
+    /** @internal */
+    static _instance: Libs;
+    /** @internal */
     static getInstance() {
         if( Libs._instance == undefined ) {
             Libs._instance = new Libs();
         }
         return Libs._instance;
     }
+    /** @internal */
     get p ( ) {
         if(this._p == undefined) throw 'playGround is undefined';
         return this._p;
     }
+    /** @internal */
     set p ( playGround: PlayGround) {
         this._p = playGround;
     }
+    /** @internal */
     public _p : PlayGround | undefined;
     constructor () {
         this._p = undefined;

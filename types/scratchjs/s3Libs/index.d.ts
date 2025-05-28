@@ -1,10 +1,11 @@
-import {S3Stage} from "../s3Stage"
-import {S3Sprite} from "../s3Sprite"
-import {S3Point} from "../s3Point";
-import {S3Rate} from "../s3Rate";
-import {S3ImageEffective} from "../s3ImageEffective";
-import {S3Monitors} from "../s3Monitors";
-import {S3Keyboard} from "../s3Keyboard";
+import type {Stage} from "../s3Stage"
+import type {Sprite} from "../s3Sprite"
+import type {S3Point} from "../s3Point";
+import type {S3Rate} from "../s3Rate";
+import type {S3ImageEffective} from "../s3ImageEffective";
+import type {S3Monitors} from "../s3Monitors";
+import type {S3Keyboard} from "../s3Keyboard";
+/** @internal */
 declare interface Loop {
     /** ループ内で breakする */
     break() : void;
@@ -51,9 +52,9 @@ declare interface S3MathUtils {
 /** 利用クラス格納ライブラリー */
 export interface S3Libs {
     /** ステージクラス */
-    Stage : S3Stage;
+    Stage : Stage;
     /** スプライトクラス */
-    Sprite : S3Sprite;
+    Sprite : Sprite;
     /**
      * 指定したミリ秒経過するまで待つ (await必須)
      * @param ms ﾐﾘ秒
@@ -73,7 +74,7 @@ export interface S3Libs {
     /** キーボードキー */
     Keyboard: S3Keyboard,
     /** ループの制御 */
-    Loop: Loop;
+    //Loop: Loop;
     /** サウンドオプション */
     SoundOption: S3SoundOption;
     /** 環境設定 */

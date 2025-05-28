@@ -22,32 +22,53 @@ import { StageLayering } from './stageLayering';
 import type { TThreadObj } from '../controls/TThreadObj';
 import type { TPosition, TScale } from '../common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from './entityOptions';
-import type { TBroadcastElement } from './TBroadcastElement';
 import type { TSoundPlayerOption } from 'lib/sounds/IAudioEngine';
 import type { ScratchRenderProperties } from '../render/IRenderWebGL';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
+declare type TBroadcastElementFunc = {
+    func: CallableFunction,
+    threadId: string,
+    target: Entity,
+}
+declare type TBroadcastElement = {
+    "eventId": string, 
+    "funcArr": TBroadcastElementFunc[],
+}
 export class Entity extends EventEmitter {
+    /** @internal */
     static clickFirstRegist = true;
+    /** @internal */
     static eventFuncArray: CLICK_EVENT_FUNCTION[] = [];
+    /** @internal */
     static broadcastReceivedFuncArr:TBroadcastElement[] = [];
+    /** @internal */
     static get EmitIdMovePromise () {
         return '_MovePromise_';
     }
+    /** @internal */
     get SOUND_FORCE_STOP (){
         return "sound_force_stop";
     }
+    /** @internal */
     public render: Render;
+    /** @internal */
     public playGround: PlayGround;
+    /** @internal */
     public drawableID: number;
     protected _libs: Libs;
     private threads: Threads;
-    public pace?: number;
+    /** @internal */
+    public pace: number;
+    /** Entityの名前 */
     public name: string;
     private layer: StageLayering;
+    /** @internal */
     public id: string;
+    /** @internal */
     public canvas: HTMLCanvasElement;
+    /** @internal */
     public flag: HTMLElement|null;
-    public $_position: TPosition;
+    protected $_position: TPosition;
     protected $_scale: TScale;
     protected $_direction: number;
     protected _visible: boolean;
@@ -58,9 +79,10 @@ export class Entity extends EventEmitter {
     protected $_prev_scale: TScale;
     protected $_prev_direction: number;
     protected _effect: TEntityEffects;
+    /** 生存期間。(÷FPS値)をするとおよそ秒数になる、デフォルトは無限値。 */
     public life: number;
     protected modules?: Map<string, Promise<void>[]>;
-    public _isAlive: boolean;
+    protected _isAlive: boolean;
     private _timer: number;
     constructor (name: string, layer: StageLayering, options:TEntityOptions = {} ){
         super();
@@ -106,23 +128,51 @@ export class Entity extends EventEmitter {
         // タイマー用
         this._timer = performance.now();
     }
-    isAlive() {
+    /**
+     * 座標 {{x:number,y:number}}
+     */
+    protected get position() : {x:number, y:number} {
+        return this.$_position;
+    }
+    /**
+     * 生きていることを確認する
+     * @returns {boolean} - 生きているときtrue.
+     */
+    $isAlive(): boolean {
         // スプライトの場合はオーバーライドしている
         return true;
     }
-    isSprite() {
+    /**
+     * Spriteであることを確認する
+     * @returns {boolean} SpriteのときTrue, 他(Stageなど)のときFalse.
+     */
+    isSprite(): boolean {
         return true;
     }
-    $delete () {
+    /**
+     * 削除する
+     */
+    protected $delete () {
         delete this.modules;
     }
-    get effect() {
+    /**
+     * 効果 {TEntityEffects}
+     */
+    get effect(): TEntityEffects {
         return this._effect;
     }
-    set effect(_effect) {
+    /**
+     * 効果を設定 {{[key:string]: number}
+     */
+    set effect(_effect: {[key:string]: number}) {
         this.setEffectsEachProperties(_effect);
     }
-    $changeSizeBy(changeW, changeH) {
+    /**
+     * @internal
+     * @param changeW 
+     * @param changeH 
+     */
+    $changeSizeBy(changeW:number|{w:number,h:number}, changeH:number): void {
         if(typeof changeW == 'number' ){
             const _w = changeW;
             let _h = changeH;
@@ -142,7 +192,12 @@ export class Entity extends EventEmitter {
         }
 
     }
-    $changeEffectBy( target:ImageEffective, changeVal:number) {
+    /**
+     * @internal
+     * @param target 
+     * @param changeVal 
+     */
+    $changeEffectBy( target:ImageEffective, changeVal:number): void {
         if(target == ImageEffective.COLOR){
             const v = (this._effect.color)? this._effect.color: 0;
             this._effect.color = v + changeVal;
@@ -175,7 +230,12 @@ export class Entity extends EventEmitter {
         }
 
     }
-    $setEffectTo( target, val) {
+    /**
+     * @internal
+     * @param target 
+     * @param val 
+     */
+    $setEffectTo( target: ImageEffective, val: number): void {
         if(target == ImageEffective.COLOR){
             this._effect.color = val;
         }else if(target == ImageEffective.FISHEYE ){
@@ -193,7 +253,7 @@ export class Entity extends EventEmitter {
         }
 
     }
-    setEffectsEachProperties(_effect) {
+    protected setEffectsEachProperties(_effect: {[key:string]: number}) {
         if(ImageEffective.COLOR in _effect ){
             this._effect.color = _effect.color;
         }
@@ -216,7 +276,10 @@ export class Entity extends EventEmitter {
             this._effect.ghost = _effect.ghost;
         }
     }
-    $clearEffect() {
+    /**
+     * @internal
+     */
+    $clearEffect() : void {
         this._effect.color = 0;
         this._effect.fisheye = 0;
         this._effect.mosaic = 0;
@@ -226,7 +289,7 @@ export class Entity extends EventEmitter {
     }
 
 
-    _isImportAllDone() {
+    protected _isImportAllDone() {
         let _allDone = true;
         this.importAllDone.map(v => {
             if( v === false ) {
@@ -235,7 +298,7 @@ export class Entity extends EventEmitter {
         })
         return _allDone;
     }
-    async _addImage(name:string ,image:string|HTMLImageElement, costume) {
+    protected async _addImage(name:string ,image:string|HTMLImageElement, costume) {
         if(name == undefined || typeof name != "string"){
             throw "【Image.add】正しい name を指定してください"
         }
@@ -258,7 +321,7 @@ export class Entity extends EventEmitter {
         await costume.addImage(name, image);
     }
 
-    async _loadImage(name, imageUrl, costume) {
+    protected async _loadImage(name, imageUrl, costume) {
         this.importIdx += 1;
         const _importIdx = this.importIdx;
         this.importAllDone.push(false);
@@ -270,7 +333,7 @@ export class Entity extends EventEmitter {
     //     const soundData = await this.sounds.importSound( sound );
     //     return soundData;
     // }
-    async _addSound(name:string, soundData:Uint8Array<ArrayBuffer>, options={}) {
+    protected async _addSound(name:string, soundData:Uint8Array<ArrayBuffer>, options={}) {
         if(name == undefined || typeof name != "string"){
             throw "【Sound.add】正しい name を指定してください"
         }
@@ -282,7 +345,7 @@ export class Entity extends EventEmitter {
         await this.sounds.setSound(name, soundData, options);
 
     }
-    async _loadSound(name, soundUrl, options={}) {
+    protected async _loadSound(name, soundUrl, options={}) {
         this.importIdx += 1;
         const _importIdx = this.importIdx;
         this.importAllDone.push(false);
@@ -290,7 +353,7 @@ export class Entity extends EventEmitter {
         await this.sounds.loadSound(name,soundUrl, options);
         this.importAllDone[_importIdx] = true;
     }
-    $soundSwitch(sound) {
+    protected $soundSwitch(sound) {
         if(this.sounds ){
             if(this.sounds.soundPlayer == undefined) throw 'sounds.soundPlayer undefined error';
             const name = sound.name;
@@ -305,13 +368,13 @@ export class Entity extends EventEmitter {
         } 
         throw 'sounds undefined error';
     }
-    $nextSound() {
+    protected $nextSound() {
         if ( this.sounds ){
             this.$soundStop();    
             this.sounds.nextSound();
         }
     }
-    $soundPlay(name) {
+    protected $soundPlay(name) {
         if(this.sounds) {
             if( name ) {
                 this.$soundSwitch({name:name});
@@ -321,7 +384,7 @@ export class Entity extends EventEmitter {
         } 
         throw 'sounds undefined error';
     }
-    async $setOption(key, value) {
+    protected async $setOption(key, value) {
         if( key == SoundOption.VOLUME ){
             this.$setSoundVolume(value);
         }else if(key == SoundOption.PITCH ){
@@ -333,26 +396,26 @@ export class Entity extends EventEmitter {
         // FPS分待つことで解消させる
         await this._libs.wait(1000/33*2);
     }
-    async $clearSoundEffect() {
+    protected async $clearSoundEffect() {
         this.$setSoundVolume(100);
         this.$setSoundPitch(0);
         await this._libs.wait(1000/33*2);
     }
-    $pitchAudio2Scratch(pitch) {
+    protected $pitchAudio2Scratch(pitch) {
         if(12.5 <= pitch && pitch <= 800){
             const scratchPitch = 120 * Math.log2(pitch/100);
             return scratchPitch;
         }
         return 100;
     }
-    $pitchScratch2Audio(pitch) {
+    protected $pitchScratch2Audio(pitch) {
         if(-360 <= pitch && pitch <= 360) {
             const audioPitch = 100 * (2**(pitch/120));
             return audioPitch;
         }
         return 0;
     }
-    async $changeOptionValue(key, value) {
+    protected async $changeOptionValue(key, value) {
         if(this.sounds ){
             if( key == SoundOption.VOLUME ){
                 const volume = this.sounds.volume;
@@ -372,12 +435,12 @@ export class Entity extends EventEmitter {
         } 
         throw 'sounds undefined error';
     }
-    $setSoundVolume(volume) {
+    protected $setSoundVolume(volume) {
         if ( this.sounds ) {
             this.sounds.volume = volume;
         }
     }
-    $getSoundVolume() {
+    protected $getSoundVolume() {
         if(this.sounds ) {
             return this.sounds.volume;
         } 
@@ -387,13 +450,13 @@ export class Entity extends EventEmitter {
     //     if ( this.sounds == null ) return;
     //     this.sounds.volume = volume;
     // }
-    $getSoundPitch() {
+    protected $getSoundPitch() {
         if(this.sounds ) {
             return this.sounds.pitch;
         } 
         throw 'sounds undefined error';
     }
-    $setSoundPitch(pitch) {
+    protected $setSoundPitch(pitch) {
         if(this.sounds ){
             const audioPitch = this.$pitchScratch2Audio(pitch);
             this.sounds.pitch = audioPitch/100;
@@ -401,20 +464,22 @@ export class Entity extends EventEmitter {
         } 
         throw 'sounds undefined error';
     }
-    $soundStop() {
+    protected $soundStop() {
         if ( this.sounds ){
             this.sounds.stop();
         }
     }
+    /** @internal */
     $soundStopImmediately() {
         if ( this.sounds ){
             this.sounds.stopImmediately();
         }
     }
+    /** @internal */
     $speechStopImmediately() {
         this.emit(this.SOUND_FORCE_STOP); // ---> スピーチを停止する Soundの中で。
     }
-    async $startSoundUntilDone(name) {
+    protected async $startSoundUntilDone(name) {
         if ( this.sounds ) {
             if(name){
                 this.$soundSwitch({name:name});
@@ -423,7 +488,7 @@ export class Entity extends EventEmitter {
         }
         return;
     }
-    $setPosition(x, y) {
+    protected $setPosition(x, y) {
         if(typeof x == 'number'){
             this.$_position.x = x;
             this.$_position.y = y;    
@@ -434,7 +499,7 @@ export class Entity extends EventEmitter {
         }
     }
 
-    $setScale(w, h) {
+    protected $setScale(w:number, h:number): void {
         if(typeof w == 'number'){
             this.$_scale.w = w;
             if( h == undefined) {
@@ -444,56 +509,62 @@ export class Entity extends EventEmitter {
                 this.$_scale.h = h;
             }    
         }else{
-            const obj = w;
+            const obj = w as {w:number, h:number};
             this.$_scale.w = obj.w;
             this.$_scale.h = obj.h;
 
         }
     }
-    _directionChange( direction ) {
+    protected _directionChange( direction ) {
         if( direction > 180 ) {
             return direction - 360;
         }
         return direction;    
     }
-    $setDirection(direction) {
+    protected $setDirection(direction) {
         const _direction = this._directionChange(direction);
         this.$_direction = _direction;
     }
-
+    /**
+     * @internal
+     * @param value 
+     */
     $turnRight( value ) {
         const _direction = this.$_direction + value;
         this.$setDirection( _direction )
     }
-
+    /**
+     * @internal
+     * @param value 
+     */
     $turnLeft( value ) {
         const _direction = this.$_direction - value;
         this.$setDirection( _direction )
     }
 
-    _generateUUID () {
+    protected _generateUUID () {
         return Utils.generateUUID();
     }
 
     /**
+     * @internal
      * Scratch3 Wait Block 風メソッド
-     * @deprecated 【利用非推奨】このメソッドは利用局面がありません。
      * @param seconds: {number} - 待つ秒数 
      */
     async $waitSeconds (seconds: number): Promise<void> {
         await Controls.waitSeconds(seconds);
     }
     /**
+     * @internal
      * Scratch3 Until Block 風メソッド
-     * @deprecated 【利用非推奨】このメソッドは利用局面がありません。
      * @param condition 
      */
     async $waitUntil(condition: CallableFunction): Promise<void> {
         await Controls.waitUntil(condition);
     }
     /**
+     * @internal
      * Scratch3 Ever Block 風メソッド
-     * @deprecated 【利用非推奨】このメソッドは利用局面がありません。
      * @param condition {CallableFunction}
      */
     async $waitWhile(condition: CallableFunction): Promise<void> {
@@ -504,14 +575,14 @@ export class Entity extends EventEmitter {
      * マウスタッチしていないことを判定する
      * @returns {boolean} - 非マウスタッチ
      */
-    $isNotMouseTouching() {
+    protected $isNotMouseTouching() {
         return !(this.$isMouseTouching());
     }
     /**
      * 自分自身がマウスタッチしているかを判定する
      * @returns {boolean} - マウスタッチ中
      */
-    $isMouseTouching() {
+    protected $isMouseTouching() {
         if(this.playGround.render){
             const mouseX = this.playGround.stage.mouse.x +1; // +1 は暫定、理由不明
             const mouseY = this.playGround.stage.mouse.y +1;
@@ -528,7 +599,7 @@ export class Entity extends EventEmitter {
 
     }
 
-    $isTouchingTargetToTarget(src: Entity, targets: Entity[] | Entity) {
+    protected $isTouchingTargetToTarget(src: Entity, targets: Entity[] | Entity) {
         const targetIds: number[] = [];
         if(Array.isArray(targets)){
             for(const _t of targets) {
@@ -552,11 +623,11 @@ export class Entity extends EventEmitter {
         }
         return false;
     }
-    $ifTouchingTarget(target: Entity) {
+    protected $ifTouchingTarget(target: Entity) {
         const touching = this.$isTouchingTargetToTarget(this,[target]);
         return touching;
     }
-    $ifTouchingMultiTargets(targets) {
+    protected $ifTouchingMultiTargets(targets) {
         if(Array.isArray(targets)){
             for(const t of targets){
                 const touching = this.$ifTouchingTarget(t);
@@ -565,7 +636,7 @@ export class Entity extends EventEmitter {
         }
         return false;
     }
-    $getTouchingTarget(targets: Entity[]): Entity[] {
+    protected $getTouchingTarget(targets: Entity[]): Entity[] {
         const src = this;
         const touchingTragets: Entity[] = []
         if(Array.isArray(targets)){
@@ -590,7 +661,7 @@ export class Entity extends EventEmitter {
      * @param targets {Entity[]} - チェック対象の配列
      * @returns {boolean} - 触れていればTrue.
      */
-    $isTouchingTarget(targets: Entity[]): boolean {
+    protected $isTouchingTarget(targets: Entity[]): boolean {
         const src = this;
         const touching = this.$isTouchingTargetToTarget(src, targets);
         return touching;
@@ -600,7 +671,7 @@ export class Entity extends EventEmitter {
      * @param {string} targetRgb #始まりのカラー文字列
      * @returns {Promise.<boolean>} 色にタッチしたとき true
      */
-    async $isTouchingColor(targetRgb: string) {
+    protected async $isTouchingColor(targetRgb: string): Promise<boolean> {
         if(this.render && this.render.renderer && targetRgb &&
             typeof targetRgb === 'string' && targetRgb.substring(0, 1) === '#'
         ){
@@ -616,7 +687,7 @@ export class Entity extends EventEmitter {
      * @param {Array.<number>} maskRgb 
      * @returns 
      */
-    async $colorIsTouchingColor(targetRgb, maskRgb) {
+    protected async $colorIsTouchingColor(targetRgb, maskRgb): Promise<boolean> {
         if(this.render && this.render.renderer && 
             targetRgb && typeof targetRgb === 'string' && targetRgb.substring(0, 1) === '#' &&
             maskRgb && typeof maskRgb === 'string' && maskRgb.substring(0, 1) === '#'
@@ -631,7 +702,7 @@ export class Entity extends EventEmitter {
         return false;
     }
 
-    $broadcast(messageId, ...args ) {
+    protected $broadcast(messageId, ...args ) {
         const runtime = this.playGround.runtime;
         if(runtime){
             const eventId = `message_${messageId}`;
@@ -641,7 +712,7 @@ export class Entity extends EventEmitter {
             runtime.emit(eventId, this.modules, sendTargets, ...args);    
         }
     }
-    async $broadcastAndWait(messageId, ...args ) {
+    protected async $broadcastAndWait(messageId, ...args ) {
         const wait = this._libs.wait;
         const runtime = this.playGround.runtime;
         if(runtime){
@@ -720,7 +791,7 @@ export class Entity extends EventEmitter {
      * @param {*} messageId 
      * @param {*} func 
      */
-    $whenBroadcastReceived(messageId: string, func: CallableFunction){
+    protected $whenBroadcastReceived(messageId: string, func: CallableFunction){
         //const me = this;
         const me = this.getProxyForHat();
         const threadId = me._generateUUID();
@@ -778,7 +849,7 @@ export class Entity extends EventEmitter {
             }    
         }
     };
-    _whenBroadcastReceivedStartThread(eventId:string, modules, funcElement,...args){
+    protected _whenBroadcastReceivedStartThread(eventId:string, modules, funcElement,...args){
         const arr = modules.get(eventId);
         const func = funcElement.func;
         const threadId = funcElement.threadId;
@@ -801,7 +872,7 @@ export class Entity extends EventEmitter {
         arr.push(promise);
     }
     // すぐに実行する
-    $whenRightNow(func: CallableFunction) {
+    protected $whenRightNow(func: CallableFunction) {
         const functionDeclareType = FunctionChecker.getFunctionDeclares(func);
         if( functionDeclareType.isArrow === true ){
             // アロー関数は許可しない
@@ -832,7 +903,7 @@ export class Entity extends EventEmitter {
             _p._draw();
         },0);
     }
-    $broadCastBackdropSwitch(backdropName: string) {
+    protected $broadCastBackdropSwitch(backdropName: string) {
         const messageId = `BackdropSwitches_${backdropName}`;
         this.$broadcast(messageId, backdropName);
     }
@@ -841,7 +912,7 @@ export class Entity extends EventEmitter {
      * @param {*} backdropName 
      * @param {*} func 
      */
-    $whenBackdropSwitches(backdropName: string, func: CallableFunction) {
+    protected $whenBackdropSwitches(backdropName: string, func: CallableFunction) {
         // Stage#nextBackDrop(), Stage#switchBackDrop() にて
         // 変更前のbackdropName と 変更後のbackdropName を比較し
         // 異なる場合、変更後のbackdropNameを使ったメッセージID で emit する
@@ -851,7 +922,7 @@ export class Entity extends EventEmitter {
         this.$whenBroadcastReceived(EmitId, func);    
     }
 
-    getProxyForHat(){
+    protected getProxyForHat(){
 
         const proxy = EntityProxyExt.getProxy(this, _=>{
             throw 'NOT FOUND PROPERTY in TARGET';
@@ -859,7 +930,7 @@ export class Entity extends EventEmitter {
         //console.log('proxy.stop_this_script_switch='+proxy.stop_this_script_switch)
         return proxy;
     }
-    async $whenFlag (func) {
+    protected async $whenFlag (func) {
         //const process = Process.default;
         const me = this;
         const flag = S3Element.getControlGreenFlag();
@@ -869,7 +940,7 @@ export class Entity extends EventEmitter {
         }
         flag.addEventListener('click', clickFunc);
     }
-    hatProc(func, self){
+    protected hatProc(func, self){
         const me = (self)? self : this;
         const threadId = me._generateUUID();
         const proxy = me.getProxyForHat();
@@ -879,7 +950,7 @@ export class Entity extends EventEmitter {
 
     }
 
-    $whenKeyPressed( key, func ) {
+    protected $whenKeyPressed( key, func ) {
         const me = this;
         const p = this.playGround;
         const runtime = p.runtime;
@@ -908,7 +979,7 @@ export class Entity extends EventEmitter {
      * 前回動作しているスレッドを停止させる。
      * @param {function} func 
      */
-    $whenClicked (func) {
+    protected $whenClicked (func) {
         // 同じオブジェクトで前回クリックされているとき
         // 前回のクリックで起動したものを止める。
         const p = this.playGround;
@@ -965,8 +1036,11 @@ export class Entity extends EventEmitter {
             Entity.clickFirstRegist = false;
         }
     }
-
-    $whenCloned(func) {
+    /**
+     * @internal
+     * @param func {CallableFunction} 
+     */
+    $whenCloned(func: CallableFunction) : void {
         const runtime = this.playGround.runtime;
         if(runtime){
             const eventId = `whenClone_${this.name}`;
@@ -978,30 +1052,35 @@ export class Entity extends EventEmitter {
             });    
         }
     }
-    updateVisible( visible: boolean ) {
+    protected updateVisible( visible: boolean ) {
         this._visible = visible;
         this.render.renderer.updateDrawableVisible(this.drawableID, visible);
 
     }
 
-    set visible( _visible: boolean ){
+    protected set visible( _visible: boolean ){
         this.updateVisible(_visible);
     }
-
-    $show() {
+    /**
+     * @internal
+     */
+    $show() : void {
         this.visible = true;
     }
-    $hide() {
+    /**
+     * @internal
+     */
+    $hide(): void {
         this.visible = false;
     }
 
-    get visible() {
+    protected get visible() {
         return this._visible;
     }
     /**
      * @abstract
      */
-    $setRotationStyle ( style ) {
+    protected $setRotationStyle ( style ) {
         // Spriteクラスで定義する
     }
     /**
@@ -1011,7 +1090,7 @@ export class Entity extends EventEmitter {
      * @param {boolean} doubleRunable 
      * @returns 
      */
-    startThread( func, entity , doubleRunable=true, addId = '') {
+    protected startThread( func, entity , doubleRunable=true, addId = '') {
 
         const functionDeclareType = FunctionChecker.getFunctionDeclares(func);
         if( functionDeclareType.isArrow === true ){
@@ -1067,7 +1146,7 @@ export class Entity extends EventEmitter {
         this.threads.registThread( obj );
         return obj;
     }
-    startThreadMessageRecieved( func, entity , doubleRunable=true, ...args) {
+    protected startThreadMessageRecieved( func, entity , doubleRunable=true, ...args) {
         const functionDeclareType = FunctionChecker.getFunctionDeclares(func);
         if( functionDeclareType.isArrow === true ){
             // アロー関数は許可しない
@@ -1105,19 +1184,27 @@ export class Entity extends EventEmitter {
         return obj;
     }
     /**
+     * @internal
      * @throws THROW_STOP_THIS_SCRIPTS
      */
     $stopThisScript() {
         throw Threads.THROW_STOP_THIS_SCRIPTS;
     }
+    /**
+     * @internal
+     */
     $stopOtherScripts() {
         this.threads.stopOtherScripts(this);
     }
     // これは使わない
-    stopThread( t ) {
+    /**
+     * @param t 
+     * @deprecated
+     */
+    protected stopThread( t ) {
         clearTimeout( t );
     }
-    pointTowardsMouseCursolGlobal( ) {
+    protected pointTowardsMouseCursolGlobal( ) {
         const p = this.playGround;
         if(p.canvas){
             const rect = p.canvas.getBoundingClientRect();
@@ -1152,7 +1239,7 @@ export class Entity extends EventEmitter {
     /**
      * カーソルの位置へ向く
      */
-    pointTowardsMouseCursol(): void {
+    protected pointTowardsMouseCursol(): void {
         // CANVAS 外に出てら ポインターを向かない。
         const mousePosition = this._libs.mousePosition;
         const targetX = mousePosition.x;
@@ -1170,7 +1257,7 @@ export class Entity extends EventEmitter {
      * @param drawableID {number}
      * @returns 
      */
-    getSkinId(drawableID: number) : number {
+    protected getSkinId(drawableID: number) : number {
         const drawable = this.render.renderer._allDrawables[drawableID];
         if( drawable && drawable.skin ){
             return drawable.skin.id;
@@ -1183,7 +1270,7 @@ export class Entity extends EventEmitter {
      * @param drawableID {number}
      * @returns {boolean}
      */
-    $_isDrawableActive(drawableID: number): boolean {
+    protected $_isDrawableActive(drawableID: number): boolean {
         if( this.getSkinId(drawableID) > -1 ){
             return true;
         }
@@ -1194,7 +1281,7 @@ export class Entity extends EventEmitter {
      * @param {number} x 
      * @param {number} y 
      */
-    $setForceXY(x, y)  {
+    protected $setForceXY(x:number, y:number): void  {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             const _position = _renderer.getFencedPositionOfDrawable(this.drawableID, [x, y]);
@@ -1212,7 +1299,7 @@ export class Entity extends EventEmitter {
      * @param {number} x 
      * @param {number} y 
      */
-    $setXY(x, y) {
+    protected $setXY(x, y) {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             const _position = _renderer.getFencedPositionOfDrawable(this.drawableID, [x, y]);
@@ -1225,6 +1312,10 @@ export class Entity extends EventEmitter {
         }
 
     }
+    /**
+     * @internal
+     * @param x 
+     */
     $setX(x) {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
@@ -1237,7 +1328,11 @@ export class Entity extends EventEmitter {
         }
        
     }
-    $changeX(x) {
+    /**
+     * @internal
+     * @param x 
+     */
+    $changeX(x: number):void {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             let _x = this.$_position.x + x;
@@ -1250,7 +1345,11 @@ export class Entity extends EventEmitter {
         }
        
     }
-    $setY(y) {
+    /**
+     * @internal
+     * @param y 
+     */
+    $setY(y: number): void {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             const _position = _renderer.getFencedPositionOfDrawable(this.drawableID, [this.$_position.x, y]);
@@ -1263,7 +1362,11 @@ export class Entity extends EventEmitter {
 
        
     }
-    $changeY(y) {
+    /**
+     * @internal
+     * @param y 
+     */
+    $changeY(y:number): void {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             let _y = this.$_position.y + y;
@@ -1275,23 +1378,23 @@ export class Entity extends EventEmitter {
             this.$_position.y += y;
         }
     }
-    $setSpeechProperties(type:string, properties: TSoundPlayerOption, gender='male', locale='ja-JP'){
+    protected $setSpeechProperties(type:string, properties: TSoundPlayerOption, gender='male', locale='ja-JP'){
         const _properties = (properties)? properties : {};
         const speech = Speech.getInstance();
         speech.setSpeechProperties(type, gender, locale, _properties);
     }
-    $speech(words:string, type:string) {
+    protected $speech(words:string, type:string) {
         const speech = Speech.getInstance();
         speech.speech(this, words, type);
 
     }
 
-    async $speechAndWait(words:string, type:string) {
+    protected async $speechAndWait(words:string, type:string) {
         const speech = Speech.getInstance();
         await speech.speechAndWait(this, words, type);
     }
 
-    update() {
+    protected update() {
         if(this.life != Infinity) {
             this.life -= 1 / this._libs.Env.pace * 1000;
             if( this.life < 0 ) {
@@ -1299,10 +1402,16 @@ export class Entity extends EventEmitter {
             }    
         }
     }
+    /**
+     * @internal
+     * @deprecated 
+     */
     remove() {
     
     }
-    
+    /**
+     * Mouse情報
+     */
     get Mouse() {
         const me = this;
         const mousePosition = { 
@@ -1322,55 +1431,76 @@ export class Entity extends EventEmitter {
 
         return mousePosition;
     }
-
+    /**
+     * @internal
+     * @param func 
+     */
     async forever(func) {
         await Loop.while(true, func, this);
     }
+    /**
+     * @internal
+     * @param condition 
+     * @param func 
+     */
     async while(condition, func) {
         await Loop.while(condition, func, this);
     }
+    /**
+     * @internal
+     * @param count 
+     * @param func 
+     */
     async repeat(count, func) {
         await Loop.repeat(count, func, this);
     }
+    /**
+     * @internal
+     * @param condition 
+     * @param func 
+     */
     async repeatUntil(condition, func) {
         await Loop.repeatUntil(condition, func, this);
     }
     /**
-     * キーが押されたとき
-     * @param {*} key 
-     * @returns {boolean}
+     * キーが押されている判定
+     * @param {string} key 
+     * @returns {boolean} 押されている
      */
-    $isKeyDown( key ) {
+    protected $isKeyDown( key: string ): boolean {
         return this._libs.keyIsDown(key);
     }
     /**
-     * キーが押されていない
-     * @param {*} key 
-     * @returns {boolean}
+     * キーが押されていない判定
+     * @param {string} key 
+     * @returns {boolean} 押されていない
      */
-    $isKeyNotDown( key ) {
+    $isKeyNotDown( key: string ): boolean {
         return this._libs.keyIsNotDown(key);
     }
-    public get $mouseX() {
+    protected get $mouseX() {
         const mousePosition = this._libs.mousePosition;
         return mousePosition.x;
     }
-    public get $mouseY() {
+    protected get $mouseY() {
         const mousePosition = this._libs.mousePosition;
         return mousePosition.y;
     }
 
-    $resetTimer() {
+    protected $resetTimer() {
         this._timer = performance.now();
     }
-    get $timer() {
+    protected get $timer() {
         return performance.now() - this._timer;
     }
 
-    $isMouseDown() {
+    protected $isMouseDown() {
         return this._libs.mouseIsPressed();
     }
-    $stopAll() {
+    /**
+     * @internal
+     */
+    $stopAll() : void {
         S3Element.stopAll();
         const runtime = this.playGround.runtime;
         if(runtime){

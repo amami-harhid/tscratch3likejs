@@ -44,7 +44,7 @@ Pg.prepare = async function prepare() {
 
     ball = new Lib.Sprite('ball');
     await ball.Image.add( BallA );
-    ball.Looks.setSize(50, 50);
+    ball.Looks.Size.scale = {w: 50, h: 50};
     ball.Sensing.DragMode.draggable = true;
 
     paddle = new Lib.Sprite("paddle");
@@ -56,7 +56,7 @@ Pg.prepare = async function prepare() {
     await block.Image.add( Block );
     await block.Sound.add(Pew);
     block.Motion.gotoXY(-220,-150);
-    block.$setScale(20,20);
+    block.Looks.Size.scale = {w: 20,h: 20};
     block.Looks.hide();
 
     line = new Lib.Sprite( "line" );
@@ -81,7 +81,7 @@ Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     ball.Event.whenFlag(async function*(){
         this.Motion.gotoXY(0,-100);
-        this.Looks.setSize(100, 50);
+        this.Looks.Size.scale = {w: 100, h: 50};
     });
     
     const BallSpeed = 10;
@@ -160,7 +160,7 @@ Pg.setting = async function setting() {
     block.Event.whenFlag( async function*(){
         this.Control.removeAllClones();
         this.Looks.hide();
-        this.Looks.setSize({w:50, h:50});
+        this.Looks.Size.scale = {w:50, h:50};
         this.Motion.gotoXY(-220,180);
 
         const pos = this.Motion.getCurrentPosition();
@@ -168,7 +168,7 @@ Pg.setting = async function setting() {
         blockCount = 0;
         for(let y=0; y<3; y++){
             for(let x=0; x<10; x++){
-                const blkPos = { x: pos.x + x*dimension.width, y: pos.y + (-y)*dimension.height };
+                const blkPos = { x: pos.x + x*dimension.w, y: pos.y + (-y)*dimension.h };
                 blockCount+=1;
                 this.Control.clone({position: blkPos});
                 yield;

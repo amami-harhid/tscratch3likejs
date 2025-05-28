@@ -6,7 +6,6 @@ export class StageEx extends Lib.Stage {
         await this.Image.add( Constants.Jurassic  );
         await this.Image.add( Constants.Backdrop );
         await this.Sound.add( Constants.Chill );
-        console.log(Constants.Chill);
     
     }
     setting() {

@@ -1,5 +1,7 @@
 /** スケール(縦横) */
 export interface S3Scale {
-    x: number;
-    y: number;
+    /** 横スケール */
+    w: number;
+    /** 縦スケール */
+    h: number;
 }

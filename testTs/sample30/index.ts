@@ -3,22 +3,21 @@
  * スプライトをドラッグする
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample30】スプライトをドラッグする"
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
-let stage: S3Stage;
-let cat: S3Sprite;
-
+let stage: Stage;
+let cat: Sprite;
 const Jurassic = 'Jurassic';
 const Chill = 'Chill';
 const Cat = 'Cat';
 
-Pg.preload = async function (this:S3PlayGround) {
+Pg.preload = async function (this:PlayGround) {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic);
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill);
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
@@ -32,21 +31,21 @@ Pg.prepare = async function () {
 
 Pg.setting = async function () {
 
-    stage.Event.whenFlag(async function*(this:S3Stage){
+    stage.Event.whenFlag(async function*(this:Stage){
         for(;;){
             await this.Sound.playUntilDone(Chill);
             yield;
         }
     })
-    cat.Event.whenFlag(async function*(this:S3Sprite){
-        this.Looks.setSize(150,150);
+    cat.Event.whenFlag(async function*(this:Sprite){
+        this.Looks.Size.scale = {w:150, h:150};
         this.Sensing.DragMode.draggable = true;
         this.Pen.penClear();
-        this.Pen.setPenHue(200);
-        this.Pen.setPenSaturation(90);
-        this.Pen.setPenBrightness(85);
-        this.Pen.setPenTransparency(60);
-        this.Pen.setPenSize(1500);
+        this.Pen.HSVColor.hue = 200;
+        this.Pen.HSVColor.saturation = 90;
+        this.Pen.HSVColor.brightness = 85;
+        this.Pen.HSVColor.transparency = 60;
+        this.Pen.Size.thickness = 1500;
         this.Looks.setEffect(Lib.ImageEffective.GHOST, 80);
         this.Pen.penDown();
         for(;;){

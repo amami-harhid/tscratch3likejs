@@ -8,18 +8,18 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
-import type {S3Sprite, SayProperty} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
+import type {Sprite, SayProperty} from "@typeJS/s3Sprite";
 
 Pg.title = "【Sample20】二匹のネコ、メッセージを送信受信して会話"
 
 const BackDrop = "BackDrop";
 const Cat1:string = "Cat";
 const Cat2:string = "Cat";
-let stage: S3Stage;
-let cat: S3Sprite;
-let cat2: S3Sprite;
+let stage: Stage;
+let cat: Sprite;
+let cat2: Sprite;
 import {
     bubbleTextArr, 
     bubbleTextArr2, 
@@ -32,7 +32,7 @@ import {
 const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
 
 // 事前ロード処理
-Pg.preload = async function(this: S3PlayGround) {
+Pg.preload = async function(this: PlayGround) {
     this.Image.load(`${ASSETS_HOST}/assets/backdrop.png`, BackDrop);
     this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat1);
     this.Image.load(`${ASSETS_HOST}/assets/cat2.svg`, Cat2);
@@ -44,18 +44,19 @@ Pg.prepare = async function prepare() {
     await stage.Image.add( BackDrop );
 
     cat = new Lib.Sprite("Cat");
-    cat.Motion.setRotationStyle( Lib.RotationStyle.LEFT_RIGHT );
+    cat.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
+    //cat.Motion.setRotationStyle( Lib.RotationStyle.LEFT_RIGHT );
     await cat.Image.add( Cat1 );
     await cat.Image.add( Cat2 );
-    cat.Motion.gotoXY( -150, 0 );
-    cat.Motion.pointInDirection( 90 );
+    cat.Motion.Move.gotoXY( -150, 0 );
+    cat.Motion.Point.pointInDirection( 90 );
     cat.Looks.hide();
     cat2 = new Lib.Sprite("Cat2");
-    cat2.Motion.setRotationStyle( Lib.RotationStyle.LEFT_RIGHT );
+    cat2.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
     await cat2.Image.add( Cat1 );
     await cat2.Image.add( Cat2 );
-    cat2.Motion.pointInDirection( -90 );
-    cat2.Motion.gotoXY( 150, 0 );
+    cat2.Motion.Point.pointInDirection( -90 );
+    cat2.Motion.Move.gotoXY( 150, 0 );
     cat2.Looks.hide();
 }
 // イベント定義処理
@@ -63,7 +64,7 @@ Pg.setting = async function setting() {
     
     const BubbleScale:SayProperty = {scale:{w:100,h:100}};
 
-    stage.Event.whenFlag( async function(this: S3Stage) {
+    stage.Event.whenFlag( async function(this: Stage) {
         // 1秒待つ
         await this.Control.wait(1); // 1秒待つ
         
@@ -85,26 +86,26 @@ Pg.setting = async function setting() {
 
     });
     // 緑の旗が押されたときの動作
-    cat.Event.whenFlag(async function(this:S3Sprite){
-        this.Motion.gotoXY( -150, 0 );
-        this.Motion.pointInDirection( 90 );
+    cat.Event.whenFlag(async function(this:Sprite){
+        this.Motion.Move.gotoXY( -150, 0 );
+        this.Motion.Point.pointInDirection( 90 );
         this.Looks.show();
     });
     // MessageCat1Say を受け取る。引数は受け取らずに 上下に変化させるだけ。
-    cat.Event.whenBroadcastReceived(MessageCat1Say, async function*(this:S3Sprite) {
+    cat.Event.whenBroadcastReceived(MessageCat1Say, async function*(this:Sprite) {
         // 上下に揺らす。
         for(let count=0; count<10; count++){
-            this.Motion.changeY(+2);
+            this.Motion.Position.y += 2;
             yield;
         }
         for(let count=0; count<10; count++){
-            this.Motion.changeY(-2);
+            this.Motion.Position.y -= 2;
             yield;
         }
     });
     // MessageCat1Say を受け取る。引数を受け取り、フキダシを表示する。
     cat.Event.whenBroadcastReceived(MessageCat1Say, 
-        async function(this:S3Sprite, text:string, time:number) {
+        async function(this:Sprite, text:string, time:number) {
             const self = this;
             // Cat の フキダシ を出す
             if(time>0) {
@@ -114,13 +115,13 @@ Pg.setting = async function setting() {
             }
         });
     // MessageTAIJYO を受け取る。引数を受け取り、フキダシを表示したあと、退場する
-    cat.Event.whenBroadcastReceived(MessageTAIJYO, async function*(this:S3Sprite) {
+    cat.Event.whenBroadcastReceived(MessageTAIJYO, async function*(this:Sprite) {
         const self = this;
         // Cat 退場
         self.Looks.say('');
-        self.Motion.turnRightDegrees(180); // 反対方向へ
+        self.Motion.Direction.degree += 180; // 反対方向へ
         for(;;){
-            self.Motion.moveSteps(5);
+            self.Motion.Move.moveSteps(5);
             if(self.Sensing.isTouchingEdge()) {
                 break;
             }
@@ -129,20 +130,20 @@ Pg.setting = async function setting() {
         self.Looks.hide(); 
     });
     // 緑の旗が押されたときの動作
-    cat2.Event.whenFlag(async function(this:S3Sprite){
-        this.Motion.pointInDirection( -90 );
-        this.Motion.gotoXY( 150, 0 );
+    cat2.Event.whenFlag(async function(this:Sprite){
+        this.Motion.Point.pointInDirection( -90 );
+        this.Motion.Move.gotoXY( 150, 0 );
         this.Looks.show();
     });
     // MessageTAIJYO を受け取る。引数を受け取り、フキダシを表示したあと、退場する
-    cat2.Event.whenBroadcastReceived(MessageTAIJYO, async function*(this:S3Sprite) {
+    cat2.Event.whenBroadcastReceived(MessageTAIJYO, async function*(this:Sprite) {
         const self = this;
         // Cat2 退場
         //console.log('Cat2 退場');
         self.Looks.say('');
-        self.Motion.turnRightDegrees(180); // 反対方向へ
+        self.Motion.Direction.degree += 180; // 反対方向へ
         for(;;){
-            self.Motion.moveSteps(5);
+            self.Motion.Move.moveSteps(5);
             if(self.Sensing.isTouchingEdge()) {
                 break;
             }
@@ -151,19 +152,19 @@ Pg.setting = async function setting() {
         self.Looks.hide();       
     });
     // MessageCat2Say を受け取る。引数は受け取らずに 上下に変化させるだけ。
-    cat2.Event.whenBroadcastReceived(MessageCat2Say, async function*(this:S3Sprite) {
+    cat2.Event.whenBroadcastReceived(MessageCat2Say, async function*(this:Sprite) {
         // 上下に揺らす。
         for(let count=0; count<10; count++){
-            this.Motion.changeY(+2);
+            this.Motion.Position.y += 2;
             yield;
         }
         for(let count=0; count<10; count++){
-            this.Motion.changeY(-2);
+            this.Motion.Position.y -= 2;
             yield;
         }
     });
     // MessageCat2Say を受け取る。引数を受け取り、フキダシを表示する。
-    cat2.Event.whenBroadcastReceived(MessageCat2Say, async function(this:S3Sprite, text="", time=-1) {
+    cat2.Event.whenBroadcastReceived(MessageCat2Say, async function(this:Sprite, text="", time=-1) {
         // Cat2 の フキダシ を出す
         if(time>0) {
             await this.Looks.sayForSecs(text, time, BubbleScale);
@@ -172,7 +173,7 @@ Pg.setting = async function setting() {
         }    
     });
     // MessageCat2Think を受け取る。引数を受け取り、フキダシを表示する。
-    cat2.Event.whenBroadcastReceived(MessageCat2Think, async function(this:S3Sprite, text="", time=-1) {
+    cat2.Event.whenBroadcastReceived(MessageCat2Think, async function(this:Sprite, text="", time=-1) {
         // Cat2 の フキダシ を出す
         //console.log('CAT2 フキダシ time='+time + " text="+text);
         if(time>0) {
@@ -182,13 +183,13 @@ Pg.setting = async function setting() {
         }    
     });
     // MessageByeBye を受け取る。引数を受け取り、フキダシを表示する。
-    cat.Event.whenBroadcastReceived(MessageByeBye, async function(this:S3Sprite, text="", time=-1) {
+    cat.Event.whenBroadcastReceived(MessageByeBye, async function(this:Sprite, text="", time=-1) {
         // それでは、という
         //console.log('CAT フキダシ time='+time + " text="+text);
         await this.Looks.thinkForSecs(text, time);
     });
     // MessageByeBye を受け取る。引数を受け取り、フキダシを表示する。
-    cat2.Event.whenBroadcastReceived(MessageByeBye, async function(this:S3Sprite, text="", time=-1) {
+    cat2.Event.whenBroadcastReceived(MessageByeBye, async function(this:Sprite, text="", time=-1) {
         // それでは、という
         //console.log('CAT2 フキダシ time='+time + " text="+text);
         await this.Looks.sayForSecs(text, time);

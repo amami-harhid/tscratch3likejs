@@ -3,7 +3,7 @@
  * クラス定義のサンプル（StageEx,Catクラス定義) 
  */
 import {Pg} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
+import type {PlayGround} from "@typeJS/s3PlayGround";
 
 import {StageEx} from './sub/stage';
 import {Cat} from './sub/cat';
@@ -16,7 +16,7 @@ import {Constants} from './sub/Constant';
 let stage: StageEx;
 let cat: Cat;
 
-Pg.preload = async function (this:S3PlayGround) {
+Pg.preload = async function (this:PlayGround) {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Constants.Jurassic);
     this.Image.load(AssetHost+'/assets/backdrop.png', Constants.Backdrop);
     this.Sound.load(AssetHost+'/assets/Chill.wav', Constants.Chill);

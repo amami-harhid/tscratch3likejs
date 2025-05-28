@@ -8,6 +8,11 @@ import { Sprite } from "./sprite";
 import { StageLayering } from "./stageLayering";
 import type { TScale } from "../common/typeCommon";
 
+export declare type BubbleProperties = {
+    /** スケール */
+    scale?: {w: number, h:number},
+}
+
 export type BubbleState = {
     drawableID : number,
     skinId: number,
@@ -118,7 +123,7 @@ export class Bubble{
             }
        }
     }
-    async _renderBubble(_properties={scale:{w:0,h:0}}) {
+    async _renderBubble(_properties: BubbleProperties ={scale:{w:0,h:0}}) {
         if(this.sprite.visible == false || this.bubbleState.text === '') {
             if( this.bubbleState.uid != '' ) {
                 this.destroyBubble();

@@ -148,7 +148,7 @@ export class QuestionBoxElement extends EventEmitter {
             }else if( QuestionBoxElement.isSprite(entity) ){
                 // スプライトの場合
                 const sprite = entity as Sprite;
-                sprite.$say(text);
+                sprite.Looks.say(text);
             }    
         }
 
@@ -216,7 +216,7 @@ export class QuestionBoxElement extends EventEmitter {
         if( entity && QuestionBoxElement.isSprite(entity)){
             // スプライトの場合、フキダシを消す
             const sprite = entity as Sprite;
-            sprite.$say('');
+            sprite.Looks.say('');
         }
         const _stageOverlays = document.getElementById(StageOverlays);
         if(_stageOverlays){

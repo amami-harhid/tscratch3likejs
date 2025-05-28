@@ -1,5 +1,6 @@
 import {S3Point} from "../s3Point";
-export interface S3Monitor {
+import { Entity } from "../s3Entity";
+export interface S3Monitor extends Entity{
     /** モニターＩＤ */
     monitorId: number;
     /** 位置 */

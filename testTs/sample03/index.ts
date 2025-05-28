@@ -1,16 +1,16 @@
 import {Pg, Lib} from "../../s3lib-importer";
-import type {S3PlayGround} from "@typeJS/s3PlayGround";
-import type {S3Stage} from "@typeJS/s3Stage";
+import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {Stage} from "@typeJS/s3Stage";
 
 Pg.title = "【Sample03】旗クリックでずっと『終わるまで音を鳴らす』を繰り返す";
 
 const Jurassic = "Jurassic";
 const Chill = "Chill";
 
-let stage:S3Stage;
+let stage:Stage;
 
 // 事前ロード処理
-Pg.preload = function(this:S3PlayGround) {
+Pg.preload = function(this:PlayGround) {
     this.Image.load('../../assets/Jurassic.svg', Jurassic);
     this.Sound.load('../../assets/Chill.wav', Chill);
 }
@@ -24,7 +24,7 @@ Pg.prepare = async function() {
 Pg.setting = function() {
 
     // 旗が押されたときの動作(ステージ)
-    stage.Event.whenFlag( async function*(this:S3Stage){ 
+    stage.Event.whenFlag( async function*(this:Stage){ 
         // 音量 = 50
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 50);
         // 「終わるまで音を鳴らす」をずっと繰り返す
