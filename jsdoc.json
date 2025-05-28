@@ -9,6 +9,10 @@
         "./types/**/s3ImagePool/*.ts",
         "./types/**/like-scratch-lib/*.ts", 
         "./types/**/s3Loop/*.ts", 
+        "./types/**/s3Pen/*.ts", 
+        "./types/**/s3Mouse/*.ts", 
+        "./types/**/s3SoundProperties/*.ts", 
+        "./types/**/s3SoundOption/*.ts", 
     ],
     "out": "docs"
 }

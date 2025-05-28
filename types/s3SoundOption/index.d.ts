@@ -1,7 +1,7 @@
-/** サウンドオプション */
-export interface S3SoundOption {
-    /** 音のピッチ */
-    pitch: number,
-    /** 音量 */  
-    volume: number,
-}
+// /** 音のオプション */
+// export interface S3SoundOption {
+//     /** 音のピッチ */
+//     pitch: number,
+//     /** 音量 */  
+//     volume: number,
+// }
