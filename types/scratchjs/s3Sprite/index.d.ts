@@ -812,15 +812,130 @@ export interface Sprite extends Entity{
      * イメージ(画像)
      */
     Image: S3ImageFunctions;
-    /** サウンド(音) */
+    /** 
+     * サウンド(音) 
+     */
     Sound: S3SoundFunctions;
-    /** 動き */
+    /** 
+     * 動き 
+     */
     Motion: S3MotionFunctions;
-    /** 見た目 */
+    /** 
+     * 見た目 
+     */
     Looks: S3SpriteLooksFunctions;
-    /** イベント */
+    /** 
+     * イベント
+     * ```ts
+     *  // ステージ、旗が押されたときの動作
+     *  stage.Event.whenFlag(async function(this:Stage){
+     *      console.log('旗が押された');
+     *  });
+     * ```
+     * ```ts
+     *  // スプライト、旗が押されたときの動作
+     *  sprite.Event.whenFlag(async function(this:Sprite){
+     *      console.log('旗が押された');
+     *  });
+     * ```
+     * ```ts
+     *  // このスプライトが押されたときの動作
+     *  sprite.Event.whenClicked(async function(this:Sprite){
+     *      console.log('このスプライトが押された');
+     *  });
+     * ```
+     * ```ts
+     *  // キーが押されたときの動作
+     *  const SPACE_KEY = Lib.Keyboard.SPACE;
+     *  sprite.Event.whenKeyPressed(SPACE_KEY, async function(this:Sprite){
+     *      console.log(SPACE_KEY, 'が押された');
+     *  });
+     * ```
+     * ```ts
+     *  // 背景が切り替わったときの動作
+     *  const BackdropName = "Backdrop";
+     *  sprite.Event.whenBackdropSwitches(BackdropName, async function(this:Sprite){
+     *      console.log('背景が', BackdropName, 'になった');
+     *  });
+     * ```
+     * ```ts
+     *  // メッセージを送る
+     *  const Message = "FirstAction";
+     *  this.Event.broadcast(Message);// 引数も渡せます！
+     * ```
+     * ```ts
+     *  // メッセージを送って待つ
+     *  const Message = "SecondAction";
+     *  await this.Event.broadcastAndWait(Message);// 引数も渡せます！
+     * ```
+     * ```ts
+     *  // メッセージを受け取る
+     *  const Message = "SecondAction";
+     *  this.Event.whenBroadcastReceived(Message, async function(this:Sprite){
+     *      console.log(Message, 'を受け取った');
+     *  });
+     * ```
+     */
     Event: S3SpriteEventFunctions;
-    /** 制御 */
+    /** 
+     * 制御
+     * ```ts
+     *  // 自分自身のクローンを作る
+     *  this.Control.clone();
+     * ``` 
+     * ```ts
+     *  // 生きている判定
+     *  if( this.Control.isAlive() ){
+     *      console.log('生きている');
+     *  }
+     * ``` 
+     * ```ts
+     *  // (クローンを)削除する
+     *  this.Control.remove();
+     * ``` 
+     * ```ts
+     *  // 全てのクローンを削除する
+     *  this.Control.removeAllClones();
+     * ``` 
+     * ```ts
+     *  // すべてを止める
+     *  this.Control.stopAll();
+     * ``` 
+     * ```ts
+     *  // スプライトの他のスクリプトを止める
+     *  this.Control.stopOtherScripts();
+     * ``` 
+     * ```ts
+     *  // このスクリプトを止める
+     *  this.Control.stopThisScript();
+     * ``` 
+     * ```ts
+     *  // 1秒待つ
+     *  this.Control.wait(1);
+     * ``` 
+     * ```ts
+     *  // 条件成立するまで待つ
+     *  const conditionMethod = ()=>{
+     *      // x座標が100より大
+     *      return this.Motion.Position.x > 100;
+     *  };
+     *  this.Control.waitUntil(conditionMethod);
+     * ``` 
+     * ```ts
+     *  // 条件成立する間、待つ
+     *  const conditionMethod = ()=>{
+     *      // x座標が100以下
+     *      return this.Motion.Position.x <= 100;
+     *  };
+     *  this.Control.waitWhile(conditionMethod);
+     * ``` 
+     * ```ts
+     *  // クローンされたとき
+     *  sprite.Control.whenClone(async function(this:Sprite){
+     *      console.log('クローンされた');
+     *  });
+     * ``` 
+     */
     Control: S3SpriteControlFunctions;
     /** 調べる */
     Sensing: S3SpriteSensingFunctions;
