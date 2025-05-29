@@ -70,7 +70,8 @@ export class Entity extends EventEmitter {
     public canvas: HTMLCanvasElement;
     /** @internal */
     public flag: HTMLElement|null;
-    protected $_position: TPosition;
+    /** @internal */
+    public $_position: TPosition;
     protected $_scale: TScale;
     protected $_direction: number;
     protected _visible: boolean;
@@ -1321,11 +1322,12 @@ export class Entity extends EventEmitter {
 
     }
     /**
+     * @internal
      * ポジションプロパティを更新する
      * @param {number} x 
      * @param {number} y 
      */
-    protected $setXY(x, y) {
+    public $setXY(x:number, y:number) : void {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             const _position = _renderer.getFencedPositionOfDrawable(this.drawableID, [x, y]);

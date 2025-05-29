@@ -367,7 +367,7 @@ export class Sprite extends Entity {
      * @param x 
      * @param y 
      */
-    protected $setXY( x: number|{x:number,y:number}, y?: number ) {
+    public $setXY( x: number, y: number ) {
         if(this._penSprite.isPenDown()){
             this._penSprite.drawLine();
         }
@@ -443,13 +443,9 @@ export class Sprite extends Entity {
      * @param {number} y 
      * @returns 
      */
-    $goToXY( x: number|{x:number,y:number}, y?: number ): void {
+    $goToXY( x: number, y: number ): void {
 
-        if(y == undefined){
-            const obj = x as {x:number,y:number};
-            this.$setXY( obj.x, obj.y );    
-
-        }else if(Utils.isNumber(x)){
+        if(Utils.isNumber(x)){
             if ( !Utils.isNumber(y)) {
                 return;
             }
@@ -464,7 +460,7 @@ export class Sprite extends Entity {
      * @param x 
      * @param y 
      */
-    $moveTo( x: number|{x:number,y:number}, y?: number ): void {
+    $moveTo( x: number, y: number ): void {
         this.$goToXY( x, y );       
     }
     /**
