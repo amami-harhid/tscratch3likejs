@@ -24,23 +24,23 @@ Pg.prepare = async function prepare() {
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
     await cat.Image.add( Cat );
-    cat.Looks.Size.scale = {w: 150, h: 150};
+    cat.Looks.Size.scale = {w: 400, h: 300};
 }
 
 Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     cat.Event.whenFlag(async function*(){
         this.Motion.Direction.degree = 60;
+        this.Pen.Size.thickness = 1000;
+        this.Pen.HSVColor.transparency = 95;
+        this.Pen.clear();
         await this.Control.waitUntil(()=>Lib.anyKeyIsDown());
-        this.Pen.setPenSize(1000);
-        this.Pen.penClear();
-        this.Pen.penDown();
+        this.Pen.down();
         for(const _ of Lib.Iterator(5000)){
-            this.Motion.moveSteps(10);
-            //this.Pen.drawLine();
-            this.Motion.ifOnEdgeBounds();
-            //this.Pen.drawLine();
-            this.Looks.changeEffectBy(Lib.ImageEffective.COLOR, 5);
+            this.Motion.Move.steps(10);
+            this.Motion.Move.ifOnEdgeBounds();
+            this.Looks.Effect.change(Lib.ImageEffective.COLOR, 5);
+            this.Pen.stamp();
             yield;
         }
     });

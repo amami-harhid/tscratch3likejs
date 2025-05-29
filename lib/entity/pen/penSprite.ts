@@ -1,19 +1,25 @@
 import { Color } from '../../util/color';
 import { Render } from '../../render/render';
 import { Sprite } from '../sprite';
+import { PenSpriteSize } from './penSpriteSize';
+import { PenSpriteHSVColor } from './penSpriteHSVColor';
 import { StageLayering } from '../stageLayering';
 import type { TPenAttributes } from '@typeJS/s3Pen';
 export class PenSprite {
     private render: Render;
     private _skinId: number
     private _penDown: boolean;
-    private _penAttributes: TPenAttributes;
+    /** @internal  */
+    public _penAttributes: TPenAttributes;
     private _penRgbAttributes: TPenAttributes;
-    private _penSize: number;
+    /** @internal */
+    public _penSize: number;
     private _x0?: number;
     private _y0?: number;
     private _sprite: Sprite;
     private _penDrawableId: number;
+    private _Size: PenSpriteSize;
+    private _HSVColor : PenSpriteHSVColor;
     /**
      * @constructor
      * @param render { Render } 
@@ -27,6 +33,8 @@ export class PenSprite {
         this._penSize = 1;
         this._penDrawableId = -1;
         this._skinId = -1;
+        this._Size = new PenSpriteSize(this);
+        this._HSVColor = new PenSpriteHSVColor(this);
     }
     _createPen() {
         this._penDrawableId = this.render.renderer.createDrawable(StageLayering.PEN_LAYER);
@@ -70,81 +78,51 @@ export class PenSprite {
         this._penRgbAttributes.diameter = this._penAttributes.diameter;
 
     }
+    /** @internal */
     setColor(idx: number, value:number){
         this._penAttributes.color4f[idx] = value;
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     changeColor(idx: number, value:number, limit: number){
         const _value = this._penAttributes.color4f[idx] + value;
         this._penAttributes.color4f[idx] = _value % limit;
         this.convertAttribues2Rgb();
     }
-    get HSVColor() {
-        const color = {
-            hue: 0,
-            saturation: 0,
-            brightness: 0,
-            transparency: 0,
-        };
-        const me = this;
-        Object.defineProperty(color, "hue", {
-            get : function() {
-                return this._penAttributes.color4f[0];
-            },
-            set : function(h:number){
-                me.setPenHue(h);
-            }
-        });
-        Object.defineProperty(color, "saturation", {
-            get : function() {
-                return this._penAttributes.color4f[1];
-            },
-            set : function(s:number){
-                me.setPenSaturation(s);
-            }
-        });
-        Object.defineProperty(color, "brightness", {
-            get : function() {
-                return this._penAttributes.color4f[2];
-            },
-            set : function(v:number){
-                me.setPenBrightness(v);
-            }
-        });
-        Object.defineProperty(color, "transparency", {
-            get : function() {
-                return this._penAttributes.color4f[3];
-            },
-            set : function(t:number){
-                me.setPenTransparency(t);
-            }
-        });
-        return color;
+    get HSVColor() : PenSpriteHSVColor{
+        return this._HSVColor;
     }
+    /** @internal */
     setPenHue(hue: number): void{
         this.setColor(0, hue);
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     changePenHue(hue: number): void{
         this.changeColor(0, hue, 360);
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     setPenSaturation(saturation: number): void{
         this.setColor(1, saturation/100);
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     changePenSaturation(saturation: number): void{
         this.changeColor(1, saturation/100, 1.0);
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     setPenBrightness(brightness: number): void{
         this.setColor(2, brightness/100);
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     changePenBrightness(brightness: number): void{
         this.changeColor(2, brightness/100, 1.0);
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     setPenTransparency(transparency: number): void{
         if(transparency>100.0){
             this.setColor(3, 0);
@@ -156,19 +134,21 @@ export class PenSprite {
         }
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     changePenTransparency(transparency: number): void{
         this.changeColor(3, (100 - transparency)/100, 1);
         this.convertAttribues2Rgb();
     }
     stamp() {
         const stampDrowingID = this._sprite.drawableID;
-        if(this._skinId > -1 && stampDrowingID > -1 && this._sprite.dragSprite.dragging == false){
+        if(this._skinId > -1 && stampDrowingID > -1 && this._sprite.DragMode.dragging == false){
             this.render.renderer.penStamp(this._skinId, stampDrowingID);
         }
     }
+    /** @internal */
     drawLine() {
         if(this._penDown === true){
-            if(this._skinId > -1 && this._sprite.dragSprite.dragging == false){
+            if(this._skinId > -1 && this._sprite.DragMode.dragging == false){
                 const x1 = this._sprite.Position.x;
                 const y1 = this._sprite.Position.y;
                 if(this._x0 != undefined && this._y0 != undefined){
@@ -184,8 +164,9 @@ export class PenSprite {
             }
         }
     }
+    /** @internal */
     drawPoint() {
-        if(this._skinId > -1 && this._sprite.dragSprite.dragging == false){
+        if(this._skinId > -1 && this._sprite.DragMode.dragging == false){
             const x0 = this._sprite.Position.x;
             const y0 = this._sprite.Position.y;
             this.render.renderer.penPoint(this._skinId, this._penRgbAttributes, x0, y0);
@@ -193,24 +174,16 @@ export class PenSprite {
             this._y0 = y0;
         }
     }
-    get Size(): {thickness:number} {
-        const size: {thickness:number} = {thickness: 1};
-        const me = this;
-        Object.defineProperty(size, "thickness", {
-            get : function() {
-                return me._penSize;
-            },
-            set : function(thisckness){
-                me.setPenSize(thisckness);
-            }
-        });
-        return size;
+    get Size(): PenSpriteSize {
+        return this._Size;
     }
+    /** @internal */
     setPenSize( size: number) {
         this._penSize = size;
         this._penAttributes.diameter = size;
         this.convertAttribues2Rgb();
     }
+    /** @internal */
     changePenSize( size: number) {
         const penSize = this._penSize + size;
         this._penSize = (penSize<1)? 1: penSize;

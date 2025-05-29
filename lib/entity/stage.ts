@@ -2,6 +2,12 @@
  * Stage
  */
 import { Backdrops } from "./backdrops";
+import { StageBackdrop } from "./stage/stageBackdrop";
+import { StageControl } from "./stage/stageControl";
+import { StageLooks } from "./stage/stageLooks";
+import { StageEvent } from "./stage/stageEvent";
+import { StageSensing } from "./stage/stageSensing";
+import { StageSound } from './stage/stageSound';
 import { Entity } from "./entity";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { Sprite } from "./sprite";
@@ -18,9 +24,16 @@ export class Stage extends Entity {
     //private skinIdx: number;
     /** @internal */
     public mouse: TMouse;
+    private _Backdrop: StageBackdrop;
+    private _Control: StageControl;
+    private _Looks : StageLooks;
+    private _Event : StageEvent;
+    private _Sensing : StageSensing;
+    private _Sound: StageSound;
     constructor( options:TEntityOptions ) {
         if(typeof options == "string") throw "new Stage() パラメータはオブジェクト型のみ"
         super( "stage", StageLayering.BACKGROUND_LAYER, options );
+        this.isSprite = false;
         this.effect = {
             color : (options && options.effect)? ((options.effect.color)? options.effect.color : 0) : 0,
             mosaic : (options && options.effect)? ((options.effect.mosaic)? options.effect.mosaic : 0) : 0,
@@ -88,9 +101,12 @@ export class Stage extends Entity {
         })
   
         this.playGround.stage = this;
-    }
-    isSprite(): boolean {
-        return false;
+        this._Backdrop = new StageBackdrop(this);
+        this._Control = new StageControl(this);
+        this._Looks = new StageLooks(this);
+        this._Event = new StageEvent(this);
+        this._Sensing = new StageSensing(this);
+        this._Sound = new StageSound(this);
     }
     get sprites (): Sprite[] {
         return this._sprites;
@@ -176,11 +192,12 @@ export class Stage extends Entity {
     // }
 
     /**
+     * @internal
      * サウンド名をもとに、ステージへサウンドを追加する
      * @param soundName {string}
      * @returns {Promise<void>}
      */
-    async $addSound(soundName:string): Promise<void> {
+    public async $addSound(soundName:string): Promise<void> {
         if(arguments.length > 1){
             throw "Sound.add 引数が多い";
         }
@@ -324,29 +341,35 @@ export class Stage extends Entity {
         });
     }
     /**
-     * 
-     * 背景番号、背景名を取り出すためのオブジェクト
-     * 使用例：this.Backdrop.no, this.Backdrop.name
-     * @returns {{no: number, name: string}}
+     * 背景
      */
-    get Backdrop(): {"no": number, "name": string}{
-        const stage = this;
-        const backdrop = {"no": 0, "name": ""};
-        Object.defineProperty(backdrop, "no", {
-            // @type {number}
-            get : function() {
-                return stage.backdrops.currentSkinNo();
-            },
-        })
-        Object.defineProperty(backdrop, "name", {
-            // @type {string}
-            get : function() {
-                return stage.backdrops.currentSkinName();
-            },
-        })
-        return backdrop;
-
+    get Backdrop() {
+        return this._Backdrop;
     }
+    // /**
+    //  * 
+    //  * 背景番号、背景名を取り出すためのオブジェクト
+    //  * 使用例：this.Backdrop.no, this.Backdrop.name
+    //  * @returns {{no: number, name: string}}
+    //  */
+    // get Backdrop(): {"no": number, "name": string}{
+    //     const stage = this;
+    //     const backdrop = {"no": 0, "name": ""};
+    //     Object.defineProperty(backdrop, "no", {
+    //         // @type {number}
+    //         get : function() {
+    //             return stage.backdrops.currentSkinNo();
+    //         },
+    //     })
+    //     Object.defineProperty(backdrop, "name", {
+    //         // @type {string}
+    //         get : function() {
+    //             return stage.backdrops.currentSkinName();
+    //         },
+    //     })
+    //     return backdrop;
+
+    // }
 
     // get L() {
     //     return this.Looks;
@@ -354,58 +377,66 @@ export class Stage extends Entity {
     /**
      * 見た目
      */
-    get Looks(){
-        return {
-            "Backdrop" : this.Backdrop,
-            "nextBackdrop": this.$nextBackDrop.bind(this),       // Sprite-->Stageへ
-            "switchBackdrop": this.$switchBackDrop.bind(this),   // Sprite-->Stageへ
-            "changeEffectBy": this.$changeEffectBy.bind(this),  // Sprite-->Entityへ
-            "setEffectTo": this.$setEffectTo.bind(this),        // Sprite-->Entityへ
-            "clearEffects": this.$clearEffect.bind(this),       // Sprite-->Entityへ
-
-        };
+    get Looks() {
+        return this._Looks;
     }
+    // get Looks(){
+    //     return {
+    //         "Backdrop" : this.Backdrop,
+    //         "nextBackdrop": this.$nextBackDrop.bind(this),       // Sprite-->Stageへ
+    //         "switchBackdrop": this.$switchBackDrop.bind(this),   // Sprite-->Stageへ
+    //         "changeEffectBy": this.$changeEffectBy.bind(this),  // Sprite-->Entityへ
+    //         "setEffectTo": this.$setEffectTo.bind(this),        // Sprite-->Entityへ
+    //         "clearEffects": this.$clearEffect.bind(this),       // Sprite-->Entityへ
+
+    //     };
+    // }
     // get C() {
     //     return this.Control;
     // }
     /**
      * 制御
-     * @internal
      */
     get Control() {
-        return {
-            "wait" : this.$waitSeconds.bind(this),    // Sprite --> Entityへ
-            "waitUntil": this.$waitUntil.bind(this),  // Sprite --> Entityへ
-            "waitWhile": this.$waitWhile.bind(this),  // Sprite --> Entityへ
-            //---- Entity
-            "forever": this.forever.bind(this),
-            "while": this.while.bind(this),
-            "repeat": this.repeat.bind(this),
-            "repeatUntil": this.repeatUntil.bind(this),
-            "stopAll" : this.$stopAll.bind(this),
-            "stopThisScript" : this.$stopThisScript.bind(this),
-            "stopOtherScripts" : this.$stopOtherScripts.bind(this),
-        };
+        return this._Control;
     }
+    // get Control() {
+    //     return {
+    //         "wait" : this.$waitSeconds.bind(this),    // Sprite --> Entityへ
+    //         "waitUntil": this.$waitUntil.bind(this),  // Sprite --> Entityへ
+    //         "waitWhile": this.$waitWhile.bind(this),  // Sprite --> Entityへ
+    //         //---- Entity
+    //         "forever": this.forever.bind(this),
+    //         "while": this.while.bind(this),
+    //         "repeat": this.repeat.bind(this),
+    //         "repeatUntil": this.repeatUntil.bind(this),
+    //         "stopAll" : this.$stopAll.bind(this),
+    //         "stopThisScript" : this.$stopThisScript.bind(this),
+    //         "stopOtherScripts" : this.$stopOtherScripts.bind(this),
+    //     };
+    // }
     /**
      * 調べる
      */
     get Sensing() {
-        return {
-            "askAndWait": this.$askAndWait.bind(this),
-            "isKeyDown" : this.$isKeyDown.bind(this),
-            "isKeyNotDown" : this.$isKeyNotDown.bind(this),
-            "isMouseDown" : this.$isMouseDown.bind(this),
-            "Mouse" : this.Mouse,
-            "timer" : this.$timer,
-            "resetTimer": this.$resetTimer.bind(this),
-            "getBackDrop" : null, // Spriteで工事中
-//            "isNotMouseTouching" : this.isNotMouseTouching.bind(this),
-//            "isMouseTouching": this.isMouseTouching.bind(this),
-//            "isTouchingTargetToTarget": this.isTouchingTargetToTarget.bind(this),
-//            "getTouchingTarget": this.getTouchingTarget.bind(this),
-        }
+        return this._Sensing;
     }
+//     get Sensing() {
+//         return {
+//             "askAndWait": this.$askAndWait.bind(this),
+//             "isKeyDown" : this.$isKeyDown.bind(this),
+//             "isKeyNotDown" : this.$isKeyNotDown.bind(this),
+//             "isMouseDown" : this.$isMouseDown.bind(this),
+//             "Mouse" : this.Mouse,
+//             "timer" : this.$timer,
+//             "resetTimer": this.$resetTimer.bind(this),
+//             "getBackDrop" : null, // Spriteで工事中
+// //            "isNotMouseTouching" : this.isNotMouseTouching.bind(this),
+// //            "isMouseTouching": this.isMouseTouching.bind(this),
+// //            "isTouchingTargetToTarget": this.isTouchingTargetToTarget.bind(this),
+// //            "getTouchingTarget": this.getTouchingTarget.bind(this),
+//         }
+//     }
 
     // get E() {
     //     return this.Event;
@@ -415,25 +446,28 @@ export class Stage extends Entity {
      * イベント
      */
     get Event() {
-        return {
-            "broadcast" : this.$broadcast.bind(this),
-            "broadcastAndWait" : this.$broadcastAndWait.bind(this),
-            // "broadcastToTargets": this.$broadcastToTargets.bind(this),
-            // "broadcastAndWaitToTargets": this.$broadcastAndWaitToTargets.bind(this),
-            "whenBroadcastReceived": this.$whenBroadcastReceived.bind(this),
-            "whenRightNow": this.$whenRightNow.bind(this),
-            "whenFlag": this.$whenFlag.bind(this),
-            "whenKeyPressed": this.$whenKeyPressed.bind(this),
-            //"whenMouseTouched": this.$whenMouseTouched.bind(this),
-            //"whenTargetMouseTouched": this.$whenTouchingTarget.bind(this),
-            "whenCloned": this.$whenCloned.bind(this),
-            "whenClicked": this.$whenClicked.bind(this),
-            "whenBackdropSwitches": this.$whenBackdropSwitches.bind(this),
-
-
-
-        }
+        return this._Event;
     }
+    // get Event() {
+    //     return {
+    //         "broadcast" : this.$broadcast.bind(this),
+    //         "broadcastAndWait" : this.$broadcastAndWait.bind(this),
+    //         // "broadcastToTargets": this.$broadcastToTargets.bind(this),
+    //         // "broadcastAndWaitToTargets": this.$broadcastAndWaitToTargets.bind(this),
+    //         "whenBroadcastReceived": this.$whenBroadcastReceived.bind(this),
+    //         "whenRightNow": this.$whenRightNow.bind(this),
+    //         "whenFlag": this.$whenFlag.bind(this),
+    //         "whenKeyPressed": this.$whenKeyPressed.bind(this),
+    //         //"whenMouseTouched": this.$whenMouseTouched.bind(this),
+    //         //"whenTargetMouseTouched": this.$whenTouchingTarget.bind(this),
+    //         "whenCloned": this.$whenCloned.bind(this),
+    //         "whenClicked": this.$whenClicked.bind(this),
+    //         "whenBackdropSwitches": this.$whenBackdropSwitches.bind(this),
+
+
+
+    //     }
+    // }
 
     /**
      * イメージ
@@ -449,18 +483,21 @@ export class Stage extends Entity {
      * サウンド
      */
     get Sound() {
-        return {
-            "add": this.$addSound.bind(this),
-            "switch" : this.$soundSwitch.bind(this),
-            "next" : this.$nextSound.bind(this),
-            "play" : this.$soundPlay.bind(this),
-            "playUntilDone": this.$startSoundUntilDone.bind(this),
-            "setOption" : this.$setOption.bind(this),
-            "changeOptionValue" : this.$changeOptionValue.bind(this),
-            "clearEffects" : this.$clearSoundEffect.bind(this),
-            "stop": this.$soundStop.bind(this),
-            "stopImmediately": this.$soundStopImmediately.bind(this),
-
-        }
+        return this._Sound;
     }
+    // get Sound() {
+    //     return {
+    //         "add": this.$addSound.bind(this),
+    //         "switch" : this.$soundSwitch.bind(this),
+    //         "next" : this.$nextSound.bind(this),
+    //         "play" : this.$soundPlay.bind(this),
+    //         "playUntilDone": this.$startSoundUntilDone.bind(this),
+    //         "setOption" : this.$setOption.bind(this),
+    //         "changeOptionValue" : this.$changeOptionValue.bind(this),
+    //         "clearEffects" : this.$clearSoundEffect.bind(this),
+    //         "stop": this.$soundStop.bind(this),
+    //         "stopImmediately": this.$soundStopImmediately.bind(this),
+
+    //     }
+    // }
 };

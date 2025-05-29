@@ -537,12 +537,85 @@ declare interface S3SpriteSize {
     h: number;
     /** スケール */
     scale : S3SpriteScale;
+    /** 
+     * 自分自身の縦横表示サイズを得る
+     * @returns {{w: number, h: number}} - サイズ
+     * ```ts
+     *  // 表示サイズ
+     *  const dimensions = this.Looks.drawingDimensions();
+     *  console.log('横幅',dimensions.w); 
+     *  console.log('縦幅',dimensions.h); 
+     * ```
+     */
+    drawingDimensions() : {w: number, h: number};
+
 }
 declare interface S3SpriteScale {
     /** 横 */
     w: number;
     /** 縦 */
     h: number;
+}
+declare interface S3SpriteLooksBubble {
+    /** 話す */
+    say(/** 話すテキスト */text?: string, properties?: SayProperty): void;
+    /** 指定した秒数だけ話す(await 必須) */
+    sayForSecs(/** 話すテキスト */text: string, secs: number, properties?: SayProperty): Promise<any>;
+    /** 
+     * 考える
+     * @param text? {string} - フキダシへ表示する文字列、省略時はフキダシを消す
+     * @param properties? {SayProperty} - フキダシのプロパティ（サイズ） 
+     * 
+     */
+    think(text?: string, properties?: SayProperty):void;
+    /** 
+     * 指定した秒数だけ考える
+     * @param text {string} - フキダシへ表示する文字列
+     * @param secs {number} - フキダシを表示する秒数
+     * @param properties? {SayProperty} - フキダシのプロパティ（サイズ）
+     */
+    thinkForSecs(text: string, secs: number, properties?: SayProperty): Promise<any>;
+
+}
+/** 階層 */
+declare interface S3SpriteLooksLayer {
+    /** 
+     * 最前面にする
+     * ```ts
+     *  this.Looks.goToFront();
+     * ``` 
+     */
+    goToFront(): void;
+    /** 
+     * 最背面にする
+     * ```ts
+     *  this.Looks.goToBack();
+     * ``` 
+     */
+    goToBack(): void;
+    /** 
+     * 指定階層分、前にする
+     * @param layers {number} - 移動する階層数
+     * ```ts
+     *  // 1階層分、前面にする
+     *  this.Looks.goForwardLayers(1);
+     * ```
+     */
+    goForwardLayers(layers: number): void;
+    /** 
+     * 指定階層分、背面にする 
+     * @param layers {number} - 移動する階層数
+     * ```ts
+     *  // 1階層分、背面にする
+     *  this.Looks.goBackwardLayers(1);
+     * ```
+     */
+    goBackwardLayers(layers: number): void;
+
+}
+/** 効果 */
+declare interface S3SpriteLooksEffect {
+
 }
 declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
     /** コスチューム */
@@ -611,24 +684,8 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
      * ```
      */
     switchCostume(costume: string | number): void;
-    /** 話す */
-    say(/** 話すテキスト */text?: string, properties?: SayProperty): void;
-    /** 指定した秒数だけ話す(await 必須) */
-    sayForSecs(/** 話すテキスト */text: string, secs: number, properties?: SayProperty): Promise<any>;
-    /** 
-     * 考える
-     * @param text? {string} - フキダシへ表示する文字列、省略時はフキダシを消す
-     * @param properties? {SayProperty} - フキダシのプロパティ（サイズ） 
-     * 
-     */
-    think(text?: string, properties?: SayProperty):void;
-    /** 
-     * 指定した秒数だけ考える
-     * @param text {string} - フキダシへ表示する文字列
-     * @param secs {number} - フキダシを表示する秒数
-     * @param properties? {SayProperty} - フキダシのプロパティ（サイズ）
-     */
-    thinkForSecs(text: string, secs: number, properties?: SayProperty): Promise<any>;
+    /** フキダシ */
+    Bubble : S3SpriteLooksBubble;
     /**
      *  大きさ
      * ```ts
@@ -666,49 +723,8 @@ declare interface S3SpriteLooksFunctions extends S3LooksFunctions{
      * ``` 
      */
     hide(): void;
-    /** 
-     * 最前面にする
-     * ```ts
-     *  this.Looks.goToFront();
-     * ``` 
-     */
-    goToFront(): void;
-    /** 
-     * 最背面にする
-     * ```ts
-     *  this.Looks.goToBack();
-     * ``` 
-     */
-    goToBack(): void;
-    /** 
-     * 指定階層分、前にする
-     * @param layers {number} - 移動する階層数
-     * ```ts
-     *  // 1階層分、前面にする
-     *  this.Looks.goForwardLayers(1);
-     * ```
-     */
-    goForwardLayers(layers: number): void;
-    /** 
-     * 指定階層分、背面にする 
-     * @param layers {number} - 移動する階層数
-     * ```ts
-     *  // 1階層分、背面にする
-     *  this.Looks.goBackwardLayers(1);
-     * ```
-     */
-    goBackwardLayers(layers: number): void;
-    /** 
-     * 自分自身の縦横表示サイズを得る
-     * @returns {{w: number, h: number}} - サイズ
-     * ```ts
-     *  // 表示サイズ
-     *  const dimensions = this.Looks.drawingDimensions();
-     *  console.log('横幅',dimensions.w); 
-     *  console.log('縦幅',dimensions.h); 
-     * ```
-     */
-    drawingDimensions() : {w: number, h: number};
+    /** 階層 */
+    Layer : S3SpriteLooksLayer;
 }
 declare interface S3PenSize {
     /**
