@@ -19,10 +19,9 @@ import { Stage } from '../entity/stage';
 import { StageLayering } from '../entity/stageLayering';
 import { SVGParser } from '../svgParser/parser';
 import { Utils } from '../util/utils';
-import { RotationStyle } from '../../Type/entity/RotationStyle';//'@Type/entity/RotationStyle';
-//import { RotationStyle } from '../_type/entity/CRotationStyle';
-import { ImageEffective } from '@Type/entity/ImageEffective';
-import { SoundOption } from '@Type/entity/SoundOption';
+import { RotationStyle } from '../../Type/entity/RotationStyle';
+import { ImageEffective } from '../../Type/entity/ImageEffective';
+import { SoundOption } from '../../Type/entity/SoundOption';
 //import { ImageEffective, SoundOption } from '../_type/entity/CEntityConstant';
 export class Libs {
 

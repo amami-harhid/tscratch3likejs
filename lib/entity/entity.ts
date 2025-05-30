@@ -16,8 +16,7 @@ import { Sounds } from '../sounds/sounds';
 import { Speech } from '../speech/text2Speech';
 import { Threads } from '../controls/threads';
 import { Utils } from '../util/utils';
-import { ImageEffective } from '../../Type/entity/ImageEffective';//'/entity/ImageEffective';
-import type { TypeImageEffective } from '@Type/entity/ImageEffective';
+import { ImageEffective } from '../../Type/entity/ImageEffective';
 import { SoundOption } from '../../Type/entity/SoundOption';
 import { PlayGround } from '../playGround';
 import { StageLayering } from './stageLayering';
@@ -195,7 +194,7 @@ export class Entity extends EventEmitter {
      * @param target 
      * @param changeVal 
      */
-    $changeEffectBy( target:TypeImageEffective, changeVal:number): void {
+    $changeEffectBy( target:ImageEffective, changeVal:number): void {
         if(target == ImageEffective.COLOR){
             const v = (this._effect.color)? this._effect.color: 0;
             this._effect.color = v + changeVal;
@@ -233,7 +232,7 @@ export class Entity extends EventEmitter {
      * @param target 
      * @param val 
      */
-    $setEffectTo( target: TypeImageEffective, val: number): void {
+    $setEffectTo( target: ImageEffective, val: number): void {
         if(target == ImageEffective.COLOR){
             this._effect.color = val;
         }else if(target == ImageEffective.FISHEYE ){

@@ -1,4 +1,4 @@
-import type { TypeImageEffective } from './ImageEffective';
+import { ImageEffective } from './ImageEffective';
 /** 効果 */
 export interface IEntityEffect {
 
@@ -7,13 +7,13 @@ export interface IEntityEffect {
      * @param effective {ImageEffective} - イメージ効果
      * @param value {number} - 変更量
      */
-    change(effective:TypeImageEffective, value:number): void;
+    change(effective:ImageEffective, value:number): void;
     /**
      * イメージ効果を指定量にする。
      * @param effective {ImageEffective} - イメージ効果
      * @param value {number} - 指定量
      */
-    set(effective:TypeImageEffective, value:number): void;
+    set(effective:ImageEffective, value:number): void;
     /**
      * イメージ効果をクリアする（初期値に戻す）
      */

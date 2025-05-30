@@ -1,4 +1,4 @@
-import type { TypeSoundOption } from "./SoundOption";
+import { SoundOption } from "./SoundOption";
 /** イベント */
 export interface IEntitySound {
 
@@ -24,7 +24,7 @@ export interface IEntitySound {
      * 
      * {@link SoundOption}
      */
-    setOption(key: TypeSoundOption, value:number): Promise<void>;
+    setOption(key: SoundOption, value:number): Promise<void>;
     /**
      * サウンドオプションを指定値ずつ変える
      * @param key {TypeSoundOption} - サウンドオプションキー
@@ -32,7 +32,7 @@ export interface IEntitySound {
      * 
      * {@link TypeSoundOption}
      */
-    changeOptionValue(key: TypeSoundOption, value:number): Promise<void>;
+    changeOptionValue(key: SoundOption, value:number): Promise<void>;
     /**
      * サウンドオプションをクリアする
      */

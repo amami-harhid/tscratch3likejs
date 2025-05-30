@@ -1,6 +1,6 @@
 import { Entity } from '../entity';
 import type { IEntity } from '@Type/entity/IEntity';
-import type { TypeImageEffective } from '@Type/entity/ImageEffective';
+import { ImageEffective } from '../../../Type/entity/ImageEffective';
 
 /** 効果 */
 export class EntityEffect {
@@ -18,7 +18,7 @@ export class EntityEffect {
      * @param effective {ImageEffective} - イメージ効果
      * @param value {number} - 変更量
      */
-    change(effective:TypeImageEffective, value:number): void {
+    change(effective:ImageEffective, value:number): void {
         this.entity.$changeEffectBy(effective, value);
     }
     /**
@@ -26,7 +26,7 @@ export class EntityEffect {
      * @param effective {ImageEffective} - イメージ効果
      * @param value {number} - 指定量
      */
-    set(effective:TypeImageEffective, value:number): void {
+    set(effective:ImageEffective, value:number): void {
         this.entity.$setEffectTo(effective, value);
     }
     /**

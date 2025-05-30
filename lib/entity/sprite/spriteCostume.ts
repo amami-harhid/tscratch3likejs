@@ -1,5 +1,4 @@
 import { Sprite } from '../sprite';
-import { Stage } from '../stage';
 import type { ISpriteCostume } from '@Type/sprite/ISpriteCostume';
 
 /** サイズ */

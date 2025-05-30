@@ -4,8 +4,7 @@
 import { Env } from "../env";
 import { ImageLoader } from "../importer/imageLoader";
 import { MathUtil } from "../util/math-util";
-import { RotationStyle } from "../../Type/entity/RotationStyle"; //"@Type/entity/RotationStyle";
-import type { TypeRotationStyle } from "@Type/entity/TRotationStyle";
+import { RotationStyle } from "../../Type/entity/RotationStyle"; 
 import { Utils } from "../util/utils";
 import { Render } from '../render/render';
 import { PlayGround } from "../playGround";
@@ -24,8 +23,8 @@ export class Costumes {
     public _position: TPosition;
     private _direction: number;
     private _scale: TSizeXY;
-    private _rotationStyle: TypeRotationStyle;
-    private _rotationStylePatterns: TypeRotationStyle[];
+    private _rotationStyle: RotationStyle;
+    private _rotationStylePatterns: RotationStyle[];
     /**
      * @constructor
      */
@@ -93,10 +92,10 @@ export class Costumes {
         }
         throw 'unable to execute createBitmapSkin';
     }
-    getRotationStyle (): TypeRotationStyle {
+    getRotationStyle (): RotationStyle {
         return this._rotationStyle;
     }
-    setRotationStyle ( style: TypeRotationStyle ) {
+    setRotationStyle ( style: RotationStyle ) {
         if( this._rotationStylePatterns.includes( style ) ) {
             this._rotationStyle = style;
         }

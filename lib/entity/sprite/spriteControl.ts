@@ -1,6 +1,5 @@
 import { Sprite } from '../sprite';
 import type { TEntityOptions } from '@Type/entity/TEntityOptions';
-import { ISprite } from '@Type/sprite/ISprite';
 import type { ISpriteControl } from '@Type/sprite/ISpriteControl';
 /**
  * Sprite Control(制御)

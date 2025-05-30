@@ -26,8 +26,7 @@ import { SpriteBubble } from "./sprite/spriteBubble";
 import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
 import { Costumes } from "./costumes";
-import type { TypeRotationStyle } from "@Type/entity/TRotationStyle";
-import { RotationStyle } from "../../Type/entity/RotationStyle";//"/Type/entity/RotationStyle";
+import { RotationStyle } from "../../Type/entity/RotationStyle";
 //import { PlayGround } from "lib/playGround";
 import { Stage } from "./stage";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
@@ -48,7 +47,7 @@ export class Sprite extends Entity implements ISprite {
     private bubble?: Bubble;
     /** @internal */
     public costumes?: Costumes;
-    private _rotationStyle: TypeRotationStyle;
+    private _rotationStyle: RotationStyle;
     private stage: Stage;
     /** @internal */
     public skinId: number;
@@ -914,10 +913,10 @@ export class Sprite extends Entity implements ISprite {
     /**
      * @internal
      * 回転方向を指定する
-     * @param {TypeRotationStyle} style 
+     * @param {RotationStyle} style 
      * @returns {void}
      */
-    $setRotationStyle( style: TypeRotationStyle ): void {
+    $setRotationStyle( style: RotationStyle ): void {
         this._rotationStyle = style;
         if(!this.$isAlive()) return;
         if(this.costumes){
@@ -925,7 +924,7 @@ export class Sprite extends Entity implements ISprite {
         }
     }
     /** @internal */
-    $getRotationStyle() : TypeRotationStyle {
+    $getRotationStyle() : RotationStyle {
         return this._rotationStyle;
     }
     /**
