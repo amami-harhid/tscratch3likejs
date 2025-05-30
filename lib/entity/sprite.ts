@@ -2,14 +2,16 @@
  * Sprite
  */
 import { Backdrops } from "./backdrops";
-import { Bubble } from "./bubble";
-import type {BubbleProperties} from "./bubble";
+import { Bubble } from "./sprite/bubble";
+import type {BubbleProperties} from "@Type/sprite/TBubble";
 import { DragSprite } from "./drag/dragSprite";
 import { Entity } from "./entity";
 import { Env } from "../env";
 import { MathUtil } from "../util/math-util";
 import { PenSprite } from './pen/penSprite';
+import type { IPenSprite } from "@Type/sprite/pen/IPenSprite";
 import { QuestionBoxElement } from "../io/questionBoxElement";
+import { SpriteBackdrop } from "./sprite/spriteBackdrop";
 import { SpriteControl } from './sprite/spriteControl';
 import { SpriteMotion } from './sprite/spriteMotion';
 import { SpriteLooks } from './sprite/spriteLooks';
@@ -17,21 +19,36 @@ import { SpriteEvent } from './sprite/spriteEvent';
 import { SpriteSensing } from './sprite/spriteSensing';
 import { SpriteSound } from './sprite/spriteSound';
 import { SpritePen } from './sprite/spritePen';
+import type { ISpritePen } from "@Type/sprite/ISpritePen";
+import { SpriteSensingDistance } from './sprite/spriteSensingDistance';
+import { SpriteTextToSpeech } from './sprite/spriteTextToSpeech';
+import { SpriteBubble } from "./sprite/spriteBubble";
 import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
 import { Costumes } from "./costumes";
-import { RotationStyle } from "./rotationStyle";
+import type { TypeRotationStyle } from "@Type/entity/TRotationStyle";
+import { RotationStyle } from "../../Type/entity/RotationStyle";//"/Type/entity/RotationStyle";
 //import { PlayGround } from "lib/playGround";
 import { Stage } from "./stage";
-import type { TEntityEffects, TEntityOptions } from './entityOptions';
-import type { S3ImageData, S3SoundData } from "../common/typeCommon";
+import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
+import type { S3ImageData, S3SoundData } from '@Type/common/typeCommon';
 //import { Backdrops } from "./backdrops";
-
-export class Sprite extends Entity {
+import type { ISprite } from "@Type/sprite/ISprite";
+import type { ISpriteControl } from "@Type/sprite/ISpriteControl";
+import type { ISpriteMotion } from "@Type/sprite/ISpriteMotion";
+import type { ISpriteLooks } from "@Type/sprite/ISpriteLooks";
+import type { ISpriteMotionPosition } from "@Type/sprite/ISpriteMotionPosition";
+import type { ISpriteSensing } from "@Type/sprite/ISpriteSensing";
+import type { ISpriteSensingDistance } from "@Type/sprite/ISpriteSensingDistance";
+import type { ISpriteBackdrop } from "@Type/sprite/ISpriteBackdrop";
+import type { ISpriteBubble } from "@Type/sprite/ISpriteBubble";
+import { ISpriteDragMode } from "@Type/sprite/ISpriteDragMode";
+import { SpriteDragMode } from "./sprite/spriteDragMode";
+export class Sprite extends Entity implements ISprite {
     private bubble?: Bubble;
     /** @internal */
     public costumes?: Costumes;
-    private _rotationStyle: RotationStyle;
+    private _rotationStyle: TypeRotationStyle;
     private stage: Stage;
     /** @internal */
     public skinId: number;
@@ -66,21 +83,26 @@ export class Sprite extends Entity {
      * ```
      */
     private _dragSprite : DragSprite;
-    private _penSprite: PenSprite;
+    private _penSprite: IPenSprite;
     /** 動き */
-    private _Motion: SpriteMotion;
+    private _Motion: ISpriteMotion;
     /** 見た目 */
-    private _Looks: SpriteLooks;
+    private _Looks: ISpriteLooks;
     /** 制御 */
-    private _Control: SpriteControl;
+    private _Control: ISpriteControl;
     /** イベント */
     private _Event: SpriteEvent;
     /** 調べる */
-    private _Sensing: SpriteSensing;
+    private _Sensing: ISpriteSensing;
     /** サウンド */
     private _Sound: SpriteSound;
     /** ペン */
-    private _Pen: SpritePen;
+    private _Pen: ISpritePen;
+    private _TextToSpeech: SpriteTextToSpeech;
+    private _Distance : ISpriteSensingDistance;
+    private _Backdrop : ISpriteBackdrop;
+    private _SpriteBubble: ISpriteBubble;
+    private _DragMode : ISpriteDragMode;
     /**
      * コンストラクター
      * @param name {string} - 名前
@@ -122,6 +144,11 @@ export class Sprite extends Entity {
         this._Sensing = new SpriteSensing(this);
         this._Sound = new SpriteSound(this);
         this._Pen = new SpritePen(this._penSprite);
+        this._TextToSpeech = new SpriteTextToSpeech(this);
+        this._Distance = new SpriteSensingDistance(this);
+        this._Backdrop = new SpriteBackdrop(this);
+        this._SpriteBubble = new SpriteBubble(this);
+        this._DragMode = new SpriteDragMode(this._penSprite);
         //this._isAlive = true;
         stage.addSprite(this);
     }
@@ -369,7 +396,8 @@ export class Sprite extends Entity {
      */
     public $setXY( x: number, y: number ) {
         if(this._penSprite.isPenDown()){
-            this._penSprite.drawLine();
+            const penSprite = this._penSprite as unknown as PenSprite;
+            penSprite.drawLine();
         }
         super.$setXY(x,y);
     }
@@ -886,10 +914,10 @@ export class Sprite extends Entity {
     /**
      * @internal
      * 回転方向を指定する
-     * @param {RotationStyle} style 
+     * @param {TypeRotationStyle} style 
      * @returns {void}
      */
-    $setRotationStyle( style: RotationStyle ): void {
+    $setRotationStyle( style: TypeRotationStyle ): void {
         this._rotationStyle = style;
         if(!this.$isAlive()) return;
         if(this.costumes){
@@ -897,7 +925,7 @@ export class Sprite extends Entity {
         }
     }
     /** @internal */
-    $getRotationStyle() : RotationStyle {
+    $getRotationStyle() : TypeRotationStyle {
         return this._rotationStyle;
     }
     /**
@@ -1342,20 +1370,21 @@ export class Sprite extends Entity {
      * ```
      * @returns {{no: number, name: string}}
      */
-    get Backdrop(): {no: number, name: string}{ 
-        const stage = this.playGround.stage;
-        const backdrop = {"no": 0, "name": ""};
-        Object.defineProperty(backdrop, "no", {
-            get : function() {
-                return stage.backdrops.currentSkinNo();
-            },
-        })
-        Object.defineProperty(backdrop, "name", {
-            get : function() {
-                return stage.backdrops.currentSkinName();
-            },
-        })
-        return backdrop;
+    get Backdrop(): ISpriteBackdrop { 
+        return this._Backdrop;
+        // const stage = this.playGround.stage;
+        // const backdrop : ISpriteBackdrop = {"no": 0, "name": ""};
+        // Object.defineProperty(backdrop, "no", {
+        //     get : function() {
+        //         return stage.backdrops.currentSkinNo();
+        //     },
+        // })
+        // Object.defineProperty(backdrop, "name", {
+        //     get : function() {
+        //         return stage.backdrops.currentSkinName();
+        //     },
+        // })
+        // return backdrop;
 
     }
     // /**
@@ -1419,7 +1448,7 @@ export class Sprite extends Entity {
     /**
      * 見た目
      */
-    get Looks() {
+    get Looks() : ISpriteLooks {
         return this._Looks;
     }
     // /**
@@ -1462,7 +1491,7 @@ export class Sprite extends Entity {
     /**
      * 制御
      */
-    get Control() {
+    get Control(): ISpriteControl {
         return this._Control;
     }
     // /**
@@ -1499,49 +1528,52 @@ export class Sprite extends Entity {
      * this.Distance.to( otherSprite )
      * 
      */
-    get Distance(){
-        const me = this;
-        /** 他スプライトとの距離を計算する */
-        const distanceToOthers = function(otherSprite:Sprite) {
-            if(otherSprite && (otherSprite.isSprite === true )){
-                const obj1 = {
-                    x: me._Motion.Position.x,
-                    y: me._Motion.Position.y,
-                }
-                const obj2 = {
-                    x: otherSprite._Motion.Position.x,
-                    y: otherSprite._Motion.Position.y,
-                }
-                const _distance = Utils.distance(obj1, obj2);
-                return _distance;
-            }
-            return -1;
-        }
-        const distance = {
-            "mousePointer": 0,
-            "to": distanceToOthers,
-        };
-        Object.defineProperty(distance, "mousePointer", {
-            get : function() {
-                const obj1 = {
-                    x: me._Motion.Position.x,
-                    y: me._Motion.Position.y,
-                }
-                const obj2 = {
-                    x: me.Sensing.Mouse.x,
-                    y: me.Sensing.Mouse.y,
-                }
-                const _distance = Utils.distance(obj1, obj2);
-                return _distance;
-            },
-        })
-        return distance;
-
+    get Distance() : ISpriteSensingDistance{
+        return this._Distance;
     }
+    // get Distance(){
+    //     const me = this;
+    //     /** 他スプライトとの距離を計算する */
+    //     const distanceToOthers = function(otherSprite:Sprite) {
+    //         if(otherSprite && (otherSprite.isSprite === true )){
+    //             const obj1 = {
+    //                 x: me._Motion.Position.x,
+    //                 y: me._Motion.Position.y,
+    //             }
+    //             const obj2 = {
+    //                 x: otherSprite._Motion.Position.x,
+    //                 y: otherSprite._Motion.Position.y,
+    //             }
+    //             const _distance = Utils.distance(obj1, obj2);
+    //             return _distance;
+    //         }
+    //         return -1;
+    //     }
+    //     const distance = {
+    //         "mousePointer": 0,
+    //         "to": distanceToOthers,
+    //     };
+    //     Object.defineProperty(distance, "mousePointer", {
+    //         get : function() {
+    //             const obj1 = {
+    //                 x: me._Motion.Position.x,
+    //                 y: me._Motion.Position.y,
+    //             }
+    //             const obj2 = {
+    //                 x: me.Sensing.Mouse.x,
+    //                 y: me.Sensing.Mouse.y,
+    //             }
+    //             const _distance = Utils.distance(obj1, obj2);
+    //             return _distance;
+    //         },
+    //     })
+    //     return distance;
+
+    // }
     /**
      * 調べる
      */
-    get Sensing() {
+    get Sensing() : ISpriteSensing {
         return this._Sensing;
     }
     // get Sensing() {
@@ -1630,45 +1662,49 @@ export class Sprite extends Entity {
      * 音声合成
      */
     get TextToSpeech() {
-        return {
-            //---Entity
-            "setSpeechProperties": this.$setSpeechProperties.bind(this),
-            "speech": this.$speech.bind(this),
-            "speechAndWait" : this.$speechAndWait.bind(this),
-            "speechStopAll": this.$speechStopImmediately.bind(this),
-        }
+        return this._TextToSpeech;
     }
+    // get TextToSpeech() {
+    //     return {
+    //         //---Entity
+    //         "setSpeechProperties": this.$setSpeechProperties.bind(this),
+    //         "speech": this.$speech.bind(this),
+    //         "speechAndWait" : this.$speechAndWait.bind(this),
+    //         "speechStopAll": this.$speechStopImmediately.bind(this),
+    //     }
+    // }
 
     /**
      * DragModeを設定するためのオブジェクト
      * @returns {{draggable: boolean, dragging: boolean}}
      */
-    get DragMode(): {draggable: boolean, dragging: boolean} {
-        const draggable = {"draggable": false, dragging: false};
-        const me = this;
-        Object.defineProperty(draggable, "draggable", {
-            get : function() {
-                return me._dragSprite.draggable;
-            },
-            set : function(draggable) {
-                return me._dragSprite.draggable = draggable;
-            },
-        });
-        Object.defineProperty(draggable, "dragging", {
-            get : function() {
-                return me._dragSprite.dragging;
-            },
-            set : function(dragging) {
-                return me._dragSprite.dragging = dragging;
-            },
-        });
-        return draggable;
+    get DragMode(): ISpriteDragMode {
+        return this._DragMode;
+        // const draggable = {"draggable": false, dragging: false};
+        // const me = this;
+        // Object.defineProperty(draggable, "draggable", {
+        //     get : function() {
+        //         return me._dragSprite.draggable;
+        //     },
+        //     set : function(draggable) {
+        //         return me._dragSprite.draggable = draggable;
+        //     },
+        // });
+        // Object.defineProperty(draggable, "dragging", {
+        //     get : function() {
+        //         return me._dragSprite.dragging;
+        //     },
+        //     set : function(dragging) {
+        //         return me._dragSprite.dragging = dragging;
+        //     },
+        // });
+        // return draggable;
 
     }
     /**
      * ペン機能
      */
-    get Pen() {
+    get Pen() : ISpritePen{
         return this._Pen;
         // const pen = this._penSprite;
         // return {
@@ -1692,5 +1728,7 @@ export class Sprite extends Entity {
         //     'Size': pen.Size,
         // }
     }
-
+    get Bubble() : ISpriteBubble {
+        return this._SpriteBubble;
+    }
 };

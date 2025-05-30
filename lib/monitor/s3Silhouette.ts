@@ -6,7 +6,7 @@
  * A representation of a Skin's silhouette that can test if a point on the skin
  * renders a pixel where it is drawn.
  */
-import type { TVec3 } from "../common/typeCommon";
+import type { TVec3 } from "@Type/common/typeCommon";
 
 declare type TBitMapData = ImageData|HTMLCanvasElement|HTMLImageElement;
 

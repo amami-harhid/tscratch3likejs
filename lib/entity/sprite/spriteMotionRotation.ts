@@ -1,5 +1,5 @@
 import { Sprite } from '../sprite';
-import { RotationStyle } from '../rotationStyle';
+import type { TypeRotationStyle } from '@Type/entity/TRotationStyle';
 
 export class SpriteMotionRotation {
     private entity: Sprite;
@@ -15,7 +15,7 @@ export class SpriteMotionRotation {
      * 
      * {@link RotationStyle}
      */
-    get style(): RotationStyle {
+    get style(): TypeRotationStyle {
         return this.entity.$getRotationStyle();
     }
     /**
@@ -23,7 +23,7 @@ export class SpriteMotionRotation {
      * 
      * {@link RotationStyle}
      */
-    set style(style: RotationStyle) {
+    set style(style: TypeRotationStyle) {
         this.entity.$setRotationStyle(style);
     }
 };

@@ -16,13 +16,15 @@ import { Sounds } from '../sounds/sounds';
 import { Speech } from '../speech/text2Speech';
 import { Threads } from '../controls/threads';
 import { Utils } from '../util/utils';
-import { ImageEffective, SoundOption } from './entityConstant';
+import { ImageEffective } from '../../Type/entity/ImageEffective';//'/entity/ImageEffective';
+import type { TypeImageEffective } from '@Type/entity/ImageEffective';
+import { SoundOption } from '../../Type/entity/SoundOption';
 import { PlayGround } from '../playGround';
 import { StageLayering } from './stageLayering';
 import type { TThreadObj } from '../controls/TThreadObj';
-import type { TPosition, TScale } from '../common/typeCommon';
-import type { TEntityEffects, TEntityOptions } from './entityOptions';
-import type { TSoundPlayerOption } from 'lib/sounds/IAudioEngine';
+import type { TPosition, TScale } from '@Type/common/typeCommon';
+import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
+import type { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
 import type { ScratchRenderProperties } from '../render/IRenderWebGL';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
 declare type TBroadcastElementFunc = {
@@ -193,7 +195,7 @@ export class Entity extends EventEmitter {
      * @param target 
      * @param changeVal 
      */
-    $changeEffectBy( target:ImageEffective, changeVal:number): void {
+    $changeEffectBy( target:TypeImageEffective, changeVal:number): void {
         if(target == ImageEffective.COLOR){
             const v = (this._effect.color)? this._effect.color: 0;
             this._effect.color = v + changeVal;
@@ -231,7 +233,7 @@ export class Entity extends EventEmitter {
      * @param target 
      * @param val 
      */
-    $setEffectTo( target: ImageEffective, val: number): void {
+    $setEffectTo( target: TypeImageEffective, val: number): void {
         if(target == ImageEffective.COLOR){
             this._effect.color = val;
         }else if(target == ImageEffective.FISHEYE ){
@@ -389,7 +391,7 @@ export class Entity extends EventEmitter {
         throw 'sounds undefined error';
     }
     /** @internal */
-    public async $setOption(key:string, value: number) {
+    public async $setOption(key:SoundOption, value: number) {
         if( key == SoundOption.VOLUME ){
             this.$setSoundVolume(value);
         }else if(key == SoundOption.PITCH ){
@@ -427,7 +429,7 @@ export class Entity extends EventEmitter {
      * @param value 
      * @returns 
      */
-    public async $changeOptionValue(key:string, value:number):Promise<void> {
+    public async $changeOptionValue(key:SoundOption, value:number):Promise<void> {
         if(this.sounds ){
             if( key == SoundOption.VOLUME ){
                 const volume = this.sounds.volume;
@@ -1406,18 +1408,20 @@ export class Entity extends EventEmitter {
             this.$_position.y += y;
         }
     }
-    protected $setSpeechProperties(type:string, properties: TSoundPlayerOption, gender='male', locale='ja-JP'){
+    /** @internal */
+    public $setSpeechProperties(type:string, properties: TSoundPlayerOption, gender='male', locale='ja-JP'){
         const _properties = (properties)? properties : {};
         const speech = Speech.getInstance();
         speech.setSpeechProperties(type, gender, locale, _properties);
     }
-    protected $speech(words:string, type:string) {
+    /** @internal */
+    public $speech(words:string, type:string) {
         const speech = Speech.getInstance();
         speech.speech(this, words, type);
 
     }
-
-    protected async $speechAndWait(words:string, type:string) {
+    /** @internal */
+    public async $speechAndWait(words:string, type:string) {
         const speech = Speech.getInstance();
         await speech.speechAndWait(this, words, type);
     }
@@ -1440,7 +1444,7 @@ export class Entity extends EventEmitter {
     /**
      * Mouse情報
      */
-    get Mouse() {
+    get Mouse() : {x:number, y:number} {
         const me = this;
         const mousePosition = { 
             "x" : 0,

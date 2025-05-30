@@ -1,9 +1,11 @@
 import { Sprite } from '../sprite';
-import type { TEntityOptions } from '../entityOptions';
+import type { TEntityOptions } from '@Type/entity/TEntityOptions';
+import { ISprite } from '@Type/sprite/ISprite';
+import type { ISpriteControl } from '@Type/sprite/ISpriteControl';
 /**
  * Sprite Control(制御)
  */
-export class SpriteControl {
+export class SpriteControl implements ISpriteControl {
     private entity: Sprite;
     /**
      * @internal
@@ -55,8 +57,8 @@ export class SpriteControl {
      * クローンを作る
      * @param options? {TEntityOptions} - オプション 
      */
-    clone(options?:TEntityOptions): void{
-        this.entity.$clone(options);
+    async clone(options?:TEntityOptions): Promise<void>{
+        return await this.entity.$clone(options);
     }
     /**
      * クローンを全て削除する

@@ -5,6 +5,7 @@ import { PenSpriteSize } from './penSpriteSize';
 import { PenSpriteHSVColor } from './penSpriteHSVColor';
 import { StageLayering } from '../stageLayering';
 import type { TPenAttributes } from '@typeJS/s3Pen';
+import { SpriteDragMode } from '../sprite/spriteDragMode';
 export class PenSprite {
     private render: Render;
     private _skinId: number

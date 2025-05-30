@@ -1,6 +1,7 @@
 import { Sprite } from '../sprite';
-
-export class SpriteMotionMove {
+import { ISprite } from '@Type/sprite/ISprite';
+import { ISpriteMotionMove } from '@Type/sprite/ISpriteMotionMove';
+export class SpriteMotionMove implements ISpriteMotionMove {
     private entity: Sprite;
     /**
      * @internal
@@ -46,8 +47,9 @@ export class SpriteMotionMove {
      * 指定したスプライトの位置へ移動する
      * @param target {Sprite} - 指定スプライト
      */
-    toSprite(target: Sprite) : void {
-        this.entity.$gotoSprite(target);
+    toSprite(target: ISprite) : void {
+        const _target: Sprite = target as unknown as Sprite;
+        this.entity.$gotoSprite(_target);
     }
     /**
      * 指定秒数かけて指定座標へ移動する

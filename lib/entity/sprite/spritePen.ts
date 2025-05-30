@@ -1,16 +1,19 @@
-import { Sprite } from '../sprite';
 import { PenSprite } from '../pen/penSprite';
+import type { IPenSprite } from '@Type/sprite/pen/IPenSprite';
+import type { ISpritePen } from '@Type/sprite/ISpritePen';
 
-/** サイズ */
-export class SpritePen {
+/** 
+ * SpritePen 
+ */
+export class SpritePen implements ISpritePen{
 
     private penSprite: PenSprite;
     /**
      * @internal
      * @param entity {Sprite}
      */
-    constructor(penSprite: PenSprite){
-        this.penSprite = penSprite;
+    constructor(penSprite: IPenSprite){
+        this.penSprite = penSprite as unknown as PenSprite;
     }
     clear(): void {
         this.penSprite.penClear();

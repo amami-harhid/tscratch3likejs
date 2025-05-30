@@ -6,7 +6,7 @@ import { StageLayering } from "../entity/stageLayering";
 import { Utils } from "../util/utils";
 import { S3MonitorSkin } from "./s3MonitorSkin";
 import type { IRenderWebGL, ScratchRenderProperties } from "../render/IRenderWebGL";
-import type { TPosition, TScale, TDistance} from "../common/typeCommon";
+import type { TPosition, TScale, TDistance} from "@Type/common/typeCommon";
 export class Monitor extends Entity {
     static Events = {
         DROP_START: 'DropStart',

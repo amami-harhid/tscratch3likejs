@@ -1,8 +1,11 @@
 import { Sprite } from '../sprite';
+import type { ISprite } from '@Type/sprite/ISprite';
+import type { ISpriteSensing } from '@Type/sprite/ISpriteSensing';
+import type { ISpriteDragMode } from '@Type/sprite/ISpriteDragMode';
 /**
  * Sprite Sensing(調べる)
  */
-export class SpriteSensing {
+export class SpriteSensing implements ISpriteSensing {
     private entity: Sprite;
     /**
      * @internal
@@ -92,8 +95,9 @@ export class SpriteSensing {
     isTouchingHorizontalEdge(): boolean {
         return this.entity.$isTouchingHorizontalEdge();
     }
-    isTouchingToSprites(sprites: Sprite[]): boolean {
-        return this.entity.$isTouchingTarget(sprites);
+    isTouchingToSprites(sprites: ISprite[]): boolean {
+        const _sprites = sprites as unknown as Sprite[];
+        return this.entity.$isTouchingTarget(_sprites);
     }
     /**
      * マウスタッチしていないことの判定
@@ -114,14 +118,15 @@ export class SpriteSensing {
      * @param targets 
      * @returns 
      */
-    getTouchingSprites() : Sprite[] {
+    getTouchingSprites() : ISprite[] {
         const targets: Sprite[] = [this.entity];
         const entities = this.entity.$getTouchingTarget(targets);
         const touchings:Sprite[] = [];
         for(const entity of entities){
             touchings.push( entity as Sprite );
         }
-        return touchings;
+        const _touchings = touchings as unknown as ISprite[];
+        return _touchings;
     }
     /**
      * 指定した色に触れたことを判定する
@@ -143,7 +148,7 @@ export class SpriteSensing {
     /**
      * Drag Mode
      */
-    get DragMode() {
+    get DragMode() :ISpriteDragMode{
         return this.entity.DragMode;
     }
 };

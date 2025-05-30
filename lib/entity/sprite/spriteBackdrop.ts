@@ -1,7 +1,7 @@
 import { Sprite } from '../sprite';
-
+import { ISpriteBackdrop } from '@Type/sprite/ISpriteBackdrop';
 /** サイズ */
-export class SpriteBackdrop {
+export class SpriteBackdrop implements ISpriteBackdrop {
 
     private entity: Sprite;
     /**

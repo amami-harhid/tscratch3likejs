@@ -12,9 +12,9 @@ import { Entity } from "./entity";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { Sprite } from "./sprite";
 import { StageLayering } from "./stageLayering";
-import type { TEntityEffects, TEntityOptions } from './entityOptions';
+import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TMouse } from "@typeJS/s3Mouse";
-import type { TScale } from "../common/typeCommon";
+import type { TScale } from "@Type/common/typeCommon";
 export class Stage extends Entity {
     private scale: TScale;
     private direction: number;

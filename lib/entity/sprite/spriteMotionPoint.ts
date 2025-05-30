@@ -1,6 +1,7 @@
 import { Sprite } from '../sprite';
-
-export class SpriteMotionPoint {
+import { ISprite } from '@Type/sprite/ISprite';
+import { ISpriteMotionPoint } from '@Type/sprite/ISpriteMotionPoint';
+export class SpriteMotionPoint implements ISpriteMotionPoint{
     private entity: Sprite;
     /**
      * @internal
@@ -19,7 +20,8 @@ export class SpriteMotionPoint {
      * ターゲットの位置へ向く
      * @param target {Sprite} - ターゲット
      */
-    toTarget(target: Sprite): void {
-        this.entity.$pointToTarget(target);
+    toTarget(target: ISprite): void {
+        const _target : Sprite = target as unknown as Sprite;
+        this.entity.$pointToTarget(_target);
     }
 };

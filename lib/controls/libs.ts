@@ -9,18 +9,21 @@ import { Env } from '../env';
 import { EventEmitter } from "events";
 import { FunctionChecker } from '../util/functionChecker';
 import { Keyboard } from '../io/keyboard';
-import { ImageEffective, SoundOption } from '../entity/entityConstant';
 import { MathUtil } from '../util/math-util';
 import { Monitors } from '../monitor/monitors';
 import { PlayGround } from '../playGround';
 import { Render } from '../render/render';
-import { RotationStyle } from '../entity/rotationStyle';
 import { Sounds } from '../sounds/sounds';
 import { Sprite } from '../entity/sprite';
 import { Stage } from '../entity/stage';
 import { StageLayering } from '../entity/stageLayering';
 import { SVGParser } from '../svgParser/parser';
 import { Utils } from '../util/utils';
+import { RotationStyle } from '../../Type/entity/RotationStyle';//'@Type/entity/RotationStyle';
+//import { RotationStyle } from '../_type/entity/CRotationStyle';
+import { ImageEffective } from '@Type/entity/ImageEffective';
+import { SoundOption } from '@Type/entity/SoundOption';
+//import { ImageEffective, SoundOption } from '../_type/entity/CEntityConstant';
 export class Libs {
 
     /** @internal */

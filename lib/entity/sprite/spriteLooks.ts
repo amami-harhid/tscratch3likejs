@@ -3,21 +3,25 @@ import { SpriteSize } from '../sprite/spriteSize';
 import { SpriteLayer } from '../sprite/spriteLayer';
 import { SpriteEffect } from '../sprite/spriteEffect';
 import { SpriteBubble } from '../sprite/spriteBubble';
+import type { ISprite } from '@Type/sprite/ISprite';
+import type { ISpriteBubble } from '@Type/sprite/ISpriteBubble';
+import type { ISpriteLooks } from '@Type/sprite/ISpriteLooks';
 /**
  * Sprite Looks(見た目)
  */
-export class SpriteLooks {
+export class SpriteLooks implements ISpriteLooks{
     private entity: Sprite;
     private layer: SpriteLayer;
     private effect: SpriteEffect;
     private size : SpriteSize;
-    private bubble: SpriteBubble;
+    private bubble: ISpriteBubble;
     /**
      * @internal
      * @param entity {Sprite}
      */
     constructor(entity:Sprite){
         this.entity = entity;
+        const _entity = entity as unknown as ISprite;
         this.layer = new SpriteLayer(entity);
         this.effect = new SpriteEffect(entity);
         this.size = new SpriteSize(entity);
@@ -92,7 +96,7 @@ export class SpriteLooks {
     /**
      * フキダシ
      */
-    get Bubble() : SpriteBubble {
+    get Bubble() : ISpriteBubble {
         return this.bubble;
     }
 

@@ -1,0 +1,22 @@
+/** サウンド効果 */
+export const SoundOption = {
+    VOLUME: "volume",
+
+    PITCH: "pitch",
+} as const;
+
+export declare type TypeSoundOption = typeof SoundOption[keyof typeof SoundOption];
+
+
+// export class SoundOption {
+//     /**
+//      * 音量
+//      */
+//     static get VOLUME() { return "volume"; }
+    
+//     /**
+//      * ピッチ
+//      */
+//     static get PITCH() { return "pitch"; }
+// }
+

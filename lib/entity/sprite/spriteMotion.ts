@@ -1,10 +1,13 @@
 import { Sprite } from '../sprite';
-import { RotationStyle } from '../rotationStyle';
 import { SpriteMotionMove } from './spriteMotionMove';
 import { SpriteMotionPoint } from './spriteMotionPoint';
 import { SpriteMotionDirection} from './spriteMotionDirection';
 import { SpriteMotionRotation } from './spriteMotionRotation';
-export class SpriteMotion {
+import { ISpriteMotion } from '@Type/sprite/ISpriteMotion';
+import type { ISpriteMotionMove } from '@Type/sprite/ISpriteMotionMove';
+import type { ISpriteMotionPoint } from '@Type/sprite/ISpriteMotionPoint';
+import { ISpriteMotionPosition } from '@Type/sprite/ISpriteMotionPosition';
+export class SpriteMotion implements ISpriteMotion {
     private entity: Sprite;
     private move: SpriteMotionMove;
     private point: SpriteMotionPoint;
@@ -21,7 +24,7 @@ export class SpriteMotion {
         this.direction = new SpriteMotionDirection(entity);
         this.rotation = new SpriteMotionRotation(entity);
     }
-    get Position(): {x:number, y:number, xy:{x:number,y:number}} {
+    get Position(): ISpriteMotionPosition {
         return this.entity.Position;
     }
     get Direction(): SpriteMotionDirection {
@@ -30,10 +33,10 @@ export class SpriteMotion {
     get Rotation() {
         return this.rotation;
     }
-    get Move(): SpriteMotionMove {
+    get Move(): ISpriteMotionMove {
         return this.move;
     }
-    get Point(): SpriteMotionPoint {
+    get Point(): ISpriteMotionPoint {
         return this.point;
     }
 };

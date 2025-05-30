@@ -8,7 +8,7 @@ import { MonitorRenderingConstants } from "./s3RenderConstants";
 import type { IDrawable } from "../render/IDrawable";
 import { S3Silhouette } from "./s3Silhouette";
 import type { IRenderWebGL } from "../render/IRenderWebGL";
-import type { TSize, TVec3 } from "../common/typeCommon";
+import type { TSize, TVec3 } from "@Type/common/typeCommon";
 
 const MonitorStyle = {
     MAX_LINE_WIDTH: 480,  // stage width

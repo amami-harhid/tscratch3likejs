@@ -1,6 +1,8 @@
 import { Entity } from '../entity';
+import type { IEntitySound } from '@Type/entity/IEntitySound';
+import type { TypeSoundOption } from '@Type/entity/SoundOption';
 /** イベント */
-export class EntitySound {
+export class EntitySound implements IEntitySound {
 
     protected entity: Entity;
     /**
@@ -33,22 +35,22 @@ export class EntitySound {
     }
     /**
      * サウンドオプションを設定する
-     * @param key {string} - サウンドオプションキー
+     * @param key {TypeSoundOption} - サウンドオプションキー
      * @param value {number} - オプション値
      * 
-     * {@link SoundOption}
+     * {@link TypeSoundOption}
      */
-    async setOption(key: string, value:number): Promise<void>{
+    async setOption(key: TypeSoundOption, value:number): Promise<void>{
         await this.entity.$setOption(key, value);
     }
     /**
      * サウンドオプションを指定値ずつ変える
-     * @param key {string} - サウンドオプションキー
+     * @param key {TypeSoundOption} - サウンドオプションキー
      * @param value {number} - オプション値
      * 
-     * {@link SoundOption}
+     * {@link TypeSoundOption}
      */
-    async changeOptionValue(key: string, value:number): Promise<void>{
+    async changeOptionValue(key: TypeSoundOption, value:number): Promise<void>{
         await this.entity.$changeOptionValue(key,value);
     }
     /**

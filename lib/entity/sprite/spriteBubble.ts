@@ -1,8 +1,9 @@
 import { Sprite } from '../sprite';
-import { BubbleProperties } from '../bubble';
-
+import { ISprite } from '@Type/sprite/ISprite';
+import type { BubbleProperties } from '@Type/sprite/TBubble';
+import type { ISpriteBubble } from '@Type/sprite/ISpriteBubble';
 /** 吹き出し */
-export class SpriteBubble {
+export class SpriteBubble implements ISpriteBubble{
 
     private entity: Sprite;
     /**
