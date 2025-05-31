@@ -13,9 +13,16 @@ import { QuestionBoxElement } from "../io/questionBoxElement";
 import { Sprite } from "./sprite";
 import { StageLayering } from "./stageLayering";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
-import type { TMouse } from "@typeJS/s3Mouse";
+import type { TMouse } from "@Type/mouse";
 import type { TScale } from "@Type/common/typeCommon";
-export class Stage extends Entity {
+import { IStage } from "@Type/stage";
+import { IStageControl } from "@Type/stage/IStageControl";
+import { IStageBackdrop } from "@Type/stage/IStageBackdrop";
+import { IStageLooks } from "@Type/stage/IStageLooks";
+import { IStageEvent } from "@Type/stage/IStageEvent";
+import { IStageSensing } from "@Type/stage/IStageSensing";
+import { IStageSound } from "@Type/stage/IStageSound";
+export class Stage extends Entity implements IStage{
     private scale: TScale;
     private direction: number;
     /** @internal */
@@ -24,12 +31,12 @@ export class Stage extends Entity {
     //private skinIdx: number;
     /** @internal */
     public mouse: TMouse;
-    private _Backdrop: StageBackdrop;
-    private _Control: StageControl;
-    private _Looks : StageLooks;
-    private _Event : StageEvent;
-    private _Sensing : StageSensing;
-    private _Sound: StageSound;
+    private _Backdrop: IStageBackdrop;
+    private _Control: IStageControl;
+    private _Looks : IStageLooks;
+    private _Event : IStageEvent;
+    private _Sensing : IStageSensing;
+    private _Sound: IStageSound;
     constructor( options:TEntityOptions ) {
         if(typeof options == "string") throw "new Stage() パラメータはオブジェクト型のみ"
         super( "stage", StageLayering.BACKGROUND_LAYER, options );
@@ -397,7 +404,7 @@ export class Stage extends Entity {
     /**
      * 制御
      */
-    get Control() {
+    get Control() : IStageControl {
         return this._Control;
     }
     // get Control() {

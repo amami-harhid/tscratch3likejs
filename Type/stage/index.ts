@@ -12,9 +12,11 @@ import { IStageEvent } from './IStageEvent';
 import { IStageImage } from './IStageImage';
 import { IStageSound } from './IStageSound';
 
-export type IStage = Stage;
-export interface Stage extends IEntity {
+export type TStage = IStage;
+export interface Stage extends IStage{
     new(options?:TEntityOptions):IStage;
+}
+export interface IStage extends IEntity {
     get sprites (): ISprite[];
     removeSprite ( sprite: ISprite ): void;
     update(): void;

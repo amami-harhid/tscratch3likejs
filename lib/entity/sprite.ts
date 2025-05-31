@@ -32,7 +32,7 @@ import { Stage } from "./stage";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { S3ImageData, S3SoundData } from '@Type/common/typeCommon';
 //import { Backdrops } from "./backdrops";
-import type { ISprite } from "@Type/sprite";
+import type { ISprite, TSprite } from "@Type/sprite";
 import type { ISpriteControl } from "@Type/sprite/ISpriteControl";
 import type { ISpriteMotion } from "@Type/sprite/ISpriteMotion";
 import type { ISpriteLooks } from "@Type/sprite/ISpriteLooks";
@@ -108,7 +108,7 @@ export class Sprite extends Entity implements ISprite {
      * @param options {TEntityOptions} - オプション
      * @constructor
      */
-    constructor(name?:string, options?:TEntityOptions) {
+    constructor(name:string, options:TEntityOptions) {
         let _name:string|undefined = undefined;
         if(name){
             _name = name;

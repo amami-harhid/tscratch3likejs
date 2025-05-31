@@ -7,7 +7,6 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@typeJS/*": ["types/*"],
       "@Type/*": ["Type/*"],
     },
     "sourceMap": true,

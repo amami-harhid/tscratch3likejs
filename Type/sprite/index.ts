@@ -15,13 +15,16 @@ import type { ISpritePen } from './ISpritePen';
 /**
  * Sprite
  */
-export type ISprite = Sprite; 
-export declare interface Sprite extends IEntity {
+export type TSprite = ISprite;
+export interface Sprite extends ISprite{
     /**
      * @param name
      * @param options 
      */
     new(name?:string, options?:TEntityOptions):ISprite;
+
+};
+export interface ISprite extends IEntity {
     /**
      * 動き
      */
