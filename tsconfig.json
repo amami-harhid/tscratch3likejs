@@ -9,7 +9,6 @@
     "paths": {
       "@typeJS/*": ["types/*"],
       "@Type/*": ["Type/*"],
-      "@Type2/*": ["Type/*"],
     },
     "sourceMap": true,
     "importHelpers": true,

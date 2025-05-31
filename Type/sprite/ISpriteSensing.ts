@@ -1,37 +1,12 @@
-import type { ISprite } from "./ISprite";
+import type { ISprite } from ".";
 import type { ISpriteSensingDistance } from "./ISpriteSensingDistance";
 import type { ISpriteDragMode } from "./ISpriteDragMode";
+import { IEntitySensing } from "@Type/entity/IEntitySensing";
 /**
  * Sprite Sensing(調べる)
  */
-export interface ISpriteSensing {
-    /**
-     * 質問をして答えを待つ
-     * @param question {string} - 質問テキスト
-     * @returns {Promise<string>} - answer
-     */
-    askAndWait(question:string): Promise<string>;
-    /**
-     * キーが押されていることの判定
-     * @param key {string}
-     * @returns {boolean} キー押下判定
-     */
-    isKeyDown(key: string) : boolean;
-    /**
-     * キーが押されていないことの判定
-     * @param key {string}
-     * @returns {boolean} キー押下判定
-     */
-    isKeyNotDown(key: string) : boolean;
-    /**
-     * マウスが押されていることの判定
-     * @returns {boolean} - マウスが押されている判定
-     */
-    isMouseDown() : boolean;
-    /**
-     * マウス情報
-     */
-    get Mouse() : {x:number, y:number};
+export interface ISpriteSensing extends IEntitySensing{
+ 
     /**
      * 距離
      * 使用例：マウスポインターとの距離 
@@ -41,15 +16,7 @@ export interface ISpriteSensing {
      */
     get Distance() : ISpriteSensingDistance;
 
-    /**
-     * タイマー値
-     */
-    get timer() : number;
-    /**
-     * タイマーリセット
-     */
-    resetTimer(): void;
-    /**
+     /**
      * 枠に触っていることの判定
      * @returns 
      */

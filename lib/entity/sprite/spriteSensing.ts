@@ -1,5 +1,5 @@
 import { Sprite } from '../sprite';
-import type { ISprite } from '@Type/sprite/ISprite';
+import type { ISprite } from '@Type/sprite';
 import type { ISpriteSensing } from '@Type/sprite/ISpriteSensing';
 import type { ISpriteDragMode } from '@Type/sprite/ISpriteDragMode';
 /**

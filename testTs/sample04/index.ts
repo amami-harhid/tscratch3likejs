@@ -1,6 +1,6 @@
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
+import type {PlayGround} from "@Type/playGround";
+import type {Stage} from "@Type/stage";
 
 Pg.title = "【Sample04】 旗をクリックした後、ステージをクリック（タッチ）したら音を鳴らす";
 

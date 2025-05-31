@@ -1,48 +1,27 @@
-import { Sprite } from '../sprite';
-import { PenSprite } from '../pen/penSprite';
 import type { ISpriteDragMode } from '@Type/sprite/ISpriteDragMode';
-import { IPenSprite } from '@Type/sprite/pen/IPenSprite';
+import { DragSprite } from '../drag/dragSprite';
 
 /** サイズ */
 export class SpriteDragMode implements ISpriteDragMode{
 
-    private penSprite: PenSprite;
+    private dragSprite: DragSprite;
     /**
      * @internal
      * @param entity {Sprite}
      */
-    constructor(penSprite: IPenSprite){
-        this.penSprite = penSprite as unknown as PenSprite;
+    constructor(dragSprite: DragSprite){
+        this.dragSprite = dragSprite;
     }
-    clear(): void {
-        this.penSprite.penClear();
-    }
-    up(): void {
-        this.penSprite.penUp();
-    }
-    down(): void {
-        this.penSprite.penDown();
-    }
-    stamp(): void {
-        this.penSprite.stamp();
-    }
-    get HSVColor() {
-        return this.penSprite.HSVColor;
-    }
-    get Size() {
-        return this.penSprite.Size;
-    }
-
     get dragging() : boolean {
-        return this.dragging;
+        return this.dragSprite.dragging;
     }
 
     get draggable() : boolean {
-        return this.draggable;
+        return this.dragSprite.draggable;
     }
 
     set draggable(draggable: boolean) {
-        this.draggable = draggable;
+        this.dragSprite.draggable = draggable;
     }
 
 }

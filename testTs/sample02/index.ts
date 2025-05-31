@@ -1,6 +1,6 @@
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
+import type {PlayGround} from "@Type/playGround";
+import type {Stage} from "@Type/stage";
 
 Pg.title = "【Sample02】旗クリックで背景を表示する";
 
@@ -19,13 +19,13 @@ Pg.prepare = async function() {
     stage = new Lib.Stage();
     await stage.Image.add( White );
     await stage.Image.add( Jurassic );
-    stage.Looks.switchBackdrop(White);
+    stage.Looks.Backdrop.name = White;
 }
 // イベント定義処理
 Pg.setting = function() {
     
     // 旗が押されたときの動作(ステージ)
     stage.Event.whenFlag( async function(this:Stage){
-        this.Looks.switchBackdrop(Jurassic);
+        this.Looks.Backdrop.name = Jurassic;
     });
 };

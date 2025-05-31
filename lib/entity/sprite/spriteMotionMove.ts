@@ -1,5 +1,5 @@
 import { Sprite } from '../sprite';
-import { ISprite } from '@Type/sprite/ISprite';
+import { ISprite } from '@Type/sprite';
 import { ISpriteMotionMove } from '@Type/sprite/ISpriteMotionMove';
 export class SpriteMotionMove implements ISpriteMotionMove {
     private entity: Sprite;

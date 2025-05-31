@@ -3,7 +3,7 @@ import { SpriteSize } from '../sprite/spriteSize';
 import { SpriteLayer } from '../sprite/spriteLayer';
 import { SpriteEffect } from '../sprite/spriteEffect';
 import { SpriteBubble } from '../sprite/spriteBubble';
-import type { ISprite } from '@Type/sprite/ISprite';
+import type { ISprite } from '@Type/sprite';
 import type { ISpriteBubble } from '@Type/sprite/ISpriteBubble';
 import type { ISpriteLooks } from '@Type/sprite/ISpriteLooks';
 /**

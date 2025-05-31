@@ -1,5 +1,5 @@
 import { Sprite } from '../sprite';
-import { ISprite } from '@Type/sprite/ISprite';
+import { ISprite } from '@Type/sprite';
 import type { BubbleProperties } from '@Type/sprite/TBubble';
 import type { ISpriteBubble } from '@Type/sprite/ISpriteBubble';
 /** 吹き出し */

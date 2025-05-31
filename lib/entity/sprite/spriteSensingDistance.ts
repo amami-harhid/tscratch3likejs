@@ -1,5 +1,5 @@
 import { Sprite } from '../sprite';
-import { ISprite } from '@Type/sprite/ISprite';
+import { ISprite } from '@Type/sprite';
 import { Utils } from "../../util/utils";
 import type { ISpriteSensingDistance } from '@Type/sprite/ISpriteSensingDistance';
 

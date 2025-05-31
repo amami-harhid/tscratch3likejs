@@ -32,7 +32,7 @@ import { Stage } from "./stage";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { S3ImageData, S3SoundData } from '@Type/common/typeCommon';
 //import { Backdrops } from "./backdrops";
-import type { ISprite } from "@Type/sprite/ISprite";
+import type { ISprite } from "@Type/sprite";
 import type { ISpriteControl } from "@Type/sprite/ISpriteControl";
 import type { ISpriteMotion } from "@Type/sprite/ISpriteMotion";
 import type { ISpriteLooks } from "@Type/sprite/ISpriteLooks";
@@ -147,7 +147,7 @@ export class Sprite extends Entity implements ISprite {
         this._Distance = new SpriteSensingDistance(this);
         this._Backdrop = new SpriteBackdrop(this);
         this._SpriteBubble = new SpriteBubble(this);
-        this._DragMode = new SpriteDragMode(this._penSprite);
+        this._DragMode = new SpriteDragMode(this._dragSprite);
         //this._isAlive = true;
         stage.addSprite(this);
     }

@@ -1,4 +1,4 @@
-import { ISprite } from './ISprite';
+import { ISprite } from '.';
 export interface ISpriteMotionPoint {
     /**
      * マウスカーソルへ向く

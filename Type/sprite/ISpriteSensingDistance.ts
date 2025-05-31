@@ -1,4 +1,4 @@
-import type { ISprite } from "./ISprite";
+import type { ISprite } from ".";
 /** 距離 */
 export interface ISpriteSensingDistance {
 
