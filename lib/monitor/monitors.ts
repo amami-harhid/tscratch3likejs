@@ -8,8 +8,7 @@ import { PlayGround } from "../playGround";
 import { IMonitors, SMonitors } from "@Type/monitors";
 //import type { IRenderWebGL } from "lib/render/IRenderWebGL";
 
-export const Monitors:SMonitors = class Monitors implements IMonitors{
-//export class Monitors implements IMonitors {
+export class Monitors implements IMonitors{
     private _monitors: Monitor[];
     private _playGround: PlayGround;
     /**

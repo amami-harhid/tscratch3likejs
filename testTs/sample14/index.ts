@@ -85,7 +85,7 @@ Pg.setting = async function() {
                 // マウスカーソルの位置（枠内にあった最後の位置）
                 const mousePosition = Lib.mousePosition;
                 // 取得した位置へ1秒かけて移動する
-                this.Motion.Move.glideTo( 1, mousePosition.x, mousePosition.y );
+                await this.Motion.Move.glideTo( 1, mousePosition.x, mousePosition.y );
             }else{
                 // 5秒経過していないときは
                 // マウスカーソルのある方向へ移動する

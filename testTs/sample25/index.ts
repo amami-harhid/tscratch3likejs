@@ -3,9 +3,9 @@
  * 背景を１秒ごとに切り替える
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type { PlayGround } from "@Type/playground";
+import type { IStage as Stage } from "@Type/stage";
+import type { ISprite as Sprite } from "@Type/sprite";
 
 
 Pg.title = "【Sample25】背景を１秒ごとに切り替える"
@@ -32,8 +32,7 @@ Pg.prepare = async function prepare() {
     // ステージに背景を追加
     await stage.Image.add( Jurassic01 );
     await stage.Image.add( Jurassic02 );
-    stage.Looks.switchBackdrop(Jurassic01);
-    stage.Looks.switchBackdrop(Jurassic02);
+    stage.Looks.Backdrop.name = Jurassic01;
     // Chill を追加
     await stage.Sound.add( Chill );
 
@@ -53,7 +52,7 @@ Pg.setting = async function setting() {
      * 音を追加して、STARTメッセージを送る
      */
     stage.Event.whenFlag(async function(this:Stage){
-        this.Looks.switchBackdrop(Jurassic01);
+        this.Looks.Backdrop.name = Jurassic01;
         await this.Control.wait(1);
         this.Event.broadcast('START');
     });
@@ -67,9 +66,9 @@ Pg.setting = async function setting() {
         for(;;){
 
             await this.Control.wait(1);
-            this.Looks.switchBackdrop(Jurassic02);
+            this.Looks.Backdrop.name = Jurassic02;
             await this.Control.wait(1);
-            this.Looks.switchBackdrop(Jurassic01);
+            this.Looks.Backdrop.name = Jurassic01;
             yield;
         }
     });
@@ -91,7 +90,7 @@ Pg.setting = async function setting() {
     });
     // 緑の旗が押されたときの動作
     ball.Event.whenFlag(async function(this:Sprite){
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
         this.Looks.Size.scale = {w: 120, h: 120};
     });
 

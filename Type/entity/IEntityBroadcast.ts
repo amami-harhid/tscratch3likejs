@@ -6,14 +6,14 @@ export interface IEntityBroadCast {
      * @param messageId 
      * @param args 
      */
-    broadcast(messageId: string, ...args:object[]): void;
+    broadcast(messageId: string, ...args:unknown[]): void;
 
     /**
      * メッセージを送り終わるまで待つ
      * @param messageId 
      * @param args 
      */
-    broadcastAndWait(messageId: string, ...args:object[]): Promise<void>;
+    broadcastAndWait(messageId: string, ...args:unknown[]): Promise<void>;
 
     /**
      * messageId を使い EventEmitter.on を宣言する

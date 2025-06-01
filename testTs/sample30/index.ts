@@ -3,9 +3,9 @@
  * スプライトをドラッグする
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample30】スプライトをドラッグする"
 
@@ -40,17 +40,17 @@ Pg.setting = async function () {
     cat.Event.whenFlag(async function*(this:Sprite){
         this.Looks.Size.scale = {w:150, h:150};
         this.Sensing.DragMode.draggable = true;
-        this.Pen.penClear();
+        this.Pen.clear();
         this.Pen.HSVColor.hue = 200;
         this.Pen.HSVColor.saturation = 90;
         this.Pen.HSVColor.brightness = 85;
         this.Pen.HSVColor.transparency = 60;
         this.Pen.Size.thickness = 1500;
-        this.Looks.setEffect(Lib.ImageEffective.GHOST, 80);
-        this.Pen.penDown();
+        this.Looks.Effect.set(Lib.ImageEffective.GHOST, 80);
+        this.Pen.down();
         for(;;){
             this.Motion.Direction.degree += 5;
-            this.Looks.changeEffectBy(Lib.ImageEffective.COLOR,25);
+            this.Looks.Effect.change(Lib.ImageEffective.COLOR,25);
             this.Pen.stamp();
             yield;
         }

@@ -7,7 +7,7 @@ import { Utils } from "../util/utils";
 import { S3MonitorSkin } from "./s3MonitorSkin";
 import type { IRenderWebGL, ScratchRenderProperties } from "../render/IRenderWebGL";
 import type { TPosition, TScale, TDistance} from "@Type/common/typeCommon";
-import { IMonitor } from "@Type/monitors/IMonitor";
+import { IMonitor } from "@Type/monitors/monitor";
 export class Monitor extends Entity implements IMonitor{
     static Events = {
         DROP_START: 'DropStart',

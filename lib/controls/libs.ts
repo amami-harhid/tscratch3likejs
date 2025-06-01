@@ -24,7 +24,7 @@ import { IImageEffective, ImageEffective } from '../../Type/entity/ImageEffectiv
 import { ISoundOption, SoundOption } from '../../Type/entity/SoundOption';
 import { KEYBOARD_KEYS } from '../../Type/io/IKeyboard';
 import { Point } from '@Type/common/point';
-import { IMonitors, SMonitors } from '@Type/monitors';
+import { SMonitors } from '@Type/monitors';
 import { ISprite } from '@Type/sprite';
 import { IEntitySound } from '@Type/entity/IEntitySound';
 //import { ImageEffective, SoundOption } from '../_type/entity/CEntityConstant';
@@ -71,7 +71,7 @@ export class Libs {
     get RotationStyle () : typeof RotationStyle{
         return RotationStyle;
     }
-    get Monitors () : SMonitors {
+    get Monitors () {
         return Monitors;
     }
     get MathUtil () : MathUtil{

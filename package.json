@@ -20,7 +20,7 @@
     "build",
     "eslint-plugin",
     "s3lib-importer",
-    "types"
+    "Type"
   ],
   "author": "amami-harhid",
   "license": "AGPL-3.0-only",

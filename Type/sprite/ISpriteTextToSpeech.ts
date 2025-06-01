@@ -22,5 +22,5 @@ export interface ISpriteTextToSpeech {
      * @param gender {string} - 性別 ( male/female )
      * @param locale {string} - ロケール ( ja-JP )
      */
-    setSpeechProperties(type:string, properties: TSoundPlayerOption, gender:string, locale:string): void;
+    setSpeechProperties(type:string, properties?: TSoundPlayerOption, gender?:string, locale?:string): void;
 }

@@ -3,7 +3,7 @@ import { ImageEffective } from "../entity/ImageEffective";
 import { RotationStyle } from "../entity/RotationStyle";
 import { SoundOption } from "../entity/SoundOption";
 import { I_KEYBOARD_KEYS } from "../io/IKeyboard";
-import { IMonitors } from "../monitors";
+import { SMonitors } from "../monitors";
 import { SSprite } from "../sprite";
 import { SStage } from "../stage";
 
@@ -16,7 +16,7 @@ export interface Lib {
     get ImageEffective (): typeof ImageEffective;
     get SoundOption (): typeof SoundOption;
     get RotationStyle (): typeof RotationStyle;
-    get Monitors (): IMonitors;
+    get Monitors (): SMonitors;
     get MathUtil ();
     /**
      * 指定したkeyが押されているとき TRUE

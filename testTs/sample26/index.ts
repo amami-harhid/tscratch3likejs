@@ -3,9 +3,9 @@
  * スペースキーでコスチューム切り替え
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type { PlayGround } from "@Type/playground";
+import type { IStage as Stage } from "@Type/stage";
+import type { ISprite as Sprite } from "@Type/sprite";
 import {Constant} from './sub/constants';
 
 Pg.title = "【Sample26】スペースキーでコスチューム切り替え"
@@ -126,7 +126,7 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作
     sprite.Event.whenFlag(async function(this:Sprite){
         // 初期設定
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
         // サイズ
         this.Looks.Size.scale = {w: 200, h: 200 }; 
         // 表示
@@ -151,7 +151,7 @@ Pg.setting = async function setting() {
                 // 音を鳴らす
                 this.Sound.play(Constant.Rip);
                 // コスチュームを切り替える
-                this.Looks.switchCostume(name);
+                this.Looks.Costume.name = name;
                 // 0.1秒待つ
                 await this.Control.wait(0.1); 
                 yield;

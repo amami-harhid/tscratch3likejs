@@ -3,9 +3,9 @@
  * 上下・左右に移動を繰り返す
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type { PlayGround } from "@Type/playground";
+import type { IStage as Stage } from "@Type/stage";
+import type { ISprite as Sprite } from "@Type/sprite";
 
 
 Pg.title = "【Sample24】上下・左右に移動を繰り返す"
@@ -71,7 +71,7 @@ Pg.setting = async function setting() {
      * 位置の初期化、サイズの初期化
      */
     ball.Event.whenFlag(async function(this:Sprite){
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
         this.Looks.Size.scale = {w: 120, h: 120 };
     });
 

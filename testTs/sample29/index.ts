@@ -3,7 +3,7 @@
  * クラス定義のサンプル（StageEx,Catクラス定義) 
  */
 import {Pg} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
+import type {PlayGround} from "@Type/playground";
 
 import {StageEx} from './sub/stage';
 import {Cat} from './sub/cat';
