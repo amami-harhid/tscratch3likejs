@@ -29,3 +29,6 @@ export enum ImageEffective {
      */ 
     GHOST = 'ghost',
 };
+type EnumKeys = keyof typeof ImageEffective;
+type EnumKeyFields = {[key in EnumKeys]:string};
+export type IImageEffective = EnumKeyFields

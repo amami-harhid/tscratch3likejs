@@ -36,13 +36,14 @@ import type { ISprite, TSprite } from "@Type/sprite";
 import type { ISpriteControl } from "@Type/sprite/ISpriteControl";
 import type { ISpriteMotion } from "@Type/sprite/ISpriteMotion";
 import type { ISpriteLooks } from "@Type/sprite/ISpriteLooks";
-import type { ISpriteMotionPosition } from "@Type/sprite/ISpriteMotionPosition";
+//import type { ISpriteMotionPosition } from "@Type/sprite/ISpriteMotionPosition";
 import type { ISpriteSensing } from "@Type/sprite/ISpriteSensing";
 import type { ISpriteSensingDistance } from "@Type/sprite/ISpriteSensingDistance";
 import type { ISpriteBackdrop } from "@Type/sprite/ISpriteBackdrop";
 import type { ISpriteBubble } from "@Type/sprite/ISpriteBubble";
 import { ISpriteDragMode } from "@Type/sprite/ISpriteDragMode";
 import { SpriteDragMode } from "./sprite/spriteDragMode";
+//import { ISpriteCostume } from "@Type/sprite/ISpriteCostume";
 export class Sprite extends Entity implements ISprite {
     private bubble?: Bubble;
     /** @internal */
@@ -149,7 +150,7 @@ export class Sprite extends Entity implements ISprite {
         this._SpriteBubble = new SpriteBubble(this);
         this._DragMode = new SpriteDragMode(this._dragSprite);
         //this._isAlive = true;
-        stage.addSprite(this);
+        stage.$addSprite(this);
     }
     /**
      * @internal
@@ -182,7 +183,7 @@ export class Sprite extends Entity implements ISprite {
             const clones = this.originalSprite.clones;
             this.originalSprite.clones = clones.filter(s=> s.id !== this.id);
         }
-        this.stage.removeSprite(this);
+        this.stage.$removeSprite(this);
         try{
             this.render.renderer.destroyDrawable(this.drawableID, StageLayering.SPRITE_LAYER);
 
@@ -1331,35 +1332,35 @@ export class Sprite extends Entity implements ISprite {
     //     };
     // }
 
-    /**
-     * コスチューム番号、コスチューム名を取り出すためのオブジェクト
-     * 使用例：this.Costume.no, this.Costume.name
-     * @returns {{no: number, name: string}}
-     */
-    get Costume(): {no: number, name: string} {
-        const me = this;
-        const costume = {"no": 0, "name": ""};
-        Object.defineProperty(costume, "no", {
-            // @type {number}
-            get : function() {
-                if(me.costumes)
-                    return me.costumes.currentSkinNo();
-                else
-                    return -1;
-            },
-        })
-        Object.defineProperty(costume, "name", {
-            // @type {string}
-            get : function() {
-                if(me.costumes)
-                    return me.costumes.currentSkinName();
-                else
-                    return '';
-            },
-        })
+    // /**
+    //  * コスチューム番号、コスチューム名を取り出すためのオブジェクト
+    //  * 使用例：this.Costume.no, this.Costume.name
+    //  * @returns {{no: number, name: string}}
+    //  */
+    // get Costume(): ISpriteCostume {
+    //     const me = this;
+    //     const costume = {"no": 0, "name": ""};
+    //     Object.defineProperty(costume, "no", {
+    //         // @type {number}
+    //         get : function() {
+    //             if(me.costumes)
+    //                 return me.costumes.currentSkinNo();
+    //             else
+    //                 return -1;
+    //         },
+    //     })
+    //     Object.defineProperty(costume, "name", {
+    //         // @type {string}
+    //         get : function() {
+    //             if(me.costumes)
+    //                 return me.costumes.currentSkinName();
+    //             else
+    //                 return '';
+    //         },
+    //     })
 
-        return costume;
-    }
+    //     return costume;
+    // }
     
     /**
      * 背景番号、背景名を取り出すためのオブジェクト

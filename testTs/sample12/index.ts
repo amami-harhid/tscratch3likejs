@@ -4,10 +4,10 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
-import type {S3Point} from "@typeJS/s3Point";
+import type {PlayGround} from "@Type/playGround";
+import type {Stage} from "@Type/stage";
+import type {Sprite} from "@Type/sprite";
+import type {S3Point} from "@Type/point";
 
 Pg.title = "【Sample12】クリックした場所へ移動する"
 

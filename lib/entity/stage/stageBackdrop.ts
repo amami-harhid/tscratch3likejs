@@ -1,7 +1,8 @@
+import { IStageBackdrop } from '@Type/stage/IStageBackdrop';
 import { Stage } from '../stage';
 
 /** サイズ */
-export class StageBackdrop {
+export class StageBackdrop implements IStageBackdrop {
 
     private entity: Stage;
     /**
@@ -57,7 +58,7 @@ export class StageBackdrop {
      *  this.Looks.Backdrop.nextBackdrop();
      * ```
      */
-    nextBackdrop() : void {
+    next() : void {
         this.entity.$nextBackDrop();
     }
 }

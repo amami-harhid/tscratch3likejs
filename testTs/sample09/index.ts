@@ -2,9 +2,9 @@
  * Sample09 スプライトをクリックしたらクローンを作る。
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playGround";
+import type {Stage} from "@Type/stage";
+import type {Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample09】スプライトをクリックしたらクローンを作る。端に触れたらミャーとないて折り返す。";
 
@@ -53,8 +53,8 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite){
         // 初期化
-        this.Motion.Move.gotoXY( 0, 0 );  // 配置中央
-        this.Motion.Point.pointInDirection( 90 );  // 向き90度
+        this.Motion.Move.toXY( 0, 0 );  // 配置中央
+        this.Motion.Direction.degree = 90;  // 向き90度
         // ネコの音を 音量=20 とする
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
     });
@@ -84,7 +84,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 進む。
-            this.Motion.Move.moveSteps(catStep);
+            this.Motion.Move.steps(catStep);
             // 端に触れたら跳ね返る
             this.Motion.Move.ifOnEdgeBounds();
             // 端にタッチしたとき

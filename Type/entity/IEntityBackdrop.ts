@@ -35,8 +35,8 @@ export interface IEntityBackdrop {
     /**
      * 次の背景にする
      * ```ts
-     *  this.Looks.Backdrop.nextBackdrop();
+     *  this.Looks.Backdrop.next();
      * ```
      */
-    nextBackdrop() : void;
+    next() : void;
 }

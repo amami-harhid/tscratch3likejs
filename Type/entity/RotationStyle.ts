@@ -11,3 +11,6 @@ export enum RotationStyle {
     /** 自由に回転 */
     ALL_AROUND = 'all-around',
 };
+type EnumKeys = keyof typeof RotationStyle;
+type EnumKeyFields = {[key in EnumKeys]:string};
+export type IRotationStyle = EnumKeyFields

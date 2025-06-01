@@ -128,7 +128,7 @@ export class Threads {
                 stage.$soundStopImmediately();
                 stage.$speechStopImmediately();
                 if(stage.sprites != null){
-                    for(const s of stage.sprites){
+                    for(const s of stage.$sprites){
                         s.$soundStopImmediately();
                         s.$speechStopImmediately();
                     }    
@@ -157,7 +157,7 @@ export class Threads {
                 stage.$soundStopImmediately();
                 stage.$speechStopImmediately();
                 if(stage.sprites != null){
-                    for(const s of stage.sprites){
+                    for(const s of stage.$sprites){
                         if(s){
                             s.$soundStopImmediately();
                             s.$speechStopImmediately();

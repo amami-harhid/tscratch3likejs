@@ -2,7 +2,7 @@ import { Sprite } from '../sprite';
 import type { ISpriteCostume } from '@Type/sprite/ISpriteCostume';
 
 /** サイズ */
-export class SpriteCostume implements ISpriteCostume{
+export class SpriteCostume implements ISpriteCostume {
 
     private entity: Sprite;
     /**
@@ -58,6 +58,14 @@ export class SpriteCostume implements ISpriteCostume{
     set name(name:string) {
         this.entity.$switchCostume(name);
     }
-
+    /**
+     * 次のコスチュームにする
+     * ```ts
+     *  this.Looks.Costume.next();
+     * ``
+     */
+    next(): void {
+        this.entity.$nextCostume();
+    }
 
 }

@@ -5,7 +5,6 @@ import { IEntity } from '@Type/entity/IEntity';
 import { TEntityOptions } from '@Type/entity/TEntityOptions';
 import { ISprite } from '@Type/sprite';
 import { IStageLooks } from './IStageLooks';
-import { IStageBackdrop } from './IStageBackdrop';
 import { IStageControl } from './IStageControl';
 import { IStageSensing } from './IStageSensing';
 import { IStageEvent } from './IStageEvent';
@@ -21,10 +20,6 @@ export interface IStage extends IEntity {
     removeSprite ( sprite: ISprite ): void;
     update(): void;
     draw(): void;
-    /**
-     * 背景
-     */
-    get Backdrop(): IStageBackdrop;
     /**
      * 見た目
      */
@@ -50,4 +45,6 @@ export interface IStage extends IEntity {
      * サウンド
      */
     get Sound() : IStageSound;
+
+    removeSprite(sprite: ISprite): void;
 };

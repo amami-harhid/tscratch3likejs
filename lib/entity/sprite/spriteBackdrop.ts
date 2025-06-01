@@ -59,7 +59,7 @@ export class SpriteBackdrop implements ISpriteBackdrop {
      *  this.Looks.Backdrop.nextBackdrop();
      * ```
      */
-    nextBackdrop() : void {
+    next() : void {
         this.entity.$nextBackdrop();
     }
 }

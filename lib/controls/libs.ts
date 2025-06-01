@@ -19,9 +19,14 @@ import { Stage } from '../entity/stage';
 import { StageLayering } from '../entity/stageLayering';
 import { SVGParser } from '../svgParser/parser';
 import { Utils } from '../util/utils';
-import { RotationStyle } from '../../Type/entity/RotationStyle';
-import { ImageEffective } from '../../Type/entity/ImageEffective';
-import { SoundOption } from '../../Type/entity/SoundOption';
+import { IRotationStyle, RotationStyle } from '../../Type/entity/RotationStyle';
+import { IImageEffective, ImageEffective } from '../../Type/entity/ImageEffective';
+import { ISoundOption, SoundOption } from '../../Type/entity/SoundOption';
+import { I_KEYBOARD_KEYS, KEYBOARD_KEYS } from '../../Type/io/IKeyboard';
+import { Point } from '@Type/common/point';
+import { IMonitors, SMonitors } from '@Type/monitors';
+import { ISprite } from '@Type/sprite';
+import { IEntitySound } from '@Type/entity/IEntitySound';
 //import { ImageEffective, SoundOption } from '../_type/entity/CEntityConstant';
 export class Libs {
 
@@ -54,26 +59,22 @@ export class Libs {
         return FunctionChecker;
     }
     /** @internal */
-    get Keyboard () {
-        return Keyboard;
+    get Keyboard (): I_KEYBOARD_KEYS {
+        return KEYBOARD_KEYS;
     }
-    get ImageEffective () {
+    get ImageEffective (): IImageEffective {
         return ImageEffective;
     }
-    get SoundOption () {
+    get SoundOption () : ISoundOption{
         return SoundOption;
     }
-    get RotationStyle () {
+    get RotationStyle () : IRotationStyle{
         return RotationStyle;
     }
-    /** @internal */
-    get Loop () {
-        return Loop;
-    }
-    get Monitors () {
+    get Monitors () : SMonitors {
         return Monitors;
     }
-    get MathUtil () {
+    get MathUtil () : MathUtil{
         return MathUtil;
     }
     /** @internal */
@@ -147,7 +148,7 @@ export class Libs {
     /**
      * mousePosition ( on canvas )
      */
-    get mousePosition () {
+    get mousePosition () : Point {
         const rate = this.renderRate;
         if(this.p.canvas){
             const _mouseX = (this.p.stage.mouse.x - this.p.canvas.width/2 ) * rate.x;

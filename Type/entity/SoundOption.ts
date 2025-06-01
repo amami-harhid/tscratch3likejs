@@ -10,3 +10,7 @@ export enum SoundOption {
     PITCH = "pitch",
 
 } ;
+
+type EnumKeys = keyof typeof SoundOption;
+type EnumKeyFields = {[key in EnumKeys]:string};
+export type ISoundOption = EnumKeyFields

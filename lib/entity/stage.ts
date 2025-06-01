@@ -22,6 +22,7 @@ import { IStageLooks } from "@Type/stage/IStageLooks";
 import { IStageEvent } from "@Type/stage/IStageEvent";
 import { IStageSensing } from "@Type/stage/IStageSensing";
 import { IStageSound } from "@Type/stage/IStageSound";
+import { ISprite } from "@Type/sprite";
 export class Stage extends Entity implements IStage{
     private scale: TScale;
     private direction: number;
@@ -31,7 +32,7 @@ export class Stage extends Entity implements IStage{
     //private skinIdx: number;
     /** @internal */
     public mouse: TMouse;
-    private _Backdrop: IStageBackdrop;
+    //private _Backdrop: IStageBackdrop;
     private _Control: IStageControl;
     private _Looks : IStageLooks;
     private _Event : IStageEvent;
@@ -108,21 +109,28 @@ export class Stage extends Entity implements IStage{
         })
   
         this.playGround.stage = this;
-        this._Backdrop = new StageBackdrop(this);
+//        this._Backdrop = new StageBackdrop(this);
         this._Control = new StageControl(this);
         this._Looks = new StageLooks(this);
         this._Event = new StageEvent(this);
         this._Sensing = new StageSensing(this);
         this._Sound = new StageSound(this);
     }
-    get sprites (): Sprite[] {
+    get $sprites (): Sprite[] {
         return this._sprites;
     }
-    addSprite (sprite:Sprite): void {
-        const curSprite = sprite;
-        this._sprites.push( curSprite );
-        curSprite.z = this._sprites.length
+    get sprites (): ISprite[] {
+        const sprites : ISprite[] = this._sprites as unknown as ISprite[];
+        return sprites;
+    }
+    $addSprite (sprite: Sprite): void {
+        this._sprites.push( sprite );
+        sprite.z = this._sprites.length
         this._sortSprites();
+    }
+    addSprite (sprite: ISprite): void {
+        const _sprite:Sprite = sprite as unknown as Sprite;
+        this.$addSprite(_sprite);
     }
     _sortSprites(): void {
         const n0_sprites = this._sprites;
@@ -141,8 +149,12 @@ export class Stage extends Entity implements IStage{
         this._sprites = n2_sprites;
 
     }
-    removeSprite ( sprite: Sprite ): void {
-        const curSprite = sprite;
+    removeSprite ( sprite: ISprite ): void {
+        const curSprite:Sprite = sprite as unknown as Sprite;
+        this.$removeSprite(curSprite);
+    }
+    $removeSprite ( sprite: Sprite ): void {
+        const curSprite:Sprite = sprite;
         const n_sprites = this._sprites.filter( ( item ) => item !== curSprite );
         this._sprites = n_sprites;
         this._sortSprites();
@@ -320,7 +332,8 @@ export class Stage extends Entity implements IStage{
      */
     remove() {
         for(const _s of this.sprites){
-            _s.remove();
+            const s: Sprite = _s as unknown as Sprite;
+            s.$remove();
         }
 
         try{
@@ -347,12 +360,12 @@ export class Stage extends Entity implements IStage{
             resolve(answer);
         });
     }
-    /**
-     * 背景
-     */
-    get Backdrop() {
-        return this._Backdrop;
-    }
+    // /**
+    //  * 背景
+    //  */
+    // get Backdrop() {
+    //     return this._Backdrop;
+    // }
     // /**
     //  * 
     //  * 背景番号、背景名を取り出すためのオブジェクト

@@ -5,8 +5,8 @@ import type { ISpriteLooks } from './ISpriteLooks';
 import type { ISpriteControl } from './ISpriteControl';
 import type { ISpriteSound } from './ISpriteSound';
 import type { ISpriteImage } from './ISpriteImage';
-import type { ISpriteCostume } from './ISpriteCostume';
-import type { ISpriteBackdrop } from './ISpriteBackdrop';
+// import type { ISpriteCostume } from './ISpriteCostume';
+// import type { ISpriteBackdrop } from './ISpriteBackdrop';
 import type { ISpriteSensing } from './ISpriteSensing';
 import type { ISpriteEvent } from './ISpriteEvent';
 import type { ISpriteTextToSpeech } from './ISpriteTextToSpeech';
@@ -30,17 +30,17 @@ export interface ISprite extends IEntity {
      */
     get Motion() : ISpriteMotion;
 
-    /**
-     * コスチューム番号、コスチューム名を取り出すためのオブジェクト
-     * 使用例：this.Costume.no, this.Costume.name
-     * @returns
-     */
-    get Costume(): ISpriteCostume;
+    // /**
+    //  * コスチューム番号、コスチューム名を取り出すためのオブジェクト
+    //  * 使用例：this.Costume.no, this.Costume.name
+    //  * @returns
+    //  */
+    // get Costume(): ISpriteCostume;
     
-    /**
-     * 背景番号、背景名を取り出すためのオブジェクト
-     */
-    get Backdrop(): ISpriteBackdrop;
+    // /**
+    //  * 背景番号、背景名を取り出すためのオブジェクト
+    //  */
+    // get Backdrop(): ISpriteBackdrop;
 
     /**
      * 見た目
@@ -80,4 +80,13 @@ export interface ISprite extends IEntity {
      * ペン機能
      */
     get Pen() : ISpritePen;
+    /**
+     * 生存期間 ( およその秒数 )
+     */
+    get life() : number;
+
+    /**
+     * 生存期間 ( およその秒数 )
+     */
+    set life(life:number);
 };

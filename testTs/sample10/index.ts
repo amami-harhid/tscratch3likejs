@@ -4,9 +4,9 @@
  * クローンされたら動きだす（端に触れたらミャーとないて折り返す）
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playGround";
+import type {Stage} from "@Type/stage";
+import type {Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample10】スプライトに触ったらクローンを作る(5秒で死ぬ)";
 
@@ -33,8 +33,8 @@ Pg.prepare = async function prepare() {
     cat = new Lib.Sprite("Cat");
     await cat.Image.add( Cat );
     await cat.Sound.add( Mya );
-    cat.Motion.Move.gotoXY( 200, 150 );
-    cat.Motion.Point.pointInDirection( 90 );
+    cat.Motion.Move.toXY( 200, 150 );
+    cat.Motion.Direction.degree = 90;
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -54,9 +54,9 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite) {
         // 位置初期化
-        this.Motion.Move.gotoXY( 200, 150 );
+        this.Motion.Move.toXY( 200, 150 );
         // 向き初期化
-        this.Motion.Point.pointInDirection( 90 );
+        this.Motion.Direction.degree = 90;
         // 音量 20
         await this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
     });
@@ -88,15 +88,15 @@ Pg.setting = async function setting() {
     const steps = 10;
     // クローンされたときの動作(ネコ)
     cat.Control.whenCloned(async function*(this:Sprite){
-        this.Motion.Move.gotoXY( 100, -100 );    // 位置
+        this.Motion.Move.toXY( 100, -100 );    // 位置
         this.Looks.Size.scale = {w: 50, h: 50};         // 大きさを縦横50%
-        this.Looks.setEffect(Lib.ImageEffective.COLOR, 50); //色の効果
+        this.Looks.Effect.set(Lib.ImageEffective.COLOR, 50); //色の効果
         
         this.Looks.show(); // 表示する
         // ずっと繰り返す
         for(;;){
             // 進む
-            this.Motion.Move.moveSteps( steps );
+            this.Motion.Move.steps( steps );
             // 端に触れたら跳ね返る
             this.Motion.Move.ifOnEdgeBounds();
             if(this.Sensing.isTouchingEdge() ){

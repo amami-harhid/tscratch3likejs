@@ -1,12 +1,14 @@
 import { Stage } from '../stage';
 import { StageEffect } from './stageEffect';
 import { StageBackdrop } from './stageBackdrop';
+import { IStageBackdrop } from '@Type/stage/IStageBackdrop';
+import { IStageEffect } from '@Type/stage/IStageEffect';
 /**
  * Sprite Looks(見た目)
  */
 export class StageLooks {
-    private effect: StageEffect;
-    private backdrop: StageBackdrop;
+    private effect: IStageEffect;
+    private backdrop: IStageBackdrop;
     /**
      * @internal
      * @param entity {Sprite}
@@ -18,13 +20,13 @@ export class StageLooks {
     /**
      * 背景番号、背景名を取り出すためのオブジェクト
      */
-    get Backdrop(){
+    get Backdrop(): IStageBackdrop {
         return this.backdrop
     }
     /**
      * 効果
      */
-    get Effect() : StageEffect {
+    get Effect() : IStageEffect {
         return this.effect;
     }
 

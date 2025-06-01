@@ -3,9 +3,9 @@
  * スプライト（CAT)を １秒で「どこかの」場所へ移動する
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playGround";
+import type {Stage} from "@Type/stage";
+import type {Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample11】１秒で「どこかの」場所へ移動する"
 
@@ -30,7 +30,7 @@ Pg.prepare = async function prepare() {
     await stage.Image.add( Jurassic );
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");
-    cat.Motion.Move.gotoXY( 0, 0 );
+    cat.Motion.Move.toXY( 0, 0 );
     await cat.Image.add( Cat );
 }
 // イベント定義処理
@@ -50,7 +50,7 @@ Pg.setting = async function setting() {
 
     cat.Event.whenFlag(async function(this:Sprite){
         // 初期位置
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
     });
 
     // 旗が押されたときの動作(ネコ)
@@ -62,7 +62,7 @@ Pg.setting = async function setting() {
             // 場所をランダムに決める
             const randomPoint = Lib.randomPoint;
             // 1秒で決めた場所へ移動する
-            await this.Motion.Move.glideToPosition(1,  randomPoint.x, randomPoint.y);
+            await this.Motion.Move.glideTo(1,  randomPoint.x, randomPoint.y);
             yield;
         }
     });

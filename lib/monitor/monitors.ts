@@ -5,9 +5,11 @@ import { Monitor } from "./monitor";
 import { Libs } from "../controls/libs";
 import { S3MonitorSkin } from "./s3MonitorSkin";
 import { PlayGround } from "../playGround";
+import { IMonitors, SMonitors } from "@Type/monitors";
 //import type { IRenderWebGL } from "lib/render/IRenderWebGL";
 
-export class Monitors {
+export const Monitors:SMonitors = class Monitors implements IMonitors{
+//export class Monitors implements IMonitors {
     private _monitors: Monitor[];
     private _playGround: PlayGround;
     /**
@@ -77,7 +79,7 @@ export class Monitors {
      * 指定したIDのモニターを表示する
      * @param monitorId 
      */
-    show(monitorId: string){
+    show(monitorId: string): void{
         for(const _monitor of this._monitors){
             if(monitorId === _monitor.monitorId){
                 _monitor.show();
@@ -90,7 +92,7 @@ export class Monitors {
      * 指定したIDのモニターを隠す
      * @param monitorId {string}
      */
-    hide(monitorId: string){
+    hide(monitorId: string): void{
         for(const _monitor of this._monitors){
             if(monitorId === _monitor.monitorId){
                 _monitor.hide();

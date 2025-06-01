@@ -34,5 +34,9 @@ export interface ISpriteCostume {
      */
     set name(name:string);
 
+    /**
+     * 次のコスチュームにする
+     */
+    next(): void;
 
 }

@@ -2,9 +2,9 @@
  * Sample07 スプライトを左右に動かす。端に触れたら跳ね返る
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playGround";
+import type {Stage} from "@Type/stage";
+import type {Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample07】スプライトが横向きに動き、端に触れたら跳ね返る";
 
@@ -48,9 +48,9 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite){
         // (0,0)へ移動
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
         // 向き=90
-        this.Motion.Point.pointInDirection( 90 );
+        this.Motion.Direction.degree = 90;
     });
 
     // 旗が押されたときの動作(ネコ)
@@ -60,7 +60,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す。
         for(;;){
             // 進む
-            this.Motion.Move.moveSteps(catStep);
+            this.Motion.Move.steps(catStep);
             // もし端に触れたら跳ね返る
             this.Motion.Move.ifOnEdgeBounds();
             yield;

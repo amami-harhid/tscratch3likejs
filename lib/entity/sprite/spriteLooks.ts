@@ -6,65 +6,52 @@ import { SpriteBubble } from '../sprite/spriteBubble';
 import type { ISprite } from '@Type/sprite';
 import type { ISpriteBubble } from '@Type/sprite/ISpriteBubble';
 import type { ISpriteLooks } from '@Type/sprite/ISpriteLooks';
+import { ISpriteCostume } from '@Type/sprite/ISpriteCostume';
+import { SpriteCostume } from './spriteCostume';
+import { ISpriteBackdrop } from '@Type/sprite/ISpriteBackdrop';
+import { SpriteBackdrop } from './spriteBackdrop';
+import { ISpriteEffect } from '@Type/sprite/ISpriteEffect';
+import { ISpriteSize } from '@Type/sprite/ISpriteSize';
 /**
  * Sprite Looks(見た目)
  */
 export class SpriteLooks implements ISpriteLooks{
     private entity: Sprite;
     private layer: SpriteLayer;
-    private effect: SpriteEffect;
-    private size : SpriteSize;
+    private effect: ISpriteEffect;
+    private size : ISpriteSize;
     private bubble: ISpriteBubble;
+    private costume: ISpriteCostume;
+    private backdrop: ISpriteBackdrop;
     /**
      * @internal
      * @param entity {Sprite}
      */
     constructor(entity:Sprite){
         this.entity = entity;
-        const _entity = entity as unknown as ISprite;
         this.layer = new SpriteLayer(entity);
         this.effect = new SpriteEffect(entity);
         this.size = new SpriteSize(entity);
         this.bubble = new SpriteBubble(entity);
+        this.costume = new SpriteCostume(entity);
+        this.backdrop = new SpriteBackdrop(entity);
     }
     /**
      * コスチューム番号、コスチューム名を取り出すためのオブジェクト
      */
-    get Costume() {
-        return this.entity.Costume;
+    get Costume() : ISpriteCostume {
+        return this.costume;
     }
     /**
      * 背景番号、背景名を取り出すためのオブジェクト
      */
-    get Backdrop(){
-        return this.entity.Backdrop;
-    }
-    /**
-     * 次のコスチュームにする
-     */
-    nextCostume() {
-        this.entity.$nextCostume();
-    }
-    /**
-     * コスチュームを切り替える
-     * @param costume {number|string} - コスチューム
-     */
-    switchCostume(costume:number|string) :void {
-        this.entity.$switchCostume(costume);
-    }
-    /**
-     * 次の背景にする
-     */
-    nextBackdrop(): void {
-        this.entity.$nextBackdrop();
-    }
-    switchBackdrop(backdrop: number|string ): void {
-        this.entity.$switchBackdrop(backdrop);
+    get Backdrop(): ISpriteBackdrop{
+        return this.backdrop;
     }
     /**
      * サイズ
      */
-    get Size() : SpriteSize {
+    get Size() : ISpriteSize {
         return this.size;
     }
     /**
@@ -90,7 +77,7 @@ export class SpriteLooks implements ISpriteLooks{
     /**
      * 効果
      */
-    get Effect() : SpriteEffect {
+    get Effect() : ISpriteEffect {
         return this.effect;
     }
     /**
