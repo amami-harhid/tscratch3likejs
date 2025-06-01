@@ -22,7 +22,7 @@ import { Utils } from '../util/utils';
 import { IRotationStyle, RotationStyle } from '../../Type/entity/RotationStyle';
 import { IImageEffective, ImageEffective } from '../../Type/entity/ImageEffective';
 import { ISoundOption, SoundOption } from '../../Type/entity/SoundOption';
-import { I_KEYBOARD_KEYS, KEYBOARD_KEYS } from '../../Type/io/IKeyboard';
+import { KEYBOARD_KEYS } from '../../Type/io/IKeyboard';
 import { Point } from '@Type/common/point';
 import { IMonitors, SMonitors } from '@Type/monitors';
 import { ISprite } from '@Type/sprite';
@@ -59,16 +59,16 @@ export class Libs {
         return FunctionChecker;
     }
     /** @internal */
-    get Keyboard (): I_KEYBOARD_KEYS {
+    get Keyboard (): typeof KEYBOARD_KEYS {
         return KEYBOARD_KEYS;
     }
-    get ImageEffective (): IImageEffective {
+    get ImageEffective (): typeof ImageEffective {
         return ImageEffective;
     }
-    get SoundOption () : ISoundOption{
+    get SoundOption () : typeof SoundOption{
         return SoundOption;
     }
-    get RotationStyle () : IRotationStyle{
+    get RotationStyle () : typeof RotationStyle{
         return RotationStyle;
     }
     get Monitors () : SMonitors {

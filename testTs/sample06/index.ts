@@ -2,9 +2,9 @@
  * Sample06 スプライトをタッチしたらＢＧＭを繰返し鳴らす
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playGround";
-import type {Stage} from "@Type/stage";
-import type {Sprite} from "@Type/sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample06】スプライトをタッチしたらＢＧＭを繰返し鳴らす";
 

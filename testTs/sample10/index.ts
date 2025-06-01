@@ -4,9 +4,9 @@
  * クローンされたら動きだす（端に触れたらミャーとないて折り返す）
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playGround";
-import type {Stage} from "@Type/stage";
-import type {Sprite} from "@Type/sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample10】スプライトに触ったらクローンを作る(5秒で死ぬ)";
 

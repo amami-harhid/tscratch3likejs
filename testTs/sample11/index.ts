@@ -3,9 +3,9 @@
  * スプライト（CAT)を １秒で「どこかの」場所へ移動する
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playGround";
-import type {Stage} from "@Type/stage";
-import type {Sprite} from "@Type/sprite";
+declare type PlayGround = typeof Pg;
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample11】１秒で「どこかの」場所へ移動する"
 

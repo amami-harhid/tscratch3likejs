@@ -6,9 +6,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample14】マウスポインターを追いかける（５秒経過後『１秒間でマウスポインターの位置へ移動する』に変化する）"
 
@@ -54,7 +54,7 @@ Pg.setting = async function() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function( this: Sprite ){
         // (0,0)へ移動する
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
     })
 
     // ms の値
@@ -79,17 +79,17 @@ Pg.setting = async function() {
         // ずっと繰り返す
         for(;;){
             // マウスの方向へ向く
-            this.Motion.Point.pointToMouse();
+            this.Motion.Point.toMouse();
             // 5秒経過しているとき
             if(_5SecondsTimerOn){
                 // マウスカーソルの位置（枠内にあった最後の位置）
                 const mousePosition = Lib.mousePosition;
                 // 取得した位置へ1秒かけて移動する
-                await this.Motion.Move.glideToPosition( 1, mousePosition.x, mousePosition.y );
+                await this.Motion.Move.glideTo( 1, mousePosition.x, mousePosition.y );
             }else{
                 // 5秒経過していないときは
                 // マウスカーソルのある方向へ移動する
-                this.Motion.Move.moveSteps(catStep);
+                this.Motion.Move.steps(catStep);
             }
             yield;
         }

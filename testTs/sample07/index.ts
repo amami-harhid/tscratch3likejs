@@ -2,9 +2,9 @@
  * Sample07 スプライトを左右に動かす。端に触れたら跳ね返る
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playGround";
-import type {Stage} from "@Type/stage";
-import type {Sprite} from "@Type/sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample07】スプライトが横向きに動き、端に触れたら跳ね返る";
 

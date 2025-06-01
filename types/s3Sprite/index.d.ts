@@ -816,7 +816,7 @@ export interface Sprite extends Entity{
     /**
      * @constructor
      * @param name {string} - 名前
-     * @param option? {S3SpriteOption} - オプション
+     * @param option {S3SpriteOption} - オプション
      * @example
      * ```ts
      * let cat : Sprite;

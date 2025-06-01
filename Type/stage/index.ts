@@ -12,7 +12,7 @@ import { IStageImage } from './IStageImage';
 import { IStageSound } from './IStageSound';
 
 export type TStage = IStage;
-export interface Stage extends IStage{
+export interface SStage extends IStage{
     new(options?:TEntityOptions):IStage;
 }
 export interface IStage extends IEntity {

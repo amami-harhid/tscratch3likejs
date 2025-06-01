@@ -4,10 +4,10 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
-import type {S3Point} from "@typeJS/s3Point";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
+import type {TPosition} from "@Type/common/typeCommon";
 
 Pg.title = "【Sample13】クリックした位置へ１秒で動く"
 
@@ -68,14 +68,14 @@ Pg.setting = async function() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag(async function( this:Sprite ){
         // (0,0)へ移動する
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
     });
 
     // メッセージ(MOUSE_CLICK)を受け取ったときの動作
     cat.Event.whenBroadcastReceived('MOUSE_CLICK', 
-        async function(this:Sprite, mousePosition:S3Point){
+        async function(this:Sprite, mousePosition:TPosition){
             // 取得した位置へ1秒で移動させる
-            await cat.Motion.Move.glideToPosition( 1, mousePosition.x, mousePosition.y );
+            await cat.Motion.Move.glideTo( 1, mousePosition.x, mousePosition.y );
         }
     );
 }

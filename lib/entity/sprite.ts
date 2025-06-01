@@ -32,7 +32,7 @@ import { Stage } from "./stage";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { S3ImageData, S3SoundData } from '@Type/common/typeCommon';
 //import { Backdrops } from "./backdrops";
-import type { ISprite, TSprite } from "@Type/sprite";
+import type { ISprite, SSprite, TSprite } from "@Type/sprite";
 import type { ISpriteControl } from "@Type/sprite/ISpriteControl";
 import type { ISpriteMotion } from "@Type/sprite/ISpriteMotion";
 import type { ISpriteLooks } from "@Type/sprite/ISpriteLooks";

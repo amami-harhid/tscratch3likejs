@@ -16,7 +16,7 @@ import type { ISpritePen } from './ISpritePen';
  * Sprite
  */
 export type TSprite = ISprite;
-export interface Sprite extends ISprite{
+export interface SSprite{
     /**
      * @param name
      * @param options 
@@ -25,6 +25,7 @@ export interface Sprite extends ISprite{
 
 };
 export interface ISprite extends IEntity {
+
     /**
      * 動き
      */

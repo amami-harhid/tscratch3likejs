@@ -1,11 +1,11 @@
-import { TPosition } from "@Type/common/typeCommon";
-import { ImageEffective } from "@Type/entity/ImageEffective";
-import { RotationStyle } from "@Type/entity/RotationStyle";
-import { SoundOption } from "@Type/entity/SoundOption";
-import { I_KEYBOARD_KEYS } from "@Type/io/IKeyboard";
-import { IMonitors } from "@Type/monitors";
-import { ISprite } from "@Type/sprite";
-import { IStage } from "@Type/stage";
+import { TPosition } from "../common/typeCommon";
+import { ImageEffective } from "../entity/ImageEffective";
+import { RotationStyle } from "../entity/RotationStyle";
+import { SoundOption } from "../entity/SoundOption";
+import { I_KEYBOARD_KEYS } from "../io/IKeyboard";
+import { IMonitors } from "../monitors";
+import { SSprite } from "../sprite";
+import { SStage } from "../stage";
 
 /**
  * Lib
@@ -13,9 +13,9 @@ import { IStage } from "@Type/stage";
 export interface Lib {
 
     get Keyboard ():I_KEYBOARD_KEYS;
-    get ImageEffective (): ImageEffective;
-    get SoundOption (): SoundOption;
-    get RotationStyle (): RotationStyle;
+    get ImageEffective (): typeof ImageEffective;
+    get SoundOption (): typeof SoundOption;
+    get RotationStyle (): typeof RotationStyle;
     get Monitors (): IMonitors;
     get MathUtil ();
     /**
@@ -66,8 +66,8 @@ export interface Lib {
      * @returns 
      */
     getRandomValueInRange( from:number , to:number, forceAsDecimal?:boolean ): number;
-    get Stage (): IStage;
-    get Sprite (): ISprite;
+    get Stage (): SStage;
+    get Sprite (): SSprite;
     get Utils ();
 
     /**
