@@ -18,22 +18,24 @@ const awaitMoveRule = {
                 ) {
                     if(node.parent.type == 'MemberExpression') {  
                         const parent = node.parent;
-                        if(parent.object && parent.object.name == 'Lib') { 
-                            // Lib.wait の綴りになっているとき                  
-                            const parent_parent = node.parent.parent;
-                            if(parent_parent.type == 'CallExpression'){
-                                // (await xxx.Sound.setOption) --> parent_parent_parent 
-                                const parent_parent_parent = parent_parent.parent;
-                                if(parent_parent_parent.type!='AwaitExpression'){
-                                    // AwaitExpression でない場合( await がついていない場合)
-                                    context.report({
-                                        node,
-                                        messageId: "AwaitNeededId",
-                                        fix(fixer) {
-                                            return fixer.insertTextBefore(parent_parent, "await ");
-                                        }
-                                    })
-                                }
+                        if(parent.property && parent.property.name == 'Move') { 
+                            // this.Motion.Move.xxxx の綴りになっているとき                  
+                            //const parent_parent = parent.parent;
+                            const parent2 = parent.parent;
+                            if(parent2.property && parent2.property.name == 'Motion'){
+                                const parent3 = parent2.parent;
+                                if(parent3.type == 'CallExpression') {
+                                    const parent4 = parent3.parent;
+                                    if(parent4.type!='AwaitExpression'){
+                                        context.report({
+                                            node,
+                                            messageId: "AwaitNeededId",
+                                            fix(fixer) {
+                                                return fixer.insertTextBefore(parent4, "await ");
+                                            }
+                                        })
+                                    }    
+                                } 
                             }
                         }
                     }
