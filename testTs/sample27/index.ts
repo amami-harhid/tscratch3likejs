@@ -4,10 +4,11 @@
  * 変数モニターを表示する
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
-import type {S3Monitors,S3Monitor} from "@typeJS/s3Monitors";
+import type { PlayGround } from "@Type/playground";
+import type { IStage as Stage } from "@Type/stage";
+import type { ISprite as Sprite } from "@Type/sprite";
+import type {IMonitors as Monitors} from "@Type/monitors";
+import type {IMonitor as Monitor} from "@Type/monitors/monitor";
 
 Pg.title = "【Sample27】色に触れたときカウントアップ ※雲(薄い水色), 植物(オレンジ色)"
 
@@ -21,9 +22,9 @@ const MonitorNameSecond:string = 'Seconds';
 
 let stage: Stage;
 let cat: Sprite
-let monitors: S3Monitors;
-let score: S3Monitor;
-let seconds: S3Monitor;
+let monitors: Monitors;
+let score: Monitor;
+let seconds: Monitor;
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
@@ -110,9 +111,9 @@ Pg.setting = async function setting() {
         // ずっと繰り返し、マウスカーソルへ向いて進む
         for(;;){
             // マウスカーソルへ向く
-            this.Motion.Point.pointToMouse();
+            this.Motion.Point.toMouse();
             // 進む
-            this.Motion.Move.moveSteps(5);
+            this.Motion.Move.steps(5);
             // 現在座標を取得してログ出力
             const {x,y} = this.Motion.Position.xy;
             const mx = this.Sensing.Mouse.x;

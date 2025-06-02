@@ -9,9 +9,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample16】３匹のネコの回転方向を変える"
 
@@ -43,22 +43,22 @@ Pg.prepare = async function prepare() {
     // ネコ１を作る
     cat1 = new Lib.Sprite("Cat1");
     await cat1.Image.add( Cat );
-    cat1.Motion.Move.gotoXY( -Lib.stageWidth/4, +Lib.stageHeight/4 );
-    cat1.Looks.setEffect(Lib.ImageEffective.COLOR, 50);
+    cat1.Motion.Move.toXY( -Lib.stageWidth/4, +Lib.stageHeight/4 );
+    cat1.Looks.Effect.set(Lib.ImageEffective.COLOR, 50);
     cat1.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
 
     // ネコ２を作る
     cat2 = new Lib.Sprite("Cat2");
     await cat2.Image.add( Cat );
-    cat2.Motion.Move.gotoXY( 0, 0 );
-    cat2.Looks.setEffect(Lib.ImageEffective.COLOR, 0);
+    cat2.Motion.Move.toXY( 0, 0 );
+    cat2.Looks.Effect.set(Lib.ImageEffective.COLOR, 0);
     cat2.Motion.Rotation.style = Lib.RotationStyle.ALL_AROUND;
 
     // ネコ３を作る
     cat3 = new Lib.Sprite("Cat3");
     await cat3.Image.add( Cat );
-    cat3.Motion.Move.gotoXY( Lib.stageWidth /4, -Lib.stageHeight/4 );
-    cat3.Looks.setEffect( Lib.ImageEffective.COLOR, 10);
+    cat3.Motion.Move.toXY( Lib.stageWidth /4, -Lib.stageHeight/4 );
+    cat3.Looks.Effect.set( Lib.ImageEffective.COLOR, 10);
     cat3.Motion.Rotation.style = Lib.RotationStyle.DONT_ROTATE;
 }
 // イベント定義処理
@@ -91,39 +91,39 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作（ネコ１）
     cat1.Event.whenFlag(async function(this:Sprite){
         // ネコ１：横、縦の位置を ステージの -1/4, +1/4 にする
-        this.Motion.Move.gotoXY( -Lib.stageWidth/4, +Lib.stageHeight/4 );
-        this.Looks.setEffect(Lib.ImageEffective.COLOR, 50);
+        this.Motion.Move.toXY( -Lib.stageWidth/4, +Lib.stageHeight/4 );
+        this.Looks.Effect.set(Lib.ImageEffective.COLOR, 50);
         this.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
         this.Motion.Direction.degree = 90;
     });
     // メッセージ(INIT)を受け取ったときの動作（ネコ１）
     cat1.Event.whenBroadcastReceived('INIT', async function(this:Sprite){
         // ネコ１：横、縦の位置を ステージの -1/4, +1/4 にする
-        this.Motion.Move.gotoXY( -Lib.stageWidth/4, +Lib.stageHeight/4 );
+        this.Motion.Move.toXY( -Lib.stageWidth/4, +Lib.stageHeight/4 );
     });
     // 旗が押されたときの動作（ネコ２）
     cat2.Event.whenFlag(async function(this:Sprite){
-        this.Motion.Move.gotoXY( 0, 0 );
-        this.Looks.setEffect(Lib.ImageEffective.COLOR, 0);
+        this.Motion.Move.toXY( 0, 0 );
+        this.Looks.Effect.set(Lib.ImageEffective.COLOR, 0);
         this.Motion.Rotation.style = Lib.RotationStyle.ALL_AROUND;
         this.Motion.Direction.degree = 90;
     });
     // メッセージ(INIT)を受け取ったときの動作（ネコ２）
     cat2.Event.whenBroadcastReceived('INIT', async function(this:Sprite){
         // ネコ２：横、縦の位置を (0,0)にする
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
     });
     // 旗が押されたときの動作（ネコ３）
     cat3.Event.whenFlag(async function(this:Sprite){
-        this.Motion.Move.gotoXY( Lib.stageWidth/4, -Lib.stageHeight/4 );
-        this.Looks.setEffect( Lib.ImageEffective.COLOR, 10);
+        this.Motion.Move.toXY( Lib.stageWidth/4, -Lib.stageHeight/4 );
+        this.Looks.Effect.set( Lib.ImageEffective.COLOR, 10);
         this.Motion.Rotation.style = Lib.RotationStyle.DONT_ROTATE;
         this.Motion.Direction.degree = 90;
     });
     // メッセージ(INIT)を受け取ったときの動作（ネコ３）
     cat3.Event.whenBroadcastReceived('INIT', async function(this:Sprite){
         // ネコ３：横、縦の位置を ステージの +1/4, -1/4 にする
-        this.Motion.Move.gotoXY( Lib.stageWidth/4, -Lib.stageHeight/4 );
+        this.Motion.Move.toXY( Lib.stageWidth/4, -Lib.stageHeight/4 );
     });
 
     // 進む速さ
@@ -133,9 +133,9 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // マウスカーソルの位置へ向く
-            this.Motion.Point.pointToMouse();
+            this.Motion.Point.toMouse();
             // 向きの方向へ進む
-            this.Motion.Move.moveSteps(CAT_WALK_STEP);
+            this.Motion.Move.steps(CAT_WALK_STEP);
             yield;
         }
     });
@@ -145,9 +145,9 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // マウスカーソルの位置へ向く
-            this.Motion.Point.pointToMouse();
+            this.Motion.Point.toMouse();
             // 向きの方向へ進む
-            this.Motion.Move.moveSteps(CAT_WALK_STEP);
+            this.Motion.Move.steps(CAT_WALK_STEP);
             yield;
         }
     });
@@ -157,9 +157,9 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // マウスカーソルの位置へ向く
-            this.Motion.Point.pointToMouse();
+            this.Motion.Point.toMouse();
             // 向きの方向へ進む
-            this.Motion.Move.moveSteps(CAT_WALK_STEP);
+            this.Motion.Move.steps(CAT_WALK_STEP);
             yield;
         }
     });

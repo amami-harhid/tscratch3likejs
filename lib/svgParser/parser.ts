@@ -1,7 +1,7 @@
 /**
  * SVGParser
  */
-import { TPosition, TScale } from "lib/common/typeCommon";
+import { TPosition, TScale } from "@Type/common/typeCommon";
 
 export class SVGParser {
     

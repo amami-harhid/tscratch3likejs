@@ -8,7 +8,8 @@ import { MonitorRenderingConstants } from "./s3RenderConstants";
 import type { IDrawable } from "../render/IDrawable";
 import { S3Silhouette } from "./s3Silhouette";
 import type { IRenderWebGL } from "../render/IRenderWebGL";
-import type { TSize, TVec3 } from "../common/typeCommon";
+import type { TSize, TVec3 } from "@Type/common/typeCommon";
+import { IMonitorSkin } from "@Type/monitors/IMonitorSkin";
 
 const MonitorStyle = {
     MAX_LINE_WIDTH: 480,  // stage width
@@ -49,7 +50,7 @@ declare type TUniform = {
      */
     u_skin: WebGLTexture|null,    
 }
-export class S3MonitorSkin extends EventEmitter {
+export class S3MonitorSkin extends EventEmitter implements IMonitorSkin {
     static Events = {
         /**
          * This constant value is same as Skin class

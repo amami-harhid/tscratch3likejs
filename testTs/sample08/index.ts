@@ -3,9 +3,9 @@
  * スプライトを 動かす( 端に触れたら ミャーと鳴く)
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample08】スプライトが動き、端に触れたらミャーと鳴く";
 
@@ -37,9 +37,9 @@ Pg.prepare = async function prepare() {
     await cat.Image.add( Cat2 );
     await cat.Sound.add( Mya );
     // 位置の初期化
-    cat.Motion.Move.gotoXY( 0, 0 );
+    cat.Motion.Move.toXY( 0, 0 );
     // 向きの初期化
-    cat.Motion.Point.pointInDirection( 40 );
+    cat.Motion.Direction.degree = 40;
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -59,11 +59,11 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite){
         // 位置の初期化
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
         // 向きの初期化
-        this.Motion.Point.pointInDirection( 40 );
+        this.Motion.Direction.degree = 40;
         // コスチューム
-        this.Looks.switchCostume(Cat1);
+        this.Looks.Costume.name = Cat1;
     });
 
     // 旗が押されたときの動作(ネコ)
@@ -71,7 +71,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 次のコスチュームに切り替える
-            this.Looks.nextCostume();
+            this.Looks.Costume.next();
             // ０．１秒待つ
             await this.Control.wait(0.1);
             yield;
@@ -87,7 +87,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // ネコが進む
-            this.Motion.Move.moveSteps(catStep);
+            this.Motion.Move.steps(catStep);
             // もし端に触れていたら
             if(this.Sensing.isTouchingEdge()){
                 // ネコの音を鳴らす

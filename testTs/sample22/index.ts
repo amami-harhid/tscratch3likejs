@@ -1,7 +1,8 @@
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite, SizeProperty} from "@typeJS/s3Sprite";
+import type { PlayGround } from "@Type/playground";
+import type { IStage as Stage } from "@Type/stage";
+import type { ISprite as Sprite } from "@Type/sprite";
+import type { TScale } from "@Type/common/typeCommon";
 
 Pg.title = "【Sample22】スピーチ機能：「お話しを終わるまで待つ」を続ける"
 
@@ -24,7 +25,7 @@ Pg.prepare = async function prepare(this:PlayGround) {
     stage = new Lib.Stage();
     await stage.Image.add( Jurassic );
     await stage.Sound.add( Chill );
-    const scale: SizeProperty = {w:200,h:200};
+    const scale: TScale = {w:200,h:200};
     cat = new Lib.Sprite("Cat", {scale: scale});//サイズを２倍にしています
     await cat.Image.add( Cat );
 }
@@ -40,21 +41,21 @@ Pg.setting = async function setting() {
     })
     
     // ネコにさわったらお話する
-    cat.Event.whenFlag( async function*(this:typeof Lib.Sprite){
+    cat.Event.whenFlag( async function*(this:Sprite){
         const NANINANI_TYPE = 'NANINANI';
         const words = `なになに？どうしたの？`;
         const properties = {'pitch': 2, 'volume': 100}
         this.TextToSpeech.setSpeechProperties(NANINANI_TYPE,properties,'male');
         while(true){
             if( this.Sensing.isMouseTouching() ) {
-                this.Looks.say(words);
+                this.Looks.Bubble.say(words);
                 await this.Event.broadcastAndWait('SPEECH', words, NANINANI_TYPE);
                 
                 // 「送って待つ」を使うことで スピーチが終わるまで次のループに進まないため、
                 // 以下の「マウスタッチしている間、待つ」のコードが不要である。
                 // await this.Control.waitWhile( ()=>this.Sensing.isMouseTouching()); 
             }else{
-                this.Looks.say(""); // フキダシを消す
+                this.Looks.Bubble.say(""); // フキダシを消す
             }
             yield;
         }

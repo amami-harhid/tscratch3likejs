@@ -11,7 +11,7 @@ export class StageEx extends Lib.Stage {
     setting() {
 
         this.Event.whenFlag( async function(this:StageEx){ 
-            this.Looks.switchBackdrop(Constants.Jurassic);
+            this.Looks.Backdrop.name = Constants.Jurassic;
             this.Event.broadcast('START');
         });
         /**

@@ -4,9 +4,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample15】端を越えては進めない。"
 
@@ -28,12 +28,16 @@ Pg.preload = async function(this: PlayGround) {
 
 // 事前準備処理
 Pg.prepare = async function prepare() {
+    
     stage = new Lib.Stage();
     await stage.Image.add( Jurassic );
     await stage.Sound.add( Chill );
+
     cat = new Lib.Sprite("Cat");
-    cat.Motion.Move.gotoXY( 0, 0 );
+    cat.Motion.Move.toXY( 0, 0 );
     await cat.Image.add( Cat );
+    // ドラッグ可能とする
+    cat.DragMode.draggable = true;
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -52,7 +56,7 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this: Sprite){
         // (0,0)へ移動する
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
     });
 
     // 進む速さ
@@ -62,7 +66,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 進む
-            this.Motion.Move.moveSteps(CAT_WALK_STEP);
+            this.Motion.Move.steps(CAT_WALK_STEP);
             yield;
         }
     });

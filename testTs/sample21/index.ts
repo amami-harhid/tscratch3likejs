@@ -18,9 +18,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 
 Pg.title = "【Sample21】スピーチ機能：ネコに触る、タッチするとお話しをする"
@@ -58,15 +58,45 @@ Pg.setting = async function setting() {
         }
     })
     
+    type SpeechProp = {
+        type: string,
+        words: string,
+        properties: {pitch:number, volume:number},
+        gender: 'male'|'female',
+        locale: 'ja-JP',
+    }
+    const OTTO:SpeechProp = {
+        type: 'OTTO', 
+        words: `おっと`,
+        properties:{
+            'pitch': 2, 
+            'volume': 100
+        }, 
+        gender:'male',
+        locale:'ja-JP'
+    };
+    const SOKOSOKO:SpeechProp = {
+        type: 'SOKOSOKO', 
+        words: `そこそこ`,
+        properties:{
+            'pitch': 1.7, 
+            'volume': 500
+        }, 
+        gender:'female',
+        locale:'ja-JP'
+    };
+
+    cat.Event.whenFlag( async function(this: Sprite){
+        const p1 = OTTO;
+        this.TextToSpeech.setSpeechProperties(p1.type,p1.properties,p1.gender,p1.locale);
+        const p2 = SOKOSOKO;
+        this.TextToSpeech.setSpeechProperties(p2.type,p2.properties,p2.gender,p2.locale);
+    })
     // ネコにさわったらお話する
     cat.Event.whenFlag( async function*( this: Sprite ){
-        const OTTO_TYPE = 'OTTO';
-        const words = `おっと`;
-        const properties = {'pitch': 2, 'volume': 100}
-        this.TextToSpeech.setSpeechProperties(OTTO_TYPE, properties, 'male');
         while(true){
             if( this.Sensing.isMouseTouching() ) {
-                this.Event.broadcast('SPEAK', words, OTTO_TYPE);
+                this.Event.broadcast('SPEAK', OTTO);
                 
                 // 「送って待つ」ではないので次のループに進ませないように、
                 // 「マウスタッチしない迄待つ」をする。
@@ -77,20 +107,11 @@ Pg.setting = async function setting() {
     });
     // ネコをクリックしたらお話する
     cat.Event.whenClicked(async function( this: Sprite ){
-        const SOKOSOKO_TYPE = "SOKOSOKO";
-        const words = `そこそこ`;
-        const properties = {'pitch': 1.7, 'volume': 500}
-        this.TextToSpeech.setSpeechProperties(SOKOSOKO_TYPE, properties, 'female', 'ja-JP');
-        this.Event.broadcast('SPEAK', words, SOKOSOKO_TYPE);
+        this.Event.broadcast('SPEAK', SOKOSOKO);
     });
     
     /** SPEAK を受信したらスピーチする */
-    cat.Event.whenBroadcastReceived('SPEAK', 
-        async function(this:Sprite, 
-            words:string, 
-            type: string
-        ) {
-            this.TextToSpeech.speech(words, type);
-
-        });
+    cat.Event.whenBroadcastReceived('SPEAK', async function(this:Sprite, prop: SpeechProp) {
+        this.TextToSpeech.speech(prop.words, prop.type);
+    });
 }

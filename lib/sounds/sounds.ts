@@ -4,7 +4,7 @@
 const AudioEngine = require('scratch-audio');
 import { Entity } from '../entity/entity';
 import { SoundLoader } from '../importer/soundLoader';
-import type { IAudioEngine, TSoundPlayerOption } from './IAudioEngine';
+import type { IAudioEngine, TSoundPlayerOption } from '@Type/sound/IAudioEngine';
 import { SoundPlayer } from './soundPlayer';
 
 export class Sounds {

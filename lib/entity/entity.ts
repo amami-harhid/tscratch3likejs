@@ -16,13 +16,14 @@ import { Sounds } from '../sounds/sounds';
 import { Speech } from '../speech/text2Speech';
 import { Threads } from '../controls/threads';
 import { Utils } from '../util/utils';
-import { ImageEffective, SoundOption } from './entityConstant';
+import { ImageEffective } from '../../Type/entity/ImageEffective';
+import { SoundOption } from '../../Type/entity/SoundOption';
 import { PlayGround } from '../playGround';
 import { StageLayering } from './stageLayering';
 import type { TThreadObj } from '../controls/TThreadObj';
-import type { TPosition, TScale } from '../common/typeCommon';
-import type { TEntityEffects, TEntityOptions } from './entityOptions';
-import type { TSoundPlayerOption } from 'lib/sounds/IAudioEngine';
+import type { TPosition, TScale } from '@Type/common/typeCommon';
+import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
+import type { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
 import type { ScratchRenderProperties } from '../render/IRenderWebGL';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
 declare type TBroadcastElementFunc = {
@@ -61,6 +62,8 @@ export class Entity extends EventEmitter {
     public pace: number;
     /** Entityの名前 */
     public name: string;
+    /** スプライト判定 */
+    public isSprite: boolean;
     private layer: StageLayering;
     /** @internal */
     public id: string;
@@ -68,7 +71,8 @@ export class Entity extends EventEmitter {
     public canvas: HTMLCanvasElement;
     /** @internal */
     public flag: HTMLElement|null;
-    protected $_position: TPosition;
+    /** @internal */
+    public $_position: TPosition;
     protected $_scale: TScale;
     protected $_direction: number;
     protected _visible: boolean;
@@ -88,7 +92,7 @@ export class Entity extends EventEmitter {
         super();
         this.id = this._generateUUID();
         this.name = name;
-
+        this.isSprite = false; // スプライトのときTrue, 以外のとき False
         this._libs = Libs.getInstance();
         this.threads = Threads.getInstance();        
         this.playGround = this._libs.p;
@@ -140,13 +144,6 @@ export class Entity extends EventEmitter {
      */
     $isAlive(): boolean {
         // スプライトの場合はオーバーライドしている
-        return true;
-    }
-    /**
-     * Spriteであることを確認する
-     * @returns {boolean} SpriteのときTrue, 他(Stageなど)のときFalse.
-     */
-    isSprite(): boolean {
         return true;
     }
     /**
@@ -333,6 +330,13 @@ export class Entity extends EventEmitter {
     //     const soundData = await this.sounds.importSound( sound );
     //     return soundData;
     // }
+    /** 
+     * @abstract
+     * @internal
+     */
+    public async $addSound(soundName: string): Promise<void> {
+
+    }
     protected async _addSound(name:string, soundData:Uint8Array<ArrayBuffer>, options={}) {
         if(name == undefined || typeof name != "string"){
             throw "【Sound.add】正しい name を指定してください"
@@ -374,7 +378,8 @@ export class Entity extends EventEmitter {
             this.sounds.nextSound();
         }
     }
-    protected $soundPlay(name) {
+    /** @internal */
+    public $soundPlay(name: string) : void {
         if(this.sounds) {
             if( name ) {
                 this.$soundSwitch({name:name});
@@ -384,7 +389,8 @@ export class Entity extends EventEmitter {
         } 
         throw 'sounds undefined error';
     }
-    protected async $setOption(key, value) {
+    /** @internal */
+    public async $setOption(key:SoundOption, value: number) {
         if( key == SoundOption.VOLUME ){
             this.$setSoundVolume(value);
         }else if(key == SoundOption.PITCH ){
@@ -396,7 +402,8 @@ export class Entity extends EventEmitter {
         // FPS分待つことで解消させる
         await this._libs.wait(1000/33*2);
     }
-    protected async $clearSoundEffect() {
+    /** @internal */
+    public async $clearSoundEffect() {
         this.$setSoundVolume(100);
         this.$setSoundPitch(0);
         await this._libs.wait(1000/33*2);
@@ -415,7 +422,13 @@ export class Entity extends EventEmitter {
         }
         return 0;
     }
-    protected async $changeOptionValue(key, value) {
+    /**
+     * @internal
+     * @param key 
+     * @param value 
+     * @returns 
+     */
+    public async $changeOptionValue(key:SoundOption, value:number):Promise<void> {
         if(this.sounds ){
             if( key == SoundOption.VOLUME ){
                 const volume = this.sounds.volume;
@@ -464,7 +477,8 @@ export class Entity extends EventEmitter {
         } 
         throw 'sounds undefined error';
     }
-    protected $soundStop() {
+    /** @internal */
+    public $soundStop() {
         if ( this.sounds ){
             this.sounds.stop();
         }
@@ -479,7 +493,12 @@ export class Entity extends EventEmitter {
     $speechStopImmediately() {
         this.emit(this.SOUND_FORCE_STOP); // ---> スピーチを停止する Soundの中で。
     }
-    protected async $startSoundUntilDone(name) {
+    /**
+     * @internal
+     * @param name 
+     * @returns 
+     */
+    public async $startSoundUntilDone(name) {
         if ( this.sounds ) {
             if(name){
                 this.$soundSwitch({name:name});
@@ -575,14 +594,14 @@ export class Entity extends EventEmitter {
      * マウスタッチしていないことを判定する
      * @returns {boolean} - 非マウスタッチ
      */
-    protected $isNotMouseTouching() {
+    public $isNotMouseTouching(): boolean {
         return !(this.$isMouseTouching());
     }
     /**
      * 自分自身がマウスタッチしているかを判定する
      * @returns {boolean} - マウスタッチ中
      */
-    protected $isMouseTouching() {
+    public $isMouseTouching(): boolean {
         if(this.playGround.render){
             const mouseX = this.playGround.stage.mouse.x +1; // +1 は暫定、理由不明
             const mouseY = this.playGround.stage.mouse.y +1;
@@ -636,7 +655,8 @@ export class Entity extends EventEmitter {
         }
         return false;
     }
-    protected $getTouchingTarget(targets: Entity[]): Entity[] {
+    /** @internal */
+    public $getTouchingTarget(targets: Entity[]): Entity[] {
         const src = this;
         const touchingTragets: Entity[] = []
         if(Array.isArray(targets)){
@@ -657,21 +677,23 @@ export class Entity extends EventEmitter {
         return touchingTragets;
     }
     /**
+     * @internal
      * 指定したEntity配列の中で 自身に触れているものがあるかをチェックする
      * @param targets {Entity[]} - チェック対象の配列
      * @returns {boolean} - 触れていればTrue.
      */
-    protected $isTouchingTarget(targets: Entity[]): boolean {
+    public $isTouchingTarget(targets: Entity[]): boolean {
         const src = this;
         const touching = this.$isTouchingTargetToTarget(src, targets);
         return touching;
     }
     /**
+     * @internal
      * 指定した色に触れているかを判定する
      * @param {string} targetRgb #始まりのカラー文字列
      * @returns {Promise.<boolean>} 色にタッチしたとき true
      */
-    protected async $isTouchingColor(targetRgb: string): Promise<boolean> {
+    public async $isTouchingColor(targetRgb: string): Promise<boolean> {
         if(this.render && this.render.renderer && targetRgb &&
             typeof targetRgb === 'string' && targetRgb.substring(0, 1) === '#'
         ){
@@ -682,12 +704,13 @@ export class Entity extends EventEmitter {
         return false;
     }
     /**
+     * @internal
      * 自身の色(maskRgb)が指定色(targetRgb)に触れているかを判定する
-     * @param {Array.<number>} targetRgb [r,g,b] 0 - 255
-     * @param {Array.<number>} maskRgb 
+     * @param {string} targetRgb - 先頭#
+     * @param {string} maskRgb - 先頭#
      * @returns 
      */
-    protected async $colorIsTouchingColor(targetRgb, maskRgb): Promise<boolean> {
+    public async $colorIsTouchingColor(targetRgb:string, maskRgb:string): Promise<boolean> {
         if(this.render && this.render.renderer && 
             targetRgb && typeof targetRgb === 'string' && targetRgb.substring(0, 1) === '#' &&
             maskRgb && typeof maskRgb === 'string' && maskRgb.substring(0, 1) === '#'
@@ -701,8 +724,8 @@ export class Entity extends EventEmitter {
         }
         return false;
     }
-
-    protected $broadcast(messageId, ...args ) {
+    /** @internal */
+    public $broadcast(messageId:string, ...args:any[] ): void {
         const runtime = this.playGround.runtime;
         if(runtime){
             const eventId = `message_${messageId}`;
@@ -712,7 +735,8 @@ export class Entity extends EventEmitter {
             runtime.emit(eventId, this.modules, sendTargets, ...args);    
         }
     }
-    protected async $broadcastAndWait(messageId, ...args ) {
+    /** @internal */
+    public async $broadcastAndWait(messageId: string, ...args: any[] ): Promise<void> {
         const wait = this._libs.wait;
         const runtime = this.playGround.runtime;
         if(runtime){
@@ -784,6 +808,7 @@ export class Entity extends EventEmitter {
     // }
 
     /**
+     * @internal
      * messageId を使い EventEmitter.on を宣言する
      * （他方からemitされたとき受け付け func を実行するため）
      * なお、本メソッドが呼び出される都度、funcを配列に蓄積し、
@@ -791,7 +816,7 @@ export class Entity extends EventEmitter {
      * @param {*} messageId 
      * @param {*} func 
      */
-    protected $whenBroadcastReceived(messageId: string, func: CallableFunction){
+    public $whenBroadcastReceived(messageId: string, func: CallableFunction){
         //const me = this;
         const me = this.getProxyForHat();
         const threadId = me._generateUUID();
@@ -908,11 +933,12 @@ export class Entity extends EventEmitter {
         this.$broadcast(messageId, backdropName);
     }
     /**
+     * @internal
      * 背景が〇〇になったときの動作
      * @param {*} backdropName 
      * @param {*} func 
      */
-    protected $whenBackdropSwitches(backdropName: string, func: CallableFunction) {
+    public $whenBackdropSwitches(backdropName: string, func: CallableFunction) {
         // Stage#nextBackDrop(), Stage#switchBackDrop() にて
         // 変更前のbackdropName と 変更後のbackdropName を比較し
         // 異なる場合、変更後のbackdropNameを使ったメッセージID で emit する
@@ -930,7 +956,8 @@ export class Entity extends EventEmitter {
         //console.log('proxy.stop_this_script_switch='+proxy.stop_this_script_switch)
         return proxy;
     }
-    protected async $whenFlag (func) {
+    /** @internal */
+    public $whenFlag (func: CallableFunction): void {
         //const process = Process.default;
         const me = this;
         const flag = S3Element.getControlGreenFlag();
@@ -949,8 +976,8 @@ export class Entity extends EventEmitter {
         return proxy;
 
     }
-
-    protected $whenKeyPressed( key, func ) {
+    /** @internal */
+    public $whenKeyPressed( key: string, func: CallableFunction ): void {
         const me = this;
         const p = this.playGround;
         const runtime = p.runtime;
@@ -975,11 +1002,12 @@ export class Entity extends EventEmitter {
         }
     }
     /**
+     * @internal
      * whenClickedが二重に呼ばれたときは
      * 前回動作しているスレッドを停止させる。
-     * @param {function} func 
+     * @param {CallableFunction} func 
      */
-    protected $whenClicked (func) {
+    public $whenClicked (func: CallableFunction) {
         // 同じオブジェクトで前回クリックされているとき
         // 前回のクリックで起動したものを止める。
         const p = this.playGround;
@@ -1295,11 +1323,12 @@ export class Entity extends EventEmitter {
 
     }
     /**
+     * @internal
      * ポジションプロパティを更新する
      * @param {number} x 
      * @param {number} y 
      */
-    protected $setXY(x, y) {
+    public $setXY(x:number, y:number) : void {
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             const _position = _renderer.getFencedPositionOfDrawable(this.drawableID, [x, y]);
@@ -1378,18 +1407,20 @@ export class Entity extends EventEmitter {
             this.$_position.y += y;
         }
     }
-    protected $setSpeechProperties(type:string, properties: TSoundPlayerOption, gender='male', locale='ja-JP'){
+    /** @internal */
+    public $setSpeechProperties(type:string, properties: TSoundPlayerOption, gender='male', locale='ja-JP'){
         const _properties = (properties)? properties : {};
         const speech = Speech.getInstance();
         speech.setSpeechProperties(type, gender, locale, _properties);
     }
-    protected $speech(words:string, type:string) {
+    /** @internal */
+    public $speech(words:string, type:string) {
         const speech = Speech.getInstance();
         speech.speech(this, words, type);
 
     }
-
-    protected async $speechAndWait(words:string, type:string) {
+    /** @internal */
+    public async $speechAndWait(words:string, type:string) {
         const speech = Speech.getInstance();
         await speech.speechAndWait(this, words, type);
     }
@@ -1412,7 +1443,7 @@ export class Entity extends EventEmitter {
     /**
      * Mouse情報
      */
-    get Mouse() {
+    get Mouse() : {x:number, y:number} {
         const me = this;
         const mousePosition = { 
             "x" : 0,
@@ -1463,14 +1494,16 @@ export class Entity extends EventEmitter {
         await Loop.repeatUntil(condition, func, this);
     }
     /**
+     * @internal
      * キーが押されている判定
      * @param {string} key 
      * @returns {boolean} 押されている
      */
-    protected $isKeyDown( key: string ): boolean {
+    $isKeyDown( key: string ): boolean {
         return this._libs.keyIsDown(key);
     }
     /**
+     * @internal
      * キーが押されていない判定
      * @param {string} key 
      * @returns {boolean} 押されていない
@@ -1486,15 +1519,16 @@ export class Entity extends EventEmitter {
         const mousePosition = this._libs.mousePosition;
         return mousePosition.y;
     }
-
-    protected $resetTimer() {
+    /** @internal */
+    public $resetTimer() {
         this._timer = performance.now();
     }
-    protected get $timer() {
+    /** @internal */
+    public get $timer() {
         return performance.now() - this._timer;
     }
-
-    protected $isMouseDown() {
+    /** @internal */
+    $isMouseDown() {
         return this._libs.mouseIsPressed();
     }
     /**

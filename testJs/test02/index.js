@@ -50,18 +50,18 @@ Pg.prepare = async function prepare() {
     paddle = new Lib.Sprite("paddle");
     //paddle.visible = false;
     await paddle.Image.add( Paddle );
-    paddle.Motion.Move.gotoXY(0, -140);
+    paddle.Motion.Move.toXY(0, -140);
 
     block = new Lib.Sprite( "block");
     await block.Image.add( Block );
     await block.Sound.add(Pew);
-    block.Motion.Move.gotoXY(-220,-150);
+    block.Motion.Move.toXY(-220,-150);
     block.Looks.Size.scale = {w: 20,h: 20};
     block.Looks.hide();
 
     line = new Lib.Sprite( "line" );
     await line.Image.add( Line );
-    line.Motion.Move.gotoXY(0, -180);
+    line.Motion.Move.toXY(0, -180);
 
     title = new Lib.Sprite("title");
     await title.Image.add(YouWon);
@@ -80,7 +80,7 @@ Pg.setting = async function setting() {
     });
     // 緑の旗が押されたときの動作
     ball.Event.whenFlag(async function*(){
-        this.Motion.Move.gotoXY(0,-100);
+        this.Motion.Move.toXY(0,-100);
         this.Looks.Size.scale = {w: 100, h: 50};
     });
     
@@ -89,8 +89,8 @@ Pg.setting = async function setting() {
     // メッセージ(Start)を受け取ったときの動作
     ball.Event.whenBroadcastReceived('Start', async function*(){
         score = 0;
-        this.Motion.Point.pointInDirection(InitDirection);
-        this.Motion.Move.gotoXY(0,-100);
+        this.Motion.Direction.degree = InitDirection;
+        this.Motion.Move.toXY(0,-50);
         // フキダシを出す
         //this.Looks.say('パドルはマウスで動くよ。何かのキーを押すと始まるよ');
         // 何かキーが押されるまで待つ
@@ -98,7 +98,7 @@ Pg.setting = async function setting() {
         // フキダシを消す
         //this.Looks.say('');
         for(;;){
-            this.Motion.Move.moveSteps(BallSpeed);
+            this.Motion.Move.steps(BallSpeed);
             this.Motion.Move.ifOnEdgeBounds();
             if(this.Sensing.isTouchingEdge()){
                 const randomDegree = Lib.getRandomValueInRange(-25, 25);
@@ -110,10 +110,10 @@ Pg.setting = async function setting() {
     // メッセージ(Start)を受け取ったときの動作
     ball.Event.whenBroadcastReceived('Start', async function*(){
         for(;;){
-            this.Motion.Direction.degree +=5;
-            if( this.Sensing.isTouchingToSprite(paddle)){
+            this.Motion.Direction.degree +=1;
+            if( this.Sensing.isTouchingToSprites([paddle])){
                 this.Motion.Direction.degree += Lib.getRandomValueInRange(-2, 2)+180;
-                this.Motion.Move.moveSteps(BallSpeed*2);
+                this.Motion.Move.steps(BallSpeed*2);
                 await this.Control.wait(0.2); // 0.2秒待つ
             }
             yield;
@@ -125,9 +125,9 @@ Pg.setting = async function setting() {
     });
     // 緑の旗が押されたときの動作
     line.Event.whenFlag(async function*(){
-        this.Motion.Move.gotoXY(0, -180);
+        this.Motion.Move.toXY(0, -180);
         for(;;){
-            if( this.Sensing.isTouchingToSprite(ball)){
+            if( this.Sensing.isTouchingToSprites([ball])){
                 // Ball に触れたとき
                 this.Event.broadcast(GameOver);
                 // このスクリプトを止める
@@ -139,14 +139,14 @@ Pg.setting = async function setting() {
     });
     // 緑の旗が押されたときの動作
     paddle.Event.whenFlag(async function(){
-        this.Motion.Move.gotoXY(0, -140);
+        this.Motion.Move.toXY(0, -140);
     })
     // メッセージ(Start)を受け取ったときの動作
     paddle.Event.whenBroadcastReceived('Start', async function*(){
         while(true){
             const mousePos = Lib.mousePosition;
-            const selfPosition = this.Motion.getCurrentPosition();
-            this.Motion.Move.gotoXY(mousePos.x, selfPosition.y);
+            const selfPosition = this.Motion.Position.xy;
+            this.Motion.Move.toXY(mousePos.x, selfPosition.y);
             yield;
         }
     });
@@ -161,10 +161,10 @@ Pg.setting = async function setting() {
         this.Control.removeAllClones();
         this.Looks.hide();
         this.Looks.Size.scale = {w:50, h:50};
-        this.Motion.Move.gotoXY(-220,180);
+        this.Motion.Move.toXY(-220,180);
 
-        const pos = this.Motion.getCurrentPosition();
-        const dimension = this.Looks.drawingDimensions();
+        const pos = this.Motion.Position.xy;
+        const dimension = this.Looks.Size.drawingSize;
         blockCount = 0;
         for(let y=0; y<3; y++){
             for(let x=0; x<10; x++){
@@ -181,7 +181,7 @@ Pg.setting = async function setting() {
     block.Control.whenCloned(async function*(){
         this.Looks.show();
         for(;;){
-            if(this.Control.isAlive() && this.Sensing.isTouchingToSprite(ball)){
+            if(this.Control.isAlive() && this.Sensing.isTouchingToSprites([ball])){
                 //drawable.updateVisible(false);
                 //this.update();
                 score += 1;

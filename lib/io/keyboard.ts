@@ -3,6 +3,7 @@
  */
 import { Cast } from '../util/cast';
 import { Runtime } from '../engine/runtime';
+import { IKeyboard } from '@Type/io/IKeyboard';
 
 declare type POST_DATA = {
     isDown: boolean,
@@ -13,47 +14,25 @@ declare type POST_DATA = {
  * Names used internally for keys used in scratch, also known as "scratch keys".
  * @enum {string}
  */
-export const KEY_NAME = {
-    SPACE: 'Space',
-    LEFT: 'LeftArrow',
-    UP: 'UpArrow',
-    RIGHT: 'RightArrow',
-    DOWN: 'DownArrow',
-    ENTER: 'Enter',
-    ESCAPE: 'Escape',
+export enum KEYBOARD_KEYS {
+    SPACE = 'Space',
+    LEFT = 'LeftArrow',
+    UP = 'UpArrow',
+    RIGHT = 'RightArrow',
+    DOWN = 'DownArrow',
+    ENTER = 'Enter',
+    ESCAPE = 'Escape',
 };
 
 /**
  * An array of the names of scratch keys.
  * @type {string[]}
  */
-const KEY_NAME_LIST:string[] = Object.keys(KEY_NAME).map(name => KEY_NAME[name]);
+const KEY_NAME_LIST:string[] = Object.keys(KEYBOARD_KEYS).map(name => KEYBOARD_KEYS[name]);
 
-export class Keyboard {
-    /** スペースキー */
-    static get SPACE() :string{
-        return KEY_NAME.SPACE;
-    }
-    /** 左矢印キー */
-    static get LEFT() :string{
-        return KEY_NAME.LEFT;
-    }
-    /** 右矢印キー */
-    static get RIGHT() :string{
-        return KEY_NAME.RIGHT;
-    }
-    /** 上向き矢印キー */
-    static get UP() :string{
-        return KEY_NAME.UP;
-    }
-    /** 下向き矢印キー */
-    static get DOWN() :string{
-        return KEY_NAME.DOWN;
-    }
-    /** エスケープキー */
-    static get ESCAPE() :string{
-        return KEY_NAME.ESCAPE;
-    }
+
+
+export class Keyboard implements IKeyboard {
     private _keysPressed: string[];
     private _runtime: Runtime;
     private _spaceStopPropagation: boolean;
@@ -107,17 +86,17 @@ export class Keyboard {
         // Convert space and arrow keys to their Scratch key names.
         //console.log('keyString', keyString);
         switch (keyString) {
-        case ' ': return KEY_NAME.SPACE;
-        case 'ArrowLeft':return KEY_NAME.LEFT;
-        case 'Left': return KEY_NAME.LEFT;
-        case 'ArrowUp':return KEY_NAME.UP;
-        case 'Up': return KEY_NAME.UP;
-        case 'Right': return KEY_NAME.RIGHT;
-        case 'ArrowRight': return KEY_NAME.RIGHT;
-        case 'Down': return KEY_NAME.DOWN;
-        case 'ArrowDown': return KEY_NAME.DOWN;
-        case 'Enter': return KEY_NAME.ENTER;
-        case 'Escape': return KEY_NAME.ESCAPE;
+        case ' ': return KEYBOARD_KEYS.SPACE;
+        case 'ArrowLeft':return KEYBOARD_KEYS.LEFT;
+        case 'Left': return KEYBOARD_KEYS.LEFT;
+        case 'ArrowUp':return KEYBOARD_KEYS.UP;
+        case 'Up': return KEYBOARD_KEYS.UP;
+        case 'Right': return KEYBOARD_KEYS.RIGHT;
+        case 'ArrowRight': return KEYBOARD_KEYS.RIGHT;
+        case 'Down': return KEYBOARD_KEYS.DOWN;
+        case 'ArrowDown': return KEYBOARD_KEYS.DOWN;
+        case 'Enter': return KEYBOARD_KEYS.ENTER;
+        case 'Escape': return KEYBOARD_KEYS.ESCAPE;
         }
         // 上記以外の ２文字以上のキーは空文字に変える
         if (keyString.length > 1) {
@@ -142,11 +121,11 @@ export class Keyboard {
                 return String.fromCharCode(keyArg);
             }
             switch (keyArg) {
-            case 32: return KEY_NAME.SPACE;
-            case 37: return KEY_NAME.LEFT;
-            case 38: return KEY_NAME.UP;
-            case 39: return KEY_NAME.RIGHT;
-            case 40: return KEY_NAME.DOWN;
+            case 32: return KEYBOARD_KEYS.SPACE;
+            case 37: return KEYBOARD_KEYS.LEFT;
+            case 38: return KEYBOARD_KEYS.UP;
+            case 39: return KEYBOARD_KEYS.RIGHT;
+            case 40: return KEYBOARD_KEYS.DOWN;
             }
         }
 
@@ -164,7 +143,7 @@ export class Keyboard {
 
         // Check for the space character.
         if (keyArg === ' ') {
-            return KEY_NAME.SPACE;
+            return KEYBOARD_KEYS.SPACE;
         }
 
         return keyArg.toUpperCase();

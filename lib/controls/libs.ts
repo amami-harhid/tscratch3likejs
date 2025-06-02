@@ -6,21 +6,29 @@ import { Cast } from '../util/cast';
 import { Controls, Loop } from './controls';
 import { Costumes } from '../entity/costumes';
 import { Env } from '../env';
+import type {TEnv} from '@Type/common/env';
 import { EventEmitter } from "events";
 import { FunctionChecker } from '../util/functionChecker';
 import { Keyboard } from '../io/keyboard';
-import { ImageEffective, SoundOption } from '../entity/entityConstant';
 import { MathUtil } from '../util/math-util';
 import { Monitors } from '../monitor/monitors';
 import { PlayGround } from '../playGround';
 import { Render } from '../render/render';
-import { RotationStyle } from '../entity/rotationStyle';
 import { Sounds } from '../sounds/sounds';
 import { Sprite } from '../entity/sprite';
 import { Stage } from '../entity/stage';
 import { StageLayering } from '../entity/stageLayering';
 import { SVGParser } from '../svgParser/parser';
 import { Utils } from '../util/utils';
+import { IRotationStyle, RotationStyle } from '../../Type/entity/RotationStyle';
+import { IImageEffective, ImageEffective } from '../../Type/entity/ImageEffective';
+import { ISoundOption, SoundOption } from '../../Type/entity/SoundOption';
+import { KEYBOARD_KEYS } from '../../Type/io/IKeyboard';
+import { Point } from '@Type/common/point';
+import { SMonitors } from '@Type/monitors';
+import { ISprite } from '@Type/sprite';
+import { IEntitySound } from '@Type/entity/IEntitySound';
+//import { ImageEffective, SoundOption } from '../_type/entity/CEntityConstant';
 export class Libs {
 
     /** @internal */
@@ -39,8 +47,7 @@ export class Libs {
     get Controls () {
         return Controls;
     }
-    /** @internal */
-    get Env () {
+    get Env (): TEnv {
         return Env;
     }
     /** @internal */
@@ -52,26 +59,22 @@ export class Libs {
         return FunctionChecker;
     }
     /** @internal */
-    get Keyboard () {
-        return Keyboard;
+    get Keyboard (): typeof KEYBOARD_KEYS {
+        return KEYBOARD_KEYS;
     }
-    get ImageEffective () {
+    get ImageEffective (): typeof ImageEffective {
         return ImageEffective;
     }
-    get SoundOption () {
+    get SoundOption () : typeof SoundOption{
         return SoundOption;
     }
-    get RotationStyle () {
+    get RotationStyle () : typeof RotationStyle{
         return RotationStyle;
-    }
-    /** @internal */
-    get Loop () {
-        return Loop;
     }
     get Monitors () {
         return Monitors;
     }
-    get MathUtil () {
+    get MathUtil () : MathUtil{
         return MathUtil;
     }
     /** @internal */
@@ -145,7 +148,7 @@ export class Libs {
     /**
      * mousePosition ( on canvas )
      */
-    get mousePosition () {
+    get mousePosition () : Point {
         const rate = this.renderRate;
         if(this.p.canvas){
             const _mouseX = (this.p.stage.mouse.x - this.p.canvas.width/2 ) * rate.x;

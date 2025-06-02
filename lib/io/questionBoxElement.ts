@@ -86,7 +86,7 @@ export class QuestionBoxElement extends EventEmitter {
      * @returns {boolean} Stageの場合 True
      */
     static isStage(entity: Entity) : boolean {
-        if(entity['isSprite'] &&  entity.isSprite() === false ){
+        if(entity.isSprite == false ){
             return true;
         }
         return false;
@@ -97,7 +97,7 @@ export class QuestionBoxElement extends EventEmitter {
      * @returns Spriteの場合 True
      */
     static isSprite(entity: Entity) {
-        if(entity['isSprite'] &&  entity.isSprite() === true ){
+        if(entity.isSprite === true ){
             return true;
         }
         return false;
@@ -148,7 +148,7 @@ export class QuestionBoxElement extends EventEmitter {
             }else if( QuestionBoxElement.isSprite(entity) ){
                 // スプライトの場合
                 const sprite = entity as Sprite;
-                sprite.Looks.say(text);
+                sprite.Looks.Bubble.say(text);
             }    
         }
 
@@ -216,7 +216,7 @@ export class QuestionBoxElement extends EventEmitter {
         if( entity && QuestionBoxElement.isSprite(entity)){
             // スプライトの場合、フキダシを消す
             const sprite = entity as Sprite;
-            sprite.Looks.say('');
+            sprite.Looks.Bubble.say('');
         }
         const _stageOverlays = document.getElementById(StageOverlays);
         if(_stageOverlays){

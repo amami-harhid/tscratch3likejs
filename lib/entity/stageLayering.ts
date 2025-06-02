@@ -1,3 +1,6 @@
+/**
+ * レイアー
+ */
 export class StageLayering {
     static get BACKGROUND_LAYER () {
         return 'background';

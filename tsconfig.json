@@ -1,5 +1,5 @@
 {
-  "include": ["./test/*.ts", "./src/**/*.ts","./lib/**/*/ts", "./types/**/index.d.ts"],
+  "include": ["./test/*.ts", "./src/**/*.ts","./lib/**/*.ts", "./types/**/index.d.ts", "./Type/**/*.ts2"],
   "exclude": ["./node_modules/*"],
   "compilerOptions": {
     "target": "esnext",         /* es2018,es2019,es2020,esnext が適している */
@@ -7,7 +7,8 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@typeJS/*": ["types/*"],
+      "@Lib/*": ["lib/*"],
+      "@Type/*": ["Type/*"],
     },
     "sourceMap": true,
     "importHelpers": true,

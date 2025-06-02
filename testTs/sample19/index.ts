@@ -4,16 +4,19 @@
  * 吹き出し(SAY, THINK)
  */
 
-import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
-
+import {Pg, Lib, Env} from "../../s3lib-importer";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 Pg.title = "【Sample19】いろんな文字列でフキダシ(言う, 思う)。20秒間。"
+
+// Bubbleスケールがスプライトにリンクする
+Env.bubbleScaleLinkedToSprite = true;
 
 const Jurassic:string = "Jurassic";
 const Cat1:string = "Cat1";
 const Cat2:string = "Cat2";
+
 
 let stage: Stage;
 let cat: Sprite;
@@ -32,18 +35,19 @@ Pg.preload = async function(this: PlayGround) {
 
 // 事前準備処理
 Pg.prepare = async function prepare() {
+
     stage = new Lib.Stage();
     await stage.Image.add( Jurassic );
 
     cat = new Lib.Sprite("Cat");
     await cat.Image.add( Cat1 );
     await cat.Image.add( Cat2 );
-    cat.Motion.Point.pointInDirection(75);
+    cat.Motion.Direction.degree = 75;
     cat2 = new Lib.Sprite("Cat2");
     await cat2.Image.add( Cat1 );
     await cat2.Image.add( Cat2 );
-    cat2.Motion.Point.pointInDirection(115);
-    cat2.Motion.Move.gotoXY( -20, -120 );
+    cat2.Motion.Direction.degree = 115;
+    cat2.Motion.Move.toXY( -20, -120 );
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -62,15 +66,15 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function*( this: Sprite ) {
         // 位置の設定
-        this.Motion.Move.gotoXY( 0, 0 );
+        this.Motion.Move.toXY( 0, 0 );
         // 向きの設定
-        this.Motion.Point.pointInDirection(75);
+        this.Motion.Direction.degree = 75;
         // ずっと繰り返す
         for(;;){
             // もし端に着いたら跳ね返る
             this.Motion.Move.ifOnEdgeBounds();
             // 進む
-            this.Motion.Move.moveSteps(WALK_STEP);
+            this.Motion.Move.steps(WALK_STEP);
             yield;
         }
     });
@@ -82,7 +86,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // 次のコスチュームに切り替える
-            this.Looks.nextCostume();
+            this.Looks.Costume.next();
             // ちょっとだけ待つ
             await this.Control.wait(0.1)
             yield;
@@ -135,17 +139,17 @@ Pg.setting = async function setting() {
             }
             if( counter == 0 ) {
                 // 言う
-                this.Looks.say(text);
+                this.Looks.Bubble.say(text);
 
             }else{
                 // 思う
-                this.Looks.think(text);
+                this.Looks.Bubble.think(text);
 
             }
             // フキダシが終わりになったら
             if( bubble.exit === true) {
                 // 空文字で「言う」( ==> フキダシ消える )
-                this.Looks.say();
+                this.Looks.Bubble.say();
                 // 他のスクリプトを止める
                 this.Control.stopOtherScripts();
                 // このスクリプトを止める
@@ -159,15 +163,15 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ネコ２)
     cat2.Event.whenFlag( async function*( this: Sprite ) {
         // 位置の設定
-        this.Motion.Move.gotoXY( -20, -120 );
+        this.Motion.Move.toXY( -20, -120 );
         // 向きの設定
-        this.Motion.Point.pointInDirection( 115 );
+        this.Motion.Direction.degree = 115;
         // ずっと繰り返す
         for(;;){
             // もし端に着いたら跳ね返る
             this.Motion.Move.ifOnEdgeBounds();
             // 進む
-            this.Motion.Move.moveSteps(WALK_STEP);
+            this.Motion.Move.steps(WALK_STEP);
             yield;
         }
     });
@@ -180,11 +184,11 @@ Pg.setting = async function setting() {
             // フキダシテキスト配列からランダムな要素を取り出す
             const text = bubbleTextArr2[ Math.ceil(Math.random() * bubbleTextArr2.length) - 1 ]
             // 「思う」
-            this.Looks.think(text, {scale:scale});
+            this.Looks.Bubble.think(text, {scale:scale});
             // フキダシ 終わりのとき
             if( bubble2.exit === true) {
                 // 空文字で「言う」( ==> フキダシ消える )
-                this.Looks.say();
+                this.Looks.Bubble.say();
                 // 他のスクリプトを止める
                 this.Control.stopOtherScripts();
                 // このスクリプトを止める

@@ -15,6 +15,8 @@
  * (5) 【Error】xxx.Control.～ の awaitを必要とするメソッドに awaitを強制する
  * (6) 【Error】HatEventメソッドの引数とするFunctionには asyncをつける
  * 
+ * ASTチェックは 次で実施している
+ * https://astexplorer.net/
  */
 
 import globals from "globals";
@@ -26,6 +28,7 @@ import {awaitEventRulesPlugin } from "./eslintAwaitEventRulePlugin.js";
 import {awaitExtensionsRulesPlugin} from "./eslintAwaitExtensionsRulePlugin.js";
 import {awaitImageRulesPlugin} from "./eslintAwaitImageRulePlugin.js";
 import {awaitLooksRulesPlugin} from "./eslintAwaitLooksRulePlugin.js";
+import {awaitMoveRulesPlugin} from "./eslintAwaitMoveRulePlugin.js";
 import {awaitLibRulesPlugin} from "./eslintAwaitLibRulePlugin.js";
 import {awaitSoundRulesPlugin} from "./eslintAwaitSoundRulePlugin.js";
 import {awaitSensingRulesPlugin} from "./eslintAwaitSensingRulePlugin.js";
@@ -52,6 +55,7 @@ const eslint_S3_config = [
             awaitExtensions: awaitExtensionsRulesPlugin,
             awaitImage : awaitImageRulesPlugin,
             awaitLooks : awaitLooksRulesPlugin,
+            awaitMove: awaitMoveRulesPlugin,
             awaitLib : awaitLibRulesPlugin,
             awaitSound : awaitSoundRulesPlugin,
             awaitSensing : awaitSensingRulesPlugin,
@@ -90,6 +94,7 @@ const eslint_S3_config = [
             'awaitImage/await-image-plugin': 'error',
             'awaitLib/await-lib-plugin': 'error',
             'awaitLooks/await-looks-plugin': 'error',
+            'awaitMove/await-move-plugin': 'error',
             'awaitSound/await-sound-plugin': 'error',
             'awaitSensing/await-sensing-plugin': 'error',
             'eventAsync/event-async-plugin': 'error',

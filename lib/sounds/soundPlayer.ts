@@ -4,7 +4,8 @@
 import type { 
     IScratchSoundPlayer, 
     TSoundPlayerOption, 
-    TEffectChain } from "./IAudioEngine";
+    TEffectChain } from "@Type/sound/IAudioEngine";
+
 export class SoundPlayer {
     private _name : string;
     private _soundPlayer: IScratchSoundPlayer;
@@ -79,7 +80,7 @@ export class SoundPlayer {
         // --- replace finished.
         // --- when sounds stoped, change property(isPlaying) to false
         this._soundPlayer.finished = function(){
-            return new Promise(resolve=>{
+            return new Promise<void>(resolve=>{
                 __soundPlayer.once('stop', ()=>{
                         __soundPlayer.isPlaying = false;
                         resolve();

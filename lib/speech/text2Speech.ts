@@ -1,10 +1,10 @@
 /**
  * 
  */
-import { Entity } from 'lib/entity/entity';
+import { Entity } from '../entity/entity';
 import { SoundLoader } from '../importer/soundLoader';
 import { Sounds } from '../sounds/sounds';
-import { TSoundPlayerOption } from '../sounds/IAudioEngine';
+import { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
 
 //const SERVER = 'https://synthesis-service.scratch.mit.edu';
 

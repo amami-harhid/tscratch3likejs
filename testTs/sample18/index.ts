@@ -7,9 +7,9 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample18】左右矢印でシップが左右に動き、スペースキーで弾を発射。"
 
@@ -67,9 +67,9 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(十字)
     cross.Event.whenFlag(async function*( this: Sprite ){
         // 向き初期化
-        this.Motion.Point.pointInDirection( 90 );
+        this.Motion.Direction.degree = 90;
         // 黒いコスチューム
-        this.Looks.switchCostume(Cross01);
+        this.Looks.Costume.name = Cross01;
         // サイズを 100%にする
         this.Looks.Size.scale = {w: 100, h: 100};
         // 座標x を ステージの真ん中にする 
@@ -90,11 +90,11 @@ Pg.setting = async function setting() {
         for(;;){
             // キー(右矢印)が押されているとき
             if(Lib.keyIsDown(Lib.Keyboard.RIGHT)){
-                this.Motion.Move.moveSteps(MoveSteps);
+                this.Motion.Move.steps(MoveSteps);
             }
             // キー(左矢印)が押されているとき
             if(Lib.keyIsDown(Lib.Keyboard.LEFT)){
-                this.Motion.Move.moveSteps(-MoveSteps);
+                this.Motion.Move.steps(-MoveSteps);
             }
             yield;
         }
@@ -121,13 +121,13 @@ Pg.setting = async function setting() {
         // サイズを 20%にしておく
         this.Looks.Size.scale = {w: 20, h: 20};
         // 上方向にしておく
-        this.Motion.Point.pointInDirection(0);
+        this.Motion.Direction.degree = 0;
         // スプライトの大きさを取得（高さのみ）
-        const {h} = this.Looks.drawingDimensions();
+        const {h} = this.Looks.Size.drawingSize;
         // Y座標を 高さの半分だけ変える
         this.Motion.Position.y += h / 2;
         // 次のコスチュームにする（本体とは別のコスチュームにする）
-        this.Looks.nextCostume();
+        this.Looks.Costume.next();
         // 表示する
         this.Looks.show();
     });

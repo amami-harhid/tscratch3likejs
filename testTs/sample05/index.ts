@@ -2,9 +2,9 @@
  * Sample05 旗クリックでスプライトを表示する
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample05】旗クリックでスプライトを表示する";
 
@@ -15,7 +15,7 @@ let stage: Stage;
 let cat: Sprite;
 
 // 事前ロード処理
-Pg.preload = function(this: PlayGround) {
+Pg.preload = async function(this: PlayGround) {
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Jurassic.svg', Jurassic);
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/cat.svg', Cat);
 }
@@ -28,7 +28,7 @@ Pg.prepare = async function() {
     cat.Looks.hide();
 }
 // イベント定義処理
-Pg.setting = function() {
+Pg.setting = async function() {
 
     // 旗が押されたときの動作(ネコ)
     cat.Event.whenFlag( async function(this:Sprite) {

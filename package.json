@@ -1,6 +1,6 @@
 {
   "name": "@tscratch3/tscratch3likejs",
-  "version": "1.0.0-alpha.24",
+  "version": "1.0.0-beta.01",
   "description": "scratch3-like-js library, written by Typescript",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
     "build",
     "eslint-plugin",
     "s3lib-importer",
-    "types"
+    "Type"
   ],
   "author": "amami-harhid",
   "license": "AGPL-3.0-only",

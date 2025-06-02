@@ -1,18 +1,12 @@
 {
     "$schema": "https://typedoc.org/schema.json",
     "entryPoints": [
-        "./types/**/*.ts",
+        "./Type/**/*.ts",
+        "./lib/**/*.ts",
         ],
     "exclude": [
-        "./types/**/s3Loop/*.ts",
-        "./types/**/s3Storage/*.ts",
-        "./types/**/s3ImagePool/*.ts",
-        "./types/**/like-scratch-lib/*.ts", 
-        "./types/**/s3Loop/*.ts", 
-        "./types/**/s3Pen/*.ts", 
-        "./types/**/s3Mouse/*.ts", 
-        "./types/**/s3SoundProperties/*.ts", 
-        "./types/**/s3SoundOption/*.ts", 
+        "./Type/**/IPenSprite.ts",
+
     ],
     "out": "docs"
 }

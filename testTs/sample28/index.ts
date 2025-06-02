@@ -4,10 +4,11 @@
  * 質問を出す。
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@typeJS/s3PlayGround";
-import type {Stage} from "@typeJS/s3Stage";
-import type {Sprite} from "@typeJS/s3Sprite";
-import type {S3Monitors,S3Monitor} from "@typeJS/s3Monitors";
+import type {PlayGround} from "@Type/playground";
+import type {IStage as Stage} from "@Type/stage";
+import type {ISprite as Sprite} from "@Type/sprite";
+import type {IMonitors as Monitors} from "@Type/monitors";
+import type {IMonitor as Monitor} from "@Type/monitors/monitor";
 
 Pg.title = "【Sample28】質問をする(ネコをクリック、ステージをクリック)"
 
@@ -18,9 +19,9 @@ const Cat02:string = "Cat02";
 
 let stage: Stage;
 let cat: Sprite;
-let monitors: S3Monitors;
-let who: S3Monitor;
-let answer: S3Monitor;
+let monitors: Monitors;
+let who: Monitor;
+let answer: Monitor;
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
@@ -71,11 +72,11 @@ Pg.setting = async function setting() {
      * STARTメッセージを送る
      */
     cat.Event.whenFlag(async function*(this:Sprite){
-        this.Looks.switchCostume(Cat01);
-        await this.Looks.sayForSecs('ステージやネコをクリックすると質問をするよ',1);
-        await this.Looks.sayForSecs('連続してクリックすると前回の質問応答の後に質問が続くよ',1);
-        await this.Looks.sayForSecs('答えはコンソールへ出力するよ',1);
-        this.Looks.say('');
+        this.Looks.Costume.name = Cat01;
+        await this.Looks.Bubble.sayForSecs('ステージやネコをクリックすると質問をするよ',1);
+        await this.Looks.Bubble.sayForSecs('連続してクリックすると前回の質問応答の後に質問が続くよ',1);
+        await this.Looks.Bubble.sayForSecs('答えはコンソールへ出力するよ',1);
+        this.Looks.Bubble.say('');
         who.text = '';
         answer.text = '';
         // メッセージを送る
@@ -132,24 +133,24 @@ Pg.setting = async function setting() {
      * STARTを受け取ったときの動き（ネコ） 
      */ 
     cat.Event.whenBroadcastReceived('START', async function*(this:Sprite){
-        this.Looks.switchCostume(Cat02);
+        this.Looks.Costume.name = Cat02;
         this.Looks.Size.w = -100;
         for(;;){
             for(const _ of Lib.Iterator(20)){
                 this.Looks.Size.w += 10;
                 if(this.Looks.Size.w < 0) {
-                    this.Looks.switchCostume(Cat02);
+                    this.Looks.Costume.name = Cat02;
                 }else{
-                    this.Looks.switchCostume(Cat01);
+                    this.Looks.Costume.name = Cat01;
                 }
                 yield;
             }
             for(const _ of Lib.Iterator(20)){
                 this.Looks.Size.w -= 10;
                 if(this.Looks.Size.w < 0) {
-                    this.Looks.switchCostume(Cat02);
+                    this.Looks.Costume.name = Cat02;
                 }else{
-                    this.Looks.switchCostume(Cat01);
+                    this.Looks.Costume.name = Cat01;
                 }
                 yield;
             }
@@ -165,6 +166,6 @@ Pg.setting = async function setting() {
         const message = `${from}の質問への答えは 『${answerValue}』でした`;
         console.log(message);
         answer.text = answerValue;
-        await this.Looks.thinkForSecs(message, 1);
+        await this.Looks.Bubble.thinkForSecs(message, 1);
     });
 }

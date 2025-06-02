@@ -1,0 +1,93 @@
+import type { IEntity } from '../entity/IEntity';
+import type { TEntityOptions } from '@Type/entity/TEntityOptions';
+import type { ISpriteMotion } from './ISpriteMotion';
+import type { ISpriteLooks } from './ISpriteLooks';
+import type { ISpriteControl } from './ISpriteControl';
+import type { ISpriteSound } from './ISpriteSound';
+import type { ISpriteImage } from './ISpriteImage';
+// import type { ISpriteCostume } from './ISpriteCostume';
+// import type { ISpriteBackdrop } from './ISpriteBackdrop';
+import type { ISpriteSensing } from './ISpriteSensing';
+import type { ISpriteEvent } from './ISpriteEvent';
+import type { ISpriteTextToSpeech } from './ISpriteTextToSpeech';
+import type { ISpriteDragMode } from './ISpriteDragMode';
+import type { ISpritePen } from './ISpritePen';
+/**
+ * Sprite
+ */
+export type TSprite = ISprite;
+export interface SSprite{
+    /**
+     * @param name
+     * @param options 
+     */
+    new(name?:string, options?:TEntityOptions):ISprite;
+
+};
+export interface ISprite extends IEntity {
+
+    /**
+     * 動き
+     */
+    get Motion() : ISpriteMotion;
+
+    // /**
+    //  * コスチューム番号、コスチューム名を取り出すためのオブジェクト
+    //  * 使用例：this.Costume.no, this.Costume.name
+    //  * @returns
+    //  */
+    // get Costume(): ISpriteCostume;
+    
+    // /**
+    //  * 背景番号、背景名を取り出すためのオブジェクト
+    //  */
+    // get Backdrop(): ISpriteBackdrop;
+
+    /**
+     * 見た目
+     */
+    get Looks() : ISpriteLooks;
+    /**
+     * 制御
+     */
+    get Control() : ISpriteControl;
+    /**
+     * 調べる
+     */
+    get Sensing() : ISpriteSensing;
+    /**
+     * イベント
+     */
+    get Event() : ISpriteEvent;
+    /**
+     * イメージ
+     */
+    get Image () : ISpriteImage;
+    /**
+     * サウンド
+     */
+    get Sound () : ISpriteSound;
+    /**
+     * 音声合成
+     */
+    get TextToSpeech(): ISpriteTextToSpeech;
+
+    /**
+     * DragModeを設定するためのオブジェクト
+     */
+    get DragMode(): ISpriteDragMode;
+
+    /**
+     * ペン機能
+     */
+    get Pen() : ISpritePen;
+    /**
+     * 生存期間 ( およその秒数 )
+     */
+    get life() : number;
+
+    /**
+     * 生存期間 ( およその秒数 )
+     */
+    set life(life:number);
+};

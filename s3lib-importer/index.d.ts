@@ -1,5 +1,7 @@
-import type {S3PlayGround} from "../types/scratchjs/s3PlayGround";
-import type {S3Libs} from "../types/scratchjs/s3Libs";
+import type {PlayGround} from "@Type/playground";
+import type {Lib} from "@Type/lib";
+import type {TEnv as Env} from "@Type/common/env";
 
-declare const Pg :S3PlayGround;
-declare const Lib : S3Libs;
+declare const Pg : PlayGround;
+declare const Lib : Lib;
+declare const Env: Env;
