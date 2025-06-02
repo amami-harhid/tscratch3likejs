@@ -284,7 +284,7 @@ export class PlayGround {
         // prepareメソッドの実行を開始する
         if( this.prepare ) {
             await this.prepare(this);
-            await Utils.wait(Env.pace);
+            await Utils.wait(1000/Env.fps);
             if( this._stage ) {
                 this._stage.update();
                 this._stage.draw();

@@ -3,6 +3,7 @@
  * このクラスは両方とも参照されてはいるが、利用用途はない。
  * 落ち着いたころに参照をはずしたい。もったいないけど。
  */
+import { Env } from "../env";
 import { Utils } from "../util/utils";
 import { Threads } from "./threads";
 
@@ -238,14 +239,14 @@ export class Controls {
         await Utils.wait( _seconds * 1000 );
     }
 
-    static async waitUntil( _condition , _pace = 1000/30) {
+    static async waitUntil( _condition , _pace = 1000/Env.fps) {
         const condition = (typeof _condition == 'function')? _condition: ()=>_condition;
         for(;;) {
             if(condition() === true) break;
             await Utils.wait(_pace);
         }
     }
-    static async waitWhile( _condition , _pace = 1000/30) {
+    static async waitWhile( _condition , _pace = 1000/Env.fps) {
         const condition = (typeof _condition == 'function')? _condition: ()=>_condition;
         for(;;) {
             if(condition() !== true) break;

@@ -1,11 +1,12 @@
+import type {FPS} from './fps';
 /**
  * Env
  */
 export type TEnv = {
     /**
-     * FPS Pace
+     * FPS
      */
-    readonly pace : number,
+    fps : FPS,
     /**
      * Trueのとき、スプライトのサイズに連動してBubbleの大きさが変わる（ ディフォルト値=false )
      * ```ts

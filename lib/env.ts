@@ -1,6 +1,8 @@
+import type { FPS } from "../Type/common/fps";
+const fps:FPS = 30;
 export const Env = {
 
-    pace : 33,
+    fps : fps,
     
     bubbleScaleLinkedToSprite : false,
 

@@ -218,7 +218,7 @@ export class Libs {
     async waitWhile( condition: CallableFunction, entity: object):Promise<void> {
         const _condition = (entity)?condition.bind(entity):condition;
         while(_condition()){
-            await Utils.wait(Env.pace);
+            await Utils.wait(1000/Env.fps);
         }
     }
     /**
@@ -232,7 +232,7 @@ export class Libs {
             if( _condition() ) {
                 break;
             }
-            await Utils.wait(Env.pace);
+            await Utils.wait(1000/Env.fps);
         }
     }
     /**

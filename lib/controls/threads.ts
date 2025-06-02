@@ -1,7 +1,7 @@
 /**
  * Threads
  */
-const INTERVAL = 1000/33;
+import {Env} from '../env';
 import { PlayGround } from "../playGround";
 import type { TThreadObj } from "./TThreadObj";
 export class Threads {
@@ -96,16 +96,8 @@ export class Threads {
         this.threadArr.push( obj );
     }
     async startAll() {
-        // 自動例外発生設定をクリアする
-        // for(const obj of this.threadArr){
-        //     if(obj.entity){
-        //         // @ts-ignore undefined error (setStopThisScriptSwitch) 
-        //         obj.entity.setStopThisScriptSwitch(false);
-        //         // @ts-ignore undefined error (stopThisScriptSwitch) 
-        //         obj.entity.stopThisScriptSwitch = false;
-        //         console.log('自動例外発生設定をクリア')
-        //     }
-        // }
+        // スタート時にINTERVALを計算する
+        const INTERVAL = 1000/Env.fps;
         this._startSwitch = true;
         if(this._intervalId != null) return; // この行の扱いは注意せよ！
         this._intervalId = setInterval(this.interval, INTERVAL, this);

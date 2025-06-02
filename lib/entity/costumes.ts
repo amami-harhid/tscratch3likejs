@@ -42,7 +42,7 @@ export class Costumes {
    
    async addImage(name:string, image: string|HTMLImageElement) {
         await this._setSkin(name, image);
-        await Utils.wait(Env.pace);
+        await Utils.wait(1000/Env.fps);
     }
     // async loadImage(name:string, image:string) {
     //     const _img = await ImageLoader.loadImage(image, name);

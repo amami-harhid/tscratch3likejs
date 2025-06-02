@@ -824,7 +824,7 @@ export class Sprite extends Entity implements ISprite {
         const _glideX = _x;
         const _glideY = _y;
         return new Promise<void>( async (resolve) => {
-            const framesPerSecond = 1000 / Env.pace;
+            const framesPerSecond = Env.fps;
             const stepX = (_glideX - this.$_position.x) / (sec * framesPerSecond);
             const stepY = (_glideY - this.$_position.y) / (sec * framesPerSecond);
             let i = 0;
@@ -846,7 +846,7 @@ export class Sprite extends Entity implements ISprite {
                     clearInterval(interval);
                     resolve();
                 }
-            },Env.pace);
+            },1000/Env.fps);
         });
     }
     /**

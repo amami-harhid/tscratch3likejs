@@ -97,7 +97,7 @@ export class Entity extends EventEmitter {
         this.threads = Threads.getInstance();        
         this.playGround = this._libs.p;
         Threads.playGround = this.playGround;
-        this.pace = Env.pace;
+        this.pace = 1000/Env.fps;
         this.render = this.playGround.render;
         this.layer = layer;
         this.drawableID = this.render.createDrawable(this.layer);
@@ -1427,7 +1427,7 @@ export class Entity extends EventEmitter {
 
     protected update() {
         if(this.life != Infinity) {
-            this.life -= 1 / this._libs.Env.pace * 1000;
+            this.life -= this._libs.Env.fps/1000;
             if( this.life < 0 ) {
                 this.remove();
             }    

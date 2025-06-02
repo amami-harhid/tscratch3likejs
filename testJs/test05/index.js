@@ -6,6 +6,8 @@ import {Pg, Lib} from '../../build/index.js';
 
 Pg.title = "【Test05】端に触れたら跳ね返るの動作を本家に近づける"
 
+const Env = Lib.Env;
+Env.fps = 60;
 //dconst NeonTunnel = "NeonTunnel";
 const Chill = "Chill";
 const Cat = "Cat";
@@ -24,7 +26,7 @@ Pg.prepare = async function prepare() {
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
     await cat.Image.add( Cat );
-    cat.Looks.Size.scale = {w: 400, h: 300};
+    cat.Looks.Size.scale = {w: 300, h: 300};
 }
 
 Pg.setting = async function setting() {
