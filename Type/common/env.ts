@@ -7,8 +7,10 @@ export type TEnv = {
      */
     readonly pace : number,
     /**
-     * Bubbleスケールがスプライトにリンクする（ デフォはfalse )
-     * 
+     * Trueのとき、スプライトのサイズに連動してBubbleの大きさが変わる（ ディフォルト値=false )
+     * ```ts
+     *  Env.bubbleScaleLinkedToSprite = true;
+     * ```
      */
     bubbleScaleLinkedToSprite : boolean,
     /**

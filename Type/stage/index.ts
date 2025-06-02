@@ -3,7 +3,7 @@
  */
 import { IEntity } from '@Type/entity/IEntity';
 import { TEntityOptions } from '@Type/entity/TEntityOptions';
-import { ISprite } from '@Type/sprite';
+//import { ISprite } from '@Type/sprite';
 import { IStageLooks } from './IStageLooks';
 import { IStageControl } from './IStageControl';
 import { IStageSensing } from './IStageSensing';
@@ -16,10 +16,19 @@ export interface SStage extends IStage{
     new(options?:TEntityOptions):IStage;
 }
 export interface IStage extends IEntity {
-    get sprites (): ISprite[];
-    removeSprite ( sprite: ISprite ): void;
-    update(): void;
-    draw(): void;
+    // /**
+    //  * 全てのスプライトを配列で受け取る
+    //  */
+    // get sprites (): ISprite[];
+    // /**
+    //  * スプライトを削除する
+    //  * @interface
+    //  * @param sprite 
+    //  */
+    // removeSprite ( sprite: ISprite ): void;
+    // update(): void;
+    // draw(): void;
+
     /**
      * 見た目
      */
@@ -46,5 +55,5 @@ export interface IStage extends IEntity {
      */
     get Sound() : IStageSound;
 
-    removeSprite(sprite: ISprite): void;
+    //removeSprite(sprite: ISprite): void;
 };

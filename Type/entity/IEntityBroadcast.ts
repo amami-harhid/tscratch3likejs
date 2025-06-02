@@ -3,15 +3,25 @@ export interface IEntityBroadCast {
 
     /**
      * メッセージを送る
-     * @param messageId 
-     * @param args 
+     * @param messageId - メッセージID
+     * @param args - 引数
+     * ```ts
+     *  const count: number = 100;
+     *  const mouseDown: boolean = false;
+     *  this.Event.broadcast('Start', count, mouseDown );
+     * ```
      */
     broadcast(messageId: string, ...args:unknown[]): void;
 
     /**
      * メッセージを送り終わるまで待つ
-     * @param messageId 
-     * @param args 
+     * @param messageId - メッセージID
+     * @param args - 引数
+     * ```ts
+     *  const count: number = 100;
+     *  const mouseDown: boolean = false;
+     *  await this.Event.broadcastAndWait('Start', count, mouseDown );
+     * ```
      */
     broadcastAndWait(messageId: string, ...args:unknown[]): Promise<void>;
 
@@ -23,6 +33,15 @@ export interface IEntityBroadCast {
      * 
      * @param messageId 
      * @param func 
+     * ```ts
+     *  stage.Event.whenBroadcastReceived('Start', 
+     *                  async function(this:Stage, count:number, mouseDown:boolean ){
+     *      console.log('count', count);
+     *      console.log('mouseDown', mouseDown);
+     *      // 5秒経過したあとに終了する
+     *      await Lib.await(5); 
+     *  });
+     * ```
      */
     whenBroadcastReceived(messageId:string, func: CallableFunction): void;
 }
