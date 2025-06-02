@@ -2,4 +2,5 @@
  * import script
  */
 import {Pg, Lib} from '../build/index.js';
-export {Pg, Lib}
+const Env = Lib.Env;
+export {Pg, Lib, Env};

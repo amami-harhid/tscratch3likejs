@@ -5,6 +5,8 @@
         "./lib/**/*.ts",
         ],
     "exclude": [
+        "./Type/**/IPenSprite.ts",
+
     ],
     "out": "docs"
 }

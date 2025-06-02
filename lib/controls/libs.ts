@@ -6,6 +6,7 @@ import { Cast } from '../util/cast';
 import { Controls, Loop } from './controls';
 import { Costumes } from '../entity/costumes';
 import { Env } from '../env';
+import type {TEnv} from '@Type/common/env';
 import { EventEmitter } from "events";
 import { FunctionChecker } from '../util/functionChecker';
 import { Keyboard } from '../io/keyboard';
@@ -46,8 +47,7 @@ export class Libs {
     get Controls () {
         return Controls;
     }
-    /** @internal */
-    get Env () {
+    get Env (): TEnv {
         return Env;
     }
     /** @internal */

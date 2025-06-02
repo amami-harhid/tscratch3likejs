@@ -4,16 +4,19 @@
  * 吹き出し(SAY, THINK)
  */
 
-import {Pg, Lib} from "../../s3lib-importer";
+import {Pg, Lib, Env} from "../../s3lib-importer";
 import type {PlayGround} from "@Type/playground";
 import type {IStage as Stage} from "@Type/stage";
 import type {ISprite as Sprite} from "@Type/sprite";
-
 Pg.title = "【Sample19】いろんな文字列でフキダシ(言う, 思う)。20秒間。"
+
+// Bubbleスケールがスプライトにリンクする
+Env.bubbleScaleLinkedToSprite = true;
 
 const Jurassic:string = "Jurassic";
 const Cat1:string = "Cat1";
 const Cat2:string = "Cat2";
+
 
 let stage: Stage;
 let cat: Sprite;
@@ -32,6 +35,7 @@ Pg.preload = async function(this: PlayGround) {
 
 // 事前準備処理
 Pg.prepare = async function prepare() {
+
     stage = new Lib.Stage();
     await stage.Image.add( Jurassic );
 

@@ -66,9 +66,7 @@ Pg.setting = async function setting() {
         for(;;){
 
             await this.Control.wait(1);
-            this.Looks.Backdrop.name = Jurassic02;
-            await this.Control.wait(1);
-            this.Looks.Backdrop.name = Jurassic01;
+            this.Looks.Backdrop.next();
             yield;
         }
     });

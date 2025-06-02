@@ -1,11 +1,12 @@
-import { TPosition } from "../common/typeCommon";
-import { ImageEffective } from "../entity/ImageEffective";
+import type { TPosition } from "../common/typeCommon";
+import type { ImageEffective } from "../entity/ImageEffective";
 import { RotationStyle } from "../entity/RotationStyle";
 import { SoundOption } from "../entity/SoundOption";
-import { I_KEYBOARD_KEYS } from "../io/IKeyboard";
+import type { I_KEYBOARD_KEYS } from "../io/IKeyboard";
 import { SMonitors } from "../monitors";
-import { SSprite } from "../sprite";
-import { SStage } from "../stage";
+import type { SSprite } from "../sprite";
+import type { SStage } from "../stage";
+import type { TEnv } from "../common/env";
 
 /**
  * Lib
@@ -87,4 +88,8 @@ export interface Lib {
      * @param n {number} - 繰り返し回数
      */
     Iterator(n:number): Generator<number>;
+    /**
+     * Env 
+     */
+    get Env():TEnv;
 }

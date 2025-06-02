@@ -28,12 +28,16 @@ Pg.preload = async function(this: PlayGround) {
 
 // 事前準備処理
 Pg.prepare = async function prepare() {
+    
     stage = new Lib.Stage();
     await stage.Image.add( Jurassic );
     await stage.Sound.add( Chill );
+
     cat = new Lib.Sprite("Cat");
     cat.Motion.Move.toXY( 0, 0 );
     await cat.Image.add( Cat );
+    // ドラッグ可能とする
+    cat.DragMode.draggable = true;
 }
 // イベント定義処理
 Pg.setting = async function setting() {
