@@ -116,6 +116,7 @@ export class Stage extends Entity implements IStage{
         this._Sensing = new StageSensing(this);
         this._Sound = new StageSound(this);
     }
+    /** @internal */
     get $sprites (): Sprite[] {
         return this._sprites;
     }
@@ -123,15 +124,18 @@ export class Stage extends Entity implements IStage{
         const sprites : ISprite[] = this._sprites as unknown as ISprite[];
         return sprites;
     }
+    /** @internal */
     $addSprite (sprite: Sprite): void {
         this._sprites.push( sprite );
         sprite.z = this._sprites.length
         this._sortSprites();
     }
+    /** @internal */
     addSprite (sprite: ISprite): void {
         const _sprite:Sprite = sprite as unknown as Sprite;
         this.$addSprite(_sprite);
     }
+    /** @internal */
     _sortSprites(): void {
         const n0_sprites = this._sprites;
         const n1_sprites = n0_sprites.sort( function( a, b ) {
@@ -149,16 +153,21 @@ export class Stage extends Entity implements IStage{
         this._sprites = n2_sprites;
 
     }
+    /** @internal */
     removeSprite ( sprite: ISprite ): void {
         const curSprite:Sprite = sprite as unknown as Sprite;
         this.$removeSprite(curSprite);
     }
+    /** @internal */
     $removeSprite ( sprite: Sprite ): void {
         const curSprite:Sprite = sprite;
         const n_sprites = this._sprites.filter( ( item ) => item !== curSprite );
         this._sprites = n_sprites;
         this._sortSprites();
     }
+    /**
+     * ステージと全スプライトを更新する
+     */
     update(): void {
         super.update();
         this.backdrops.setPosition(this.position.x, this.position.y);
@@ -169,47 +178,12 @@ export class Stage extends Entity implements IStage{
             _sprite.update();
         }        
     }
+    /**
+     * 描画する
+     */    
     draw(): void {
         this.render.renderer.draw();
     }
-    // sendSpriteBackwards (sprite) {
-    //     // 工事中
-    
-    // }
-    // sendSpriteForward (sprite) {
-    //     // 工事中
-    // }
-    // sendSpriteToFront (sprite) {
-    //     // 工事中
-    // }
-    // sendSpriteToBack (sprite) {
-    //     // 工事中
-    // }
-
-    // isKeyPressed (userKey) {
-    //     let match = false
-    //     let check
-    
-    //     typeof userKey === 'string' ? check = userKey.toLowerCase() : check = userKey
-    //     this.keysKey.indexOf(check) !== -1 ? match = true : null
-    //     this.keysCode.indexOf(check) !== -1 ? match = true : null
-    
-    //     return match
-    // }
-
-    // move(x,y) {
-    //     this.$_position.x = x;
-    //     this.$_position.y = y;
-    //     this.backdrops.setPosition(this.$_position.x, this.$_position.y);
-    // }
-
-    // async loadSound(name,soundUrl, options={}) {
-    //     await this._loadSound(name, soundUrl, options);
-    // }
-    // async loadImage(name, imageUrl) {
-    //     this._loadImage(name, imageUrl, this.backdrops);
-    // }
-
     /**
      * @internal
      * サウンド名をもとに、ステージへサウンドを追加する
@@ -241,6 +215,7 @@ export class Stage extends Entity implements IStage{
         return promise;
     }
     /**
+     * @internal
      * イメージ名を使ってイメージをステージへ追加する
      * @param imageData {string}
      * @returns {Promise<void>}
@@ -270,6 +245,7 @@ export class Stage extends Entity implements IStage{
 
     }
     /**
+     * @internal
      * イメージ名の配列を返す
      * @returns {string[]}
      */
@@ -278,53 +254,175 @@ export class Stage extends Entity implements IStage{
         return Array.from(iterator);
     }
     /**
+     * @internal
      * 新しい名前の背景に切り替わったとき、イベント通知をする
      * @param {string} backdropName 
      * @param {string} newBackdropName 
      */
-    $emitWhenBackdropChange(backdropName: string, newBackdropName: string) {
+    $emitWhenBackdropChange(backdropName: string, newBackdropName: string): void {
         // 新しい名前の背景に切り替わったとき
         if(backdropName !== newBackdropName){
             this.$broadCastBackdropSwitch(newBackdropName);
         }
     }
+    /** @internal */
+    async $emitWhenBackdropChangeAndWait(backdropName: string, newBackdropName: string): Promise<void> {
+        // 新しい名前の背景に切り替わったとき
+        if(backdropName !== newBackdropName){
+            await this.$broadCastBackdropSwitchAndWait(newBackdropName);
+        }
+    }
+
     /**
+     * @internal
      * 次の背景に切り替える
      */
     $nextBackDrop(): void {
         if(!this.$isAlive()) return;
         if(this.backdrops){
-            const name_before = this.backdrops.currentSkinName();
-            this.backdrops.nextCostume();
-            const name_after = this.backdrops.currentSkinName();
-            this.$emitWhenBackdropChange(name_before, name_after);
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.nextCostume();
+                const name_after = this.backdrops.currentSkinName();
+                this.$emitWhenBackdropChange(name_before, name_after);
+            }
         }
-        //this.ifOnEdgeBounds();
     }
     /**
+     * @internal
+     * 次の背景に切り替える
+     */
+    async $nextBackDropAndWait(): Promise<void> {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.nextCostume();
+                const name_after = this.backdrops.currentSkinName();
+                await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * 前の背景に切り替える
+     */
+    $prevBackdrop() : void {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.prevCostume();
+                const name_after = this.backdrops.currentSkinName();
+                this.$emitWhenBackdropChange(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * 前の背景に切り替えて待つ
+     */
+    async $prevBackdropAndWait() : Promise<void> {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.prevCostume();
+                const name_after = this.backdrops.currentSkinName();
+                await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * どれかの背景にする
+     */
+    $randomBackdrop() : void {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.randomCostume();
+                const name_after = this.backdrops.currentSkinName();
+                this.$emitWhenBackdropChange(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * どれかの背景にして待つ
+     */
+    async $randomBackdropAndWait() : Promise<void> {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.randomCostume();
+                const name_after = this.backdrops.currentSkinName();
+                await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
      * 背景名、または背景番号で背景を切り替える
      * @param {string|number} backdrop 
      */
     $switchBackDrop( backdrop: string|number ): void {
         if(!this.$isAlive()) return;
         if( backdrop ){
-            if( typeof backdrop === 'string') {
-                const _name = backdrop;
-                if(this.backdrops) {
-                    const name_before = this.backdrops.currentSkinName();
-                    this.backdrops.switchCostumeByName(_name);
-                    const name_after = this.backdrops.currentSkinName();
-                    this.$emitWhenBackdropChange(name_before, name_after);
+            if( this.backdrops.skinSize > 0) {
+                if( typeof backdrop === 'string') {
+                    const _name = backdrop;
+                    if(this.backdrops) {
+                        const name_before = this.backdrops.currentSkinName();
+                        this.backdrops.switchCostumeByName(_name);
+                        const name_after = this.backdrops.currentSkinName();
+                        this.$emitWhenBackdropChange(name_before, name_after);
+                    }
+                }else if( Number.isInteger(backdrop)) {
+                    const _idx = backdrop;
+                    if(this.backdrops){
+                        const name_before = this.backdrops.currentSkinName();
+                        this.backdrops.switchCostumeByNumber(_idx);
+                        const name_after = this.backdrops.currentSkinName();
+                        this.$emitWhenBackdropChange(name_before, name_after);
+                    }
                 }
-            }else if( Number.isInteger(backdrop)) {
-                const _idx = backdrop;
-                if(this.backdrops){
-                    const name_before = this.backdrops.currentSkinName();
-                    this.backdrops.switchCostumeByNumber(_idx);
-                    const name_after = this.backdrops.currentSkinName();
-                    this.$emitWhenBackdropChange(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * 背景名、または背景番号で背景を切り替えて待つ
+     * @param {string|number} backdrop 
+     */
+    async $switchBackdropAndWait( backdrop: string|number ): Promise<void> {
+        if(!this.$isAlive()) return;
+        if( backdrop ){
+            if( this.backdrops.skinSize > 0) {
+                if( typeof backdrop === 'string') {
+                    const _name = backdrop;
+                    if(this.backdrops) {
+                        const name_before = this.backdrops.currentSkinName();
+                        this.backdrops.switchCostumeByName(_name);
+                        const name_after = this.backdrops.currentSkinName();
+                        if(name_after != name_before){
+                            await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+                        }
+                    }
+                }else if( Number.isInteger(backdrop)) {
+                    const _idx = backdrop;
+                    if(this.backdrops){
+                        const name_before = this.backdrops.currentSkinName();
+                        this.backdrops.switchCostumeByNumber(_idx);
+                        const name_after = this.backdrops.currentSkinName();
+                        if(name_after != name_before){
+                            await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+                        }
+                    }
                 }
-            }    
+            }
         }
     }
     /**

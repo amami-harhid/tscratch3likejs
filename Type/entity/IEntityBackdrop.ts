@@ -39,4 +39,18 @@ export interface IEntityBackdrop {
      * ```
      */
     next() : void;
+    /**
+     * 前の背景にする
+     * ```ts
+     *  this.Looks.Backdrop.previous();
+     * ```
+     */
+    previous(): void;
+    /**
+     * どれかの背景にする
+     * ```ts
+     *  this.Looks.Backdrop.random();
+     * ```
+     */
+    random(): void;
 }

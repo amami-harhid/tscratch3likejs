@@ -192,9 +192,54 @@ export class Costumes {
         }
         return -1;
     }
+    get skinSize() {
+        const costumesKeys = Array.from(this.costumes.keys());
+        return costumesKeys.length;
+    }
+    randomCostume() {
+        const costumesKeys = Array.from(this.costumes.keys());
+        if(costumesKeys.length == 0 || costumesKeys.length == 1) {
+            return; // do nothing
+        }
+        if(this.skinId == -1) {
+            const name = costumesKeys[0];
+            this.skinId = this.getSkinId(name);
+            return;
+        }
+        let idx = Utils.randomizeInRange(0, costumesKeys.length-1);
+        this.skinId = idx;
+    }
+    prevCostume() {
+        const costumesKeys = Array.from(this.costumes.keys());
+        if(costumesKeys.length == 0 || costumesKeys.length == 1) {
+            return; // do nothing
+        }
+        if(this.skinId == -1) {
+            const name = costumesKeys[0];
+            this.skinId = this.getSkinId(name);
+            return;
+        }
+        // search next skinId
+        let _idx = 0;
+        for(const _name of costumesKeys) {
+            const _skinId = this.costumes.get(_name);
+            if(_skinId == this.skinId) {
+                if( _idx == 0 ){
+                    // 先頭のスキンのとき最後のスキンにする
+                    const nextName = costumesKeys[costumesKeys.length-1];
+                    this.skinId = this.getSkinId(nextName);
+                }else{
+                    const nextName = costumesKeys[_idx-1];
+                    this.skinId = this.getSkinId(nextName);
+                }
+                return;
+            }
+            _idx += 1;
+        }
+    }
     nextCostume() {
         const costumesKeys = Array.from(this.costumes.keys());
-        if(costumesKeys.length == 0) {
+        if(costumesKeys.length == 0 || costumesKeys.length == 1) {
             return; // do nothing
         }
         if(this.skinId == -1) {
@@ -208,6 +253,7 @@ export class Costumes {
             const _skinId = this.costumes.get(_name);
             if(_skinId == this.skinId) {
                 if( _idx == (costumesKeys.length - 1) ){
+                    // 最後のSkinのとき先頭にする
                     const nextName = costumesKeys[0];
                     this.skinId = this.getSkinId(nextName);
                 }else{

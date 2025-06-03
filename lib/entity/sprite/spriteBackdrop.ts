@@ -62,4 +62,16 @@ export class SpriteBackdrop implements ISpriteBackdrop {
     next() : void {
         this.entity.$nextBackdrop();
     }
+    /**
+     * 前の背景にする
+     */
+    previous(): void {
+        this.entity.$prevBackdrop();
+    }
+    /**
+     * どれかの背景にする
+     */
+    random(): void {
+        this.entity.$randomBackdrop();
+    }
 }

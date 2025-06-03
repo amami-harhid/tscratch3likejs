@@ -53,6 +53,14 @@ export class StageBackdrop implements IStageBackdrop {
         this.entity.$switchBackDrop(name);
     }
     /**
+     * 背景を切り替えて待つ
+     * @param name 
+     */
+    async switchAndWait(name: string) : Promise<void>{
+        await this.entity.$switchBackdropAndWait(name);
+    }
+
+    /**
      * 次の背景にする
      * ```ts
      *  this.Looks.Backdrop.nextBackdrop();
@@ -60,5 +68,35 @@ export class StageBackdrop implements IStageBackdrop {
      */
     next() : void {
         this.entity.$nextBackDrop();
+    }
+    /**
+     * 次の背景にして待つ
+     */
+    async nextAndWait(): Promise<void> {
+        await this.entity.$nextBackDropAndWait();
+    }
+    /**
+     * 前の背景にする
+     */
+    previous() : void {
+        this.entity.$prevBackdrop();
+    }
+    /**
+     * 前の背景にして待つ。
+     */
+    async previousAndWait() : Promise<void> {
+        await this.entity.$prevBackdropAndWait();
+    }
+    /**
+     * どれかの背景にする
+     */
+    random(): void {
+        this.entity.$randomBackdrop();
+    }
+    /**
+     * どれかの背景にして待つ
+     */
+    async randomAndWait() : Promise<void>{
+        await this.entity.$randomBackdropAndWait();
     }
 }

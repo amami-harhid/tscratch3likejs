@@ -1,0 +1,141 @@
+import {Lib} from "../../../s3lib-importer";
+import {Constants} from "./Constant";
+
+export class StageEx extends Lib.Stage {
+
+    /**
+     * prepare stage
+     */
+    async prepare() {
+
+        await this.Image.add( Constants.Jurassic  );
+        await this.Image.add( Constants.Jurassic2  );
+        await this.Image.add( Constants.Backdrop );
+        await this.Sound.add( Constants.Chill );
+    
+    }
+    /**
+     * setting stage
+     */
+    async setting() {
+        // 旗を押されたときの動作
+        // function() { } の中の this は、通常は外側のthisとは異なる
+        // Tscratch3の仕組みでは function() {} のthisを 外側のthisをProxyで
+        // 包んだインスタンスとしているため、内側thisでもStageExのメソッドを
+        // 使うことができる。Typescriptの型として this : StageEx と
+        // 教えてあげる必要があるので function(this:StageEx)としている。
+        // これは引数として受け取っているわけではなく型を定義しているだけ。
+        this.Event.whenFlag( async function(this:StageEx){
+            // 背景を Jurassic とする
+            this.Looks.Backdrop.name = Constants.Jurassic;
+            // メッセージ START を送る
+            this.Event.broadcast(Constants.Start);
+            // メッセージは Stageで受け取っているが、スプライト側でも
+            // 受け取ることができる。
+        });
+        /**
+         * メッセージ(START)を受け取ったときの動き
+         */
+        this.Event.whenBroadcastReceived(Constants.Start, async function*(this:StageEx){
+            console.log('whenBroadcastReceived Start in StageEx');
+            // モザイク           
+            this.Looks.Effect.set(Lib.ImageEffective.MOSAIC, 50);
+
+            console.log('change next backdrop ')
+            // ずっと繰り返す
+            for(const _ of Lib.Iterator(5)){
+                // 次の背景を変える(待たない)
+                this.Looks.Backdrop.next();
+                await this.Control.wait(1);
+            }
+            // 効果をクリア
+            this.Looks.Effect.clear();
+            // 魚眼
+            this.Looks.Effect.set(Lib.ImageEffective.FISHEYE, 50);
+            // ずっと繰り返す
+            console.log('change previous backdrop ')
+            for(const _ of Lib.Iterator(5)){
+                // 前の背景を変える(待たない)
+                this.Looks.Backdrop.previous();
+                await this.Control.wait(1);
+            }
+            // 効果をクリア
+            this.Looks.Effect.clear();
+            // 色
+            this.Looks.Effect.set(Lib.ImageEffective.COLOR, 50);
+            // ずっと繰り返す
+            console.log('change random backdrop ')
+            for(const _ of Lib.Iterator(5)){
+                // 前の背景を変える(待たない)
+                this.Looks.Backdrop.random();
+                await this.Control.wait(1);
+            }
+            this.Event.broadcast(Constants.NextBackdrop );
+            console.log('change next backdrop and Wait ')
+            for(const _ of Lib.Iterator(5)){
+                // 次の背景を変える(待たない)
+                await this.Looks.Backdrop.nextAndWait();
+                console.log('exit nextAndWait');
+                await this.Control.wait(1);
+            }
+            // 効果をクリア
+            this.Looks.Effect.clear();
+            // 魚眼
+            this.Looks.Effect.set(Lib.ImageEffective.FISHEYE, 50);
+            // ずっと繰り返す
+            console.log('change previous backdrop ')
+            for(const _ of Lib.Iterator(5)){
+                // 前の背景を変える(待たない)
+                await this.Looks.Backdrop.previousAndWait();
+                console.log('exit previousAndWait');
+                await this.Control.wait(1);
+            }
+            // 効果をクリア
+            this.Looks.Effect.clear();
+            // 色
+            this.Looks.Effect.set(Lib.ImageEffective.COLOR, 50);
+            // ずっと繰り返す
+            console.log('change random backdrop ')
+            for(const _ of Lib.Iterator(5)){
+                // 前の背景を変える(待たない)
+                await this.Looks.Backdrop.randomAndWait();
+                console.log('exit randomAndWait');
+                await this.Control.wait(1);
+            }
+            console.log('==== stopAll ====')
+            this.Control.stopAll();
+
+        });
+
+
+        /**
+         * メッセージ(START)を受け取ったときの動き
+         */
+        this.Event.whenBroadcastReceived(Constants.Start, async function(this:StageEx){
+            console.log('whenBroadcastReceived Start in StageEx')            
+            // 音量 10
+            await this.Sound.setOption( Lib.SoundOption.VOLUME, 10 );
+            // ピッチ 0
+            await this.Sound.setOption( Lib.SoundOption.PITCH, 0 );
+        });
+
+        this.Event.whenKeyPressed('M', async function*(this:StageEx){
+            // 「終わるまで音を鳴らす」をずっと繰り返す
+            yield * this.chillLoop();
+        });
+
+    }
+    async *chillLoop(){
+        for(;;){
+            // 処理が終わるまで待つために await をつける
+            await this.Sound.playUntilDone(Constants.Chill);
+            // 音量を5ずつ増やす
+            await this.Sound.changeOptionValue(Lib.SoundOption.VOLUME, 5);
+            // ピッチを5ずつ増やす
+            await this.Sound.changeOptionValue(Lib.SoundOption.PITCH, 5);
+            yield;
+        }    
+    }
+
+
+}

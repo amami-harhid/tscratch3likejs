@@ -753,59 +753,6 @@ export class Entity extends EventEmitter {
             }    
         }
     }
-    // $broadcastToTargets(messageId, target, ...args) {
-    //     const runtime = playGround.runtime;
-    //     if(runtime){
-    //         const eventId = `message_${messageId}`;
-    //         this.modules.set(eventId, []);
-    //         const _targets:Entity[] = [];
-    //         if( Array.isArray(target) ) {
-    //             target.map(v=>{
-    //                 if( v instanceof Entity) {
-    //                     _targets.push(v);
-    //                 }
-    //             })
-    //         }else{
-    //             const _target = target;
-    //             if( _target instanceof Entity) {
-    //                 _targets.push(_target);
-    //             }
-    //         }
-    //         if(sendTargets.length > 0) {
-    //             runtime.emit(eventId, this.modules, _targets, ...args);
-    //         }     
-    //     }
-    // }
-    // async $broadcastAndWaitToTargets(messageId, target:Entity|Entity[], ...args) {
-    //     const runtime = playGround.runtime;
-    //     if(runtime){
-    //         const wait = this._libs.wait;
-    //         const eventId = `message_${messageId}`;
-    //         this.modules.set(eventId, []);
-    //         const _targets:Entity[] = [];
-    //         if( Array.isArray(target) ) {
-    //             target.map(v=>{
-    //                 if( v instanceof Entity) {
-    //                     _targets.push(v);
-    //                 }
-    //             })
-    //         }else{
-    //             const _target = target;
-    //             if( _target instanceof Entity) {
-    //                 _targets.push(_target);
-    //             }
-    //         }
-    //         if(sendTargets.length > 0) {
-    //             runtime.emit(eventId, this.modules, _targets, ...args);
-    //             await wait(10);
-    //             const promises = this.modules.get(eventId);
-    //             if(promises.length > 0) {
-    //                 await Promise.all(promises);
-    //                 return;
-    //             }
-    //         }    
-    //     }
-    // }
 
     /**
      * @internal
@@ -931,6 +878,10 @@ export class Entity extends EventEmitter {
     protected $broadCastBackdropSwitch(backdropName: string) {
         const messageId = `BackdropSwitches_${backdropName}`;
         this.$broadcast(messageId, backdropName);
+    }
+    protected async $broadCastBackdropSwitchAndWait(backdropName: string) {
+        const messageId = `BackdropSwitches_${backdropName}`;
+        await this.$broadcastAndWait(messageId, backdropName);
     }
     /**
      * @internal

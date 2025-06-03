@@ -970,6 +970,22 @@ export class Sprite extends Entity implements ISprite {
     }
     /**
      * @internal
+     * 前の背景にする
+     */
+    $prevBackdrop(): void {
+        const stage = this.playGround.stage;
+        stage.$prevBackdrop();
+    }
+    /**
+     * @internal
+     * どれかの背景にする
+     */
+    $randomBackdrop(): void {
+        const stage = this.playGround.stage;
+        stage.$randomBackdrop();
+    }
+    /**
+     * @internal
      * 背景を切り替える
      * @param {string|number} backdrop 
      */
