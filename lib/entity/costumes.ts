@@ -63,7 +63,7 @@ export class Costumes {
             });
         }else{
             const _bitmap = _img as HTMLImageElement;
-            const _skinId = await this._setBitmapSkin(_bitmap);        
+            const _skinId = await this._setBitmapSkin(_bitmap);
             this.costumes.set( name , _skinId);
             if( this.skinId == -1) {
                 this.skinId = _skinId; // 初回のSkinId 

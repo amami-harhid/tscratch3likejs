@@ -28,8 +28,13 @@ import { Point } from '@Type/common/point';
 import { SMonitors } from '@Type/monitors';
 import { ISprite } from '@Type/sprite';
 import { IEntitySound } from '@Type/entity/IEntitySound';
+import { TextSprite } from '../entity/text/textSprite';
 //import { ImageEffective, SoundOption } from '../_type/entity/CEntityConstant';
 export class Libs {
+
+    get TextSprite() {
+        return TextSprite;
+    }
 
     /** @internal */
     get Backdrops () {
