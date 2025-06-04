@@ -1,5 +1,7 @@
+import { MathUtil } from '../../util/math-util';
 import { PenSprite } from './penSprite';
 export class PenSpriteSize {
+
     private sprite: PenSprite;
     /**
      * @constructor
@@ -18,8 +20,17 @@ export class PenSpriteSize {
      * ペンの太さ
      */
     set thickness(thickness: number) {
-        this.sprite._penSize = thickness;
-        this.sprite._penAttributes.diameter = thickness;
+        // Penサイズを範囲内にする
+        const _thickness = MathUtil.clamp(thickness, 
+                PenSpriteSize.PEN_SIZE_RANGE.min, 
+                PenSpriteSize.PEN_SIZE_RANGE.max);
+
+        this.sprite._penSize = _thickness;
+        this.sprite._penAttributes.diameter = _thickness;
         this.sprite.convertAttribues2Rgb();
+    }
+    /** Pen Size Range */
+    static get PEN_SIZE_RANGE() : {min:number, max:number}{
+        return {min: 1, max: 1200};
     }
 }

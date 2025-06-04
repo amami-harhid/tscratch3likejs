@@ -25,6 +25,7 @@ export class Cat extends Lib.Sprite {
         this.Event.whenFlag( async function(this:Cat) {
             this.Motion.Move.toXY(0, 0);
         });
+        // メッセージ SAY を受け取ったときの動作
         this.Event.whenBroadcastReceived(Constants.Start, async function*(this:Cat){
             console.log('whenBroadcastReceived, Start in cat')
             // yield* とすることで generatorを実行できる
@@ -43,22 +44,34 @@ export class Cat extends Lib.Sprite {
         this.Event.whenBackdropSwitches(Constants.Jurassic, async function*(this:Cat){
             console.log('whenBackdropSwitches', Constants.Jurassic, ', in Cat');
             this.rotationDegree = 30;
-            if(this.waitFlag === true)
+            if(this.waitFlag === true){
+                this.Looks.Bubble.say("");
+                await this.Control.wait(1);
+                this.Looks.Bubble.think("「待つ」を解除するには「A」キーを押してね");
                 await this.Control.waitUntil(()=>isKeyADown());
+            }
         });
         // メッセージ(Jurassic2)を受け取ったときの動作
         this.Event.whenBackdropSwitches(Constants.Jurassic2, async function(this:Cat){
             console.log('whenBackdropSwitches', Constants.Jurassic2, ', in Cat');
             this.rotationDegree = 5;
-            if(this.waitFlag === true)
+            if(this.waitFlag === true){
+                this.Looks.Bubble.say("");
+                await this.Control.wait(1);
+                this.Looks.Bubble.think("「待つ」を解除するには「A」キーを押してね");
                 await this.Control.waitUntil(()=>isKeyADown());
+            }
         });
         // メッセージ(Backdrop)を受け取ったときの動作
         this.Event.whenBackdropSwitches(Constants.Backdrop, async function(this:Cat){
             console.log('whenBackdropSwitches', Constants.Backdrop, ', in Cat');
             this.rotationDegree = -5;
-            if(this.waitFlag === true)
+            if(this.waitFlag === true){
+                this.Looks.Bubble.say("");
+                await this.Control.wait(1);
+                this.Looks.Bubble.think("「待つ」を解除するには「A」キーを押してね");
                 await this.Control.waitUntil(()=>isKeyADown());
+            }
         });
 
     }

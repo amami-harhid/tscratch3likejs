@@ -16,4 +16,6 @@ export const Constants = {
     Start: "START",
     /** メッセージID（次の動作） */
     NextBackdrop: "NextBackdrop",
+    /** メッセージID (ガイダンス) */
+    Say: "Say",
 };
