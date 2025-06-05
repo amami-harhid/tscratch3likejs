@@ -38,12 +38,17 @@ export class Costumes {
         this._scale = {x:100, y:100};
         this._rotationStyle = RotationStyle.ALL_AROUND;
         this._rotationStylePatterns = [RotationStyle.LEFT_RIGHT, RotationStyle.DONT_ROTATE, RotationStyle.ALL_AROUND];
-   }
+    }
    
-   async addImage(name:string, image: string|HTMLImageElement) {
+    async addImage(name:string, image: string|HTMLImageElement): Promise<void> {
         await this._setSkin(name, image);
         await Utils.wait(1000/Env.fps);
     }
+    async updateImage(name:string, image: string|HTMLImageElement): Promise<number> {
+        await this._updateSkin(name, image);
+        return this.skinId;
+    }
+
     // async loadImage(name:string, image:string) {
     //     const _img = await ImageLoader.loadImage(image, name);
     //     console.log('--- Costumes, loadImage _img ---')
@@ -91,6 +96,18 @@ export class Costumes {
             return skinId;        
         }
         throw 'unable to execute createBitmapSkin';
+    }
+    async _updateSkin(name: string, _img: string|HTMLImageElement) {
+        const skinId = this.costumes.get(name);
+        if(skinId == undefined) return;
+        if(typeof _img == "string" && ImageLoader.isSVG(_img)) {
+            const svgText = _img as string;
+            this.render.renderer.updateSVGSkin(skinId, svgText)
+        }else{
+            const _bitmap = _img as HTMLImageElement;
+            this.render.renderer.updateBitmapSkin(skinId,_bitmap);
+        }
+        await Utils.wait(1000/Env.fps);
     }
     getRotationStyle (): RotationStyle {
         return this._rotationStyle;

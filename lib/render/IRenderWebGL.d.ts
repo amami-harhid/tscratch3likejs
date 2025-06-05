@@ -227,6 +227,21 @@ export declare interface IRenderWebGL {
      */
     updateDrawableVisible(drawableID: number, visible: boolean): void;
     /**
+     * Update an existing SVG skin, or create an SVG skin if the previous skin was not SVG.
+     * @param skinId 
+     * @param svgData 
+     * @param rotationCenter 
+     */
+    updateSVGSkin(skinId:number, svgData: string, rotationCenter?: TPositionArray):void;
+    /**
+     * Update an existing bitmap skin, or create a bitmap skin if the previous skin was not bitmap.
+     * @param skinId 
+     * @param bitmapData 
+     * @param costumeResolution 
+     * @param rotationCenter 
+     */
+    updateBitmapSkin(skinId:number, bitmapData: HTMLImageElement, costumeResolution?:number, rotationCenter?:TPositionArray)
+    /**
      * 
      * @param skinId {number} - skin id.
      * @param type {string} - "say" or "think".

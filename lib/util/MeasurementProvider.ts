@@ -1,7 +1,7 @@
 /**
- * S3CanvasMeasurementProvider
+ * MeasurementProvider
  */
-export class S3CanvasMeasurementProvider {
+export class MeasurementProvider {
 
     private _ctx: CanvasRenderingContext2D;
     private _cache: {[key:string]: number};

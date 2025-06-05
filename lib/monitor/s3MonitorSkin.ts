@@ -3,7 +3,7 @@
  */
 const twgl = require('twgl.js');
 import { EventEmitter } from "events";
-import { S3CanvasMeasurementProvider } from "./s3CanvasMeasurementProvider";
+import { MeasurementProvider } from "../util/MeasurementProvider";
 import { MonitorRenderingConstants } from "./s3RenderConstants";
 import type { IDrawable } from "../render/IDrawable";
 import { S3Silhouette } from "./s3Silhouette";
@@ -76,7 +76,7 @@ export class S3MonitorSkin extends EventEmitter implements IMonitorSkin {
     private _y: number;
     private _visible: boolean;
     public _canvas: HTMLCanvasElement|null;
-    private _measurementProvider: S3CanvasMeasurementProvider|null;
+    private _measurementProvider: MeasurementProvider|null;
 
     /** adding */
     private _dropping: boolean;
@@ -179,7 +179,7 @@ export class S3MonitorSkin extends EventEmitter implements IMonitorSkin {
         this._canvas = document.createElement('canvas');
         const ctx = this._canvas.getContext('2d', { willReadFrequently: true });
         if(ctx == undefined) throw 'Unable to get ctx';
-        this._measurementProvider = new S3CanvasMeasurementProvider(ctx);
+        this._measurementProvider = new MeasurementProvider(ctx);
         return ctx;
     }
     getDefaultHeight(){
@@ -269,9 +269,9 @@ export class S3MonitorSkin extends EventEmitter implements IMonitorSkin {
         return this._ctx;
     }
     /**
-     * @returns {S3CanvasMeasurementProvider}
+     * @returns {MeasurementProvider}
      */
-    get measurementProvider() {
+    get measurementProvider(): MeasurementProvider {
         if(this._measurementProvider == undefined) throw 'measurementProvider null error';
         return this._measurementProvider;
     }

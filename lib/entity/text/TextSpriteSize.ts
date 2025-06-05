@@ -4,12 +4,14 @@ import { TextSprite } from './textSprite';
 export class TextSpriteSize {
 
     private entity: TextSprite;
+    private drawingDimension: {w: number, h: number};
     /**
      * @internal
      * @param entity {TextSprite}
      */
     constructor(entity:TextSprite){
         this.entity = entity;
+        this.drawingDimension = {w:0, h:0};
     }
     /**
      * 横サイズ

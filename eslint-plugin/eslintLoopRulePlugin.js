@@ -1,6 +1,6 @@
 'use strict'
 
-const yieldCheckCommon = function*(context,node){
+const yieldCheckCommon = function(context,node){
     if(node.body && node.body.body){
         const statements = node.body.body;
         if(Array.isArray(statements) && statements.length > 0){
@@ -30,7 +30,6 @@ const yieldCheckCommon = function*(context,node){
                             }
                             parent = parent.parent;
                         }
-                        yield;
                     }
                     if(functionNode){
             
@@ -80,7 +79,7 @@ const yieldCheckCommon = function*(context,node){
  * @param {*} context 
  * @param {*} node 
  */
-const prohibitionLoopCommon = function*(context,node){
+const prohibitionLoopCommon = function(context,node){
     let parent = node.parent
     // 親をたどる
     for(;;) {
@@ -108,7 +107,6 @@ const prohibitionLoopCommon = function*(context,node){
             }
             parent = parent.parent;
         }
-        yield;
     }
     return false;
 }
@@ -148,14 +146,13 @@ const prohibitionGenerator = function(context, node, callee){
  * @param {string} calleeの名前
  * @returns parentCallee
  */
-const foundParentCallee = function*(node, propName) {
+const foundParentCallee = function(node, propName) {
     let parent = node.parent;
     while(parent){
         if(parent.callee && parent.callee.property && parent.callee.property.name == propName){
             return parent;
         }
         parent = parent.parent;
-        yield;
     }
     return false;
 }

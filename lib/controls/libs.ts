@@ -142,7 +142,7 @@ export class Libs {
      * get rendering rate object
      * @internal
      */
-    get renderRate() {
+    get renderRate(): {x:number, y:number} {
         if(this.p.render != null && this.p.canvas){
             const _rateX = this.p.render.stageWidth / this.p.canvas.width;
             const _rateY = this.p.render.stageHeight / this.p.canvas.height;

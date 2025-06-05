@@ -1,6 +1,7 @@
 import { Costumes } from '../costumes';
 import { Entity } from '../entity';
 import { ImageLoader } from '../../importer/imageLoader';
+import { MeasurementProvider } from '../../util/MeasurementProvider';
 import { StageLayering } from '../stageLayering';
 import { ScratchRenderProperties } from '@Lib/render/IRenderWebGL';
 import { TextSpriteControl } from './textControl';
@@ -14,6 +15,8 @@ import type { ITextSpriteLooks } from '@Type/text/ITextSpriteLooks';
 import type { ITextSpriteMotion } from '@Type/text/ITextSpriteMotion';
 import { TextSpriteEvent } from './textSpriteEvent';
 import { ISprite } from '@Type/sprite';
+import { Utils } from '@Lib/util/utils';
+import { Env } from '@Lib/env';
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -26,6 +29,7 @@ export class TextSprite extends Entity implements ITextSprite{
     private _text: string;
     private costumes: Costumes;
     private _font: string;
+    private _fontFamily: string[];
     private _fontSize: number;
     private _textAttributes: {x:number,y:number};
     private _dirty : boolean;
@@ -37,7 +41,7 @@ export class TextSprite extends Entity implements ITextSprite{
     private _Control: ITextSpriteControl;
     /** イベント */
     private _Event: ITextSpriteEvent;
-    
+
     constructor(name : string) {
         super(name, StageLayering.TEXT_LAYER);
         this.$_position = {x:0, y:0};
@@ -53,8 +57,17 @@ export class TextSprite extends Entity implements ITextSprite{
         this._Looks = new TextSpriteLooks(this);
         this._Control = new TextSpriteControl(this);
         this._Event = new TextSpriteEvent(this);
+        this._fontFamily = [];
         const stage = this.playGround.stage;
         stage.addSprite(this as unknown as ISprite);
+    }
+    set fontFamily(fontFamily: string[]){
+        if(this._fontFamily.length>0){
+            this._fontFamily.slice(0, this._fontFamily.length);
+        }
+        for(const font of fontFamily) {
+            this._fontFamily.push(font);
+        }
     }
     set svgScale(scale:TScale) {
         this.$svgScale.w = scale.w;
@@ -76,21 +89,23 @@ export class TextSprite extends Entity implements ITextSprite{
     
     private async drawText(): Promise<void> {
         const textStr = this._text;
-        const svg = this.createSvg();
-        const text = this.createText(textStr);
-        svg.appendChild(text);
+        const svg = this.createSvg(textStr);
         this.skinId = await this.addSvgImage(svg);
-        svg.remove();
+        //svg.remove();
     }
     /**
      * SVG エレメントを返す
      * @returns - SVG element
      */
-    private createSvg() :SVGSVGElement{
+    private createSvg(textStr: string) :SVGSVGElement{
         const svg = document.createElementNS(SVG_NS, "svg");
-        svg.setAttribute("width", `${this.$svgScale.w}`);
-        svg.setAttribute("height", `${this.$svgScale.h}`);
-        svg.setAttribute("viewBox", `0 0 ${this.$svgScale.w} ${this.$svgScale.h}`);
+        const mesure = this.mesure(textStr);
+        console.log(mesure);
+        svg.setAttribute("width", `${mesure.w}`);
+        svg.setAttribute("height", `${mesure.h}`);
+        svg.setAttribute("viewBox", `0 0 ${mesure.w} ${mesure.h}`);
+        const text = this.createText(textStr);
+        svg.appendChild(text);
         return svg;
     }
     /**
@@ -100,13 +115,24 @@ export class TextSprite extends Entity implements ITextSprite{
      */
     private createText(textStr: string): SVGTextElement {
         const text = document.createElementNS(SVG_NS, "text");
+        // テキストの左下のX座標
         text.setAttribute("x", `${this._textAttributes.x}`);
+        // テキストの左下のY座標
         text.setAttribute("y", `${this._textAttributes.y}`);
         text.setAttribute("fill", "black");
         text.setAttribute("font-size", `${this._fontSize}`);
         text.setAttribute("font-family", `${this._font}`);
         text.textContent = textStr;
         return text;
+    }
+    mesure(text:string): {w:number, h:number} {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if(ctx == undefined) throw 'Unable to get ctx';
+        ctx.font = `${this._fontSize}px ${this._font}, sans-serif`;
+        const measurementProvider = new MeasurementProvider(ctx);
+        const w = measurementProvider.measureText(text);
+        return {w:w, h: this._fontSize};
     }
     /**
      * SVG element を文字列化(ロード可能とし)、コスチュームへ追加する
@@ -119,9 +145,16 @@ export class TextSprite extends Entity implements ITextSprite{
         const svgText = serializer.serializeToString(svg);
         const name = `TextSprite_${this.id}`;
         const img = await ImageLoader._loadImage('data:image/svg+xml;charset=UTF-8,'+ svgText);
-        await this.costumes.addImage(name, img);
-        const skinId = this.costumes.getSkinId(name);
-        return skinId;
+        if(this.skinId == -1) {
+            await this.costumes.addImage(name, img);
+            const skinId = this.costumes.getSkinId(name);
+            this.render.renderer.updateDrawableSkinId(this.drawableID, skinId);
+            return skinId;
+        }else{
+            const skinId = await this.costumes.updateImage(name, img);
+            //this.render.renderer.updateDrawableSkinId(this.drawableID, skinId);
+            return skinId;
+        }
     }
     /**
      * コスチュームを更新する

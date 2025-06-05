@@ -31,10 +31,12 @@ Pg.prepare = async function prepare() {
     cat.Looks.Size.scale = {w: 300, h: 300};
 
     text = new Lib.TextSprite('Text');
-    text.fontSize = 350;
-    text.Looks.Size.scale = {w:30, h:30};
-    text.svgScale = {w:1500, h:400};
-    text.textAttributes = {x:0, y:350};
+    // https://hsmt-web.com/blog/svg-text/
+    text.font = 'Noto Sans JP';
+    text.fontSize = 500;
+    text.Looks.Size.scale = {w:20, h:20};
+    //text.svgScale = {w:1500, h:400};
+    text.textAttributes = {x:0, y:490};
     text.text = 'あい';
     text.Motion.Position.xy = {x: -150, y:0};
 }
@@ -44,12 +46,15 @@ Pg.setting = async function setting() {
         let counter = 0;
         for(;;){
             counter += 1;
-            this.text = `${counter}`;
+            this.text = `かきくけこ「${counter}」`;
             this.Motion.Move.steps(10);
             if(this.Motion.Position.x > 240) {
                 this.Motion.Position.x = -240;
             }
+            const size = this.Looks.Size.drawingSize;
+            console.log(size);
             yield;
+            
         }
     });
     cat.Event.whenFlag(async function*(){

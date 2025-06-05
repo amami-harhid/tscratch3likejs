@@ -179,8 +179,8 @@ export class PlayGround {
      * get randering rate ( when resized )
      * @returns 
      */
-    getRenderRate() {
-        return this.libs.renderRate;        
+    getRenderRate() : {x:number, y:number}{
+        return this._libs.renderRate;        
     }
 
 
