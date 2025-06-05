@@ -5,8 +5,18 @@ import type { ITextSpriteEvent } from './ITextSpriteEvent';
 import type { ITextSpriteLooks } from './ITextSpriteLooks';
 import type { ITextSpriteMotion } from './ITextSpriteMotion';
 /**
- * Sprite
+ * TextSprite
  */
+export type TextAttributes = {
+    fill: string,
+    stroke?: string,
+    stroke_mode?: 'outside'|'inside',
+    stroke_width?: number,
+    font: string,
+    font_size: number,
+    font_weight?: 'normal'|'bold'|'bolder'|'lighter',
+    use?: {x:number,y:number,fill:string,stroke?:string,stroke_width?:number}[],
+};
 export type TTextSprite = ITextSprite;
 export interface STextSprite{
     /**
@@ -51,16 +61,12 @@ export interface ITextSprite {
      * SVGの大きさ
      */    
     set svgScale(scale:TScale);
-    /**
-     * 文字の大きさ
-     */    
-    set fontSize(fontSize:number);
 
     set padding(padding:number);
     /**
      * 文字を書き出す位置
      */
-    set textAttributes(attr: {x:number, y:number});
+    set textAttributes(attr: TextAttributes);
     /**
      * テキスト
      */

@@ -38,26 +38,46 @@ Pg.prepare = async function prepare() {
             href:'../../assets/fonts/TogeMaruGothic-700-Bold.woff',
         },
     ]);
-    text.padding = 50;
-    text.fontSize = 500;
-    text.Looks.Size.scale = {w:10, h:10};
+    const textAttr = {
+        font: 'TogeMaruGothic',
+        font_size: 700,
+        font_weight: 'bold',
+        fill: 'white',
+        stroke: 'blue',
+        stroke_mode : 'outside',
+        stroke_width: 30,
+        use:[
+            {x:0,y:0,fill:'black',stroke:'black',stroke_width:30},
+            {x:0,y:0,fill:'white',stroke:'white',stroke_width:30},
+            {x:0,y:0,fill:'blue'},
+        ]
+    }
+    text.textAttributes = textAttr;
+    //text.font = 'red';
+    text.padding = 70;
+    //text.fontSize = 700;
+    text.Looks.Size.scale = {w:50, h:50};
     //text.svgScale = {w:1500, h:400};
-    text.textAttributes = {x:0, y:490};
     text.text = 'あい';
-    text.Motion.Position.xy = {x: -140, y:150};
+    text.Motion.Position.xy = {x: 0, y:0};
 }
 
 Pg.setting = async function setting() {
     text.Event.whenFlag(async function*(){
-        let counter = 0;
+        let counter = 5;
         for(;;){
-            this.text = `秒数「${counter}」`;
+            this.text = `${counter}`;
             await this.Control.wait(1);
-            counter += 1;
-            
-            yield;
-            
+            counter -= 1;
+            if(counter == 0){
+                break;
+            }
+            yield;            
         }
+        this.text = 'GO!';
+        await this.Control.wait(1);
+        this.Looks.hide();
+
     });
     cat.Event.whenFlag(async function*(){
         for(;;) {

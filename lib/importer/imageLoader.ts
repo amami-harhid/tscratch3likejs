@@ -97,6 +97,7 @@ export class ImageLoader {
             img.crossOrigin = "Anonymous";
             img.onload = () => resolve(img);
             img.onerror = (e) => {
+                console.log(e);
                 //reject(e);
                 resolve("ERROR");
             }    
@@ -110,7 +111,9 @@ export class ImageLoader {
      * @returns Promise<string>
      */
     static async _svgText(image: string) :Promise<string>{
+        console.log('iamge',image);
         let svg: Response = await fetch(image);
+        console.log('svg',svg);
         let _text: string = await svg.text();
         if(_text.substring(0,4) != "<svg"){
             return "ERROR";
