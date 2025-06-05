@@ -23,12 +23,15 @@ import { IStageEvent } from "@Type/stage/IStageEvent";
 import { IStageSensing } from "@Type/stage/IStageSensing";
 import { IStageSound } from "@Type/stage/IStageSound";
 import { ISprite } from "@Type/sprite";
+import { ITextSprite } from "@Type/text";
+import { TextSprite } from "./text/textSprite";
 export class Stage extends Entity implements IStage{
     private scale: TScale;
     private direction: number;
     /** @internal */
     public backdrops: Backdrops;
     private _sprites: Sprite[];
+    private _textSprites: TextSprite[];
     //private skinIdx: number;
     /** @internal */
     public mouse: TMouse;
@@ -55,6 +58,7 @@ export class Stage extends Entity implements IStage{
         //this.keysKey = [];
         this.backdrops = new Backdrops(this.playGround);
         this._sprites = [];
+        this._textSprites = [];
         //this.skinIdx = -1;
         this.mouse = {scratchX:0, scratchY:0, x:0, y:0, down: false, pageX: 0, pageY: 0, clientX: 0, clientY: 0};
         const me = this;
@@ -120,6 +124,10 @@ export class Stage extends Entity implements IStage{
     get $sprites (): Sprite[] {
         return this._sprites;
     }
+    /** @internal */
+    get textSprites(): ITextSprite[] {
+        return this._textSprites;
+    }
     get sprites (): ISprite[] {
         const sprites : ISprite[] = this._sprites as unknown as ISprite[];
         return sprites;
@@ -134,6 +142,11 @@ export class Stage extends Entity implements IStage{
     addSprite (sprite: ISprite): void {
         const _sprite:Sprite = sprite as unknown as Sprite;
         this.$addSprite(_sprite);
+    }
+
+    addTextSprite( textSprite: ITextSprite) : void {
+        const _textSprite:TextSprite = textSprite as unknown as TextSprite;
+        this._textSprites.push(_textSprite);
     }
     /** @internal */
     _sortSprites(): void {
@@ -165,6 +178,14 @@ export class Stage extends Entity implements IStage{
         this._sprites = n_sprites;
         this._sortSprites();
     }
+
+    /** @internal */
+    removeTextSprite( textSprite: ITextSprite ) {
+        const curSprite:TextSprite = textSprite as unknown as TextSprite;
+        const n_sprites = this._textSprites.filter( ( item ) => item !== curSprite );
+        this._textSprites = n_sprites;
+
+    }
     /**
      * ステージと全スプライトを更新する
      */
@@ -176,7 +197,11 @@ export class Stage extends Entity implements IStage{
         this.backdrops.update(this.drawableID, this._effect);
         for(const _sprite of this._sprites){
             _sprite.update();
-        }        
+        }
+        for(const _sprite of this._textSprites){
+            _sprite.update();
+        }
+
     }
     /**
      * 描画する

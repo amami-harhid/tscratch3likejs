@@ -43,6 +43,8 @@ import type { ISpriteBackdrop } from "@Type/sprite/ISpriteBackdrop";
 import type { ISpriteBubble } from "@Type/sprite/ISpriteBubble";
 import { ISpriteDragMode } from "@Type/sprite/ISpriteDragMode";
 import { SpriteDragMode } from "./sprite/spriteDragMode";
+import { ISpriteEvent } from "@Type/sprite/ISpriteEvent";
+import { ISpriteSound } from "@Type/sprite/ISpriteSound";
 //import { ISpriteCostume } from "@Type/sprite/ISpriteCostume";
 export class Sprite extends Entity implements ISprite {
     private bubble?: Bubble;
@@ -91,11 +93,11 @@ export class Sprite extends Entity implements ISprite {
     /** 制御 */
     private _Control: ISpriteControl;
     /** イベント */
-    private _Event: SpriteEvent;
+    private _Event: ISpriteEvent;
     /** 調べる */
     private _Sensing: ISpriteSensing;
     /** サウンド */
-    private _Sound: SpriteSound;
+    private _Sound: ISpriteSound;
     /** ペン */
     private _Pen: ISpritePen;
     private _TextToSpeech: SpriteTextToSpeech;
@@ -331,45 +333,6 @@ export class Sprite extends Entity implements ISprite {
 
     }
     /**
-     * 指定した層に移す
-     * @param {number} nLayers 
-     */
-    protected _goLayers(nLayers: number){
-        if (this.render.renderer) {
-            this.render.renderer.setDrawableOrder(this.drawableID, nLayers, StageLayering.SPRITE_LAYER, true);
-        }
-    }
-    /**
-     * @internal
-     * 最前面にする
-     */
-    $goToFront() : void {
-        this._goLayers(Infinity); // 最上位
-    }
-    /**
-     * @internal
-     * 最背面にする
-     */
-    $goToBack() : void {
-        this._goLayers(-Infinity); // 最下位
-    }
-    /**
-     * @internal
-     * 手前に出す
-     * @param nLayers {number}
-     */
-    $goForwardLayers (nLayers: number) : void {
-        this._goLayers(nLayers);
-    }
-    /**
-     * @internal
-     * 奥に下げる
-     * @param nLayers {number}
-     */
-    $goBackwardLayers (nLayers: number) : void {
-        this._goLayers(-nLayers);
-    }
-    /**
      * UPDATE
      * @internal
      */
@@ -400,18 +363,6 @@ export class Sprite extends Entity implements ISprite {
             penSprite.drawLine();
         }
         super.$setXY(x,y);
-    }
-    /**
-     * @internal
-     * 動かす
-     * @param steps {number}
-     */
-    $moveSteps(steps: number): void {
-        const radians = MathUtil.degToRad(90 - this.$_direction);
-        const dx = steps * Math.cos(radians);
-        const dy = steps * Math.sin(radians);
-        this.$setXY( this.$_position.x + dx, this.$_position.y + dy );
-    
     }
     /**
      * @internal
@@ -463,33 +414,6 @@ export class Sprite extends Entity implements ISprite {
      */
     set y( y:number ){
         this.$setY(y);
-    }
-    /**
-     * 指定した座標へ行く
-     * @internal
-     * @param {number} x 
-     * @param {number} y 
-     * @returns 
-     */
-    $goToXY( x: number, y: number ): void {
-
-        if(Utils.isNumber(x)){
-            if ( !Utils.isNumber(y)) {
-                return;
-            }
-            // @type {number}
-            const _x = x;
-            this.$setXY( _x, y );
-        }
-    }
-    /**
-     * @internal
-     * 指定した座標へ行く.
-     * @param x 
-     * @param y 
-     */
-    $moveTo( x: number, y: number ): void {
-        this.$goToXY( x, y );       
     }
     /**
      * 触っている枠を返す
@@ -889,30 +813,6 @@ export class Sprite extends Entity implements ISprite {
     }
     /**
      * @internal
-     * 向きを指定する
-     * @param {number} d 
-     * @returns {void}
-     */
-    $pointInDirection( d: number ): void {
-        if(!this.$isAlive()) return;
-
-        if(d < 0) {
-            let _direction = d % 360;
-            if( _direction < -180) {
-                _direction = 360 + _direction;
-            }
-            this.$_direction = _direction;
-        }else{
-            // _derection 0 以上 
-            let _direction = d % 360;
-            if( _direction > 180) {
-                _direction = _direction - 360;
-            }
-            this.$_direction = _direction;
-        }
-    }
-    /**
-     * @internal
      * 回転方向を指定する
      * @param {RotationStyle} style 
      * @returns {void}
@@ -1166,37 +1066,12 @@ export class Sprite extends Entity implements ISprite {
         });
     }
     /**
-     * Drawableが存在していることを確認する
-     * @returns {boolean}
-     */
-    protected $_isDrawableExist(): boolean {
-        const drawable = this.render.renderer._allDrawables[this.drawableID];
-        if(drawable == null){
-            return false;
-        }
-        return true;
-    }
-    /**
      * @internal
      * 自分自身の縦横表示サイズを得る
      * @returns {{w:number, h: number}}
      */
     $drawingDimensions(): {w: number, h: number} {
         return this.$getDrawingDimensions();
-    }
-    /**
-     * 自分自身の縦横表示サイズを得る
-     * @returns {{w:number, h: number}}
-     */
-    protected $getDrawingDimensions(): {w: number, h: number} {
-        let width = 0;
-        let height = 0  
-        if(this.$_isDrawableExist()){
-            const bounds = this.render.renderer.getBounds(this.drawableID);
-            height = Math.abs(bounds.top - bounds.bottom);
-            width = Math.abs(bounds.left - bounds.right);    
-        }   
-        return {w:width, h:height};
     }
     /**
      * @internal
@@ -1208,23 +1083,7 @@ export class Sprite extends Entity implements ISprite {
         const y = this.$_position.y
         return {x:x, y:y};
     }
-    /**
-     * @internal
-     * 現在の向きを取得する
-     * @returns {number}
-     */
-    $getCurrentDirection(): number {
-        return this.$_direction;
-    }
 
-    /**
-     * @internal
-     * 現在のスケールを取得する
-     * @returns {{w: number, h: number}}
-     */
-    public $getCurrentSize() {
-        return {w: this.$_scale.w, h: this.$_scale.h};
-    }
     /**
      * @internal
      * 質問をして答えを待つ
