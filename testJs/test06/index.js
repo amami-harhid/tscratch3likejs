@@ -34,23 +34,24 @@ Pg.prepare = async function prepare() {
     // https://hsmt-web.com/blog/svg-text/
     await text.setFontFamily([
         {
-            font:'TogeMaruGothic',
-            href:'../../assets/fonts/TogeMaruGothic-700-Bold.woff',
+            font:'KTEGAKI',
+            href:'../../assets/fonts/KTEGAKI.ttf',
+            descriptors: { style: 'normal', weight: 700}
         },
     ]);
     const textAttr = {
-        font: 'TogeMaruGothic',
+        font: 'Curly',
         font_size: 700,
-        font_weight: 'bold',
+        //font_weight: 'bold',
         fill: 'white',
-        stroke: 'blue',
-        stroke_mode : 'outside',
-        stroke_width: 30,
-        use:[
-            {x:0,y:0,fill:'black',stroke:'black',stroke_width:30},
-            {x:0,y:0,fill:'white',stroke:'white',stroke_width:30},
-            {x:0,y:0,fill:'blue'},
-        ]
+        //stroke: 'blue',
+        //stroke_mode : 'outside',
+        //stroke_width: 50,
+        // use:[
+        //     {x:0,y:0,fill:'black',stroke:'black',stroke_width:30},
+        //     {x:0,y:0,fill:'white',stroke:'white',stroke_width:30},
+        //     {x:0,y:0,fill:'blue'},
+        // ]
     }
     text.textAttributes = textAttr;
     //text.font = 'red';

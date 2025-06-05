@@ -8,7 +8,7 @@ import { TextSpriteControl } from './textControl';
 import { TextSpriteLooks } from './textSpriteLooks';
 import { TextSpriteMotion } from './textSpriteMotion';
 import type { TPosition, TScale } from '@Type/common/typeCommon';
-import type { ITextSprite, TextAttributes } from '@Type/text';
+import type { ITextSprite, TextAttributes, ParmFontFace } from '@Type/text';
 import type { ITextSpriteControl } from '@Type/text/ITextSpriteControl';
 import type { ITextSpriteEvent } from '@Type/text/ITextSpriteEvent';
 import type { ITextSpriteLooks } from '@Type/text/ITextSpriteLooks';
@@ -28,7 +28,7 @@ export class TextSprite extends Entity implements ITextSprite{
     private $svgScale: TScale;
     private _text: string;
     private costumes: Costumes;
-    private _fontFamily: {font:string,href?:string}[];
+    private _fontFamily: ParmFontFace[];
     private _padding: number;
     private _textAttributes: TextAttributes;
     private _dirty : boolean;
@@ -63,7 +63,7 @@ export class TextSprite extends Entity implements ITextSprite{
         this._padding = padding;
         this._dirty = true;
     }
-    async setFontFamily(fontFamily: {font:string,href?:string}[]): Promise<void>{
+    async setFontFamily(fontFamily: ParmFontFace[]): Promise<void>{
         if(this._fontFamily.length>0){
             this._fontFamily.slice(0, this._fontFamily.length);
         }
@@ -90,7 +90,7 @@ export class TextSprite extends Entity implements ITextSprite{
                 this._textAttributes.use.push(_use);
             }
         }
-        console.log(this._textAttributes);
+        //console.log(this._textAttributes);
     }
     set text(text:string) {
         if(this._text != text) {
@@ -113,14 +113,20 @@ export class TextSprite extends Entity implements ITextSprite{
                     const fontFace = new FontFace(
                         font.font,
                         `url(${font.href})`,
+                        font.descriptors
                     );
                     const promise = fontFace.load();
                     promiseArr.push(promise);
                 }
             }
             const fontFaces = await Promise.all(promiseArr);
-            for(const face of fontFaces) {
-                document.fonts.add(face);
+            const scratchFontStyles = document.getElementById('scratch-font-styles');
+            if(scratchFontStyles){
+                for(const face of fontFaces) {
+                    console.log(face);
+                    document.fonts.add(face);
+                }
+
             }
         }
     }
@@ -134,6 +140,8 @@ export class TextSprite extends Entity implements ITextSprite{
         svg.setAttribute("width", `${mesure.w}`);
         svg.setAttribute("height", `${mesure.h+this._padding*2}`);
         svg.setAttribute("viewBox", `0 0 ${mesure.w} ${mesure.h+this._padding*2}`);
+        
+
         const text = this.createText(textStr, mesure);
         if(this._textAttributes.use && this._textAttributes.use.length>0){
             const defs = document.createElementNS(SVG_NS, "defs");
@@ -173,6 +181,7 @@ export class TextSprite extends Entity implements ITextSprite{
      */
     private createText(textStr: string, mesure:{w:number,h:number}): SVGTextElement {
         const text = document.createElementNS(SVG_NS, "text");
+        text.style.fontFamily = `${this._textAttributes.font}, sans-serif`;
         if(this._textAttributes.use == undefined || this._textAttributes.use.length == 0){
             // テキストの左下のX座標
             text.setAttribute("x", '0');
@@ -211,12 +220,14 @@ export class TextSprite extends Entity implements ITextSprite{
      * @returns 
      */
     private mesure(text:string): {w:number, h:number} {
+        const fontFamily  = ((this._textAttributes.font_weight)? this._textAttributes.font_weight: '')
+            +`${this._textAttributes.font_size}px "${this._textAttributes.font}", sans-serif`;
         const debugCanvas = document.createElement('canvas');
-        const debugCtx = debugCanvas.getContext('2d');
+        debugCanvas.style.fontFamily = fontFamily;
+        const debugCtx = debugCanvas.getContext('2d',{willReadFrequently:true});
         if(debugCtx == undefined) throw 'Unable to get ctx';
-        let fontFamily = this.getFontFamily();
-        debugCtx.font = ((this._textAttributes.font_weight)? this._textAttributes.font_weight: '')
-            +`${this._textAttributes.font_size}px '${this._textAttributes.font}', sans-serif`;
+        //let fontFamily = this.getFontFamily();
+        debugCtx.font = fontFamily;
         //const measurementProvider = new MeasurementProvider(debugCtx);
         const mesure = debugCtx.measureText(text);
         const width = mesure.width;
@@ -232,13 +243,13 @@ export class TextSprite extends Entity implements ITextSprite{
     private async addSvgImage(svg:SVGSVGElement) : Promise<number>{
         const serializer = new XMLSerializer();
         const svgText = serializer.serializeToString(svg);
-        console.log(svgText);
+        //console.log(svgText);
         const name = `TextSprite_${this.id}`;
         const base64 = Buffer.from(svgText).toString('base64');
-        const url = 'data:image/svg+xml;base64,'+ base64;
+        const url = 'data:image/svg+xml;charset=utf-8;base64,'+ base64;
         const img = await ImageLoader._loadImage(url);
         //const img = await ImageLoader._svgText(url);
-        console.log(img);
+        //console.log(img);
         if(this.skinId == -1) {
             await this.costumes.addImage(name, img);
             const skinId = this.costumes.getSkinId(name);

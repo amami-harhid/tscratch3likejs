@@ -4,9 +4,13 @@ import type { ITextSpriteControl } from './ITextSpriteControl';
 import type { ITextSpriteEvent } from './ITextSpriteEvent';
 import type { ITextSpriteLooks } from './ITextSpriteLooks';
 import type { ITextSpriteMotion } from './ITextSpriteMotion';
-/**
- * TextSprite
- */
+
+export type ParmFontFace = {
+    font: string,
+    href: string,
+    descriptors: FontFaceDescriptors,
+} 
+
 export type TextAttributes = {
     fill: string,
     stroke?: string,
@@ -18,6 +22,9 @@ export type TextAttributes = {
     use?: {x:number,y:number,fill:string,stroke?:string,stroke_width?:number}[],
 };
 export type TTextSprite = ITextSprite;
+/**
+ * TextSprite
+ */
 export interface STextSprite{
     /**
      * @param name
@@ -74,5 +81,5 @@ export interface ITextSprite {
     /**
      * フォントファミリー
      */
-    setFontFamily(fontFamily: {font:string,href?:string}[]): Promise<void>;
+    setFontFamily(fontFamily: ParmFontFace[]): Promise<void>;
 };
