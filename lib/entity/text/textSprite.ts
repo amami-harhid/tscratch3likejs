@@ -29,9 +29,10 @@ export class TextSprite extends Entity implements ITextSprite{
     private _text: string;
     private costumes: Costumes;
     private _font: string;
-    private _fontFamily: string[];
+    private _fontFamily: {font:string,href?:string}[];
     private _fontSize: number;
     private _textAttributes: {x:number,y:number};
+    private _padding: number;
     private _dirty : boolean;
     /** 動き */
     private _Motion: ITextSpriteMotion;
@@ -51,6 +52,7 @@ export class TextSprite extends Entity implements ITextSprite{
         this._fontSize = 50;
         this._font = 'Arial';
         this._textAttributes = {x:0,y:0};
+        this._padding = 0;
         this.costumes = new Costumes(this.playGround);
         this.skinId = -1;
         this._Motion = new TextSpriteMotion(this);
@@ -61,13 +63,19 @@ export class TextSprite extends Entity implements ITextSprite{
         const stage = this.playGround.stage;
         stage.addSprite(this as unknown as ISprite);
     }
-    set fontFamily(fontFamily: string[]){
+
+    set padding(padding:number) {
+        this._padding = padding;
+    }
+    async setFontFamily(fontFamily: {font:string,href?:string}[]): Promise<void>{
         if(this._fontFamily.length>0){
             this._fontFamily.slice(0, this._fontFamily.length);
         }
         for(const font of fontFamily) {
             this._fontFamily.push(font);
         }
+
+        await this.link();
     }
     set svgScale(scale:TScale) {
         this.$svgScale.w = scale.w;
@@ -93,6 +101,25 @@ export class TextSprite extends Entity implements ITextSprite{
         this.skinId = await this.addSvgImage(svg);
         //svg.remove();
     }
+    private async link(): Promise<void> {
+        if(this._fontFamily.length > 0){
+            const promiseArr:Promise<FontFace>[] = []
+            for(const font of this._fontFamily){
+                if(font.href){
+                    const fontFace = new FontFace(
+                        font.font,
+                        `url(${font.href})`,
+                    );
+                    const promise = fontFace.load();
+                    promiseArr.push(promise);
+                }
+            }
+            const fontFaces = await Promise.all(promiseArr);
+            for(const face of fontFaces) {
+                document.fonts.add(face);
+            }
+        }
+    }
     /**
      * SVG エレメントを返す
      * @returns - SVG element
@@ -100,11 +127,11 @@ export class TextSprite extends Entity implements ITextSprite{
     private createSvg(textStr: string) :SVGSVGElement{
         const svg = document.createElementNS(SVG_NS, "svg");
         const mesure = this.mesure(textStr);
-        console.log(mesure);
         svg.setAttribute("width", `${mesure.w}`);
-        svg.setAttribute("height", `${mesure.h}`);
-        svg.setAttribute("viewBox", `0 0 ${mesure.w} ${mesure.h}`);
-        const text = this.createText(textStr);
+        svg.setAttribute("height", `${mesure.h+this._padding*2}`);
+        svg.setAttribute("viewBox", `0 0 ${mesure.w} ${mesure.h+this._padding*2}`);
+        
+        const text = this.createText(textStr, mesure);
         svg.appendChild(text);
         return svg;
     }
@@ -113,26 +140,45 @@ export class TextSprite extends Entity implements ITextSprite{
      * @param textStr 
      * @returns - text element
      */
-    private createText(textStr: string): SVGTextElement {
+    private createText(textStr: string, mesure:{w:number,h:number}): SVGTextElement {
         const text = document.createElementNS(SVG_NS, "text");
         // テキストの左下のX座標
-        text.setAttribute("x", `${this._textAttributes.x}`);
+        text.setAttribute("x", '0');
+        //text.setAttribute("x", `${this._textAttributes.x}`);
         // テキストの左下のY座標
-        text.setAttribute("y", `${this._textAttributes.y}`);
+        text.setAttribute("y", `${mesure.h + this._padding}`);
+        //text.setAttribute("y", `${this._textAttributes.y}`);
         text.setAttribute("fill", "black");
         text.setAttribute("font-size", `${this._fontSize}`);
-        text.setAttribute("font-family", `${this._font}`);
+        let fontFamily = this.getFontFamily();
+        text.setAttribute("font-family", `${fontFamily}`);
         text.textContent = textStr;
         return text;
     }
-    mesure(text:string): {w:number, h:number} {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        if(ctx == undefined) throw 'Unable to get ctx';
-        ctx.font = `${this._fontSize}px ${this._font}, sans-serif`;
-        const measurementProvider = new MeasurementProvider(ctx);
-        const w = measurementProvider.measureText(text);
-        return {w:w, h: this._fontSize};
+    private getFontFamily() : string {
+        let fontFamily = '';
+        for(const font of this._fontFamily){
+            fontFamily += `"${font.font}",`;
+        }
+        fontFamily+='sans-serif'
+        return fontFamily;
+    }
+    /**
+     * 文字列の大きさを測定するために Canvasを使っている
+     * @param text 
+     * @returns 
+     */
+    private mesure(text:string): {w:number, h:number} {
+        const debugCanvas = document.createElement('canvas');
+        const debugCtx = debugCanvas.getContext('2d');
+        if(debugCtx == undefined) throw 'Unable to get ctx';
+        let fontFamily = this.getFontFamily();
+        debugCtx.font = `${this._fontSize}px ${fontFamily}`;
+        //const measurementProvider = new MeasurementProvider(debugCtx);
+        const mesure = debugCtx.measureText(text);
+        const width = mesure.width;
+        const height = mesure.actualBoundingBoxAscent+mesure.actualBoundingBoxDescent 
+        return {w:width, h: height};
     }
     /**
      * SVG element を文字列化(ロード可能とし)、コスチュームへ追加する

@@ -32,27 +32,29 @@ Pg.prepare = async function prepare() {
 
     text = new Lib.TextSprite('Text');
     // https://hsmt-web.com/blog/svg-text/
-    text.font = 'Noto Sans JP';
+    await text.setFontFamily([
+        {
+            font:'TogeMaruGothic',
+            href:'../../assets/fonts/TogeMaruGothic-700-Bold.woff',
+        },
+    ]);
+    text.padding = 50;
     text.fontSize = 500;
-    text.Looks.Size.scale = {w:20, h:20};
+    text.Looks.Size.scale = {w:10, h:10};
     //text.svgScale = {w:1500, h:400};
     text.textAttributes = {x:0, y:490};
     text.text = 'あい';
-    text.Motion.Position.xy = {x: -150, y:0};
+    text.Motion.Position.xy = {x: -140, y:150};
 }
 
 Pg.setting = async function setting() {
     text.Event.whenFlag(async function*(){
         let counter = 0;
         for(;;){
+            this.text = `秒数「${counter}」`;
+            await this.Control.wait(1);
             counter += 1;
-            this.text = `かきくけこ「${counter}」`;
-            this.Motion.Move.steps(10);
-            if(this.Motion.Position.x > 240) {
-                this.Motion.Position.x = -240;
-            }
-            const size = this.Looks.Size.drawingSize;
-            console.log(size);
+            
             yield;
             
         }

@@ -55,6 +55,8 @@ export interface ITextSprite {
      * 文字の大きさ
      */    
     set fontSize(fontSize:number);
+
+    set padding(padding:number);
     /**
      * 文字を書き出す位置
      */
@@ -63,6 +65,8 @@ export interface ITextSprite {
      * テキスト
      */
     set text(text:string);
-
-
+    /**
+     * フォントファミリー
+     */
+    setFontFamily(fontFamily: {font:string,href?:string}[]): Promise<void>;
 };
