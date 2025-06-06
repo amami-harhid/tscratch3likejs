@@ -39,7 +39,25 @@ export class Costumes {
         this._rotationStyle = RotationStyle.ALL_AROUND;
         this._rotationStylePatterns = [RotationStyle.LEFT_RIGHT, RotationStyle.DONT_ROTATE, RotationStyle.ALL_AROUND];
     }
-   
+    async addImageDirectSVG(name: string, image: string): Promise<number> {
+        const skinId = this.render.renderer.createSVGSkin(image);
+        this.costumes.set( name , skinId);
+        if( this.skinId == -1) {
+            this.skinId = skinId; // 初回のSkinId 
+        }
+        await Utils.wait(1000/Env.fps);
+        return skinId;
+    }
+    async updateSkinDirectSVG(name: string, image:string): Promise<number> {
+        const skinId = this.costumes.get(name);
+        if(skinId ) {
+            this.render.renderer.updateSVGSkin(skinId, image);
+            await Utils.wait(1000/Env.fps);
+            return skinId;
+        }else{
+            return this.skinId;
+        }
+    }
     async addImage(name:string, image: string|HTMLImageElement): Promise<void> {
         await this._setSkin(name, image);
         await Utils.wait(1000/Env.fps);
@@ -59,6 +77,7 @@ export class Costumes {
         if(typeof _img == "string" && ImageLoader.isSVG(_img)) {
             // 複数回ロードしたら、その都度 skinId は変わる
             const _svgText = _img;
+            console.log('costumes._setSkin _setSvgSkin ')
             this._setSvgSkin(_svgText).then(v=>{
                 const _skinId = v;
                 this.costumes.set( name , _skinId);
@@ -67,6 +86,7 @@ export class Costumes {
                 }    
             });
         }else{
+            console.log('costumes._setSkin _setBitmapSkin ', _img)
             const _bitmap = _img as HTMLImageElement;
             const _skinId = await this._setBitmapSkin(_bitmap);
             this.costumes.set( name , _skinId);
@@ -77,6 +97,7 @@ export class Costumes {
     }
     async _setSvgSkin(_svgText: string) {
         if(this.render && this.render.renderer){
+            console.log('before this.render.renderer.createSVGSkin');
             const skinId = this.render.renderer.createSVGSkin(_svgText);
             // [2025/2/27] 姑息な対応
             // willReadFrequently を設定するために SKINインスタンスを取り出し、

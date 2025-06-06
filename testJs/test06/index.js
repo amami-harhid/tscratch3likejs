@@ -9,7 +9,7 @@ Pg.title = "【Test06】テキストを描画する"
 //const Env = Lib.Env;
 //Env.fps = 30;
 
-//const NeonTunnel = "NeonTunnel";
+const Jurassic = 'Jurassic';
 const Chill = "Chill";
 const Cat = "Cat";
 
@@ -19,12 +19,14 @@ let text;
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
 Pg.preload = async function preload() {
-    //dthis.Image.load('../../assets/white_backdrop.svg', NeonTunnel );
+    this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
 }
 Pg.prepare = async function prepare() {
+
     stage = new Lib.Stage();
+    await stage.Image.add(Jurassic);
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
     await cat.Image.add( Cat );
@@ -34,16 +36,16 @@ Pg.prepare = async function prepare() {
     // https://hsmt-web.com/blog/svg-text/
     await text.setFontFamily([
         {
-            font:'KTEGAKI',
-            href:'../../assets/fonts/KTEGAKI.ttf',
-            descriptors: { style: 'normal', weight: 700}
+            font:'ResotE',
+            href:'/assets/fonts/ResotE-Rose-89c1.woff',
+            descriptors: { style: 'normal', weight: 500}
         },
     ]);
     const textAttr = {
-        font: 'Curly',
-        font_size: 700,
+        font: 'ResotE',
+        font_size: 500,
         //font_weight: 'bold',
-        fill: 'white',
+        fill: 'blue',
         //stroke: 'blue',
         //stroke_mode : 'outside',
         //stroke_width: 50,
@@ -59,15 +61,17 @@ Pg.prepare = async function prepare() {
     //text.fontSize = 700;
     text.Looks.Size.scale = {w:50, h:50};
     //text.svgScale = {w:1500, h:400};
-    text.text = 'あい';
+    text.text = 'Text styled with custom font';
     text.Motion.Position.xy = {x: 0, y:0};
+
 }
 
 Pg.setting = async function setting() {
     text.Event.whenFlag(async function*(){
+        this.Looks.show()
         let counter = 5;
         for(;;){
-            this.text = `${counter}`;
+            //this.text = `custom font${counter}`;
             await this.Control.wait(1);
             counter -= 1;
             if(counter == 0){
@@ -75,10 +79,9 @@ Pg.setting = async function setting() {
             }
             yield;            
         }
-        this.text = 'GO!';
+        //this.text = 'GO!';
         await this.Control.wait(1);
-        this.Looks.hide();
-
+        //this.Looks.hide();
     });
     cat.Event.whenFlag(async function*(){
         for(;;) {

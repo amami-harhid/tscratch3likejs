@@ -17,6 +17,10 @@ import { TextSpriteEvent } from './textSpriteEvent';
 import { ISprite } from '@Type/sprite';
 import { Utils } from '@Lib/util/utils';
 import { Env } from '@Lib/env';
+import { blob } from 'stream/consumers';
+
+const SVGSkin = require('../../../node_modules/scratch-render/src/SVGSkin');
+const {loadSvgString, serializeSvgToString} = require('scratch-svg-renderer');
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -58,6 +62,8 @@ export class TextSprite extends Entity implements ITextSprite{
         this._fontFamily = [];
         const stage = this.playGround.stage;
         stage.addSprite(this as unknown as ISprite);
+
+        this.reCreateFunction();
     }
     set padding(padding:number) {
         this._padding = padding;
@@ -137,9 +143,10 @@ export class TextSprite extends Entity implements ITextSprite{
     private createSvg(textStr: string) :SVGSVGElement{
         const svg = document.createElementNS(SVG_NS, "svg");
         const mesure = this.mesure(textStr);
-        svg.setAttribute("width", `${mesure.w}`);
+        svg.setAttribute("width", `${mesure.w+this._padding*2}`);
         svg.setAttribute("height", `${mesure.h+this._padding*2}`);
-        svg.setAttribute("viewBox", `0 0 ${mesure.w} ${mesure.h+this._padding*2}`);
+        svg.setAttribute("viewBox", `0 0 ${mesure.w+this._padding*2} ${mesure.h+this._padding*2}`);
+        //svg.setAttribute("fontFamily",`&quot;${this._textAttributes.font}&quot;, sans-serif`);
         
 
         const text = this.createText(textStr, mesure);
@@ -164,7 +171,7 @@ export class TextSprite extends Entity implements ITextSprite{
                 }
                 _use.setAttribute("font-size", `${this._textAttributes.font_size}px`);
                 let fontFamily = this.getFontFamily();
-                _use.setAttribute("font-family", `${this._textAttributes.font}, sans-serif`);
+                _use.setAttribute("font-family", `"${this._textAttributes.font}", sans-serif`);
                 svg.appendChild(_use);
             }
         }else{
@@ -181,7 +188,7 @@ export class TextSprite extends Entity implements ITextSprite{
      */
     private createText(textStr: string, mesure:{w:number,h:number}): SVGTextElement {
         const text = document.createElementNS(SVG_NS, "text");
-        text.style.fontFamily = `${this._textAttributes.font}, sans-serif`;
+        //text.style.fontFamily = `"${this._textAttributes.font}", sans-serif`;
         if(this._textAttributes.use == undefined || this._textAttributes.use.length == 0){
             // テキストの左下のX座標
             text.setAttribute("x", '0');
@@ -191,8 +198,9 @@ export class TextSprite extends Entity implements ITextSprite{
             //text.setAttribute("y", `${this._textAttributes.y}`);
             text.setAttribute("fill", `${this._textAttributes.fill}`);
             text.setAttribute("font-size", `${this._textAttributes.font_size}px`);
-            let fontFamily = this.getFontFamily();
-            text.setAttribute("font-family", `${this._textAttributes.font}, sans-serif`);
+            //let fontFamily = this.getFontFamily();
+            text.setAttribute("font-family", `${this._textAttributes.font},sans-serif`);
+            //text.setAttribute("font-family", "&quot;ヒラギノ角ゴ Pro W3&quot;, &quot;Hiragino Kaku Gothic Pro&quot;, Osaka, &quot;メイリオ&quot;, Meiryo, &quot;ＭＳ Ｐゴシック&quot;, &quot;MS PGothic&quot;");
             if(this._textAttributes.stroke){
                 text.setAttribute('stroke', this._textAttributes.stroke);
             }
@@ -221,13 +229,15 @@ export class TextSprite extends Entity implements ITextSprite{
      */
     private mesure(text:string): {w:number, h:number} {
         const fontFamily  = ((this._textAttributes.font_weight)? this._textAttributes.font_weight: '')
+            +`${this._textAttributes.font_size}px &quot;${this._textAttributes.font}&quot;, sans-serif`;
+        const fontFamilyCtx  = ((this._textAttributes.font_weight)? this._textAttributes.font_weight: '')
             +`${this._textAttributes.font_size}px "${this._textAttributes.font}", sans-serif`;
         const debugCanvas = document.createElement('canvas');
         debugCanvas.style.fontFamily = fontFamily;
         const debugCtx = debugCanvas.getContext('2d',{willReadFrequently:true});
         if(debugCtx == undefined) throw 'Unable to get ctx';
         //let fontFamily = this.getFontFamily();
-        debugCtx.font = fontFamily;
+        debugCtx.font = fontFamilyCtx;
         //const measurementProvider = new MeasurementProvider(debugCtx);
         const mesure = debugCtx.measureText(text);
         const width = mesure.width;
@@ -251,13 +261,15 @@ export class TextSprite extends Entity implements ITextSprite{
         //const img = await ImageLoader._svgText(url);
         //console.log(img);
         if(this.skinId == -1) {
-            await this.costumes.addImage(name, img);
-            const skinId = this.costumes.getSkinId(name);
+            console.log('textSprite before this.costumes.addImage')
+            const skinId = await this.costumes.addImageDirectSVG(name, svgText);
+            //await this.costumes.addImage(name, url);
+            //const skinId = this.costumes.getSkinId(name);
             this.render.renderer.updateDrawableSkinId(this.drawableID, skinId);
             return skinId;
         }else{
-            const skinId = await this.costumes.updateImage(name, img);
-            //this.render.renderer.updateDrawableSkinId(this.drawableID, skinId);
+            const skinId = await this.costumes.updateSkinDirectSVG(name, svgText);
+            this.render.renderer.updateDrawableSkinId(this.drawableID, skinId);
             return skinId;
         }
     }
@@ -293,5 +305,100 @@ export class TextSprite extends Entity implements ITextSprite{
 
     get Event() : ITextSpriteEvent {
         return this._Event;
+    }
+    /**
+     * SVG を loadするとき @font-face を有効にできない問題あり。
+     */
+    async reCreateFunction() {
+
+        const url = '/assets/fonts/ResotE-Rose-89c1.woff';
+
+        const response = await (await fetch(url)).text();
+        // const response = await (await fetch(url)).blob();
+        // const reader = new FileReader()
+        
+        // function blobToBase64(blob) {
+        //     return new Promise(resolve=>{
+        //         reader.onloadend = () =>{
+        //            resolve(reader.result); 
+        //         }
+        //         reader.readAsDataURL(blob);
+        //     })
+        // }
+        // const base64 = await blobToBase64(blob);
+        const base64 = Buffer.from(response).toString('base64');
+        console.log(base64);
+
+        const renderer = this.render.renderer;
+        const dummySvg = `
+<svg
+  viewBox="0 0 400 400"
+  width="400"
+  height="400"
+  xmlns="http://www.w3.org/2000/svg">
+  <defs>
+  <style>
+        @font-face {
+            font-family: "ResotE";
+            /*
+            src: url('data:application/font;base64,{base64}') format('woff');
+            */
+            src: url('${url}') format('woff');
+            }
+        .text0 {
+            font-family:"Marker";
+            font-size: 150px;
+            fill: blue;
+            font-weight: bold;
+            font-style: italic;
+        }
+  </style>
+  </defs>
+  <text class="text0" x="10" y="300" font-family="Marker" >aaa</text>
+</svg>        
+        `
+        const _createSVGSkin = function(svgData, rotationCenter): number{
+            console.log('_createSVGSkin');
+            const skinId = renderer._nextSkinId++;
+            const newSkin = new SVGSkin(skinId, renderer);
+            const _setSVG = function(svgData, rotationCenter):void {
+                console.log('_setSVG');
+                const svgTag = loadSvgString(svgData);
+                console.log(svgTag);
+                const svgText = serializeSvgToString(svgTag, true /* shouldInjectFonts */);
+                console.log(svgText);
+                newSkin._svgImageLoaded = false;
+                const {x, y, width, height} = svgTag.viewBox.baseVal;
+                newSkin._size[0] = width;
+                newSkin._size[1] = height;
+                newSkin._svgImage.onload = () => {
+
+                    const maxDimension = Math.ceil(Math.max(width, height));
+                    let testScale = 2;
+                    const MAX_TEXTURE_DIMENSION = 2048;
+                    for (testScale; maxDimension * testScale <= MAX_TEXTURE_DIMENSION; testScale *= 2) {
+                        newSkin._maxTextureScale = testScale;
+                    }
+
+                    newSkin.resetMIPs();
+
+                    if (typeof rotationCenter === 'undefined') rotationCenter = newSkin.calculateRotationCenter();
+                    // Compensate for viewbox offset.
+                    // See https://github.com/LLK/scratch-render/pull/90.
+                    newSkin._rotationCenter[0] = rotationCenter[0] - x;
+                    newSkin._rotationCenter[1] = rotationCenter[1] - y;
+                    newSkin._svgImageLoaded = true;
+                    newSkin.emit(SVGSkin.Events.WasAltered);
+                };
+                newSkin._svgImage.src = `data:image/svg+xml;utf8,${encodeURIComponent(svgText)}`;
+            }
+            newSkin.setSVG = _setSVG.bind(newSkin);
+            newSkin.setSVG(dummySvg, rotationCenter);
+            renderer._allSkins[skinId] = newSkin;
+            console.log('skinId',skinId);
+            return skinId;
+        };
+        renderer.createSVGSkin = _createSVGSkin.bind(renderer);
+
     }
 }
