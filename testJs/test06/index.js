@@ -30,65 +30,82 @@ Pg.prepare = async function prepare() {
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
     await cat.Image.add( Cat );
-    cat.Looks.Size.scale = {w: 300, h: 300};
+    cat.Looks.Size.scale = {w: 50, h: 50};
 
     text = new Lib.TextSprite('Text');
     // https://hsmt-web.com/blog/svg-text/
     await text.setFontFamily([
         {
             font:'ResotE',
+            //href:'/assets/fonts/ResotE-Rose-89c1.woff2',
             href:'/assets/fonts/ResotE-Rose-89c1.woff',
-            descriptors: { style: 'normal', weight: 500}
+            descriptors: { style: 'normal', weight: 700}
         },
     ]);
     const textAttr = {
         font: 'ResotE',
-        font_size: 500,
+        font_size: 12,
         //font_weight: 'bold',
-        fill: 'blue',
+        //fill: 'blue',
         //stroke: 'blue',
         //stroke_mode : 'outside',
-        //stroke_width: 50,
+        //stroke_width: 0,
         // use:[
-        //     {x:0,y:0,fill:'black',stroke:'black',stroke_width:30},
-        //     {x:0,y:0,fill:'white',stroke:'white',stroke_width:30},
-        //     {x:0,y:0,fill:'blue'},
+        //     {x:0,y:0,fill:'black',stroke:'white',stroke_width:130},
+        //     {x:4,y:-4,fill:'blue'},
         // ]
     }
     text.textAttributes = textAttr;
     //text.font = 'red';
-    text.padding = 70;
+    text.padding = 10;
     //text.fontSize = 700;
-    text.Looks.Size.scale = {w:50, h:50};
+    text.Looks.Size.scale = {w:100, h:100};
     //text.svgScale = {w:1500, h:400};
-    text.text = 'Text styled with custom font';
     text.Motion.Position.xy = {x: 0, y:0};
 
 }
 
+const Text = `
+    これから開始します<br>
+    クリックはできません
+    `;
+
 Pg.setting = async function setting() {
     text.Event.whenFlag(async function*(){
+        await this.setText(Text);
+        this.Looks.Size.scale = {w:100, h:100};
         this.Looks.show()
-        let counter = 5;
+        let counter =20;
         for(;;){
-            //this.text = `custom font${counter}`;
-            await this.Control.wait(1);
-            counter -= 1;
-            if(counter == 0){
+            if(counter == 500){
+                this.setText('GO!');
+                this.Looks.Size.scale = {w:100,h:100};
+                await this.Control.wait(1);
                 break;
             }
+            this.Looks.Size.scale = {w:counter,h:counter};
+            await this.setText(`Count Down (${counter})`);
+            //this.text = `Count Down (${counter})`;
+            console.log(this.Looks.Size.drawingSize);
+            //await this.Control.wait(0.5);
+            counter += 5;
             yield;            
         }
-        //this.text = 'GO!';
         await this.Control.wait(1);
-        //this.Looks.hide();
+        this.Looks.hide();
     });
     cat.Event.whenFlag(async function*(){
+        this.Motion.Direction.degree = 40;
         for(;;) {
             // 進む。
-            this.Motion.Move.steps(5);
+            this.Motion.Move.steps(10);
             // 端に触れたら跳ね返る
             this.Motion.Move.ifOnEdgeBounds();
+            if(this.Sensing.isTouchingToSprites([text])){
+                this.Looks.Bubble.say('さわった');
+            }else{
+                this.Looks.Bubble.say('');
+            }
             yield;
         }
     });

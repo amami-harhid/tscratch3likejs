@@ -77,7 +77,7 @@ export class Costumes {
         if(typeof _img == "string" && ImageLoader.isSVG(_img)) {
             // 複数回ロードしたら、その都度 skinId は変わる
             const _svgText = _img;
-            console.log('costumes._setSkin _setSvgSkin ')
+            //console.log('costumes._setSkin _setSvgSkin ')
             this._setSvgSkin(_svgText).then(v=>{
                 const _skinId = v;
                 this.costumes.set( name , _skinId);
@@ -86,7 +86,7 @@ export class Costumes {
                 }    
             });
         }else{
-            console.log('costumes._setSkin _setBitmapSkin ', _img)
+            //console.log('costumes._setSkin _setBitmapSkin ', _img)
             const _bitmap = _img as HTMLImageElement;
             const _skinId = await this._setBitmapSkin(_bitmap);
             this.costumes.set( name , _skinId);
@@ -97,7 +97,7 @@ export class Costumes {
     }
     async _setSvgSkin(_svgText: string) {
         if(this.render && this.render.renderer){
-            console.log('before this.render.renderer.createSVGSkin');
+            //console.log('before this.render.renderer.createSVGSkin');
             const skinId = this.render.renderer.createSVGSkin(_svgText);
             // [2025/2/27] 姑息な対応
             // willReadFrequently を設定するために SKINインスタンスを取り出し、
