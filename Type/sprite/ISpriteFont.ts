@@ -1,5 +1,9 @@
-import { IEntityImage } from '../entity/IEntityImage';
 /**
  * Sprite Image(イメージ)
  */
-export type ISpriteFont = IEntityImage;
+export interface ISpriteFont {
+
+    add(fontName: string) : Promise<void>;
+
+    get names() : string [];
+};
