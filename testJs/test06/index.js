@@ -12,6 +12,7 @@ Pg.title = "【Test06】テキストを描画する"
 const Jurassic = 'Jurassic';
 const Chill = "Chill";
 const Cat = "Cat";
+const RosetE = "RosetE";
 
 let stage;
 let cat;
@@ -22,6 +23,8 @@ Pg.preload = async function preload() {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
+    this.Font.load('/assets/fonts/ResotE-Rose-89c1.woff', RosetE);
+
 }
 Pg.prepare = async function prepare() {
 
@@ -30,6 +33,7 @@ Pg.prepare = async function prepare() {
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
     await cat.Image.add( Cat );
+    await cat.Font.add( RosetE );
     cat.Looks.Size.scale = {w: 50, h: 50};
 
     text = new Lib.TextSprite('Text');
@@ -79,14 +83,13 @@ Pg.setting = async function setting() {
         for(;;){
             if(counter == 500){
                 this.setText('GO!');
-                this.Looks.Size.scale = {w:100,h:100};
+                this.Looks.Size.scale = {w:300,h:300};
                 await this.Control.wait(1);
                 break;
             }
             this.Looks.Size.scale = {w:counter,h:counter};
-            await this.setText(`Count Down (${counter})`);
+            await this.setText(`カウントダウン (${counter})`);
             //this.text = `Count Down (${counter})`;
-            console.log(this.Looks.Size.drawingSize);
             //await this.Control.wait(0.5);
             counter += 5;
             yield;            

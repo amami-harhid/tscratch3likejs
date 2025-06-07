@@ -24,4 +24,8 @@ export interface IKeyboard {
      * @return {boolean} Is the specified key down?
      */
     keyIsDown (keyArg: string|number) :boolean;
+    /**
+     * Spaceキーイベント伝播を抑止
+     */
+    spaceStopPropagation: boolean;
 }

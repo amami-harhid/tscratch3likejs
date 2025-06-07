@@ -1,24 +1,32 @@
-declare interface PgImage {
+export declare interface IPgImage {
     /** ロード処理 */
-    load(path:string, name:string);
+    load(path:string, name:string, translate?:{x:number,y:number}): Promise<void>;
 } 
-declare interface PgSound {
+export declare interface IPgSound {
     /** ロード処理 */
-    load(path:string, name:string);
+    load(path:string, name:string): Promise<void>;
+} 
+export declare interface IPgFont {
+    /** ロード処理 */
+    load(path:string, name:string): Promise<void>;
 } 
 
 /** PlayGround */
-export interface PlayGround {
+export interface IPlayGround {
     /** タイトル */
     title: string;
     /** 事前ロード処理をするところ */
-    preload(m:PlayGround) : Promise<void>;
+    preload?() : Promise<void>;
     /** 事前準備処理をするところ */
-    prepare(m:PlayGround) : Promise<void>;
+    prepare?() : Promise<void>;
     /** 動作セッティングをするところ */
-    setting(m:PlayGround) : Promise<void>;
+    setting?() : Promise<void>;
+    /** ﾄﾞﾛｰ処理 */
+    draw?(): Promise<void>;
     /** イメージ処理 */
-    Image: PgImage;
+    Image: IPgImage;
     /** サウンド処理 */
-    Sound: PgSound;
+    Sound: IPgSound;
+    /** フォント処理 */
+    Font: IPgFont;
 }

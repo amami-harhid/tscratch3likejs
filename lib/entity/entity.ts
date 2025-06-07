@@ -21,7 +21,7 @@ import { SoundOption } from '../../Type/entity/SoundOption';
 import { PlayGround } from '../playGround';
 import { StageLayering } from './stageLayering';
 import type { TThreadObj } from '../controls/TThreadObj';
-import type { TPosition, TScale } from '@Type/common/typeCommon';
+import type { S3FontData, TPosition, TScale } from '@Type/common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
 import type { ScratchRenderProperties } from '../render/IRenderWebGL';
@@ -88,6 +88,8 @@ export class Entity extends EventEmitter {
     protected modules?: Map<string, Promise<void>[]>;
     protected _isAlive: boolean;
     private _timer: number;
+    protected fontDatas?: S3FontData[];
+
     constructor (name: string, layer: StageLayering, options:TEntityOptions = {} ){
         super();
         this.id = this._generateUUID();
@@ -131,6 +133,8 @@ export class Entity extends EventEmitter {
         this._isAlive = true;
         // タイマー用
         this._timer = performance.now();
+
+        this.fontDatas = [];
     }
     /**
      * 座標 {{x:number,y:number}}
@@ -427,6 +431,20 @@ export class Entity extends EventEmitter {
             
         }
         await costume.addImage(name, image);
+    }
+    protected async _addFont(name:string ,image:string) {
+        if(name == undefined || typeof name != "string"){
+            throw "【Font.add】正しい name を指定してください"
+        }
+        const ImageError = "【Font.add】正しいFONTデータを指定してください";
+        if(image == undefined) throw ImageError
+        if(typeof image =="string"){
+            if(image.substring(0,10)!="data:font/")
+                throw ImageError            
+        }
+        if( this.fontDatas) {
+            this.fontDatas.push({name:name,data:image});
+        }
     }
 
     protected async _loadImage(name, imageUrl, costume) {

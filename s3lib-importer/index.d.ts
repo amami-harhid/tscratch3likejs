@@ -1,4 +1,4 @@
-import type {PlayGround} from "@Type/playground";
+import type {IPlayGround as PlayGround} from "@Type/playground";
 import type {Lib} from "@Type/lib";
 import type {TEnv as Env} from "@Type/common/env";
 

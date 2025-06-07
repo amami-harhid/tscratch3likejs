@@ -1,5 +1,5 @@
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playground";
+import type {IPlayGround as PlayGround} from "@Type/playground";
 import type {IStage as Stage} from "@Type/stage";
 
 Pg.title = "【Sample02】旗クリックで背景を表示する";

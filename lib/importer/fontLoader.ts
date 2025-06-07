@@ -8,7 +8,7 @@ export class FontLoader {
      * @param name {string}
      * @returns {Promise<FontFace>}
      */
-    static async fontLoad(url: string, name: string): Promise<FontFace>{
+    static async fontFaceLoad(url: string, name: string): Promise<FontFace>{
         if(url) {
             const font = new FontFace(name, `url(${url})`);
             const _font = await font.load();
@@ -17,9 +17,20 @@ export class FontLoader {
         // 例外を起こすべきところ。
         throw('Scratch3LikeJS loadFont: empty url')
     }
-    static async makeEmbeddedFontdata(src: string): Promise<string>{
+    /**
+     * フォントをロードする
+     * @param url {string} - fontの URL
+     * @param name {string} - BlobをBase64化した文字列( data:font/～;base64,～)
+     * @returns {Promise<string>}
+     */
+    public static async fontLoad(url: string, name: string): Promise<{name:string, data:string}>{
+        console.log('url=', url);        
+        const data = await FontLoader.makeEmbeddedFontdata(url);
+        return {name: name, data: data};
 
-        const response = await fetch(src);
+    }
+    private static async makeEmbeddedFontdata(url: string): Promise<string>{
+        const response = await fetch(url);
         const blob = await response.blob();
         const fontData = await FontLoader.blobToBase64(blob);
         return fontData;
@@ -31,7 +42,7 @@ export class FontLoader {
      * @param blob 
      * @returns 
      */
-    static async blobToBase64(blob: Blob): Promise<string> {
+    private static async blobToBase64(blob: Blob): Promise<string> {
         const reader = new FileReader();
         return new Promise<string>(resolve=>{
             reader.onloadend = () => {

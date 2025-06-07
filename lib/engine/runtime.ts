@@ -11,7 +11,7 @@ declare type IODEVICES = {
 }
 export class Runtime extends EventEmitter {
     private renderer:IRenderWebGL|undefined;
-    private ioDevices: IODEVICES;
+    public ioDevices: IODEVICES;
     /**
      * @constructor
      */
@@ -41,7 +41,7 @@ export class Runtime extends EventEmitter {
      * @param key {string}
      * @returns {boolean}
      */
-    keyIsDown(key: string) : boolean{
+    keyIsDown(key?: string) : boolean{
         return this.ioDevices.keyboard.keyIsDown(key);
     }
 

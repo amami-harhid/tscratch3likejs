@@ -30,7 +30,7 @@ import { RotationStyle } from "../../Type/entity/RotationStyle";
 //import { PlayGround } from "lib/playGround";
 import { Stage } from "./stage";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
-import type { S3ImageData, S3SoundData } from '@Type/common/typeCommon';
+import type { S3ImageData, S3SoundData, S3FontData } from '@Type/common/typeCommon';
 //import { Backdrops } from "./backdrops";
 import type { ISprite, SSprite, TSprite } from "@Type/sprite";
 import type { ISpriteControl } from "@Type/sprite/ISpriteControl";
@@ -111,7 +111,7 @@ export class Sprite extends Entity implements ISprite {
      * @param options {TEntityOptions} - オプション
      * @constructor
      */
-    constructor(name:string, options:TEntityOptions) {
+    constructor(name:string, options?:TEntityOptions) {
         let _name:string|undefined = undefined;
         if(name){
             _name = name;
@@ -279,6 +279,12 @@ export class Sprite extends Entity implements ISprite {
                 for(const d of this.imageDatas) {
                     // svg image の場合、createSVGSkin の中で非同期になることに注意すること
                     await newSprite.$addImage(d.name); 
+                }    
+            }
+            if(this.fontDatas){
+                for(const f of this.fontDatas) {
+                    // svg image の場合、createSVGSkin の中で非同期になることに注意すること
+                    await newSprite.$addFont(f.name); 
                 }    
             }
             if(this.costumes){
@@ -991,6 +997,30 @@ export class Sprite extends Entity implements ISprite {
         return [];
     }
     /**
+     * イメージ名を使って、スプライトにイメージを追加する
+     * @param imageName {string}
+     * @returns 
+     */
+    protected async $addFont(fontName: string): Promise<void> {
+        let _fontData:S3FontData;
+        if(fontName == undefined){
+            throw "【Sprite.Font.add】FONTデータの指定がありません"
+        }else if(typeof fontName == "string"){
+            _fontData = this.playGround.loadedFonts[fontName];
+            if(_fontData == undefined){
+                throw "【Sprite.Font.add】正しいイメージ名を指定してください"
+            }
+        }else{
+            //_imageData = imageName;
+            throw "【Sprite.Font.add】正しいイメージ名を指定してください"
+        }
+        if(_fontData['name'] == undefined || _fontData['data'] == undefined ){
+            throw "【Sprite.Font.add】正しいイメージデータを指定してください"
+        }
+        this._addFont(_fontData['name'], _fontData['data']);
+        return;
+    }
+    /**
      * @internal
      * 言う
      * @param {string} text 
@@ -1512,6 +1542,14 @@ export class Sprite extends Entity implements ISprite {
             "names" : this.$getImageNames.bind(this),
         }
     }
+
+    get Font (){
+        return {
+            "add": this.$addFont.bind(this),
+            "names": this.$getImageNames.bind(this),
+        }
+    }
+
     /**
      * サウンド
      */
