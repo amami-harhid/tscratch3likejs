@@ -373,7 +373,7 @@ export class PlayGround implements IPlayGround {
         return data;
     }
     $loadFont(fontUrl:string, name:string) : Promise<{name:string, data:string}>{
-        console.log('$loadFont', fontUrl, name);
+        //console.log('$loadFont', fontUrl, name);
         const font = FontLoader.fontLoad(fontUrl, name);
         this._preloadFontPromise.push(font);
         return font;

@@ -5,8 +5,11 @@ import { PenSpriteSize } from './penSpriteSize';
 import { PenSpriteHSVColor } from './penSpriteHSVColor';
 import { StageLayering } from '../../../Type/stage/CStageLayering';
 import type { TPenAttributes } from '@Type/pen';
-import { SpriteDragMode } from '../sprite/spriteDragMode';
-export class PenSprite {
+//import { SpriteDragMode } from '../sprite/spriteDragMode';
+import { IPenSprite } from '@Type/sprite/pen/IPenSprite';
+
+const NotPrepareMessage = 'prepareが行われていません';
+export class PenSprite implements IPenSprite {
     private render: Render;
     private _skinId: number
     private _penDown: boolean;
@@ -37,23 +40,39 @@ export class PenSprite {
         this._Size = new PenSpriteSize(this);
         this._HSVColor = new PenSpriteHSVColor(this);
     }
-    _createPen() {
+    _createPen() : void {
         this._penDrawableId = this.render.renderer.createDrawable(StageLayering.PEN_LAYER);
         this._skinId = this.render.renderer.createPenSkin();
         this.render.renderer.updateDrawableSkinId(this._penDrawableId, this._skinId);
     }
-    penClear() {
-        if(this._skinId > -1){
-            this.render.renderer.penClear(this._skinId);
-        }
-    }
-    penUp() {
-        this._penDown = false;
-    }
-    penDown() {
+
+    prepare() : void {
         if(this._skinId == -1){
             this._createPen();
         }
+        this.penClear();
+    }
+
+    penClear() : void {
+        if(this._skinId == -1){
+            console.error(NotPrepareMessage);
+            return;
+        }
+        this.render.renderer.penClear(this._skinId);
+    }
+    penUp() : void {
+        if(this._skinId == -1){
+            console.error(NotPrepareMessage);
+            return;
+        }
+        this._penDown = false;
+    }
+    penDown() : void {
+        if(this._skinId == -1){
+            console.error(NotPrepareMessage);
+            return;
+        }
+        this.prepare();
         this._penDown = true;
         this.drawPoint();
     }
@@ -80,17 +99,20 @@ export class PenSprite {
 
     }
     /** @internal */
-    setColor(idx: number, value:number){
+    setColor(idx: number, value:number): void {
+        if(this._skinId == -1){
+            console.error(NotPrepareMessage);
+        }
         this._penAttributes.color4f[idx] = value;
         this.convertAttribues2Rgb();
     }
     /** @internal */
-    changeColor(idx: number, value:number, limit: number){
+    changeColor(idx: number, value:number, limit: number) : void {
         const _value = this._penAttributes.color4f[idx] + value;
         this._penAttributes.color4f[idx] = _value % limit;
         this.convertAttribues2Rgb();
     }
-    get HSVColor() : PenSpriteHSVColor{
+    get HSVColor() : PenSpriteHSVColor {
         return this._HSVColor;
     }
     /** @internal */
@@ -140,14 +162,22 @@ export class PenSprite {
         this.changeColor(3, (100 - transparency)/100, 1);
         this.convertAttribues2Rgb();
     }
-    stamp() {
+    stamp() : void {
+        if(this._skinId == -1){
+            console.error(NotPrepareMessage);
+        }
         const stampDrowingID = this._sprite.drawableID;
         if(this._skinId > -1 && stampDrowingID > -1 && this._sprite.DragMode.dragging == false){
             this.render.renderer.penStamp(this._skinId, stampDrowingID);
         }
     }
     /** @internal */
-    drawLine() {
+    drawLine(): void {
+        if(this._skinId == -1){
+            console.error(NotPrepareMessage);
+            return;
+        }
+
         if(this._penDown === true){
             if(this._skinId > -1 && this._sprite.DragMode.dragging == false){
                 const x1 = this._sprite.Position.x;
@@ -166,7 +196,11 @@ export class PenSprite {
         }
     }
     /** @internal */
-    drawPoint() {
+    drawPoint() : void {
+        if(this._skinId == -1){
+            console.error(NotPrepareMessage);
+            return;
+        }
         if(this._skinId > -1 && this._sprite.DragMode.dragging == false){
             const x0 = this._sprite.Position.x;
             const y0 = this._sprite.Position.y;
@@ -179,13 +213,13 @@ export class PenSprite {
         return this._Size;
     }
     /** @internal */
-    setPenSize( size: number) {
+    setPenSize( size: number): void {
         this._penSize = size;
         this._penAttributes.diameter = size;
         this.convertAttribues2Rgb();
     }
     /** @internal */
-    changePenSize( size: number) {
+    changePenSize( size: number): void {
         const penSize = this._penSize + size;
         this._penSize = (penSize<1)? 1: penSize;
         this._penAttributes.diameter = this._penSize;

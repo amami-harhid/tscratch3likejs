@@ -5,6 +5,11 @@ import { IPenSpriteHSVColor } from '@Type/sprite/pen/IPenSpriteHSVColor';
  */
 export interface ISpritePen {
     /**
+     * 準備する
+     */
+    prepare() : void;
+
+    /**
      * ペン描画をクリアする
      */
     clear(): void;
@@ -26,10 +31,10 @@ export interface ISpritePen {
      *  this.Pen.HSVColor.hue = 120;
      * ```
      */
-    get HSVColor(): IPenSpriteHSVColor;
+    readonly HSVColor: IPenSpriteHSVColor;
     /**
      * ペンのサイズ
      */
-    get Size() : IPenSpriteSize;
+    readonly Size : IPenSpriteSize;
 
 }

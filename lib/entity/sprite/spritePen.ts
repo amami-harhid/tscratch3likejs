@@ -15,6 +15,10 @@ export class SpritePen implements ISpritePen{
     constructor(penSprite: IPenSprite){
         this.penSprite = penSprite as unknown as PenSprite;
     }
+    prepare(): void {
+        this.penSprite.prepare();
+    }
+
     clear(): void {
         this.penSprite.penClear();
     }
