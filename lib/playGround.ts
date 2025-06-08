@@ -25,7 +25,7 @@ export class PlayGround implements IPlayGround {
      * 
      * @return {PlayGround}
      */
-    static getInstance() {
+    static getInstance(): PlayGround {
         if( PlayGround._instance == undefined ) {
             PlayGround._instance = new PlayGround();
         }

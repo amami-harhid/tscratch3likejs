@@ -13,7 +13,7 @@ import type { ISpriteEvent } from './ISpriteEvent';
 import type { ISpriteTextToSpeech } from './ISpriteTextToSpeech';
 import type { ISpriteDragMode } from './ISpriteDragMode';
 import type { ISpritePen } from './ISpritePen';
-import type { ISvgText } from '../svgText/svgText';
+import type { ISvgText } from '../svgText/ISvgText';
 /**
  * Sprite
  */

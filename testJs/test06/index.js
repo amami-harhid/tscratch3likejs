@@ -34,13 +34,8 @@ Pg.prepare = async function prepare() {
     cat = new Lib.Sprite(Cat);
     //await cat.Image.add( Cat );
     await cat.Font.add( RosetE );
-    const svg = `
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300" viewBox="0 0 800 300">
-    <text x="0" y="150" style="font-size:150px;">aaaaa</text>
-</svg>`;
 
-    await cat.SvgText.add(RosetE, svg, RosetE);
-    cat.Looks.Size.scale = {w: 50, h: 50};
+    cat.Looks.Size.scale = {w: 100, h: 100};
 
     text = new Lib.TextSprite('Text');
     // https://hsmt-web.com/blog/svg-text/
@@ -73,6 +68,22 @@ Pg.prepare = async function prepare() {
     //text.svgScale = {w:1500, h:400};
     text.Motion.Position.xy = {x: 0, y:0};
 
+
+    const textStr = 'abcdefghij';
+    const mesure = cat.SvgText.mesure(textStr, 50, 'normal', RosetE);
+    console.log(mesure)
+    const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="${mesure.w}" height="${mesure.h}" viewBox="0 0 ${mesure.w} ${mesure.h}">
+    <defs><style>
+        .text {
+            font: normal 50px "${RosetE}", sans-serif;
+        }
+    </style></defs>
+    <text class="text" x="0" y="${mesure.h}">${textStr}</text>
+</svg>`;
+
+    await cat.SvgText.add(RosetE, svg, RosetE);
+
 }
 
 const Text = `
@@ -94,7 +105,7 @@ Pg.setting = async function setting() {
                 break;
             }
             this.Looks.Size.scale = {w:counter,h:counter};
-            await this.setText(`カウントダウン (${counter})`);
+            //await this.setText(`カウントダウン (${counter})`);
             //this.text = `Count Down (${counter})`;
             //await this.Control.wait(0.5);
             counter += 5;

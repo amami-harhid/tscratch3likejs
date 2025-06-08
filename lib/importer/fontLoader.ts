@@ -26,8 +26,14 @@ export class FontLoader {
     public static async fontLoad(url: string, name: string): Promise<{name:string, data:string}>{
         console.log('url=', url);        
         const data = await FontLoader.makeEmbeddedFontdata(url);
+        await FontLoader.makeFontFace(url, name);
         return {name: name, data: data};
 
+    }
+    private static async makeFontFace(url:string, name:string): Promise<void> {
+        const fontFace = new FontFace(name, `url(${url})`);
+        await fontFace.load();
+        document.fonts.add(fontFace);
     }
     private static async makeEmbeddedFontdata(url: string): Promise<string>{
         const response = await fetch(url);

@@ -47,7 +47,7 @@ import { ISpriteSound } from "@Type/sprite/ISpriteSound";
 import { ISpriteFont } from "@Type/sprite/ISpriteFont";
 import { StageLayering } from "../../Type/stage/CStageLayering";
 import { SpriteFont } from "./sprite/spriteFont";
-import { ISvgText } from "@Type/svgText/svgText";
+import { ISvgText } from "@Type/svgText/ISvgText";
 import { SvgText } from "./entity/svgText";
 //import { ISpriteCostume } from "@Type/sprite/ISpriteCostume";
 export class Sprite extends Entity implements ISprite {

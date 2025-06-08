@@ -9,7 +9,7 @@ import { Env } from '../env';
 import type {TEnv} from '@Type/common/env';
 import { EventEmitter } from "events";
 import { FunctionChecker } from '../util/functionChecker';
-import { Keyboard } from '../io/keyboard';
+//import { Keyboard } from '../io/keyboard';
 import { MathUtil } from '../util/math-util';
 import { Monitors } from '../monitor/monitors';
 import { PlayGround } from '../playGround';
@@ -19,16 +19,15 @@ import { Sprite } from '../entity/sprite';
 import { Stage } from '../entity/stage';
 import { SVGParser } from '../svgParser/parser';
 import { Utils } from '../util/utils';
-import { IRotationStyle, RotationStyle } from '../../Type/entity/RotationStyle';
-import { IImageEffective, ImageEffective } from '../../Type/entity/ImageEffective';
-import { ISoundOption, SoundOption } from '../../Type/entity/SoundOption';
+import { RotationStyle } from '../../Type/entity/RotationStyle';
+import { ImageEffective } from '../../Type/entity/ImageEffective';
+import { SoundOption } from '../../Type/entity/SoundOption';
 import { KEYBOARD_KEYS } from '../../Type/io/IKeyboard';
 import { Point } from '@Type/common/point';
-import { SMonitors } from '@Type/monitors';
-import { ISprite } from '@Type/sprite';
-import { IEntitySound } from '@Type/entity/IEntitySound';
+//import { SMonitors } from '@Type/monitors';
+//import { ISprite } from '@Type/sprite';
+//import { IEntitySound } from '@Type/entity/IEntitySound';
 import { TextSprite } from '../entity/text/textSprite';
-//import { ImageEffective, SoundOption } from '../_type/entity/CEntityConstant';
 export class Libs {
 
     get TextSprite() {
