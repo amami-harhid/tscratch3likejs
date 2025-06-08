@@ -47,10 +47,15 @@ export class SvgText implements ISvgText {
                 style.innerHTML = fontFace;
                 defs.appendChild(style);
                 svgTag.appendChild(defs);
+                const dummys = svgTag.getElementsByTagName('dummy');
+                if(dummys && dummys.length > 0){
+                    svgTag.insertBefore(defs, dummys[0]);
+                    for(const dummy of dummys){
+                        dummy.remove();
+                    }
+                }
                 const texts = svgTag.getElementsByTagName('text');
                 if(texts){
-                    if(texts.length > 0)
-                        svgTag.insertBefore(defs, texts[0]);
                     for(const text of texts){
                         const textFontFamily = text.getAttribute('font-family');
                         if(textFontFamily) {
@@ -63,18 +68,18 @@ export class SvgText implements ISvgText {
             }
             const serializer = new XMLSerializer();
             const svgText = serializer.serializeToString(svgTag);
-            console.log(svgText);
+            //console.log(svgText);
             await this.addImage(name, svgText);
 
         }else{
             const serializer = new XMLSerializer();
             const svgText = serializer.serializeToString(svgTag);
-            console.log(svgText);
+            //console.log(svgText);
             await this.addImage(name, svgText);
         }
     }
     mesure(text:string, fontSize:number, fontStyle:string='normal', fontFamily?: string): {w:number, h:number}{
-        console.log('fontStyle', fontStyle);
+        //console.log('fontStyle', fontStyle);
         return this._svgTextCreator.mesure(text, fontSize, fontStyle, fontFamily);
     }
 }
@@ -88,24 +93,24 @@ class SvgTextCreator {
     }
     mesure(text:string, fontSize:number, fontStyle:string='normal', fontFamily?: string): {w:number, h:number} {
         if(fontFamily){
-            console.log('fontFamily', fontFamily);
+            //console.log('fontFamily', fontFamily);
             this.dummyCanvas.style.fontFamily = `${fontSize}px '${fontFamily}', sans-serif`;
         }
         const dummyCtx = this.dummyCanvas.getContext('2d', { willReadFrequently: true });        
         if(dummyCtx == null) throw 'Error';
         if(fontFamily){
             const font = `${fontStyle} ${fontSize}px '${fontFamily}',sans-serif`;
-            console.log(font);
+            //console.log(font);
             dummyCtx.font = font;
 
         }else{
             const font = `${fontStyle} ${fontSize}px sans-serif`;
-            console.log(font);
+            //console.log(font);
             dummyCtx.font = font;
 
         }
-        console.log(this.dummyCanvas);
-        console.log(dummyCtx);
+        //console.log(this.dummyCanvas);
+        //console.log(dummyCtx);
         const mesure = dummyCtx.measureText(text);
         const width = mesure.width;
         const height = mesure.actualBoundingBoxAscent+mesure.actualBoundingBoxDescent 
