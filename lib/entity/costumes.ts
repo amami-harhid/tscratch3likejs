@@ -9,8 +9,8 @@ import { Utils } from "../util/utils";
 import { Render } from '../render/render';
 import { PlayGround } from "../playGround";
 import { TPosition, TSizeXY } from "@Type/common/typeCommon";
-import type { ISvgSkin } from "../render/ISvgSkin";
-import type { ScratchRenderProperties } from "../render/IRenderWebGL";
+import type { ISvgSkin } from "@Type/render/ISvgSkin";
+import type { ScratchRenderProperties } from "@Type/render/IRenderWebGL";
 
 export class Costumes {
     static get RotationStyle () {

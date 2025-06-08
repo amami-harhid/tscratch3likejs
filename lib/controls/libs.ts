@@ -17,7 +17,6 @@ import { Render } from '../render/render';
 import { Sounds } from '../sounds/sounds';
 import { Sprite } from '../entity/sprite';
 import { Stage } from '../entity/stage';
-import { StageLayering } from '../entity/stageLayering';
 import { SVGParser } from '../svgParser/parser';
 import { Utils } from '../util/utils';
 import { IRotationStyle, RotationStyle } from '../../Type/entity/RotationStyle';
@@ -194,10 +193,6 @@ export class Libs {
     }
     get Stage () {
         return Stage;
-    }
-    /** @internal */
-    get StageLayering () {
-        return StageLayering;
     }
     get Sprite () {
         return Sprite;

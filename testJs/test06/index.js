@@ -32,8 +32,14 @@ Pg.prepare = async function prepare() {
     await stage.Image.add(Jurassic);
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
-    await cat.Image.add( Cat );
+    //await cat.Image.add( Cat );
     await cat.Font.add( RosetE );
+    const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300" viewBox="0 0 800 300">
+    <text x="0" y="150" style="font-size:150px;">aaaaa</text>
+</svg>`;
+
+    await cat.SvgText.add(RosetE, svg, RosetE);
     cat.Looks.Size.scale = {w: 50, h: 50};
 
     text = new Lib.TextSprite('Text');
@@ -98,6 +104,7 @@ Pg.setting = async function setting() {
         this.Looks.hide();
     });
     cat.Event.whenFlag(async function*(){
+        this.Looks.Costume.name = RosetE;
         this.Motion.Direction.degree = 40;
         for(;;) {
             // 進む。

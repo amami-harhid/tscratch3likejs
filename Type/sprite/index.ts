@@ -13,6 +13,7 @@ import type { ISpriteEvent } from './ISpriteEvent';
 import type { ISpriteTextToSpeech } from './ISpriteTextToSpeech';
 import type { ISpriteDragMode } from './ISpriteDragMode';
 import type { ISpritePen } from './ISpritePen';
+import type { ISvgText } from '../svgText/svgText';
 /**
  * Sprite
  */
@@ -30,7 +31,7 @@ export interface ISprite extends IEntity {
     /**
      * 動き
      */
-    get Motion() : ISpriteMotion;
+    readonly Motion: ISpriteMotion;
 
     // /**
     //  * コスチューム番号、コスチューム名を取り出すためのオブジェクト
@@ -47,51 +48,49 @@ export interface ISprite extends IEntity {
     /**
      * 見た目
      */
-    get Looks() : ISpriteLooks;
+    readonly Looks: ISpriteLooks;
     /**
      * 制御
      */
-    get Control() : ISpriteControl;
+    readonly Control: ISpriteControl;
     /**
      * 調べる
      */
-    get Sensing() : ISpriteSensing;
+    readonly Sensing: ISpriteSensing;
     /**
      * イベント
      */
-    get Event() : ISpriteEvent;
+    readonly Event: ISpriteEvent;
     /**
      * イメージ
      */
-    get Image () : ISpriteImage;
+    readonly Image: ISpriteImage;
     /**
      * サウンド
      */
-    get Sound () : ISpriteSound;
+    readonly Sound: ISpriteSound;
 
 
-    get Font () : ISpriteFont;
+    readonly Font : ISpriteFont;
     /**
      * 音声合成
      */
-    get TextToSpeech(): ISpriteTextToSpeech;
+    readonly TextToSpeech: ISpriteTextToSpeech;
 
     /**
      * DragModeを設定するためのオブジェクト
      */
-    get DragMode(): ISpriteDragMode;
+    readonly DragMode: ISpriteDragMode;
 
     /**
      * ペン機能
      */
-    get Pen() : ISpritePen;
+    readonly Pen : ISpritePen;
     /**
      * 生存期間 ( およその秒数 )
      */
-    get life() : number;
+    readonly life : number;
 
-    /**
-     * 生存期間 ( およその秒数 )
-     */
-    set life(life:number);
+    readonly SvgText: ISvgText;
+
 };

@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 // Virtual I/O devices.
 import { Keyboard } from '../io/keyboard';
 
-import type {IRenderWebGL} from '../render/IRenderWebGL';
+import type {IRenderWebGL} from '@Type/render/IRenderWebGL';
 declare type IODEVICES = {
     keyboard: Keyboard,
 }

@@ -3,7 +3,7 @@ import { Render } from '../../render/render';
 import { Sprite } from '../sprite';
 import { PenSpriteSize } from './penSpriteSize';
 import { PenSpriteHSVColor } from './penSpriteHSVColor';
-import { StageLayering } from '../stageLayering';
+import { StageLayering } from '../../../Type/stage/CStageLayering';
 import type { TPenAttributes } from '@Type/pen';
 import { SpriteDragMode } from '../sprite/spriteDragMode';
 export class PenSprite {

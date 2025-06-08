@@ -23,7 +23,6 @@ import type { ISpritePen } from "@Type/sprite/ISpritePen";
 import { SpriteSensingDistance } from './sprite/spriteSensingDistance';
 import { SpriteTextToSpeech } from './sprite/spriteTextToSpeech';
 import { SpriteBubble } from "./sprite/spriteBubble";
-import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
 import { Costumes } from "./costumes";
 import { RotationStyle } from "../../Type/entity/RotationStyle";
@@ -46,7 +45,10 @@ import { SpriteDragMode } from "./sprite/spriteDragMode";
 import { ISpriteEvent } from "@Type/sprite/ISpriteEvent";
 import { ISpriteSound } from "@Type/sprite/ISpriteSound";
 import { ISpriteFont } from "@Type/sprite/ISpriteFont";
+import { StageLayering } from "../../Type/stage/CStageLayering";
 import { SpriteFont } from "./sprite/spriteFont";
+import { ISvgText } from "@Type/svgText/svgText";
+import { SvgText } from "./entity/svgText";
 //import { ISpriteCostume } from "@Type/sprite/ISpriteCostume";
 export class Sprite extends Entity implements ISprite {
     private bubble?: Bubble;
@@ -109,13 +111,14 @@ export class Sprite extends Entity implements ISprite {
     private _Backdrop : ISpriteBackdrop;
     private _SpriteBubble: ISpriteBubble;
     private _DragMode : ISpriteDragMode;
+    private _SvgText: ISvgText;
     /**
      * コンストラクター
      * @param name {string} - 名前
      * @param options {TEntityOptions} - オプション
      * @constructor
      */
-    constructor(name:string, options?:TEntityOptions) {
+    constructor(name:string, options?:TEntityOptions, layer?: StageLayering) {
         let _name:string|undefined = undefined;
         if(name){
             _name = name;
@@ -123,7 +126,11 @@ export class Sprite extends Entity implements ISprite {
             _name = "Sprite_"+Utils.generateUUID();
         }
         const _options = (options)? options : {};
-        super(_name, StageLayering.SPRITE_LAYER, _options);
+        if(layer === undefined){
+            super(_name, StageLayering.SPRITE_LAYER, _options);
+        }else{
+            super(_name, layer, _options);
+        }
         this.isSprite = true;
         const stage = this.playGround.stage;
         this.stage = stage;
@@ -156,6 +163,7 @@ export class Sprite extends Entity implements ISprite {
         this._SpriteBubble = new SpriteBubble(this);
         this._DragMode = new SpriteDragMode(this._dragSprite);
         this._Font = new SpriteFont(this);
+        this._SvgText = new SvgText(this);
         //this._isAlive = true;
         stage.$addSprite(this);
     }
@@ -961,11 +969,12 @@ export class Sprite extends Entity implements ISprite {
         }
     }
     /**
+     * @internal
      * イメージ名を使って、スプライトにイメージを追加する
      * @param imageName {string}
      * @returns 
      */
-    protected async $addImage(imageName: string): Promise<void> {
+    public async $addImage(imageName: string): Promise<void> {
         let _imageData:S3ImageData;
         if(imageName == undefined){
             throw "【Sprite.Image.add】イメージデータの指定がありません"
@@ -1361,5 +1370,9 @@ export class Sprite extends Entity implements ISprite {
     }
     get Bubble() : ISpriteBubble {
         return this._SpriteBubble;
+    }
+
+    get SvgText() : ISvgText {
+        return this._SvgText;
     }
 };

@@ -1,5 +1,6 @@
 import { ITextSpriteMotionMove } from '@Type/text/ITextSpriteMotionMove';
 import { TextSprite } from './textSprite';
+import { SpriteMotionMove } from '../sprite/spriteMotionMove';
 export class TextSpriteMotionMove implements ITextSpriteMotionMove {
     private entity: TextSprite;
     /**

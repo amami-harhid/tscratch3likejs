@@ -1,7 +1,7 @@
 import { Libs } from '../../controls/libs';
 import { PlayGround } from '../../playGround';
 import { Sprite } from '../sprite';
-import { StageLayering } from '../stageLayering';
+import { StageLayering } from '../../../Type/stage/CStageLayering';
 /**
  * DragSprite
  */

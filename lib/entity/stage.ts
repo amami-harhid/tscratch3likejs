@@ -11,7 +11,7 @@ import { StageSound } from './stage/stageSound';
 import { Entity } from "./entity";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { Sprite } from "./sprite";
-import { StageLayering } from "./stageLayering";
+import { StageLayering } from "../../Type/stage/CStageLayering";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TMouse } from "@Type/mouse";
 import type { TScale } from "@Type/common/typeCommon";
@@ -31,7 +31,7 @@ export class Stage extends Entity implements IStage{
     /** @internal */
     public backdrops: Backdrops;
     private _sprites: Sprite[];
-    private _textSprites: TextSprite[];
+    private _textSprites: ITextSprite[];
     //private skinIdx: number;
     /** @internal */
     public mouse: TMouse;
@@ -145,8 +145,7 @@ export class Stage extends Entity implements IStage{
     }
 
     addTextSprite( textSprite: ITextSprite) : void {
-        const _textSprite:TextSprite = textSprite as unknown as TextSprite;
-        this._textSprites.push(_textSprite);
+        this._textSprites.push(textSprite);
     }
     /** @internal */
     _sortSprites(): void {
@@ -181,8 +180,7 @@ export class Stage extends Entity implements IStage{
 
     /** @internal */
     removeTextSprite( textSprite: ITextSprite ) {
-        const curSprite:TextSprite = textSprite as unknown as TextSprite;
-        const n_sprites = this._textSprites.filter( ( item ) => item !== curSprite );
+        const n_sprites = this._textSprites.filter( ( item ) => item !== textSprite );
         this._textSprites = n_sprites;
 
     }
@@ -199,7 +197,8 @@ export class Stage extends Entity implements IStage{
             _sprite.update();
         }
         for(const _sprite of this._textSprites){
-            _sprite.update();
+            const s : TextSprite = _sprite as unknown as TextSprite;
+            s.update();
         }
 
     }

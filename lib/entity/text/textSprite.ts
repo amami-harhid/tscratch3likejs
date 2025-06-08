@@ -1,9 +1,9 @@
 import { Costumes } from '../costumes';
 import { Entity } from '../entity';
-import { ImageLoader } from '../../importer/imageLoader';
-import { MeasurementProvider } from '../../util/MeasurementProvider';
-import { StageLayering } from '../stageLayering';
-import { ScratchRenderProperties } from '../../render/IRenderWebGL';
+//import { ImageLoader } from '../../importer/imageLoader';
+//import { MeasurementProvider } from '../../util/MeasurementProvider';
+import { StageLayering } from '../../../Type/stage/CStageLayering';
+import { ScratchRenderProperties } from '@Type/render/IRenderWebGL';
 import { TextSpriteControl } from './textControl';
 import { TextSpriteLooks } from './textSpriteLooks';
 import { TextSpriteMotion } from './textSpriteMotion';
@@ -20,8 +20,8 @@ import { ISprite } from '@Type/sprite';
 //import { blob } from 'stream/consumers';
 import { FontLoader } from '../../importer/fontLoader';
 
-const SVGSkin = require('../../../node_modules/scratch-render/src/SVGSkin');
-const {loadSvgString, serializeSvgToString} = require('scratch-svg-renderer');
+//const SVGSkin = require('../../../node_modules/scratch-render/src/SVGSkin');
+//const {loadSvgString, serializeSvgToString} = require('scratch-svg-renderer');
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 

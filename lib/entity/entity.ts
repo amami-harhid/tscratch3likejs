@@ -19,12 +19,12 @@ import { Utils } from '../util/utils';
 import { ImageEffective } from '../../Type/entity/ImageEffective';
 import { SoundOption } from '../../Type/entity/SoundOption';
 import { PlayGround } from '../playGround';
-import { StageLayering } from './stageLayering';
 import type { TThreadObj } from '../controls/TThreadObj';
 import type { S3FontData, TPosition, TScale } from '@Type/common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
-import type { ScratchRenderProperties } from '../render/IRenderWebGL';
+//import type { ScratchRenderProperties } from '../render/IRenderWebGL';
+import { StageLayering, IStageLayering } from '../../Type/stage/CStageLayering';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
 declare type TBroadcastElementFunc = {
     func: CallableFunction,
@@ -89,6 +89,17 @@ export class Entity extends EventEmitter {
     protected _isAlive: boolean;
     private _timer: number;
     protected fontDatas?: S3FontData[];
+
+    getFontData(fontFamily:string): string|undefined {
+        if(this.fontDatas){
+            for(const font of this.fontDatas){
+                if(font.name == fontFamily){
+                    return font.data as string;
+                }
+            }
+        }
+        return undefined;
+    }
 
     constructor (name: string, layer: StageLayering, options:TEntityOptions = {} ){
         super();
@@ -410,7 +421,8 @@ export class Entity extends EventEmitter {
         })
         return _allDone;
     }
-    protected async _addImage(name:string ,image:string|HTMLImageElement, costume) {
+    /** @internal */
+    public async _addImage(name:string ,image:string|HTMLImageElement, costume) {
         if(name == undefined || typeof name != "string"){
             throw "【Image.add】正しい name を指定してください"
         }
@@ -1196,7 +1208,11 @@ export class Entity extends EventEmitter {
 
     }
 
-    protected set visible( _visible: boolean ){
+    get visible( ): boolean {
+        return this._visible;
+    }
+
+    set visible( _visible: boolean ){
         this.updateVisible(_visible);
     }
     /**
@@ -1212,9 +1228,6 @@ export class Entity extends EventEmitter {
         this.visible = false;
     }
 
-    protected get visible() {
-        return this._visible;
-    }
     /**
      * @abstract
      */

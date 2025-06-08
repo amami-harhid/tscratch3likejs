@@ -5,10 +5,11 @@ const ScratchRender = require('scratch-render');
 import { Canvas } from '../elements/canvas';
 import { S3Element } from '../elements/element';
 import { PlayGround } from '../playGround';
-import { StageLayering } from '../entity/stageLayering';
-import { IRenderWebGL } from './IRenderWebGL';
+import { StageLayering, LAYER_GROUPS } from '../../Type/stage/CStageLayering';
+import { IRenderWebGL } from '@Type/render/IRenderWebGL';
+import { IRender } from '@Type/render/IRender';
 
-export class Render {
+export class Render implements IRender {
     /**
      * ステージ縦横比(縦÷高さの率)
      */
@@ -63,10 +64,9 @@ export class Render {
     private canvas: HTMLCanvasElement|null;
     /**
      * @constructor
-     * @param layerGroups {StageLayering[]}
      */
-    constructor(layerGroups = StageLayering.LAYER_GROUPS) {
-        this.layerGroups = layerGroups;
+    constructor() {
+        this.layerGroups = LAYER_GROUPS();
         this.stageWidth = 0;
         this.stageHeight = 0;
         this._renderer = null;

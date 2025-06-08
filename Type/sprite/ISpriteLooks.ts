@@ -11,16 +11,16 @@ export interface ISpriteLooks {
     /**
      * コスチューム番号、コスチューム名を取り出すためのオブジェクト
      */
-    get Costume() : ISpriteCostume;
+    readonly Costume: ISpriteCostume;
     /**
      * 背景番号、背景名を取り出すためのオブジェクト
      */
-    get Backdrop(): ISpriteBackdrop;
+    readonly Backdrop: ISpriteBackdrop;
 
     /**
      * サイズ
      */
-    get Size() : ISpriteSize;
+    readonly Size : ISpriteSize;
     /**
      * 表示する
      */
@@ -34,15 +34,15 @@ export interface ISpriteLooks {
      * 
      * {@link Layer}
      */
-    get Layer() : ISpriteLayer;
+    readonly Layer : ISpriteLayer;
     /**
      * 効果
      */
-    get Effect() : ISpriteEffect;
+    readonly Effect : ISpriteEffect;
     /**
      * フキダシ
      */
-    get Bubble() : ISpriteBubble;
+    readonly Bubble : ISpriteBubble;
 
 };
 

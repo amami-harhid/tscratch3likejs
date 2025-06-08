@@ -5,9 +5,9 @@ const twgl = require('twgl.js');
 import { EventEmitter } from "events";
 import { MeasurementProvider } from "../util/MeasurementProvider";
 import { MonitorRenderingConstants } from "./s3RenderConstants";
-import type { IDrawable } from "../render/IDrawable";
+import type { IDrawable } from "@Type/render/IDrawable";
 import { S3Silhouette } from "./s3Silhouette";
-import type { IRenderWebGL } from "../render/IRenderWebGL";
+import type { IRenderWebGL } from "@Type/render/IRenderWebGL";
 import type { TSize, TVec3 } from "@Type/common/typeCommon";
 import { IMonitorSkin } from "@Type/monitors/IMonitorSkin";
 
@@ -174,7 +174,7 @@ export class S3MonitorSkin extends EventEmitter implements IMonitorSkin {
     /**
      * @returns {CanvasRenderingContext2D}
      */
-    createCanvas() {
+    createCanvas(): CanvasRenderingContext2D {
         /** @type {HTMLCanvasElement} */
         this._canvas = document.createElement('canvas');
         const ctx = this._canvas.getContext('2d', { willReadFrequently: true });

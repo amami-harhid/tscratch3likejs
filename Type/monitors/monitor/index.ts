@@ -3,7 +3,7 @@ import { TPosition, TScale } from "@Type/common/typeCommon";
 /**
  * Monitor
  */
-export interface IMonitor{
+export interface IMonitor {
     get monitorId(): string;
     get position(): TPosition;
     set position(_position: TPosition)

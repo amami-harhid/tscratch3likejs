@@ -1,7 +1,8 @@
+import { IMeasurementProvider } from '@Type/util/IMeasurementProvider';
 /**
  * MeasurementProvider
  */
-export class MeasurementProvider {
+export class MeasurementProvider implements IMeasurementProvider{
 
     private _ctx: CanvasRenderingContext2D;
     private _cache: {[key:string]: number};
