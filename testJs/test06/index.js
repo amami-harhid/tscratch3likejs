@@ -4,8 +4,6 @@
  */
 import {Pg, Lib} from '../../build/index.js';
 
-import { SvgTextMesure } from './sub/svgTextMesure.js';
-
 Pg.title = "【Test06】テキストを描画する"
 
 const Env = Lib.Env;
@@ -23,7 +21,6 @@ let stage;
 let cat, apple;
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
-import { Svg } from './sub/svg.js'; 
 import { Texts } from './sub/texts.js';
 
 Pg.preload = async function preload() {
@@ -52,17 +49,21 @@ Pg.prepare = async function prepare() {
 
     //cat.Looks.Size.scale = {w: 150, h: 150};
     const promiseArr = []
-    const textMesure =  SvgTextMesure.getInstance();
+    //const textMesure =  cat.SvgText.mesure;
+    const toSvg = cat.SvgText.toSvg.bind(cat.SvgText);
     // eslint-disable-next-line loopCheck/s3-loop-plugin
     for(const counter of Lib.Iterator(Texts.length)){
         //console.log(counter);
         const texts = Texts[counter];
-        const fontSize = 12;
-        const padding = Math.ceil(fontSize);
+        const color = '#ff0f0f';
+        const fontSize = 10;
+        const fontStyle = 'normal';
+        const padding = Math.ceil(fontSize); // <--- ??
         console.log(texts);
-        const mesure = textMesure.mesure(texts, fontSize, 'normal', TogeMaruGothic);
-        console.log(mesure);
-        const svg = Svg(texts, fontSize, 'blue', mesure, padding, TogeMaruGothic);
+        //const mesure = textMesure.mesure(texts, fontSize, 'normal', TogeMaruGothic);
+        //console.log(mesure);
+        const svg = toSvg(texts, color, fontSize, fontStyle, padding);
+        console.log(svg);
         const add = cat.SvgText.add(`${counter}`, svg, TogeMaruGothic);
         promiseArr.push(add);
     }

@@ -3,16 +3,21 @@ import { Entity } from '../entity';
 import { Sprite } from '../sprite';
 import { Stage } from '../stage';
 import { SvgTextError } from './svgTextError';
-import { SvgTextMesure } from './svgTextMesure';
+import { SvgTextCreator } from './svgTextCreator';
+import { SvgTextMesure } from './svgTexMesure';
+import type { ISvgTextCreator } from '@Type/svgText/ISvgTextCreator';
+import type { ISvgTextMesure } from '@Type/svgText/ISvgTextMesure';
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 export class SvgText implements ISvgText {
     private _entity : Entity;
-    private _svgTextMesure:SvgTextMesure;
+    private _svgTextMesure: ISvgTextMesure;
+    private _svgTextCreator: ISvgTextCreator;
     constructor(entity: Entity) {
         this._entity = entity;
         this._svgTextMesure = SvgTextMesure.getInstance();
-
+        this._svgTextCreator = SvgTextCreator.getInstance();
+        console.log('this._svgTextCreator', this._svgTextCreator);
     }
     private async addImage(name:string, image:string): Promise<void> {
         //console.log(image);
@@ -83,9 +88,14 @@ export class SvgText implements ISvgText {
             await this.addImage(name, svgText);
         }
     }
-    mesure(texts:string[], fontSize:number, fontStyle:string='normal', fontFamily?: string): {w:number, h:number}{
+    mesure(texts:string[], fontSize?:number, fontStyle?:string, fontFamily?: string): {w:number, h:number}{
         //console.log('fontStyle', fontStyle);
         return this._svgTextMesure.mesure(texts, fontSize, fontStyle, fontFamily);
+    }
+
+    toSvg(textArr: string[], color?: string, fontSize?: number, fontStyle?: string, padding?:number, fontFamily?:string): string {
+        console.log(this);
+        return this._svgTextCreator.toSvg(textArr, color, fontSize, fontStyle, padding, fontFamily);
     }
 }
 
