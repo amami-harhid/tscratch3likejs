@@ -2,13 +2,16 @@ import { ISvgText } from '@Type/svgText/ISvgText';
 import { Entity } from '../entity';
 import { Sprite } from '../sprite';
 import { Stage } from '../stage';
+import { SvgTextError } from './svgTextError';
+import { SvgTextMesure } from './svgTextMesure';
+
 const SVG_NS = "http://www.w3.org/2000/svg";
 export class SvgText implements ISvgText {
     private _entity : Entity;
-    private _svgTextCreator:SvgTextCreator;
+    private _svgTextMesure:SvgTextMesure;
     constructor(entity: Entity) {
         this._entity = entity;
-        this._svgTextCreator = SvgTextCreator.getInstance();
+        this._svgTextMesure = SvgTextMesure.getInstance();
 
     }
     private async addImage(name:string, image:string): Promise<void> {
@@ -25,13 +28,15 @@ export class SvgText implements ISvgText {
     }
     async add(name: string, svgString: string, fontFamily?: string): Promise<void>{
         const parser = new DOMParser();
-        const svgDom = parser.parseFromString(svgString, 'text/xml');
+        let svgDom = parser.parseFromString(svgString, 'text/xml');
         if(svgDom.childNodes.length < 1 ||
             svgDom.documentElement.localName !== 'svg') {
-            throw 'SVGではないですよ';
+            const svgTextError = SvgTextError();
+            await this.addImage(name, svgTextError);
+            return;
+            //throw 'SVGではないですよ';
         }
         const svgTag = svgDom.documentElement;
-
         if(fontFamily){
             // font データを取得しておく
             const font = this._entity.getFontData(fontFamily);
@@ -78,20 +83,20 @@ export class SvgText implements ISvgText {
             await this.addImage(name, svgText);
         }
     }
-    mesure(text:string, fontSize:number, fontStyle:string='normal', fontFamily?: string): {w:number, h:number}{
+    mesure(texts:string[], fontSize:number, fontStyle:string='normal', fontFamily?: string): {w:number, h:number}{
         //console.log('fontStyle', fontStyle);
-        return this._svgTextCreator.mesure(text, fontSize, fontStyle, fontFamily);
+        return this._svgTextMesure.mesure(texts, fontSize, fontStyle, fontFamily);
     }
 }
 
-class SvgTextCreator {
+class SvgTextMesure2 {
     private dummyCanvas : HTMLCanvasElement;
     //private dummyCtx: CanvasRenderingContext2D|null; 
     constructor() {
         this.dummyCanvas = document.createElement('canvas');
         //this.dummyCtx = this.dummyCanvas.getContext('2d', { willReadFrequently: true });        
     }
-    mesure(text:string, fontSize:number, fontStyle:string='normal', fontFamily?: string): {w:number, h:number} {
+    mesure(texts:string[], fontSize:number, fontStyle:string='normal', fontFamily?: string): {w:number, h:number} {
         if(fontFamily){
             //console.log('fontFamily', fontFamily);
             this.dummyCanvas.style.fontFamily = `${fontSize}px '${fontFamily}', sans-serif`;
@@ -111,18 +116,31 @@ class SvgTextCreator {
         }
         //console.log(this.dummyCanvas);
         //console.log(dummyCtx);
-        const mesure = dummyCtx.measureText(text);
-        const width = mesure.width;
-        const height = mesure.actualBoundingBoxAscent+mesure.actualBoundingBoxDescent 
-        return {w:width, h: height};
+        if(texts.length > 0) {
+            let maxLength = texts[0].length;
+            let maxLengthStr: string = texts[0]; 
+            for(let i=1 ; i<texts.length;i++) {
+                const text = texts[i];
+                const _length = text.length;
+                if( maxLength < _length ) {
+                    maxLength = _length;
+                    maxLengthStr = text;
+                }
+            }
+            const mesure = dummyCtx.measureText(maxLengthStr);
+            const width = mesure.width;
+            const height = mesure.actualBoundingBoxAscent+mesure.actualBoundingBoxDescent 
+            return {w:width, h: height};
+        }
+        return {w:0, h: 0};
     }
 
-    static instance:SvgTextCreator;
-    static getInstance(): SvgTextCreator {
-        if(SvgTextCreator.instance == undefined){
-            SvgTextCreator.instance = new SvgTextCreator();
+    static instance:SvgTextMesure;
+    static getInstance(): SvgTextMesure {
+        if(SvgTextMesure.instance == undefined){
+            SvgTextMesure.instance = new SvgTextMesure();
         }
-        return SvgTextCreator.instance;
+        return SvgTextMesure.instance;
     }
 
 }
