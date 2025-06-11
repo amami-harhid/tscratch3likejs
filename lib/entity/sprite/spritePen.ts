@@ -31,6 +31,9 @@ export class SpritePen implements ISpritePen{
     stamp(): void {
         this.penSprite.stamp();
     }
+    stampStage(): void {
+        this.penSprite.stampStage();
+    }
     get HSVColor() {
         return this.penSprite.HSVColor;
     }

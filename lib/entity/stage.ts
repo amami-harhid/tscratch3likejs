@@ -25,6 +25,8 @@ import { IStageSound } from "@Type/stage/IStageSound";
 import { ISprite } from "@Type/sprite";
 import { ITextSprite } from "@Type/text";
 import { TextSprite } from "./text/textSprite";
+import { ISvgText } from "@Type/svgText/ISvgText";
+import { SvgText } from "./entity/svgText";
 export class Stage extends Entity implements IStage{
     private scale: TScale;
     private direction: number;
@@ -41,6 +43,7 @@ export class Stage extends Entity implements IStage{
     private _Event : IStageEvent;
     private _Sensing : IStageSensing;
     private _Sound: IStageSound;
+    private _SvgText: ISvgText;
     constructor( options:TEntityOptions ) {
         if(typeof options == "string") throw "new Stage() パラメータはオブジェクト型のみ"
         super( "stage", StageLayering.BACKGROUND_LAYER, options );
@@ -119,6 +122,7 @@ export class Stage extends Entity implements IStage{
         this._Event = new StageEvent(this);
         this._Sensing = new StageSensing(this);
         this._Sound = new StageSound(this);
+        this._SvgText = new SvgText(this);
     }
     /** @internal */
     get $sprites (): Sprite[] {
@@ -523,4 +527,9 @@ export class Stage extends Entity implements IStage{
     get Sound() {
         return this._Sound;
     }
+
+    get SvgText() : ISvgText {
+        return this._SvgText;
+    }
+
 };

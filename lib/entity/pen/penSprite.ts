@@ -166,9 +166,15 @@ export class PenSprite implements IPenSprite {
         if(this._skinId == -1){
             console.error(NotPrepareMessage);
         }
-        const stampDrowingID = this._sprite.drawableID;
-        if(this._skinId > -1 && stampDrowingID > -1 && this._sprite.DragMode.dragging == false){
-            this.render.renderer.penStamp(this._skinId, stampDrowingID);
+        const stampDrawingID = this._sprite.drawableID;
+        if(this._skinId > -1 && stampDrawingID > -1 && this._sprite.DragMode.dragging == false){
+            this.render.renderer.penStamp(this._skinId, stampDrawingID);
+        }
+    }
+    stampStage(): void {
+        const stampDrawingId = this._sprite.playGround.stage.drawableID;
+        if(this._skinId > -1 && stampDrawingId > -1){
+            this.render.renderer.penStamp(this._skinId, stampDrawingId);
         }
     }
     /** @internal */

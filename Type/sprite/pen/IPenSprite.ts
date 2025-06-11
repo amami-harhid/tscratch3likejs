@@ -37,6 +37,10 @@ export interface IPenSprite {
      */
     stamp(): void;
     /**
+     * ステージをスタンプする
+     */
+    stampStage(): void;
+    /**
      * サイズ
      */
     readonly Size: IPenSpriteSize;

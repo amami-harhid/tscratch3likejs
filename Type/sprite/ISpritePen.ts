@@ -26,6 +26,10 @@ export interface ISpritePen {
      */
     stamp(): void;
     /**
+     * ステージをスタンプする。
+     */
+    stampStage(): void;
+    /**
      * カラー(HSV)
      * ```ts
      *  this.Pen.HSVColor.hue = 120;
