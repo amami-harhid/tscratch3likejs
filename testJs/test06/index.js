@@ -48,16 +48,13 @@ Pg.prepare = async function prepare() {
     await cat.Font.add( TogeMaruGothic );
     cat.Looks.hide();
 
-    //cat.Looks.Size.scale = {w: 150, h: 150};
     const promiseArr = []
     const toSvg = cat.SvgText.toSvg.bind(cat.SvgText);
-    //const toSvg = svgTextCreator;
     // eslint-disable-next-line loopCheck/s3-loop-plugin
     for(const counter of Lib.Iterator(Texts.length)){
-        //console.log(counter);
         const texts = Texts[counter];
         const color = 'red';
-        const fontSize = 20;
+        const fontSize = 15;
         const fontStyle = 'normal';
         const svg = toSvg(texts, fontSize, fontStyle, color, Kaisotai);
         const add = cat.SvgText.add(`${counter}`, svg, Kaisotai);
@@ -103,12 +100,12 @@ Pg.setting = async function setting() {
         this.Pen.HSVColor.transparency = 100;//99.5;
         this.Pen.clear();
         this.Pen.down();
-        let dx = 1;
+        let dx = 2;
         await this.Control.wait(4);
         for(;;) {
             this.Looks.Size.w += dx;
             this.Looks.Size.h += dx;
-            if(this.Looks.Size.h > 800 || this.Looks.Size.h < 90) {
+            if(this.Looks.Size.h > 900 || this.Looks.Size.h < 50) {
                 dx *= -1;
             }
             // 進む。
