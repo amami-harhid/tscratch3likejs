@@ -12,6 +12,14 @@ export class SpriteCostume implements ISpriteCostume {
     constructor(entity:Sprite){
         this.entity = entity;
     }
+
+    get names() : string[] {
+        if(this.entity.costumes){
+            return this.entity.costumes.names;
+        }
+        return [];
+    }
+
     /**
      * コスチューム番号
      * ```ts

@@ -39,6 +39,9 @@ export class Costumes {
         this._rotationStyle = RotationStyle.ALL_AROUND;
         this._rotationStylePatterns = [RotationStyle.LEFT_RIGHT, RotationStyle.DONT_ROTATE, RotationStyle.ALL_AROUND];
     }
+    get names() : string[] {
+        return Array.from(this.costumes.keys());
+    }
     async addImageDirectSVG(name: string, image: string): Promise<number> {
         const skinId = this.render.renderer.createSVGSkin(image);
         this.costumes.set( name , skinId);

@@ -13,6 +13,15 @@ export class StageBackdrop implements IStageBackdrop {
         this.entity = entity;
     }
     /**
+     * 背景名の配列
+     */
+    get names() : string[] {
+        if(this.entity.backdrops){
+            return this.entity.backdrops.names;
+        }
+        return [];
+    }
+    /**
      * 背景番号
      * ```ts
      *  // 背景番号

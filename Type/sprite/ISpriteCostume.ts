@@ -2,6 +2,10 @@
 export interface ISpriteCostume {
 
     /**
+     * コスチューム名 配列
+     */
+    readonly names : string[]
+    /**
      * コスチューム番号
      * ```ts
      *  // コスチューム番号
