@@ -1,5 +1,5 @@
 import { ISvgTextMesure } from "@Type/svgText/ISvgTextMesure";
-import { lineBeaker } from "./svgTexUtil";
+import { lineBreaker } from "./svgTexUtil";
 
 /**
  * 文字列の長さ、高さを取り出す
@@ -18,7 +18,7 @@ export class SvgTextMesure implements ISvgTextMesure{
      * @returns 
      */
     mesure(texts:string[], fontSize?:number, fontStyle?:string, fontFamily?: string): {w:number, h:number} {
-        const _texts = lineBeaker(texts);
+        const _texts = lineBreaker(texts);
         const _fontSize = (fontSize)? fontSize: 12;
         const _fontStyle = (fontStyle)? fontStyle: 'normal';        
         

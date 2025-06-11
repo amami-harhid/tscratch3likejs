@@ -3,7 +3,6 @@
  * テキストを描画する
  */
 import {Pg, Lib} from '../../build/index.js';
-
 Pg.title = "【Test06】テキストを描画する"
 
 const Env = Lib.Env;
@@ -35,6 +34,8 @@ Pg.preload = async function preload() {
 }
 Pg.prepare = async function prepare() {
 
+    //const renderRate = Lib.renderRate;
+    //console.log(renderRate);
     stage = new Lib.Stage();
     await stage.Image.add(Jurassic);
     await stage.Sound.add( Chill );
@@ -49,25 +50,29 @@ Pg.prepare = async function prepare() {
 
     //cat.Looks.Size.scale = {w: 150, h: 150};
     const promiseArr = []
-    //const textMesure =  cat.SvgText.mesure;
     const toSvg = cat.SvgText.toSvg.bind(cat.SvgText);
+    //const toSvg = svgTextCreator;
     // eslint-disable-next-line loopCheck/s3-loop-plugin
     for(const counter of Lib.Iterator(Texts.length)){
         //console.log(counter);
         const texts = Texts[counter];
-        const color = '#ff0f0f';
-        const fontSize = 10;
+        const color = 'red';
+        const fontSize = 20;
         const fontStyle = 'normal';
-        const padding = Math.ceil(fontSize); // <--- ??
-        console.log(texts);
+        //console.log(texts);
         //const mesure = textMesure.mesure(texts, fontSize, 'normal', TogeMaruGothic);
         //console.log(mesure);
-        const svg = toSvg(texts, color, fontSize, fontStyle, padding);
-        console.log(svg);
-        const add = cat.SvgText.add(`${counter}`, svg, TogeMaruGothic);
+        const svg = toSvg(texts, fontSize, fontStyle, color, Kaisotai);
+        //console.log('svg=', svg);
+        const add = cat.SvgText.add(`${counter}`, svg, Kaisotai);
         promiseArr.push(add);
     }
     await Promise.all(promiseArr);
+
+    //const main = document.getElementById('main');
+    //const mainTmp = document.getElementById('mainTmp');
+    //main.remove();
+    //mainTmp.remove();
 }
 Pg.setting = async function setting() {
 
@@ -76,12 +81,13 @@ Pg.setting = async function setting() {
         this.Looks.Costume.name = '1';
         for(;;) {
             this.Looks.Costume.next();
-            await this.Control.wait(2);
+            await this.Control.wait(0.5);
             yield;
         }
     });   
 
     cat.Event.whenFlag(async function*(){
+        this.Looks.Size.scale = {w:200, h:200};
         this.Motion.Direction.degree = 90;
         this.Pen.prepare();
         this.Pen.Size.thickness = 1000;
@@ -93,11 +99,11 @@ Pg.setting = async function setting() {
         for(;;) {
             this.Looks.Size.w += dx;
             this.Looks.Size.h += dx;
-            if(this.Looks.Size.h > 400 || this.Looks.Size.h < 50) {
+            if(this.Looks.Size.h > 800 || this.Looks.Size.h < 90) {
                 dx *= -1;
             }
             // 進む。
-            //this.Motion.Move.steps(1);
+            this.Motion.Move.steps(1);
             //console.log(this.Looks.Size.drawingSize);
             // 端に触れたら跳ね返る
             this.Motion.Move.ifOnEdgeBounds();

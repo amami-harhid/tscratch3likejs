@@ -3,7 +3,7 @@
  * @param texts 
  * @returns 
  */
-export const lineBeaker = function (texts: string[]): string[] {
+export const lineBreaker = function (texts: string[]): string[] {
     const lineBreakArr: string[] = [];
     for( const text of texts) {
         const t = text.replaceAll('<br>', '<br/>').split('<br/>');

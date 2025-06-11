@@ -17,7 +17,7 @@ export class SvgText implements ISvgText {
         this._entity = entity;
         this._svgTextMesure = SvgTextMesure.getInstance();
         this._svgTextCreator = SvgTextCreator.getInstance();
-        console.log('this._svgTextCreator', this._svgTextCreator);
+        //console.log('this._svgTextCreator', this._svgTextCreator);
     }
     private async addImage(name:string, image:string): Promise<void> {
         //console.log(image);
@@ -93,64 +93,8 @@ export class SvgText implements ISvgText {
         return this._svgTextMesure.mesure(texts, fontSize, fontStyle, fontFamily);
     }
 
-    toSvg(textArr: string[], color?: string, fontSize?: number, fontStyle?: string, padding?:number, fontFamily?:string): string {
-        console.log(this);
-        return this._svgTextCreator.toSvg(textArr, color, fontSize, fontStyle, padding, fontFamily);
+    toSvg(textArr: string[], fontSize?: number, fontStyle?: string, color?: string, fontFamily?:string): string {
+        //console.log(this);
+        return this._svgTextCreator.toSvg(textArr, fontSize, fontStyle, color, fontFamily);
     }
-}
-
-class SvgTextMesure2 {
-    private dummyCanvas : HTMLCanvasElement;
-    //private dummyCtx: CanvasRenderingContext2D|null; 
-    constructor() {
-        this.dummyCanvas = document.createElement('canvas');
-        //this.dummyCtx = this.dummyCanvas.getContext('2d', { willReadFrequently: true });        
-    }
-    mesure(texts:string[], fontSize:number, fontStyle:string='normal', fontFamily?: string): {w:number, h:number} {
-        if(fontFamily){
-            //console.log('fontFamily', fontFamily);
-            this.dummyCanvas.style.fontFamily = `${fontSize}px '${fontFamily}', sans-serif`;
-        }
-        const dummyCtx = this.dummyCanvas.getContext('2d', { willReadFrequently: true });        
-        if(dummyCtx == null) throw 'Error';
-        if(fontFamily){
-            const font = `${fontStyle} ${fontSize}px '${fontFamily}',sans-serif`;
-            //console.log(font);
-            dummyCtx.font = font;
-
-        }else{
-            const font = `${fontStyle} ${fontSize}px sans-serif`;
-            //console.log(font);
-            dummyCtx.font = font;
-
-        }
-        //console.log(this.dummyCanvas);
-        //console.log(dummyCtx);
-        if(texts.length > 0) {
-            let maxLength = texts[0].length;
-            let maxLengthStr: string = texts[0]; 
-            for(let i=1 ; i<texts.length;i++) {
-                const text = texts[i];
-                const _length = text.length;
-                if( maxLength < _length ) {
-                    maxLength = _length;
-                    maxLengthStr = text;
-                }
-            }
-            const mesure = dummyCtx.measureText(maxLengthStr);
-            const width = mesure.width;
-            const height = mesure.actualBoundingBoxAscent+mesure.actualBoundingBoxDescent 
-            return {w:width, h: height};
-        }
-        return {w:0, h: 0};
-    }
-
-    static instance:SvgTextMesure;
-    static getInstance(): SvgTextMesure {
-        if(SvgTextMesure.instance == undefined){
-            SvgTextMesure.instance = new SvgTextMesure();
-        }
-        return SvgTextMesure.instance;
-    }
-
 }
