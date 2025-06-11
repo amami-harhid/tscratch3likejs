@@ -46,6 +46,7 @@ Pg.prepare = async function prepare() {
     await cat.Font.add( RosetE );
     await cat.Font.add( Kaisotai );
     await cat.Font.add( TogeMaruGothic );
+    cat.Looks.hide();
 
     //cat.Looks.Size.scale = {w: 150, h: 150};
     const promiseArr = []
@@ -58,20 +59,12 @@ Pg.prepare = async function prepare() {
         const color = 'red';
         const fontSize = 20;
         const fontStyle = 'normal';
-        //console.log(texts);
-        //const mesure = textMesure.mesure(texts, fontSize, 'normal', TogeMaruGothic);
-        //console.log(mesure);
         const svg = toSvg(texts, fontSize, fontStyle, color, Kaisotai);
-        console.log('svg=', svg);
         const add = cat.SvgText.add(`${counter}`, svg, Kaisotai);
         promiseArr.push(add);
     }
     await Promise.all(promiseArr);
 
-    //const main = document.getElementById('main');
-    //const mainTmp = document.getElementById('mainTmp');
-    //main.remove();
-    //mainTmp.remove();
 }
 Pg.setting = async function setting() {
     stage.Event.whenFlag(async function*(){
@@ -82,17 +75,27 @@ Pg.setting = async function setting() {
         }
     })
     cat.Event.whenFlag(async function*(){
+        this.Looks.Size.scale = {w:200, h:200};
+        this.Looks.show();
         this.Motion.Position.xy = {x:0, y:0};
         this.Looks.Costume.name = '1';
         for(;;) {
             this.Looks.Costume.next();
-            await this.Control.wait(0.5);
+            if(this.Looks.Costume.name == '1') {
+                break;
+            }
+            await this.Control.wait(1);
+            yield;
+        }
+        for(;;) {
+            await this.Control.wait(2);
+            this.Looks.Costume.next();
+            await this.Control.wait(2);
             yield;
         }
     });   
 
     cat.Event.whenFlag(async function*(){
-        this.Looks.Size.scale = {w:200, h:200};
         this.Motion.Direction.degree = 90;
         this.Pen.prepare();
         this.Pen.Size.thickness = 1000;
@@ -101,6 +104,7 @@ Pg.setting = async function setting() {
         this.Pen.clear();
         this.Pen.down();
         let dx = 1;
+        await this.Control.wait(4);
         for(;;) {
             this.Looks.Size.w += dx;
             this.Looks.Size.h += dx;
@@ -114,7 +118,7 @@ Pg.setting = async function setting() {
             this.Motion.Move.ifOnEdgeBounds();
             this.Pen.stampStage();
             this.Pen.stamp();
-            this.Looks.Effect.change(Lib.ImageEffective.COLOR, 5);
+            this.Looks.Effect.change(Lib.ImageEffective.COLOR, 1);
             this.Motion.Direction.degree += 1;
             yield;
         }
