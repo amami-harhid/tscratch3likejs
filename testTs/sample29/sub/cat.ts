@@ -1,10 +1,12 @@
-import {Lib} from "../../../s3lib-importer";
+import { Lib } from "../../../s3lib-importer";
 import { Constants } from "./Constant";
+
+const Sprite = Lib.Sprite;
 
 /**
  * Cat (SubClass) 
  */
-export class Cat extends Lib.Sprite {
+export class Cat extends Sprite {
     private rotationDegree: number;
     /**
      * @constructor
@@ -19,10 +21,11 @@ export class Cat extends Lib.Sprite {
      */
     setting() {
         // this.Eventの thisは、Cat
-        this.Event.whenFlag( async function(this:Cat) {
+        this.Event.whenFlag( async function(this: Cat) {
             this.Motion.Move.toXY(0, 0);
+            await this.Looks.Bubble.sayForSecs('Aキーで背景が変わるよ', 1);
         });
-        this.Event.whenBroadcastReceived(Constants.Start, async function*(this:Cat){
+        this.Event.whenBroadcastReceived(Constants.Start, async function*(this: Cat){
             console.log('whenBroadcastReceived, Start in cat')
             // yield* とすることで generatorを実行できる
             // つまり 1000÷FPS 間隔で実行される。
@@ -34,17 +37,17 @@ export class Cat extends Lib.Sprite {
             yield * this.doActions();
         })
         // メッセージ(次の背景)を受け取ったときの動作
-        this.Event.whenBroadcastReceived(Constants.NextBackdrop, async function(this:Cat){
+        this.Event.whenBroadcastReceived(Constants.NextBackdrop, async function(this: Cat){
             console.log('nextBackdrop, in Cat');
             this.Looks.Backdrop.next();
         });
         // 背景がBackdrop になったときの動作
-        this.Event.whenBackdropSwitches(Constants.Backdrop, async function(this:Cat){
+        this.Event.whenBackdropSwitches(Constants.Backdrop, async function(this: Cat){
             this.rotationDegree = 5;
             this.Looks.Size.scale = {w: 200, h:100};
         });
         // 背景がBackdrop になったときの動作
-        this.Event.whenBackdropSwitches(Constants.Jurassic, async function(this:Cat){
+        this.Event.whenBackdropSwitches(Constants.Jurassic, async function(this: Cat){
             this.rotationDegree = -5;            
             this.Looks.Size.scale = {w: 100, h:200};
         });
@@ -54,7 +57,7 @@ export class Cat extends Lib.Sprite {
      * Generator関数
      * 1000÷FPS 間隔で実行される
      */
-    *doActions(){
+    *doActions(this: Cat){
         // ずっと繰り返す（ 1000/FPS ごとにyieldまで実行される）
         for(;;){
             // マウスカーソルへ向く

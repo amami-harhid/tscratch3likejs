@@ -1,5 +1,5 @@
 {
-  "include": ["./test/*.ts", "./src/**/*.ts","./lib/**/*.ts", "./types/**/index.d.ts", "./Type/**/*.ts2"],
+  "include": ["./test/*.ts", "./src/**/*.ts","./lib/**/*.ts", "./types/**/index.d.ts", "./s3lib-importer/**/*.ts"],
   "exclude": ["./node_modules/*"],
   "compilerOptions": {
     "target": "esnext",         /* es2018,es2019,es2020,esnext が適している */

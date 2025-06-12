@@ -3,7 +3,7 @@
  * 背景を１秒ごとに切り替える
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type { PlayGround } from "@Type/playground";
+import type { IPgMain as PgMain } from "@Type/pgMain";
 import type { IStage as Stage } from "@Type/stage";
 import type { ISprite as Sprite } from "@Type/sprite";
 
@@ -20,7 +20,7 @@ let ball: Sprite
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
-Pg.preload = async function preload(this:PlayGround) {
+Pg.preload = async function preload(this: PgMain) {
     this.Image.load('../../assets/Jurassic.svg', Jurassic01 );
     this.Image.load('../../assets/Jurassic2.svg', Jurassic02 );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );

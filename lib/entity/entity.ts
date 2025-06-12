@@ -4,7 +4,6 @@
 import { Canvas } from '../elements/canvas';
 import { Controls, Loop } from '../controls/controls';
 import { S3Element } from '../elements/element';
-
 import { EntityProxyExt } from '../util/entityProxyExt';
 import { Env } from '../env';
 import { EventEmitter } from "events";
@@ -18,13 +17,12 @@ import { Threads } from '../controls/threads';
 import { Utils } from '../util/utils';
 import { ImageEffective } from '../../Type/entity/ImageEffective';
 import { SoundOption } from '../../Type/entity/SoundOption';
-import { PlayGround } from '../playGround';
+import { PgMain } from '../pgMain';
 import type { TThreadObj } from '../controls/TThreadObj';
 import type { S3FontData, TPosition, TScale } from '@Type/common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
-//import type { ScratchRenderProperties } from '../render/IRenderWebGL';
-import { StageLayering, IStageLayering } from '../../Type/stage/CStageLayering';
+import { StageLayering } from '../../Type/stage/CStageLayering';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
 declare type TBroadcastElementFunc = {
     func: CallableFunction,
@@ -53,7 +51,7 @@ export class Entity extends EventEmitter {
     /** @internal */
     public render: Render;
     /** @internal */
-    public playGround: PlayGround;
+    public pgMain: PgMain;
     /** @internal */
     public drawableID: number;
     protected _libs: Libs;
@@ -84,11 +82,18 @@ export class Entity extends EventEmitter {
     protected $_prev_direction: number;
     protected _effect: TEntityEffects;
     /** 生存期間。(÷FPS値)をするとおよそ秒数になる、デフォルトは無限値。 */
-    public life: number;
+    protected _life: number;
     protected modules?: Map<string, Promise<void>[]>;
     protected _isAlive: boolean;
     private _timer: number;
     protected fontDatas?: S3FontData[];
+
+    get life() : number {
+        return this._life;
+    }
+    set life(life: number) {
+        this._life = life;
+    }
 
     getFontData(fontFamily:string): string|undefined {
         if(this.fontDatas){
@@ -108,14 +113,14 @@ export class Entity extends EventEmitter {
         this.isSprite = false; // スプライトのときTrue, 以外のとき False
         this._libs = Libs.getInstance();
         this.threads = Threads.getInstance();        
-        this.playGround = this._libs.p;
-        Threads.playGround = this.playGround;
+        this.pgMain = this._libs.p;
+        Threads.pgMain = this.pgMain;
         this.pace = 1000/Env.fps;
-        this.render = this.playGround.render;
+        this.render = this.pgMain.render;
         this.layer = layer;
         this.drawableID = this.render.createDrawable(this.layer);
         this.canvas = Canvas.canvas;
-        this.flag = null;//playGround.flag;
+        this.flag = null;
         this.$_position = {x:0, y:0}; // 意味なし
         this.$_scale = {w:100,h:100}; // 意味なし
         this.$_direction = 90; // 意味なし
@@ -138,7 +143,7 @@ export class Entity extends EventEmitter {
         this.$_prev_scale.h = this.$_scale.h;
         this._visible = (options.visible)? options.visible : true;
 
-        this.life = Infinity;
+        this._life = Infinity;
         this.modules = new Map();
         Entity.broadcastReceivedFuncArr = Entity.broadcastReceivedFuncArr || [];
         this._isAlive = true;
@@ -773,13 +778,13 @@ export class Entity extends EventEmitter {
      * @returns {boolean} - マウスタッチ中
      */
     public $isMouseTouching(): boolean {
-        if(this.playGround.render){
-            const mouseX = this.playGround.stage.mouse.x +1; // +1 は暫定、理由不明
-            const mouseY = this.playGround.stage.mouse.y +1;
-            if(this.playGround.render.renderer){
+        if(this.pgMain.render){
+            const mouseX = this.pgMain.stage.mouse.x +1; // +1 は暫定、理由不明
+            const mouseY = this.pgMain.stage.mouse.y +1;
+            if(this.pgMain.render.renderer){
                 // 自分自身だけを対象にしてマウスタッチしているDrawableのIDを取得する
                 // マウスタッチしていれば自分自身のDrawableIDが返るはず。
-                const _touchDrawableId = this.playGround.render.renderer.pick(mouseX,mouseY, 2, 2, [this.drawableID]); 
+                const _touchDrawableId = this.pgMain.render.renderer.pick(mouseX,mouseY, 2, 2, [this.drawableID]); 
                 if(this.drawableID == _touchDrawableId){
                     return true;
                 }    
@@ -897,7 +902,7 @@ export class Entity extends EventEmitter {
     }
     /** @internal */
     public $broadcast(messageId:string, ...args:any[] ): void {
-        const runtime = this.playGround.runtime;
+        const runtime = this.pgMain.runtime;
         if(runtime){
             const eventId = `message_${messageId}`;
             if(this.modules == undefined) this.modules = new Map();
@@ -909,7 +914,7 @@ export class Entity extends EventEmitter {
     /** @internal */
     public async $broadcastAndWait(messageId: string, ...args: any[] ): Promise<void> {
         const wait = this._libs.wait;
-        const runtime = this.playGround.runtime;
+        const runtime = this.pgMain.runtime;
         if(runtime){
             const eventId = `message_${messageId}`;
             if(this.modules == undefined) this.modules = new Map();
@@ -938,7 +943,7 @@ export class Entity extends EventEmitter {
         //const me = this;
         const me = this.getProxyForHat();
         const threadId = me._generateUUID();
-        const runtime = this.playGround.runtime;
+        const runtime = this.pgMain.runtime;
         if(runtime){
             const eventId = `message_${messageId}`;
             // func をためる。
@@ -1034,7 +1039,7 @@ export class Entity extends EventEmitter {
         }
         const me = this;
         setTimeout(async _=>{
-            const _p = this.playGround;
+            const _p = this.pgMain;
             const wait = this._libs.wait;
             const f = func.bind(me);
             await f(me);
@@ -1101,7 +1106,7 @@ export class Entity extends EventEmitter {
     /** @internal */
     public $whenKeyPressed( key: string, func: CallableFunction ): void {
         const me = this;
-        const p = this.playGround;
+        const p = this.pgMain;
         const runtime = p.runtime;
         if(key && func && runtime) {
             runtime.on("KEY_PRESSED", function(pressedKey:string){
@@ -1132,7 +1137,7 @@ export class Entity extends EventEmitter {
     public $whenClicked (func: CallableFunction) {
         // 同じオブジェクトで前回クリックされているとき
         // 前回のクリックで起動したものを止める。
-        const p = this.playGround;
+        const p = this.pgMain;
         const addId = '_clicked';
         const me = this;
         const _clickEventF = async (e: MouseEvent)=>{
@@ -1191,7 +1196,7 @@ export class Entity extends EventEmitter {
      * @param func {CallableFunction} 
      */
     $whenCloned(func: CallableFunction) : void {
-        const runtime = this.playGround.runtime;
+        const runtime = this.pgMain.runtime;
         if(runtime){
             const eventId = `whenClone_${this.name}`;
             runtime.on(eventId, function(clone: Entity){
@@ -1356,7 +1361,7 @@ export class Entity extends EventEmitter {
         clearTimeout( t );
     }
     protected pointTowardsMouseCursolGlobal( ) {
-        const p = this.playGround;
+        const p = this.pgMain;
         if(p.canvas){
             const rect = p.canvas.getBoundingClientRect();
 
@@ -1549,9 +1554,9 @@ export class Entity extends EventEmitter {
     }
 
     protected update() {
-        if(this.life != Infinity) {
-            this.life -= this._libs.Env.fps/1000;
-            if( this.life < 0 ) {
+        if(this._life != Infinity) {
+            this._life -= this._libs.Env.fps/1000;
+            if( this._life < 0 ) {
                 this.remove();
             }    
         }
@@ -1659,7 +1664,7 @@ export class Entity extends EventEmitter {
      */
     $stopAll() : void {
         S3Element.stopAll();
-        const runtime = this.playGround.runtime;
+        const runtime = this.pgMain.runtime;
         if(runtime){
             const EmitID_GREEN_MARK_BUTTON_ENABLED = runtime.GREEN_BUTTON_ENABLED;
             runtime.emit(EmitID_GREEN_MARK_BUTTON_ENABLED);    

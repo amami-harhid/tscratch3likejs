@@ -4,7 +4,7 @@
 const ScratchRender = require('scratch-render');
 import { Canvas } from '../elements/canvas';
 import { S3Element } from '../elements/element';
-import { PlayGround } from '../playGround';
+import { PgMain } from '../pgMain';
 import { StageLayering, LAYER_GROUPS } from '../../Type/stage/CStageLayering';
 import { IRenderWebGL } from '@Type/render/IRenderWebGL';
 import { IRender } from '@Type/render/IRender';
@@ -47,15 +47,15 @@ export class Render implements IRender {
     static get H() {
         return Render.W * Render.WHRate;
     }
-    private static playGround: PlayGround|undefined;
-    /** PlayGroundのGetter @returns {PlayGround} */
-    static get p(): PlayGround {
-        if(Render.playGround==undefined) throw 'PlayGround is undefined.';
-        return Render.playGround;
+    private static pgMain: PgMain|undefined;
+    /** PlayのGetter @returns {PgMain} */
+    static get p(): PgMain {
+        if(Render.pgMain==undefined) throw 'Play is undefined.';
+        return Render.pgMain;
     }
-    /** PlayGroundのSetter @param {PlayGround} playGround */
-    static set p(playGround: PlayGround){
-        Render.playGround = playGround;
+    /** PlayのSetter @param {PgMain} play */
+    static set p(play: PgMain){
+        Render.pgMain = play;
     }
     private layerGroups: StageLayering[];
     public stageWidth: number;

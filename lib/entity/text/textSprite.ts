@@ -57,7 +57,7 @@ export class TextSprite extends Entity implements ITextSprite{
         this._text = '';
         this._textAttributes = {fill:'#5db9fc', font: 'sans-serif', font_size:80};
         this._padding = 0;
-        this.costumes = new Costumes(this.playGround);
+        this.costumes = new Costumes(this.pgMain);
         this.skinId = -1;
         this.debugCanvas = document.createElement('canvas');
         this.debugCtx = this.debugCanvas.getContext('2d',{ willReadFrequently: true });
@@ -67,7 +67,7 @@ export class TextSprite extends Entity implements ITextSprite{
         this._Event = new TextSpriteEvent(this);
         this._fontFamily = [];
         this._fontDatas = [];
-        const stage = this.playGround.stage;
+        const stage = this.pgMain.stage;
         stage.addSprite(this as unknown as ISprite);
 
     }

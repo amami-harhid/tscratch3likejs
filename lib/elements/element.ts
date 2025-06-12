@@ -3,6 +3,8 @@
  */
 import { Canvas } from './canvas';
 import { QuestionBoxElement } from '../io/questionBoxElement';
+import { Sprite } from '../entity/sprite';
+import { PgMain } from '../pgMain';
 
 const ScratchHeader = "scratch3Header";
 const ControlGreenFlag = "green-flag_green-flag";
@@ -20,12 +22,12 @@ export class S3Element {
     static main;
     static canvas;
     static textCanvas;
-    static playGround;
+    static pgMain;
     static get p() {
-        return S3Element.playGround;
+        return S3Element.pgMain;
     }
-    static set p(playGround) {
-        S3Element.playGround = playGround;        
+    static set p(pgMain: PgMain) {
+        S3Element.pgMain = pgMain;        
     }
     static get DISPLAY_NONE (): string {
         return "displayNone";
@@ -239,21 +241,26 @@ export class S3Element {
         // スプライトのクローンを削除
         if(S3Element.p.stage.sprites){
             for(const s of S3Element.p.stage.sprites){
-                if(s && s.clones){
-                    for(const c of s.clones){
-                        if(c && c.$isAlive && c.$isAlive()){
-                            c.$remove();
-                        }
-                    }    
+                if(s && s instanceof Sprite){
+                    const sprite:Sprite = s as Sprite;
+                    if(sprite.clones){
+                        for(const c of sprite.clones){
+                            if(c && c.$isAlive && c.$isAlive()){
+                                c.$remove();
+                            }
+                        }    
+                    }
                 }
             }
             // Sprite-QuestionBox を消す
             for(const s of S3Element.p.stage.sprites){
-                QuestionBoxElement.removeAsk(s);
+                if(s instanceof Sprite){
+                    const sprite:Sprite = s as Sprite;
+                    QuestionBoxElement.removeAsk(s);
+                }
             }
         }
         // Stage-QuestionBox を消す
-        // QuestionBoxElement.default.removeAsk(playground.stage);
         S3Element.p.stage.emit(QuestionBoxElement.QuestionBoxForceComplete);        
             
         S3Element.p._draw();

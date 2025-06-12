@@ -33,6 +33,9 @@ Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     cat.Event.whenFlag(async function*(){
         this.Motion.Direction.degree = 60;
+        console.log('b1')
+        this.Pen.prepare();
+        console.log('b2')
         this.Pen.Size.thickness = 1000;
         this.Pen.HSVColor.transparency = 95;
         this.Pen.clear();

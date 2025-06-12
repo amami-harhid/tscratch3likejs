@@ -1,7 +1,7 @@
-import type {IPlayGround as PlayGround} from "@Type/playground";
+import type {IPgMain} from "@Type/pgMain";
 import type {Lib} from "@Type/lib";
 import type {TEnv as Env} from "@Type/common/env";
 
-declare const Pg : PlayGround;
+declare const Pg : IPgMain;
 declare const Lib : Lib;
 declare const Env: Env;

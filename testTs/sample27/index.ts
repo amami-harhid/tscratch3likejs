@@ -4,7 +4,7 @@
  * 変数モニターを表示する
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type { PlayGround } from "@Type/playground";
+import type { IPgMain as PgMain } from "@Type/pgMain";
 import type { IStage as Stage } from "@Type/stage";
 import type { ISprite as Sprite } from "@Type/sprite";
 import type {IMonitors as Monitors} from "@Type/monitors";
@@ -28,7 +28,7 @@ let seconds: Monitor;
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
-Pg.preload = async function preload(this:PlayGround) {
+Pg.preload = async function preload(this: PgMain) {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic01 );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', Cat01 );

@@ -9,10 +9,9 @@ import { Env } from '../env';
 import type {TEnv} from '@Type/common/env';
 import { EventEmitter } from "events";
 import { FunctionChecker } from '../util/functionChecker';
-//import { Keyboard } from '../io/keyboard';
 import { MathUtil } from '../util/math-util';
 import { Monitors } from '../monitor/monitors';
-import { PlayGround } from '../playGround';
+import { PgMain } from '../pgMain';
 import { Render } from '../render/render';
 import { Sounds } from '../sounds/sounds';
 import { Sprite } from '../entity/sprite';
@@ -24,9 +23,6 @@ import { ImageEffective } from '../../Type/entity/ImageEffective';
 import { SoundOption } from '../../Type/entity/SoundOption';
 import { KEYBOARD_KEYS } from '../../Type/io/IKeyboard';
 import { Point } from '@Type/common/point';
-//import { SMonitors } from '@Type/monitors';
-//import { ISprite } from '@Type/sprite';
-//import { IEntitySound } from '@Type/entity/IEntitySound';
 import { TextSprite } from '../entity/text/textSprite';
 export class Libs {
 
@@ -193,7 +189,7 @@ export class Libs {
     get Stage () {
         return Stage;
     }
-    get Sprite () {
+    get Sprite () : typeof Sprite{
         return Sprite;
     }
     // get TextDraw () {
@@ -319,15 +315,15 @@ export class Libs {
     }
     /** @internal */
     get p ( ) {
-        if(this._p == undefined) throw 'playGround is undefined';
+        if(this._p == undefined) throw 'pgMain is undefined';
         return this._p;
     }
     /** @internal */
-    set p ( playGround: PlayGround) {
-        this._p = playGround;
+    set p ( p: PgMain) {
+        this._p = p;
     }
     /** @internal */
-    public _p : PlayGround | undefined;
+    public _p : PgMain | undefined;
     constructor () {
         this._p = undefined;
     }

@@ -172,7 +172,7 @@ export class PenSprite implements IPenSprite {
         }
     }
     stampStage(): void {
-        const stampDrawingId = this._sprite.playGround.stage.drawableID;
+        const stampDrawingId = this._sprite.pgMain.stage.drawableID;
         if(this._skinId > -1 && stampDrawingId > -1){
             this.render.renderer.penStamp(this._skinId, stampDrawingId);
         }

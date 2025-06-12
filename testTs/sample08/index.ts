@@ -3,7 +3,7 @@
  * スプライトを 動かす( 端に触れたら ミャーと鳴く)
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playground";
+import type {IPgMain as PgMain} from "@Type/pgMain";
 import type {IStage as Stage} from "@Type/stage";
 import type {ISprite as Sprite} from "@Type/sprite";
 
@@ -20,7 +20,7 @@ let stage: Stage;
 let cat: Sprite;
 
 // 事前ロード処理
-Pg.preload = async function preload(this: PlayGround) {
+Pg.preload = async function preload(this: PgMain) {
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Jurassic.svg', Jurassic);
     this.Sound.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Chill.wav', Chill);
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/cat.svg', Cat1);

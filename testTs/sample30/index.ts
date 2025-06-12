@@ -3,7 +3,7 @@
  * スプライトをドラッグする
  */
 import {Pg, Lib, Env} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playground";
+import type {IPgMain as PgMain} from "@Type/pgMain";
 import type {IStage as Stage} from "@Type/stage";
 import type {ISprite as Sprite} from "@Type/sprite";
 
@@ -24,7 +24,7 @@ const Chill = 'Chill';
 /** コスチュームネコ */
 const Cat = 'Cat';
 
-Pg.preload = async function (this:PlayGround) {
+Pg.preload = async function (this: PgMain) {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic);
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill);
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
@@ -62,6 +62,8 @@ Pg.setting = async function () {
         this.Looks.Size.scale = {w:150, h:150};
         // ドラッグ可能とする
         this.Sensing.DragMode.draggable = true;
+        // ペン準備
+        this.Pen.prepare();
         // ペン描画をクリア
         this.Pen.clear();
         // Pen Color(HSV)を設定する        

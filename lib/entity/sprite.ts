@@ -26,30 +26,26 @@ import { SpriteBubble } from "./sprite/spriteBubble";
 import { Utils } from "../util/utils";
 import { Costumes } from "./costumes";
 import { RotationStyle } from "../../Type/entity/RotationStyle";
-//import { PlayGround } from "lib/playGround";
 import { Stage } from "./stage";
-import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
+import type { TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { S3ImageData, S3SoundData, S3FontData } from '@Type/common/typeCommon';
-//import { Backdrops } from "./backdrops";
-import type { ISprite, SSprite, TSprite } from "@Type/sprite";
+import type { ISprite, } from "@Type/sprite";
 import type { ISpriteControl } from "@Type/sprite/ISpriteControl";
 import type { ISpriteMotion } from "@Type/sprite/ISpriteMotion";
 import type { ISpriteLooks } from "@Type/sprite/ISpriteLooks";
-//import type { ISpriteMotionPosition } from "@Type/sprite/ISpriteMotionPosition";
 import type { ISpriteSensing } from "@Type/sprite/ISpriteSensing";
 import type { ISpriteSensingDistance } from "@Type/sprite/ISpriteSensingDistance";
 import type { ISpriteBackdrop } from "@Type/sprite/ISpriteBackdrop";
 import type { ISpriteBubble } from "@Type/sprite/ISpriteBubble";
-import { ISpriteDragMode } from "@Type/sprite/ISpriteDragMode";
+import type { ISpriteDragMode } from "@Type/sprite/ISpriteDragMode";
 import { SpriteDragMode } from "./sprite/spriteDragMode";
-import { ISpriteEvent } from "@Type/sprite/ISpriteEvent";
-import { ISpriteSound } from "@Type/sprite/ISpriteSound";
-import { ISpriteFont } from "@Type/sprite/ISpriteFont";
+import type { ISpriteEvent } from "@Type/sprite/ISpriteEvent";
+import type { ISpriteSound } from "@Type/sprite/ISpriteSound";
+import type { ISpriteFont } from "@Type/sprite/ISpriteFont";
 import { StageLayering } from "../../Type/stage/CStageLayering";
 import { SpriteFont } from "./sprite/spriteFont";
-import { ISvgText } from "@Type/svgText/ISvgText";
+import type { ISvgText } from "@Type/svgText/ISvgText";
 import { SvgText } from "./entity/svgText";
-//import { ISpriteCostume } from "@Type/sprite/ISpriteCostume";
 export class Sprite extends Entity implements ISprite {
     private bubble?: Bubble;
     /** @internal */
@@ -132,10 +128,10 @@ export class Sprite extends Entity implements ISprite {
             super(_name, layer, _options);
         }
         this.isSprite = true;
-        const stage = this.playGround.stage;
+        const stage = this.pgMain.stage;
         this.stage = stage;
         this.bubble = new Bubble(this);
-        this.costumes = new Costumes(this.playGround);
+        this.costumes = new Costumes(this.pgMain);
         this._rotationStyle = RotationStyle.ALL_AROUND;
         this.costumes.setRotationStyle(this._rotationStyle);
         this.skinId = -1;
@@ -326,7 +322,7 @@ export class Sprite extends Entity implements ISprite {
             newSprite.originalSprite = this;
 
             // whenClone をemitで起動する。
-            const runtime = this.playGround.runtime;
+            const runtime = this.pgMain.runtime;
             const eventId = `whenClone_${this.name}`; // 本体スプライトの名前で定義
             runtime.emit(eventId, newSprite);
             return newSprite;
@@ -884,7 +880,7 @@ export class Sprite extends Entity implements ISprite {
      * 次の背景にする
      */
     $nextBackdrop(): void {
-        const stage = this.playGround.stage;
+        const stage = this.pgMain.stage;
         stage.$nextBackDrop();
     }
     /**
@@ -892,7 +888,7 @@ export class Sprite extends Entity implements ISprite {
      * 前の背景にする
      */
     $prevBackdrop(): void {
-        const stage = this.playGround.stage;
+        const stage = this.pgMain.stage;
         stage.$prevBackdrop();
     }
     /**
@@ -900,7 +896,7 @@ export class Sprite extends Entity implements ISprite {
      * どれかの背景にする
      */
     $randomBackdrop(): void {
-        const stage = this.playGround.stage;
+        const stage = this.pgMain.stage;
         stage.$randomBackdrop();
     }
     /**
@@ -909,7 +905,7 @@ export class Sprite extends Entity implements ISprite {
      * @param {string|number} backdrop 
      */
     $switchBackdrop( backdrop: string|number ): void {
-        const stage = this.playGround.stage;
+        const stage = this.pgMain.stage;
         stage.$switchBackDrop( backdrop );
     }
     /**
@@ -917,7 +913,7 @@ export class Sprite extends Entity implements ISprite {
      * @returns 
      */
     $getBackdrops() : Backdrops {
-        const stage = this.playGround.stage;
+        const stage = this.pgMain.stage;
         const backdrops = stage.backdrops;
         return backdrops; 
     }
@@ -948,7 +944,7 @@ export class Sprite extends Entity implements ISprite {
         if(soundName == undefined ){
             throw "【Sprite.Sound.add】サウンドデータの指定がありません"
         }else if(soundName == undefined || typeof soundName == "string"){
-            _soundData = this.playGround.loadedSounds[soundName];
+            _soundData = this.pgMain.loadedSounds[soundName];
             if(_soundData == undefined){
                 throw "【Sprite.Sound.add】正しいサウンド名を指定してください"
             }
@@ -979,7 +975,7 @@ export class Sprite extends Entity implements ISprite {
         if(imageName == undefined){
             throw "【Sprite.Image.add】イメージデータの指定がありません"
         }else if(typeof imageName == "string"){
-            _imageData = this.playGround.loadedImages[imageName];
+            _imageData = this.pgMain.loadedImages[imageName];
             if(_imageData == undefined){
                 throw "【Sprite.Image.add】正しいイメージ名を指定してください"
             }
@@ -1022,7 +1018,7 @@ export class Sprite extends Entity implements ISprite {
         if(fontName == undefined){
             throw "【Sprite.Font.add】FONTデータの指定がありません"
         }else if(typeof fontName == "string"){
-            _fontData = this.playGround.loadedFonts[fontName];
+            _fontData = this.pgMain.loadedFonts[fontName];
             if(_fontData == undefined){
                 throw "【Sprite.Font.add】正しいイメージ名を指定してください"
             }

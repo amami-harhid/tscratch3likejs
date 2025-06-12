@@ -3,7 +3,7 @@
  * 上下・左右に移動を繰り返す
  */
 import {Pg, Lib} from "../../s3lib-importer";
-import type { PlayGround } from "@Type/playground";
+import type { IPgMain as PgMain } from "@Type/pgMain";
 import type { IStage as Stage } from "@Type/stage";
 import type { ISprite as Sprite } from "@Type/sprite";
 
@@ -19,7 +19,7 @@ let ball: Sprite
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
-Pg.preload = async function preload(this:PlayGround) {
+Pg.preload = async function preload(this: PgMain) {
     this.Image.load('../../assets/Neon Tunnel.png', NeonTunnel );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/ball-a.svg', BallA );

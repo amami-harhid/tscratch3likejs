@@ -2,7 +2,7 @@
  * Render
  */
 import { IRenderWebGL } from './IRenderWebGL';
-import { IPlayGround } from '../playground';
+import { IPgMain } from '../pgMain';
 import { StageLayering } from '../stage/CStageLayering';
 
 export type TRender = {
@@ -23,8 +23,8 @@ export type TRender = {
      */
     W: number;
 
-    /** PlayGroundのGetter @returns {PlayGround} */
-    p: IPlayGround;
+    /** PgMain @returns {IPgMain} */
+    p: IPgMain;
 
 }
 

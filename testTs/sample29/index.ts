@@ -3,12 +3,12 @@
  * クラス定義のサンプル（StageEx,Catクラス定義) 
  */
 import {Pg} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playground";
+import type {IPgMain as PgMain} from "@Type/pgMain";
 
 import {StageEx} from './sub/stage';
 import {Cat} from './sub/cat';
 
-Pg.title = "【Sample29】クラス定義のサンプル"
+Pg.title = "【Sample29】クラス定義を使う, 背景が変わることをイベントで受け取る"
 
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 import {Constants} from './sub/Constant';
@@ -22,7 +22,7 @@ let stage: StageEx;
  */
 let cat: Cat;
 
-Pg.preload = async function (this:PlayGround) {
+Pg.preload = async function (this: PgMain) {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Constants.Jurassic);
     this.Image.load(AssetHost+'/assets/backdrop.png', Constants.Backdrop);
     this.Sound.load(AssetHost+'/assets/Chill.wav', Constants.Chill);

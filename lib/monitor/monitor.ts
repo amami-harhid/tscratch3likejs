@@ -43,7 +43,7 @@ export class Monitor extends Entity implements IMonitor{
         this._moveDistance = {};
         this._preDraw = false;
         const me = this;
-        const runtime = this.playGround.runtime;
+        const runtime = this.pgMain.runtime;
         if(runtime == undefined) throw 'Not Found runtime error';
         runtime.on(Monitor.Events.DROP_START, (senderDrawableID:number)=>{
             if( me.drawableID === senderDrawableID) {
@@ -210,7 +210,7 @@ export class Monitor extends Entity implements IMonitor{
         }
     }
     _drop() {
-        const runtime = this.playGround.runtime;
+        const runtime = this.pgMain.runtime;
         if(runtime == undefined) throw 'Not found runtime error';
         if( this._moveDistance.x == undefined && this._moveDistance.y == undefined ) {
             if(this.$isMouseTouching() && this.$isMouseDown()){

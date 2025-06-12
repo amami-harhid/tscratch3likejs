@@ -1,4 +1,4 @@
-import { PlayGround } from '../../playGround';
+import { PgMain } from '../../pgMain';
 import { SvgTextError } from './svgTextError';
 import { SvgTextMesure } from './svgTexMesure';
 import type { ISvgTextCreator } from '@Type/svgText/ISvgTextCreator';
@@ -37,7 +37,7 @@ export class SvgTextCreator implements ISvgTextCreator {
  * @returns 
  */
 export const svgTextCreator = function(texts: string[], fontSize?:number, fontStyle?:string, color?: string, fontFamily?:string): string {
-    const p = PlayGround.getInstance();
+    const p = PgMain.getInstance();
     const renderRate = p.Libs.renderRate;
     //console.log('renderRate', renderRate)
     const _fontSize = (fontSize)? fontSize: 12;

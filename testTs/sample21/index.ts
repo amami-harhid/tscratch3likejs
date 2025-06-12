@@ -18,7 +18,7 @@
  */
 
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playground";
+import type {IPgMain as PgMain} from "@Type/pgMain";
 import type {IStage as Stage} from "@Type/stage";
 import type {ISprite as Sprite} from "@Type/sprite";
 
@@ -34,7 +34,7 @@ let cat: Sprite;
 
 const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
 
-Pg.preload = async function preload(this: PlayGround) {
+Pg.preload = async function preload(this: PgMain) {
     this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
     this.Sound.load(`${ASSETS_HOST}/assets/Chill.wav`, Chill);
     this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat);

@@ -7,7 +7,7 @@ import { MathUtil } from "../util/math-util";
 import { RotationStyle } from "../../Type/entity/RotationStyle"; 
 import { Utils } from "../util/utils";
 import { Render } from '../render/render';
-import { PlayGround } from "../playGround";
+import { PgMain } from "../pgMain";
 import { TPosition, TSizeXY } from "@Type/common/typeCommon";
 import type { ISvgSkin } from "@Type/render/ISvgSkin";
 import type { ScratchRenderProperties } from "@Type/render/IRenderWebGL";
@@ -16,7 +16,7 @@ export class Costumes {
     static get RotationStyle () {
         return RotationStyle;
     }
-    private _p: PlayGround;
+    private _p: PgMain;
     private render: Render;
     public skinId: number;
     public costumes: Map<string,number>;
@@ -28,8 +28,8 @@ export class Costumes {
     /**
      * @constructor
      */
-    constructor(playGround: PlayGround) {
-        this._p = playGround;
+    constructor(pgMain: PgMain) {
+        this._p = pgMain;
         this.render = this._p.render;
         this.skinId = -1;
         this.costumes = new Map();

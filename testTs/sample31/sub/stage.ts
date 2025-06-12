@@ -49,6 +49,7 @@ export class StageEx extends Lib.Stage {
                 // 次の背景を変える(待たない)
                 this.Looks.Backdrop.next();
                 await this.Control.wait(0.5);
+                yield;
             }
             // 効果をクリア
             this.Looks.Effect.clear();
@@ -62,6 +63,7 @@ export class StageEx extends Lib.Stage {
                 // 前の背景を変える(待たない)
                 this.Looks.Backdrop.previous();
                 await this.Control.wait(0.5);
+                yield;
             }
             // 効果をクリア
             this.Looks.Effect.clear();
@@ -75,6 +77,7 @@ export class StageEx extends Lib.Stage {
                 // 前の背景を変える(待たない)
                 this.Looks.Backdrop.random();
                 await this.Control.wait(0.5);
+                yield;
             }
 
             this.Event.broadcast(Constants.NextBackdrop );
@@ -90,6 +93,7 @@ export class StageEx extends Lib.Stage {
                 await this.Looks.Backdrop.nextAndWait();
                 console.log('exit nextAndWait');
                 await this.Control.wait(0.5);
+                yield;
             }
             // 効果をクリア
             this.Looks.Effect.clear();
@@ -104,6 +108,7 @@ export class StageEx extends Lib.Stage {
                 await this.Looks.Backdrop.previousAndWait();
                 console.log('exit previousAndWait');
                 await this.Control.wait(0.5);
+                yield;
             }
             // 効果をクリア
             this.Looks.Effect.clear();
@@ -118,6 +123,7 @@ export class StageEx extends Lib.Stage {
                 await this.Looks.Backdrop.randomAndWait();
                 console.log('exit randomAndWait');
                 await this.Control.wait(0.5);
+                yield;
             }
             await this.Event.broadcastAndWait(Constants.Say,"全てを停止するよ",1);
             console.log('==== stopAll ====')

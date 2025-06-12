@@ -89,7 +89,7 @@ export interface ISprite extends IEntity {
     /**
      * 生存期間 ( およその秒数 )
      */
-    readonly life : number;
+    life : number;
 
     readonly SvgText: ISvgText;
 

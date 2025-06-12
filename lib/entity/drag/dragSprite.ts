@@ -1,5 +1,5 @@
 import { Libs } from '../../controls/libs';
-import { PlayGround } from '../../playGround';
+import { PgMain } from '../../pgMain';
 import { Sprite } from '../sprite';
 import { StageLayering } from '../../../Type/stage/CStageLayering';
 /**
@@ -10,7 +10,7 @@ export class DragSprite {
     static PROPERTIES_CHANGE = "properties_change";
     private sprite: Sprite;
     private libs: Libs;
-    private p: PlayGround;
+    private p: PgMain;
     /**
      * draggable {boolean} - trueのときDragできる。デフォルト値はfalse.
      * 

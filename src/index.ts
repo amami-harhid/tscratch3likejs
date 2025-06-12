@@ -38,14 +38,15 @@ const { Buffer } = await import(/* webpackMode: "eager" */ 'buffer');
 window.Buffer = window.Buffer || Buffer
 
 const { S3CSS } = await import(/* webpackMode: "eager" */ '../lib/elements/css');
-const { PlayGround } = await import(/* webpackMode: "eager" */ '../lib/playGround');
-export const Pg = PlayGround.getInstance();
+const { PgMain } = await import(/* webpackMode: "eager" */ '../lib/pgMain');
+export const Pg = PgMain.getInstance();
 export const Lib = Pg.Libs;
 const S3Element = Pg.Element;
 S3Element.insertCss(S3CSS);
 
 const Initialize = async function() {
     console.log(`Library Version = "${Version}"`);
+    await Lib.wait(1000);
     await Pg._init();
 };
 

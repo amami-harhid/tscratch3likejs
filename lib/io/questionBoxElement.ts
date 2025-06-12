@@ -3,7 +3,7 @@
  */
 import { EventEmitter } from 'events';
 import { Entity } from '../entity/entity';
-import { PlayGround } from '../playGround';
+import { PgMain } from '../pgMain';
 import { Sprite } from '../entity/sprite';
 import { Utils } from '../util/utils';
 
@@ -36,14 +36,14 @@ export class QuestionBoxElement extends EventEmitter {
     /** 入力テキスト */
     private static TextInputComplete: string = "TextInputComplete";
     private forceComplete: boolean;
-    private playGround: PlayGround;
+    private pgMain: PgMain;
     /**
      * @constructor
      */
     constructor() {
         super();
         this.forceComplete = false;
-        this.playGround = PlayGround.getInstance();
+        this.pgMain = PgMain.getInstance();
     }
     /**
      * DOM(StageStageOverlays)が存在しなくなるまで待つ
@@ -57,7 +57,7 @@ export class QuestionBoxElement extends EventEmitter {
             const f = function() {
                 me.forceComplete = true;
             }
-            const stage = this.playGround.stage;
+            const stage = this.pgMain.stage;
             stage.once(QuestionBoxElement.QuestionBoxForceComplete,f);
             let stage_stage_overlays = document.getElementById(StageOverlays);
             for(;;){
@@ -169,7 +169,7 @@ export class QuestionBoxElement extends EventEmitter {
         button.appendChild(img);
         questionInputDiv.appendChild(button);
 
-        const runtime = this.playGround.runtime;
+        const runtime = this.pgMain.runtime;
         if(runtime == undefined) throw 'runtime is undefined error';
         const keyboard = runtime.ioDevices.keyboard;
         // 半角スペースの入力を許可する

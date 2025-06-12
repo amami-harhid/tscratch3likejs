@@ -3,7 +3,7 @@
  * 背景が変わえて待つ。 
  */
 import {Pg, Lib, Env} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playground";
+import type {IPgMain as PgMain} from "@Type/pgMain";
 import type {ISprite as Sprite} from "@Type/sprite";
 
 import {StageEx} from './sub/stage';
@@ -25,7 +25,7 @@ let stage: StageEx;
  */
 let cat: Cat, guideCat: Sprite;
 
-Pg.preload = async function (this:PlayGround) {
+Pg.preload = async function (this: PgMain) {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Constants.Jurassic);
     this.Image.load(AssetHost+'/assets/Jurassic2.svg', Constants.Jurassic2);
     this.Image.load(AssetHost+'/assets/backdrop.png', Constants.Backdrop);

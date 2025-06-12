@@ -1,5 +1,5 @@
 import {Pg, Lib} from "../../s3lib-importer";
-import type {PlayGround} from "@Type/playground";
+import type {IPgMain as PgMain} from "@Type/pgMain";
 import type {IStage as Stage} from "@Type/stage";
 
 Pg.title = "【Sample04】 旗をクリックした後、ステージをクリック（タッチ）したら音を鳴らす";
@@ -9,7 +9,7 @@ const Chill = "Chill";
 let stage: Stage;
 
 // 事前ロード処理
-Pg.preload = async function(this:PlayGround) {
+Pg.preload = async function(this:PgMain) {
     this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Jurassic.svg', ImageNameJurassic);
     this.Sound.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Chill.wav', Chill);
 }

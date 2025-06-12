@@ -2,7 +2,6 @@
  * Stage
  */
 import { Backdrops } from "./backdrops";
-import { StageBackdrop } from "./stage/stageBackdrop";
 import { StageControl } from "./stage/stageControl";
 import { StageLooks } from "./stage/stageLooks";
 import { StageEvent } from "./stage/stageEvent";
@@ -12,20 +11,19 @@ import { Entity } from "./entity";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { Sprite } from "./sprite";
 import { StageLayering } from "../../Type/stage/CStageLayering";
-import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
+import type { TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TMouse } from "@Type/mouse";
 import type { TScale } from "@Type/common/typeCommon";
-import { IStage } from "@Type/stage";
-import { IStageControl } from "@Type/stage/IStageControl";
-import { IStageBackdrop } from "@Type/stage/IStageBackdrop";
-import { IStageLooks } from "@Type/stage/IStageLooks";
-import { IStageEvent } from "@Type/stage/IStageEvent";
-import { IStageSensing } from "@Type/stage/IStageSensing";
-import { IStageSound } from "@Type/stage/IStageSound";
-import { ISprite } from "@Type/sprite";
-import { ITextSprite } from "@Type/text";
+import type { IStage } from "@Type/stage";
+import type { IStageControl } from "@Type/stage/IStageControl";
+import type { IStageLooks } from "@Type/stage/IStageLooks";
+import type { IStageEvent } from "@Type/stage/IStageEvent";
+import type { IStageSensing } from "@Type/stage/IStageSensing";
+import type { IStageSound } from "@Type/stage/IStageSound";
+import type { ISprite } from "@Type/sprite";
+import type { ITextSprite } from "@Type/text";
 import { TextSprite } from "./text/textSprite";
-import { ISvgText } from "@Type/svgText/ISvgText";
+import type { ISvgText } from "@Type/svgText/ISvgText";
 import { SvgText } from "./entity/svgText";
 export class Stage extends Entity implements IStage{
     private scale: TScale;
@@ -59,14 +57,14 @@ export class Stage extends Entity implements IStage{
 
         //this.keysCode = [];
         //this.keysKey = [];
-        this.backdrops = new Backdrops(this.playGround);
+        this.backdrops = new Backdrops(this.pgMain);
         this._sprites = [];
         this._textSprites = [];
         //this.skinIdx = -1;
         this.mouse = {scratchX:0, scratchY:0, x:0, y:0, down: false, pageX: 0, pageY: 0, clientX: 0, clientY: 0};
         const me = this;
         // これは Canvasをつくる Element クラスで実行したほうがよさそう（関連性強いため）
-        const canvas = this.playGround.canvas;
+        const canvas = this.pgMain.canvas;
         const body = document.getElementById('main');
         if(body){
             body.addEventListener('mousedown', (e:MouseEvent) => {
@@ -95,8 +93,8 @@ export class Stage extends Entity implements IStage{
             me.mouse.clientX = e.clientX;
             me.mouse.clientY = e.clientY;
             
-            me.mouse.scratchX = e.offsetX - this.playGround.canvas.width/2;
-            me.mouse.scratchY = this.playGround.canvas.height/2 - e.offsetY;
+            me.mouse.scratchX = e.offsetX - this.pgMain.canvas.width/2;
+            me.mouse.scratchY = this.pgMain.canvas.height/2 - e.offsetY;
 
 //            me.mouse.down = true;
 
@@ -115,7 +113,7 @@ export class Stage extends Entity implements IStage{
             e.stopPropagation();
         })
   
-        this.playGround.stage = this;
+        this.pgMain.stage = this;
 //        this._Backdrop = new StageBackdrop(this);
         this._Control = new StageControl(this);
         this._Looks = new StageLooks(this);
@@ -226,7 +224,7 @@ export class Stage extends Entity implements IStage{
         if(soundName == undefined){
             throw "【Stage.Sound.add】サウンドデータの指定がありません"
         }else if(soundName == undefined || typeof soundName == "string"){
-            _soundData = this.playGround.loadedSounds[soundName];
+            _soundData = this.pgMain.loadedSounds[soundName];
             if(_soundData == undefined){
                 throw "【Stage.Sound.add】正しいサウンド名を指定してください"
             }
@@ -256,7 +254,7 @@ export class Stage extends Entity implements IStage{
         if(imageName == undefined){
             throw "【Stage.Image.add】イメージデータの指定がありません"
         }else if(typeof imageName == "string"){
-            _imageData = this.playGround.loadedImages[imageName];
+            _imageData = this.pgMain.loadedImages[imageName];
             if(_imageData == undefined){
                 throw "【Stage.Image.add】正しいイメージ名を指定してください"
             }

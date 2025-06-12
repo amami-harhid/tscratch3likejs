@@ -1,7 +1,7 @@
 /**
  * Bubble
  */
-import { PlayGround } from "../../playGround";
+import { PgMain } from "../../pgMain";
 import { uid } from "../../util/uid";
 import type { IRenderWebGL } from "@Type/render/IRenderWebGL";
 import { Sprite } from "../sprite";
@@ -9,17 +9,16 @@ import { StageLayering } from "../../../Type/stage/CStageLayering";
 import type { TScale } from "@Type/common/typeCommon";
 import type { BubbleState, BubbleProperties } from "@Type/sprite/TBubble";
 export class Bubble {
-    private p: PlayGround;
+    private p: PgMain;
     private bubbleState: BubbleState;
     private sprite: any;
     private renderer: IRenderWebGL|null;
     private _scale: TScale;
     private _direction: number;
     constructor( sprite: Sprite ) {
-        this.p = sprite.playGround;
+        this.p = sprite.pgMain;
         this.bubbleState = this._createBubbleState();
         this.sprite = sprite;
-        //this.playground = playGround;
         this.renderer = null;
         if(this.p.render){
             this.renderer = this.p.render.renderer;

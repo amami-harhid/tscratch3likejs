@@ -44,6 +44,7 @@ Pg.setting = async function setting() {
         //this.Motion.gotoXY(0,0);
         this.Motion.Direction.degree = 45;
         await this.Control.waitUntil(()=>Lib.anyKeyIsDown());
+        this.Pen.prepare();
         this.Pen.Size.thickness = 1500;
         this.Pen.clear();
         this.Pen.HSVColor.hue = 240;

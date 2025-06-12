@@ -4,20 +4,20 @@
 import { Monitor } from "./monitor";
 import { Libs } from "../controls/libs";
 import { S3MonitorSkin } from "./s3MonitorSkin";
-import { PlayGround } from "../playGround";
-import { IMonitors, SMonitors } from "@Type/monitors";
+import { PgMain } from "../pgMain";
+import { IMonitors } from "@Type/monitors";
 //import type { IRenderWebGL } from "lib/render/IRenderWebGL";
 
 export class Monitors implements IMonitors{
     private _monitors: Monitor[];
-    private _playGround: PlayGround;
+    private _pgMain: PgMain;
     /**
      * @constructor
      */
     constructor() {
         this._monitors = [];
-        this._playGround = Libs.getInstance().p;
-        const render = this._playGround.render;
+        this._pgMain = Libs.getInstance().p;
+        const render = this._pgMain.render;
         const renderer = render.renderer;
         /**
          * (独自関数) monitorSkin を作成する
@@ -43,7 +43,7 @@ export class Monitors implements IMonitors{
         }
         renderer.s3CreateMonitorSkin = s3CreateMonitorSkin;
         renderer.getS3Skin = getS3Skin;
-        this._playGround.monitors = this;
+        this._pgMain.monitors = this;
     }
     /**
      * IDとラベルを指定して モニターを追加する.

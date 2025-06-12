@@ -2,22 +2,22 @@
  * Threads
  */
 import {Env} from '../env';
-import { PlayGround } from "../playGround";
+import { PgMain } from "../pgMain";
 import type { TThreadObj } from "./TThreadObj";
 export class Threads {
     static instance: Threads;
-    static playGround: PlayGround;
+    static pgMain: PgMain;
     static getInstance(){
         if(!Threads.instance) {
             Threads.instance = new Threads();
         }
         return Threads.instance;
     }
-    static set p(playGround: PlayGround) {
-        Threads.playGround = playGround;
+    static set p(play: PgMain) {
+        Threads.pgMain = play;
     }
-    static get p(): PlayGround{
-        return Threads.playGround;
+    static get p(): PgMain{
+        return Threads.pgMain;
     }
     //private stopper: boolean;
     private _running: boolean;
