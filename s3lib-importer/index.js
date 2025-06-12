@@ -3,4 +3,6 @@
  */
 import {Pg, Lib} from '../build/index.js';
 const Env = Lib.Env;
-export {Pg, Lib, Env};
+const Monitors = Lib.Monitors;
+const Monitor = Lib.Monitor;
+export {Pg, Lib, Monitors, Monitor, Env};

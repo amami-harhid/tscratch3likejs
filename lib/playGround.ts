@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * PlayGround
  */
@@ -16,27 +15,51 @@ import { Utils } from './util/utils';
 
 import { S3Element } from './elements/element';
 
-export class PlayGround {
+import type { IPgFont, IPgImage, IPgSound, IPlayGround } from '@Type/playground';
+import { Monitors } from './monitor/monitors';
+
+export class PlayGround implements IPlayGround {
     static _instance;
 
     /**
      * 
      * @return {PlayGround}
      */
-    static getInstance() {
+    static getInstance(): PlayGround {
         if( PlayGround._instance == undefined ) {
             PlayGround._instance = new PlayGround();
         }
         return PlayGround._instance;
     }
-    public main: HTMLElement;
-    private _render: Render;
-    private _lib: Libs;
-    private _nowLoading: string;
+    public main?: HTMLElement;
+    private _id : string;
+    private _runtime: Runtime|null; 
+    private _render?: Render;
+    private _libs: Libs;
+    private _flag: HTMLElement|null;
+    private mainTmp: HTMLElement|null;
+    //private _nowLoading: string;
     public runningGame: boolean;
-    private _stage: Stage;
+    private _stage: Stage|null;
+    private _canvas: HTMLCanvasElement|null;
+    private _textCanvas: HTMLCanvasElement|null;
+    private _monitors: Monitors|null;
+    public preload?() : Promise<void>;
+    public prepare?(): Promise<void>;
+    public setting?(): Promise<void>;
+    public draw?(): Promise<void>;
+    private _preloadImagePromise:Promise<{name:string, data:string|HTMLImageElement}>[];
+    private _preloadSoundPromise: Promise<{name:string, data:Uint8Array<ArrayBuffer>}>[];
+    private _preloadFontPromise: Promise<{name:string, data:string}>[];
+    private _loadedImages: {name?:string, data?:string|HTMLImageElement};
+    private _loadedSounds: {name?:string, data?:Uint8Array<ArrayBuffer>};
+    private _loadedFonts: {name?:string,data?:string};
+    private _preloadDone: boolean;
+    private _prepaeDone: boolean;
+    private _image: IPgImage;
+    private _sound: IPgSound;
+    private _font: IPgFont;
     constructor () {
-        this._render = null;
         this._id = this._generateUUID();
         this._runtime = null;
         this._preloadImagePromise = [];
@@ -44,6 +67,7 @@ export class PlayGround {
         this._preloadFontPromise = [];
         this._loadedImages = {};
         this._loadedSounds = {};
+        this._loadedFonts = {};
 //        this._dataPools = {};
         this._preloadDone = false;
         this._prepaeDone = false;
@@ -54,15 +78,18 @@ export class PlayGround {
         this._flag = null;
         this.mainTmp = null;
         this.main = undefined;
-        this.preload = null;
-        this.prepare = null;
-        this.setting = null;
-        this.draw = null;
+        //this.preload = null;
+        //this.prepare = null;
+        //this.setting = null;
+        //this.draw = null;
         this._textCanvas = null;
         this._libs = Libs.getInstance();
         this._libs.p = this;
-        this._nowLoading = '';
+        //this._nowLoading = '';
         Threads.p = this;
+        this._image = new PgImage(this);
+        this._sound = new PgSound(this);
+        this._font = new PgFont(this);
     }
     get monitors() {
         return this._monitors;
@@ -85,6 +112,9 @@ export class PlayGround {
     get loadedSounds() {
         return this._loadedSounds;
     }
+    get loadedFonts() {
+        return this._loadedFonts;
+    }
     // get dataPools() {
     //     return this._dataPools;
     // }
@@ -104,12 +134,14 @@ export class PlayGround {
     _generateUUID () {
         return Utils.generateUUID();
     }
-    set NowLoading (nowLoading){
-        this.nowLoading = nowLoading;
-    }
-    get NowLoading () {
-        return this.nowLoading;
-    }
+
+    // set NowLoading (nowLoading){
+    //     this._nowLoading = nowLoading;
+    // }
+    // get NowLoading () {
+    //     return this._nowLoading;
+    // }
+
     get threads () {
         return Threads.getInstance();
     }
@@ -179,16 +211,16 @@ export class PlayGround {
      * get randering rate ( when resized )
      * @returns 
      */
-    getRenderRate() {
-        return this.libs.renderRate;        
+    getRenderRate() : {x:number, y:number}{
+        return this._libs.renderRate;        
     }
 
 
-    set flag ( flag ) {
+    set flag ( flag:HTMLElement ) {
         this._flag = flag;
     }
 
-    get flag () {
+    get flag (): HTMLElement {
         if(this._flag){
             return this._flag;
         }
@@ -275,7 +307,8 @@ export class PlayGround {
     }
     async _preload () {
         if( this.preload ) {
-            this.preload( this );
+            const f = this.preload.bind(this);
+            f(); // 意図的に await していない。
         }
     }
 
@@ -283,7 +316,8 @@ export class PlayGround {
 
         // prepareメソッドの実行を開始する
         if( this.prepare ) {
-            await this.prepare(this);
+            const f = this.prepare.bind(this);
+            await f();
             await Utils.wait(1000/Env.fps);
             if( this._stage ) {
                 this._stage.update();
@@ -294,7 +328,8 @@ export class PlayGround {
     async _setting () {
 
         if( this.setting ) {
-            await this.setting (this);
+            const f = this.setting.bind(this);
+            await f();
         }
 
     }
@@ -314,7 +349,7 @@ export class PlayGround {
         }
     }
 
-    $loadImage(imageUrl, name, translate) {
+    $loadImage(imageUrl, name, translate?) {
         let _name ;
         if( name ) {
             _name = name;
@@ -337,7 +372,8 @@ export class PlayGround {
         this._preloadSoundPromise.push(data);
         return data;
     }
-    loadFont(fontUrl, name) {
+    $loadFont(fontUrl:string, name:string) : Promise<{name:string, data:string}>{
+        //console.log('$loadFont', fontUrl, name);
         const font = FontLoader.fontLoad(fontUrl, name);
         this._preloadFontPromise.push(font);
         return font;
@@ -374,22 +410,22 @@ export class PlayGround {
             const _fonts = await Promise.all( this._preloadFontPromise);
             for(const v of _fonts) {
                 // Font を登録する
-                document.fonts.add( v );
+                this._loadedFonts[v.name] = {'name': v.name, 'data': v.data};
             }
         }
 
         this._preloadDone = true;
     }
 
-    get Image () {
-        return {
-            "load": this.$loadImage.bind(this),
-        }
+    get Image () : IPgImage {
+        return this._image;
     }
-    get Sound () {
-        return {
-            "load": this.$loadSound.bind(this),
-        }
+    get Sound () : IPgSound {
+        return this._sound;
+    }
+
+    get Font () : IPgFont {
+        return this._font;
     }
 
     $stopAll() {
@@ -403,3 +439,31 @@ export class PlayGround {
         }
     }
 };
+
+class PgImage implements IPgImage{
+    private _p : PlayGround;
+    constructor(playGround: PlayGround) {
+        this._p = playGround;
+    }
+    async load(path:string, name:string, translate?:{x:number,y:number}): Promise<void>{
+        await this._p.$loadImage(path, name, translate);
+    }
+}
+class PgSound implements IPgSound{
+    private _p : PlayGround;
+    constructor(playGround: PlayGround) {
+        this._p = playGround;
+    }
+    async load(path:string, name:string): Promise<void>{
+        await this._p.$loadSound(path, name);
+    }
+}
+class PgFont implements IPgFont{
+    private _p : PlayGround;
+    constructor(playGround: PlayGround) {
+        this._p = playGround;
+    }
+    async load(path:string, name:string): Promise<void>{
+        await this._p.$loadFont(path, name);
+    }
+}

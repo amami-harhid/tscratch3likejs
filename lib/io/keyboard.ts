@@ -175,12 +175,17 @@ export class Keyboard implements IKeyboard {
      * @param  {string|number} keyArg key argument.
      * @return {boolean} Is the specified key down?
      */
-    keyIsDown (keyArg: string|number) :boolean{
+    keyIsDown (keyArg?: string|number) :boolean{
         if (!keyArg || keyArg === 'any') {
             return this._keysPressed.length > 0;
         }
         const scratchKey = this._keyArgToScratchKey(keyArg);
         return this._keysPressed.indexOf(scratchKey) > -1;
     }
-
+    get spaceStopPropagation() : boolean{
+        return this._spaceStopPropagation;
+    }
+    set spaceStopPropagation(spaceStopPropagation: boolean) {
+        this._spaceStopPropagation = spaceStopPropagation;
+    }
 };

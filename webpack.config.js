@@ -4,6 +4,8 @@ const path = require('path');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const webpack = require('webpack');
 // eslint-disable-next-line @typescript-eslint/no-require-imports
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const version = JSON.stringify(require('./package.json').version);
 module.exports = {
     mode: 'development',
@@ -26,7 +28,10 @@ module.exports = {
         extensions: ['.ts','.js']
     },
     devtool: 'source-map',
-    plugins: [new webpack.DefinePlugin({ __s3_version__: version })],
+    plugins: [
+        new webpack.DefinePlugin({ __s3_version__: version }),
+        new NodePolyfillPlugin()
+    ],
     module: {
         rules: [
             {

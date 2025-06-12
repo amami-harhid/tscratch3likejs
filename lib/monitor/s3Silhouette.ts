@@ -7,8 +7,7 @@
  * renders a pixel where it is drawn.
  */
 import type { TVec3 } from "@Type/common/typeCommon";
-
-declare type TBitMapData = ImageData|HTMLCanvasElement|HTMLImageElement;
+import type { ISilhouette, TBitMapData} from '@Type/monitors/monitor/ISilhouette';
 
 /**
  * <canvas> element used to update Silhouette data from skin bitmap data.

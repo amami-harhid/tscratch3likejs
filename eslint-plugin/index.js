@@ -39,7 +39,7 @@ import {s3LoopRulesPlugin} from "./eslintLoopRulePlugin.js";
 /** @type {import('eslint').Linter.Config[]} */
 const eslint_S3_config = [
     {
-        ignores: ["**/*.d.ts"],
+        ignores: ["**/*.d.ts", "lib/**/*.ts", "node_modules/**/*", "eslint-plugin/**/*.js", "./*.js"],
     },
     {
         files: ["**/*.ts","**/*.js"],

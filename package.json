@@ -35,6 +35,9 @@
     "events": "^3.3.0",
     "exports-loader": "^5.0.0",
     "globals": "^16.1.0",
+    "node-polyfill-webpack-plugin": "^4.1.0",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
     "ts-loader": "^9.5.2",
     "typedoc": "^0.28.4",
     "typescript": "^5.8.3",
@@ -46,9 +49,11 @@
     "@babel/parser": "^7.27.1",
     "buffer": "^6.0.3",
     "core-js": "^3.42.0",
+    "fs": "^0.0.1-security",
     "regenerator-runtime": "^0.14.1",
     "scratch-audio": "^2.0.139",
     "scratch-render": "^2.0.356",
+    "text-to-svg": "^3.1.5",
     "twgl.js": "^4.4.0"
   }
 }

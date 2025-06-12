@@ -3,9 +3,9 @@
  */
 import { PlayGround } from "../../playGround";
 import { uid } from "../../util/uid";
-import type { IRenderWebGL } from "../../render/IRenderWebGL";
+import type { IRenderWebGL } from "@Type/render/IRenderWebGL";
 import { Sprite } from "../sprite";
-import { StageLayering } from "../stageLayering";
+import { StageLayering } from "../../../Type/stage/CStageLayering";
 import type { TScale } from "@Type/common/typeCommon";
 import type { BubbleState, BubbleProperties } from "@Type/sprite/TBubble";
 export class Bubble {

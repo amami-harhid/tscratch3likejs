@@ -9,8 +9,8 @@ import { Utils } from "../util/utils";
 import { Render } from '../render/render';
 import { PlayGround } from "../playGround";
 import { TPosition, TSizeXY } from "@Type/common/typeCommon";
-import type { ISvgSkin } from "../render/ISvgSkin";
-import type { ScratchRenderProperties } from "../render/IRenderWebGL";
+import type { ISvgSkin } from "@Type/render/ISvgSkin";
+import type { ScratchRenderProperties } from "@Type/render/IRenderWebGL";
 
 export class Costumes {
     static get RotationStyle () {
@@ -38,12 +38,38 @@ export class Costumes {
         this._scale = {x:100, y:100};
         this._rotationStyle = RotationStyle.ALL_AROUND;
         this._rotationStylePatterns = [RotationStyle.LEFT_RIGHT, RotationStyle.DONT_ROTATE, RotationStyle.ALL_AROUND];
-   }
-   
-   async addImage(name:string, image: string|HTMLImageElement) {
+    }
+    get names() : string[] {
+        return Array.from(this.costumes.keys());
+    }
+    async addImageDirectSVG(name: string, image: string): Promise<number> {
+        const skinId = this.render.renderer.createSVGSkin(image);
+        this.costumes.set( name , skinId);
+        if( this.skinId == -1) {
+            this.skinId = skinId; // 初回のSkinId 
+        }
+        await Utils.wait(1000/Env.fps);
+        return skinId;
+    }
+    async updateSkinDirectSVG(name: string, image:string): Promise<number> {
+        const skinId = this.costumes.get(name);
+        if(skinId ) {
+            this.render.renderer.updateSVGSkin(skinId, image);
+            await Utils.wait(1000/Env.fps);
+            return skinId;
+        }else{
+            return this.skinId;
+        }
+    }
+    async addImage(name:string, image: string|HTMLImageElement): Promise<void> {
         await this._setSkin(name, image);
         await Utils.wait(1000/Env.fps);
     }
+    async updateImage(name:string, image: string|HTMLImageElement): Promise<number> {
+        await this._updateSkin(name, image);
+        return this.skinId;
+    }
+
     // async loadImage(name:string, image:string) {
     //     const _img = await ImageLoader.loadImage(image, name);
     //     console.log('--- Costumes, loadImage _img ---')
@@ -54,6 +80,7 @@ export class Costumes {
         if(typeof _img == "string" && ImageLoader.isSVG(_img)) {
             // 複数回ロードしたら、その都度 skinId は変わる
             const _svgText = _img;
+            //console.log('costumes._setSkin _setSvgSkin ')
             this._setSvgSkin(_svgText).then(v=>{
                 const _skinId = v;
                 this.costumes.set( name , _skinId);
@@ -62,8 +89,9 @@ export class Costumes {
                 }    
             });
         }else{
+            //console.log('costumes._setSkin _setBitmapSkin ', _img)
             const _bitmap = _img as HTMLImageElement;
-            const _skinId = await this._setBitmapSkin(_bitmap);        
+            const _skinId = await this._setBitmapSkin(_bitmap);
             this.costumes.set( name , _skinId);
             if( this.skinId == -1) {
                 this.skinId = _skinId; // 初回のSkinId 
@@ -72,6 +100,7 @@ export class Costumes {
     }
     async _setSvgSkin(_svgText: string) {
         if(this.render && this.render.renderer){
+            //console.log('before this.render.renderer.createSVGSkin');
             const skinId = this.render.renderer.createSVGSkin(_svgText);
             // [2025/2/27] 姑息な対応
             // willReadFrequently を設定するために SKINインスタンスを取り出し、
@@ -91,6 +120,18 @@ export class Costumes {
             return skinId;        
         }
         throw 'unable to execute createBitmapSkin';
+    }
+    async _updateSkin(name: string, _img: string|HTMLImageElement) {
+        const skinId = this.costumes.get(name);
+        if(skinId == undefined) return;
+        if(typeof _img == "string" && ImageLoader.isSVG(_img)) {
+            const svgText = _img as string;
+            this.render.renderer.updateSVGSkin(skinId, svgText)
+        }else{
+            const _bitmap = _img as HTMLImageElement;
+            this.render.renderer.updateBitmapSkin(skinId,_bitmap);
+        }
+        await Utils.wait(1000/Env.fps);
     }
     getRotationStyle (): RotationStyle {
         return this._rotationStyle;
@@ -192,9 +233,54 @@ export class Costumes {
         }
         return -1;
     }
+    get skinSize() {
+        const costumesKeys = Array.from(this.costumes.keys());
+        return costumesKeys.length;
+    }
+    randomCostume() {
+        const costumesKeys = Array.from(this.costumes.keys());
+        if(costumesKeys.length == 0 || costumesKeys.length == 1) {
+            return; // do nothing
+        }
+        if(this.skinId == -1) {
+            const name = costumesKeys[0];
+            this.skinId = this.getSkinId(name);
+            return;
+        }
+        let idx = Utils.randomizeInRange(0, costumesKeys.length-1);
+        this.skinId = idx;
+    }
+    prevCostume() {
+        const costumesKeys = Array.from(this.costumes.keys());
+        if(costumesKeys.length == 0 || costumesKeys.length == 1) {
+            return; // do nothing
+        }
+        if(this.skinId == -1) {
+            const name = costumesKeys[0];
+            this.skinId = this.getSkinId(name);
+            return;
+        }
+        // search next skinId
+        let _idx = 0;
+        for(const _name of costumesKeys) {
+            const _skinId = this.costumes.get(_name);
+            if(_skinId == this.skinId) {
+                if( _idx == 0 ){
+                    // 先頭のスキンのとき最後のスキンにする
+                    const nextName = costumesKeys[costumesKeys.length-1];
+                    this.skinId = this.getSkinId(nextName);
+                }else{
+                    const nextName = costumesKeys[_idx-1];
+                    this.skinId = this.getSkinId(nextName);
+                }
+                return;
+            }
+            _idx += 1;
+        }
+    }
     nextCostume() {
         const costumesKeys = Array.from(this.costumes.keys());
-        if(costumesKeys.length == 0) {
+        if(costumesKeys.length == 0 || costumesKeys.length == 1) {
             return; // do nothing
         }
         if(this.skinId == -1) {
@@ -208,6 +294,7 @@ export class Costumes {
             const _skinId = this.costumes.get(_name);
             if(_skinId == this.skinId) {
                 if( _idx == (costumesKeys.length - 1) ){
+                    // 最後のSkinのとき先頭にする
                     const nextName = costumesKeys[0];
                     this.skinId = this.getSkinId(nextName);
                 }else{

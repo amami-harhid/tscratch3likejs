@@ -10,6 +10,7 @@ import { IStageSensing } from './IStageSensing';
 import { IStageEvent } from './IStageEvent';
 import { IStageImage } from './IStageImage';
 import { IStageSound } from './IStageSound';
+import { ISvgText } from '@Type/svgText/ISvgText';
 
 export type TStage = IStage;
 export interface SStage extends IStage{
@@ -32,28 +33,28 @@ export interface IStage extends IEntity {
     /**
      * 見た目
      */
-    get Looks(): IStageLooks;
+    readonly Looks : IStageLooks;
     /**
      * 制御
      */
-    get Control() : IStageControl;
+    readonly Control : IStageControl;
     /**
      * 調べる
      */
-    get Sensing() : IStageSensing;
+    readonly Sensing : IStageSensing;
     /**
      * イベント
      */
-    get Event() : IStageEvent;
+    readonly Event : IStageEvent;
     /**
      * イメージ
      */
-    get Image() : IStageImage;
+    readonly Image : IStageImage;
 
     /**
      * サウンド
      */
-    get Sound() : IStageSound;
+    readonly Sound : IStageSound;
 
-    //removeSprite(sprite: ISprite): void;
+    readonly SvgText: ISvgText;
 };

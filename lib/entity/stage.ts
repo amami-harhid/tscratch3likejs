@@ -11,7 +11,7 @@ import { StageSound } from './stage/stageSound';
 import { Entity } from "./entity";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { Sprite } from "./sprite";
-import { StageLayering } from "./stageLayering";
+import { StageLayering } from "../../Type/stage/CStageLayering";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TMouse } from "@Type/mouse";
 import type { TScale } from "@Type/common/typeCommon";
@@ -23,12 +23,17 @@ import { IStageEvent } from "@Type/stage/IStageEvent";
 import { IStageSensing } from "@Type/stage/IStageSensing";
 import { IStageSound } from "@Type/stage/IStageSound";
 import { ISprite } from "@Type/sprite";
+import { ITextSprite } from "@Type/text";
+import { TextSprite } from "./text/textSprite";
+import { ISvgText } from "@Type/svgText/ISvgText";
+import { SvgText } from "./entity/svgText";
 export class Stage extends Entity implements IStage{
     private scale: TScale;
     private direction: number;
     /** @internal */
     public backdrops: Backdrops;
     private _sprites: Sprite[];
+    private _textSprites: ITextSprite[];
     //private skinIdx: number;
     /** @internal */
     public mouse: TMouse;
@@ -38,6 +43,7 @@ export class Stage extends Entity implements IStage{
     private _Event : IStageEvent;
     private _Sensing : IStageSensing;
     private _Sound: IStageSound;
+    private _SvgText: ISvgText;
     constructor( options:TEntityOptions ) {
         if(typeof options == "string") throw "new Stage() パラメータはオブジェクト型のみ"
         super( "stage", StageLayering.BACKGROUND_LAYER, options );
@@ -55,6 +61,7 @@ export class Stage extends Entity implements IStage{
         //this.keysKey = [];
         this.backdrops = new Backdrops(this.playGround);
         this._sprites = [];
+        this._textSprites = [];
         //this.skinIdx = -1;
         this.mouse = {scratchX:0, scratchY:0, x:0, y:0, down: false, pageX: 0, pageY: 0, clientX: 0, clientY: 0};
         const me = this;
@@ -115,23 +122,36 @@ export class Stage extends Entity implements IStage{
         this._Event = new StageEvent(this);
         this._Sensing = new StageSensing(this);
         this._Sound = new StageSound(this);
+        this._SvgText = new SvgText(this);
     }
+    /** @internal */
     get $sprites (): Sprite[] {
         return this._sprites;
+    }
+    /** @internal */
+    get textSprites(): ITextSprite[] {
+        return this._textSprites;
     }
     get sprites (): ISprite[] {
         const sprites : ISprite[] = this._sprites as unknown as ISprite[];
         return sprites;
     }
+    /** @internal */
     $addSprite (sprite: Sprite): void {
         this._sprites.push( sprite );
         sprite.z = this._sprites.length
         this._sortSprites();
     }
+    /** @internal */
     addSprite (sprite: ISprite): void {
         const _sprite:Sprite = sprite as unknown as Sprite;
         this.$addSprite(_sprite);
     }
+
+    addTextSprite( textSprite: ITextSprite) : void {
+        this._textSprites.push(textSprite);
+    }
+    /** @internal */
     _sortSprites(): void {
         const n0_sprites = this._sprites;
         const n1_sprites = n0_sprites.sort( function( a, b ) {
@@ -149,67 +169,49 @@ export class Stage extends Entity implements IStage{
         this._sprites = n2_sprites;
 
     }
+    /** @internal */
     removeSprite ( sprite: ISprite ): void {
         const curSprite:Sprite = sprite as unknown as Sprite;
         this.$removeSprite(curSprite);
     }
+    /** @internal */
     $removeSprite ( sprite: Sprite ): void {
         const curSprite:Sprite = sprite;
         const n_sprites = this._sprites.filter( ( item ) => item !== curSprite );
         this._sprites = n_sprites;
         this._sortSprites();
     }
+
+    /** @internal */
+    removeTextSprite( textSprite: ITextSprite ) {
+        const n_sprites = this._textSprites.filter( ( item ) => item !== textSprite );
+        this._textSprites = n_sprites;
+
+    }
+    /**
+     * ステージと全スプライトを更新する
+     */
     update(): void {
         super.update();
         this.backdrops.setPosition(this.position.x, this.position.y);
         this.backdrops.setScale(this.scale.w, this.scale.h);
         this.backdrops.setDirection(this.direction);
-        this.backdrops.update(this.drawableID);
+        this.backdrops.update(this.drawableID, this._effect);
         for(const _sprite of this._sprites){
             _sprite.update();
-        }        
+        }
+        for(const _sprite of this._textSprites){
+            const s : TextSprite = _sprite as unknown as TextSprite;
+            s.update();
+        }
+
     }
+    /**
+     * 描画する
+     */    
     draw(): void {
         this.render.renderer.draw();
     }
-    // sendSpriteBackwards (sprite) {
-    //     // 工事中
-    
-    // }
-    // sendSpriteForward (sprite) {
-    //     // 工事中
-    // }
-    // sendSpriteToFront (sprite) {
-    //     // 工事中
-    // }
-    // sendSpriteToBack (sprite) {
-    //     // 工事中
-    // }
-
-    // isKeyPressed (userKey) {
-    //     let match = false
-    //     let check
-    
-    //     typeof userKey === 'string' ? check = userKey.toLowerCase() : check = userKey
-    //     this.keysKey.indexOf(check) !== -1 ? match = true : null
-    //     this.keysCode.indexOf(check) !== -1 ? match = true : null
-    
-    //     return match
-    // }
-
-    // move(x,y) {
-    //     this.$_position.x = x;
-    //     this.$_position.y = y;
-    //     this.backdrops.setPosition(this.$_position.x, this.$_position.y);
-    // }
-
-    // async loadSound(name,soundUrl, options={}) {
-    //     await this._loadSound(name, soundUrl, options);
-    // }
-    // async loadImage(name, imageUrl) {
-    //     this._loadImage(name, imageUrl, this.backdrops);
-    // }
-
     /**
      * @internal
      * サウンド名をもとに、ステージへサウンドを追加する
@@ -241,6 +243,7 @@ export class Stage extends Entity implements IStage{
         return promise;
     }
     /**
+     * @internal
      * イメージ名を使ってイメージをステージへ追加する
      * @param imageData {string}
      * @returns {Promise<void>}
@@ -270,6 +273,7 @@ export class Stage extends Entity implements IStage{
 
     }
     /**
+     * @internal
      * イメージ名の配列を返す
      * @returns {string[]}
      */
@@ -278,53 +282,175 @@ export class Stage extends Entity implements IStage{
         return Array.from(iterator);
     }
     /**
+     * @internal
      * 新しい名前の背景に切り替わったとき、イベント通知をする
      * @param {string} backdropName 
      * @param {string} newBackdropName 
      */
-    $emitWhenBackdropChange(backdropName: string, newBackdropName: string) {
+    $emitWhenBackdropChange(backdropName: string, newBackdropName: string): void {
         // 新しい名前の背景に切り替わったとき
         if(backdropName !== newBackdropName){
             this.$broadCastBackdropSwitch(newBackdropName);
         }
     }
+    /** @internal */
+    async $emitWhenBackdropChangeAndWait(backdropName: string, newBackdropName: string): Promise<void> {
+        // 新しい名前の背景に切り替わったとき
+        if(backdropName !== newBackdropName){
+            await this.$broadCastBackdropSwitchAndWait(newBackdropName);
+        }
+    }
+
     /**
+     * @internal
      * 次の背景に切り替える
      */
     $nextBackDrop(): void {
         if(!this.$isAlive()) return;
         if(this.backdrops){
-            const name_before = this.backdrops.currentSkinName();
-            this.backdrops.nextCostume();
-            const name_after = this.backdrops.currentSkinName();
-            this.$emitWhenBackdropChange(name_before, name_after);
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.nextCostume();
+                const name_after = this.backdrops.currentSkinName();
+                this.$emitWhenBackdropChange(name_before, name_after);
+            }
         }
-        //this.ifOnEdgeBounds();
     }
     /**
+     * @internal
+     * 次の背景に切り替える
+     */
+    async $nextBackDropAndWait(): Promise<void> {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.nextCostume();
+                const name_after = this.backdrops.currentSkinName();
+                await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * 前の背景に切り替える
+     */
+    $prevBackdrop() : void {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.prevCostume();
+                const name_after = this.backdrops.currentSkinName();
+                this.$emitWhenBackdropChange(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * 前の背景に切り替えて待つ
+     */
+    async $prevBackdropAndWait() : Promise<void> {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.prevCostume();
+                const name_after = this.backdrops.currentSkinName();
+                await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * どれかの背景にする
+     */
+    $randomBackdrop() : void {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.randomCostume();
+                const name_after = this.backdrops.currentSkinName();
+                this.$emitWhenBackdropChange(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * どれかの背景にして待つ
+     */
+    async $randomBackdropAndWait() : Promise<void> {
+        if(!this.$isAlive()) return;
+        if(this.backdrops){
+            if(this.backdrops.skinSize > 1) {
+                const name_before = this.backdrops.currentSkinName();
+                this.backdrops.randomCostume();
+                const name_after = this.backdrops.currentSkinName();
+                await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
      * 背景名、または背景番号で背景を切り替える
      * @param {string|number} backdrop 
      */
     $switchBackDrop( backdrop: string|number ): void {
         if(!this.$isAlive()) return;
         if( backdrop ){
-            if( typeof backdrop === 'string') {
-                const _name = backdrop;
-                if(this.backdrops) {
-                    const name_before = this.backdrops.currentSkinName();
-                    this.backdrops.switchCostumeByName(_name);
-                    const name_after = this.backdrops.currentSkinName();
-                    this.$emitWhenBackdropChange(name_before, name_after);
+            if( this.backdrops.skinSize > 0) {
+                if( typeof backdrop === 'string') {
+                    const _name = backdrop;
+                    if(this.backdrops) {
+                        const name_before = this.backdrops.currentSkinName();
+                        this.backdrops.switchCostumeByName(_name);
+                        const name_after = this.backdrops.currentSkinName();
+                        this.$emitWhenBackdropChange(name_before, name_after);
+                    }
+                }else if( Number.isInteger(backdrop)) {
+                    const _idx = backdrop;
+                    if(this.backdrops){
+                        const name_before = this.backdrops.currentSkinName();
+                        this.backdrops.switchCostumeByNumber(_idx);
+                        const name_after = this.backdrops.currentSkinName();
+                        this.$emitWhenBackdropChange(name_before, name_after);
+                    }
                 }
-            }else if( Number.isInteger(backdrop)) {
-                const _idx = backdrop;
-                if(this.backdrops){
-                    const name_before = this.backdrops.currentSkinName();
-                    this.backdrops.switchCostumeByNumber(_idx);
-                    const name_after = this.backdrops.currentSkinName();
-                    this.$emitWhenBackdropChange(name_before, name_after);
+            }
+        }
+    }
+    /**
+     * @internal
+     * 背景名、または背景番号で背景を切り替えて待つ
+     * @param {string|number} backdrop 
+     */
+    async $switchBackdropAndWait( backdrop: string|number ): Promise<void> {
+        if(!this.$isAlive()) return;
+        if( backdrop ){
+            if( this.backdrops.skinSize > 0) {
+                if( typeof backdrop === 'string') {
+                    const _name = backdrop;
+                    if(this.backdrops) {
+                        const name_before = this.backdrops.currentSkinName();
+                        this.backdrops.switchCostumeByName(_name);
+                        const name_after = this.backdrops.currentSkinName();
+                        if(name_after != name_before){
+                            await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+                        }
+                    }
+                }else if( Number.isInteger(backdrop)) {
+                    const _idx = backdrop;
+                    if(this.backdrops){
+                        const name_before = this.backdrops.currentSkinName();
+                        this.backdrops.switchCostumeByNumber(_idx);
+                        const name_after = this.backdrops.currentSkinName();
+                        if(name_after != name_before){
+                            await this.$emitWhenBackdropChangeAndWait(name_before, name_after);
+                        }
+                    }
                 }
-            }    
+            }
         }
     }
     /**
@@ -360,107 +486,24 @@ export class Stage extends Entity implements IStage{
             resolve(answer);
         });
     }
-    // /**
-    //  * 背景
-    //  */
-    // get Backdrop() {
-    //     return this._Backdrop;
-    // }
-    // /**
-    //  * 
-    //  * 背景番号、背景名を取り出すためのオブジェクト
-    //  * 使用例：this.Backdrop.no, this.Backdrop.name
-    //  * @returns {{no: number, name: string}}
-    //  */
-    // get Backdrop(): {"no": number, "name": string}{
-    //     const stage = this;
-    //     const backdrop = {"no": 0, "name": ""};
-    //     Object.defineProperty(backdrop, "no", {
-    //         // @type {number}
-    //         get : function() {
-    //             return stage.backdrops.currentSkinNo();
-    //         },
-    //     })
-    //     Object.defineProperty(backdrop, "name", {
-    //         // @type {string}
-    //         get : function() {
-    //             return stage.backdrops.currentSkinName();
-    //         },
-    //     })
-    //     return backdrop;
-
-    // }
-
-    // get L() {
-    //     return this.Looks;
-    // }
     /**
      * 見た目
      */
     get Looks() {
         return this._Looks;
     }
-    // get Looks(){
-    //     return {
-    //         "Backdrop" : this.Backdrop,
-    //         "nextBackdrop": this.$nextBackDrop.bind(this),       // Sprite-->Stageへ
-    //         "switchBackdrop": this.$switchBackDrop.bind(this),   // Sprite-->Stageへ
-    //         "changeEffectBy": this.$changeEffectBy.bind(this),  // Sprite-->Entityへ
-    //         "setEffectTo": this.$setEffectTo.bind(this),        // Sprite-->Entityへ
-    //         "clearEffects": this.$clearEffect.bind(this),       // Sprite-->Entityへ
-
-    //     };
-    // }
-    // get C() {
-    //     return this.Control;
-    // }
     /**
      * 制御
      */
     get Control() : IStageControl {
         return this._Control;
     }
-    // get Control() {
-    //     return {
-    //         "wait" : this.$waitSeconds.bind(this),    // Sprite --> Entityへ
-    //         "waitUntil": this.$waitUntil.bind(this),  // Sprite --> Entityへ
-    //         "waitWhile": this.$waitWhile.bind(this),  // Sprite --> Entityへ
-    //         //---- Entity
-    //         "forever": this.forever.bind(this),
-    //         "while": this.while.bind(this),
-    //         "repeat": this.repeat.bind(this),
-    //         "repeatUntil": this.repeatUntil.bind(this),
-    //         "stopAll" : this.$stopAll.bind(this),
-    //         "stopThisScript" : this.$stopThisScript.bind(this),
-    //         "stopOtherScripts" : this.$stopOtherScripts.bind(this),
-    //     };
-    // }
     /**
      * 調べる
      */
     get Sensing() {
         return this._Sensing;
     }
-//     get Sensing() {
-//         return {
-//             "askAndWait": this.$askAndWait.bind(this),
-//             "isKeyDown" : this.$isKeyDown.bind(this),
-//             "isKeyNotDown" : this.$isKeyNotDown.bind(this),
-//             "isMouseDown" : this.$isMouseDown.bind(this),
-//             "Mouse" : this.Mouse,
-//             "timer" : this.$timer,
-//             "resetTimer": this.$resetTimer.bind(this),
-//             "getBackDrop" : null, // Spriteで工事中
-// //            "isNotMouseTouching" : this.isNotMouseTouching.bind(this),
-// //            "isMouseTouching": this.isMouseTouching.bind(this),
-// //            "isTouchingTargetToTarget": this.isTouchingTargetToTarget.bind(this),
-// //            "getTouchingTarget": this.getTouchingTarget.bind(this),
-//         }
-//     }
-
-    // get E() {
-    //     return this.Event;
-    // }
 
     /**
      * イベント
@@ -468,27 +511,6 @@ export class Stage extends Entity implements IStage{
     get Event() {
         return this._Event;
     }
-    // get Event() {
-    //     return {
-    //         "broadcast" : this.$broadcast.bind(this),
-    //         "broadcastAndWait" : this.$broadcastAndWait.bind(this),
-    //         // "broadcastToTargets": this.$broadcastToTargets.bind(this),
-    //         // "broadcastAndWaitToTargets": this.$broadcastAndWaitToTargets.bind(this),
-    //         "whenBroadcastReceived": this.$whenBroadcastReceived.bind(this),
-    //         "whenRightNow": this.$whenRightNow.bind(this),
-    //         "whenFlag": this.$whenFlag.bind(this),
-    //         "whenKeyPressed": this.$whenKeyPressed.bind(this),
-    //         //"whenMouseTouched": this.$whenMouseTouched.bind(this),
-    //         //"whenTargetMouseTouched": this.$whenTouchingTarget.bind(this),
-    //         "whenCloned": this.$whenCloned.bind(this),
-    //         "whenClicked": this.$whenClicked.bind(this),
-    //         "whenBackdropSwitches": this.$whenBackdropSwitches.bind(this),
-
-
-
-    //     }
-    // }
-
     /**
      * イメージ
      */
@@ -505,19 +527,9 @@ export class Stage extends Entity implements IStage{
     get Sound() {
         return this._Sound;
     }
-    // get Sound() {
-    //     return {
-    //         "add": this.$addSound.bind(this),
-    //         "switch" : this.$soundSwitch.bind(this),
-    //         "next" : this.$nextSound.bind(this),
-    //         "play" : this.$soundPlay.bind(this),
-    //         "playUntilDone": this.$startSoundUntilDone.bind(this),
-    //         "setOption" : this.$setOption.bind(this),
-    //         "changeOptionValue" : this.$changeOptionValue.bind(this),
-    //         "clearEffects" : this.$clearSoundEffect.bind(this),
-    //         "stop": this.$soundStop.bind(this),
-    //         "stopImmediately": this.$soundStopImmediately.bind(this),
 
-    //     }
-    // }
+    get SvgText() : ISvgText {
+        return this._SvgText;
+    }
+
 };

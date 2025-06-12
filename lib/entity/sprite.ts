@@ -23,14 +23,13 @@ import type { ISpritePen } from "@Type/sprite/ISpritePen";
 import { SpriteSensingDistance } from './sprite/spriteSensingDistance';
 import { SpriteTextToSpeech } from './sprite/spriteTextToSpeech';
 import { SpriteBubble } from "./sprite/spriteBubble";
-import { StageLayering } from "./stageLayering";
 import { Utils } from "../util/utils";
 import { Costumes } from "./costumes";
 import { RotationStyle } from "../../Type/entity/RotationStyle";
 //import { PlayGround } from "lib/playGround";
 import { Stage } from "./stage";
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
-import type { S3ImageData, S3SoundData } from '@Type/common/typeCommon';
+import type { S3ImageData, S3SoundData, S3FontData } from '@Type/common/typeCommon';
 //import { Backdrops } from "./backdrops";
 import type { ISprite, SSprite, TSprite } from "@Type/sprite";
 import type { ISpriteControl } from "@Type/sprite/ISpriteControl";
@@ -43,6 +42,13 @@ import type { ISpriteBackdrop } from "@Type/sprite/ISpriteBackdrop";
 import type { ISpriteBubble } from "@Type/sprite/ISpriteBubble";
 import { ISpriteDragMode } from "@Type/sprite/ISpriteDragMode";
 import { SpriteDragMode } from "./sprite/spriteDragMode";
+import { ISpriteEvent } from "@Type/sprite/ISpriteEvent";
+import { ISpriteSound } from "@Type/sprite/ISpriteSound";
+import { ISpriteFont } from "@Type/sprite/ISpriteFont";
+import { StageLayering } from "../../Type/stage/CStageLayering";
+import { SpriteFont } from "./sprite/spriteFont";
+import { ISvgText } from "@Type/svgText/ISvgText";
+import { SvgText } from "./entity/svgText";
 //import { ISpriteCostume } from "@Type/sprite/ISpriteCostume";
 export class Sprite extends Entity implements ISprite {
     private bubble?: Bubble;
@@ -91,11 +97,13 @@ export class Sprite extends Entity implements ISprite {
     /** 制御 */
     private _Control: ISpriteControl;
     /** イベント */
-    private _Event: SpriteEvent;
+    private _Event: ISpriteEvent;
     /** 調べる */
     private _Sensing: ISpriteSensing;
     /** サウンド */
-    private _Sound: SpriteSound;
+    private _Sound: ISpriteSound;
+
+    private _Font: ISpriteFont;
     /** ペン */
     private _Pen: ISpritePen;
     private _TextToSpeech: SpriteTextToSpeech;
@@ -103,13 +111,14 @@ export class Sprite extends Entity implements ISprite {
     private _Backdrop : ISpriteBackdrop;
     private _SpriteBubble: ISpriteBubble;
     private _DragMode : ISpriteDragMode;
+    private _SvgText: ISvgText;
     /**
      * コンストラクター
      * @param name {string} - 名前
      * @param options {TEntityOptions} - オプション
      * @constructor
      */
-    constructor(name:string, options:TEntityOptions) {
+    constructor(name:string, options?:TEntityOptions, layer?: StageLayering) {
         let _name:string|undefined = undefined;
         if(name){
             _name = name;
@@ -117,7 +126,11 @@ export class Sprite extends Entity implements ISprite {
             _name = "Sprite_"+Utils.generateUUID();
         }
         const _options = (options)? options : {};
-        super(_name, StageLayering.SPRITE_LAYER, _options);
+        if(layer === undefined){
+            super(_name, StageLayering.SPRITE_LAYER, _options);
+        }else{
+            super(_name, layer, _options);
+        }
         this.isSprite = true;
         const stage = this.playGround.stage;
         this.stage = stage;
@@ -149,6 +162,8 @@ export class Sprite extends Entity implements ISprite {
         this._Backdrop = new SpriteBackdrop(this);
         this._SpriteBubble = new SpriteBubble(this);
         this._DragMode = new SpriteDragMode(this._dragSprite);
+        this._Font = new SpriteFont(this);
+        this._SvgText = new SvgText(this);
         //this._isAlive = true;
         stage.$addSprite(this);
     }
@@ -279,6 +294,12 @@ export class Sprite extends Entity implements ISprite {
                     await newSprite.$addImage(d.name); 
                 }    
             }
+            if(this.fontDatas){
+                for(const f of this.fontDatas) {
+                    // svg image の場合、createSVGSkin の中で非同期になることに注意すること
+                    await newSprite.$addFont(f.name); 
+                }    
+            }
             if(this.costumes){
                 let _name = this.costumes.currentSkinName();
                 if( _name != null && newSprite.costumes){
@@ -331,45 +352,6 @@ export class Sprite extends Entity implements ISprite {
 
     }
     /**
-     * 指定した層に移す
-     * @param {number} nLayers 
-     */
-    protected _goLayers(nLayers: number){
-        if (this.render.renderer) {
-            this.render.renderer.setDrawableOrder(this.drawableID, nLayers, StageLayering.SPRITE_LAYER, true);
-        }
-    }
-    /**
-     * @internal
-     * 最前面にする
-     */
-    $goToFront() : void {
-        this._goLayers(Infinity); // 最上位
-    }
-    /**
-     * @internal
-     * 最背面にする
-     */
-    $goToBack() : void {
-        this._goLayers(-Infinity); // 最下位
-    }
-    /**
-     * @internal
-     * 手前に出す
-     * @param nLayers {number}
-     */
-    $goForwardLayers (nLayers: number) : void {
-        this._goLayers(nLayers);
-    }
-    /**
-     * @internal
-     * 奥に下げる
-     * @param nLayers {number}
-     */
-    $goBackwardLayers (nLayers: number) : void {
-        this._goLayers(-nLayers);
-    }
-    /**
      * UPDATE
      * @internal
      */
@@ -400,18 +382,6 @@ export class Sprite extends Entity implements ISprite {
             penSprite.drawLine();
         }
         super.$setXY(x,y);
-    }
-    /**
-     * @internal
-     * 動かす
-     * @param steps {number}
-     */
-    $moveSteps(steps: number): void {
-        const radians = MathUtil.degToRad(90 - this.$_direction);
-        const dx = steps * Math.cos(radians);
-        const dy = steps * Math.sin(radians);
-        this.$setXY( this.$_position.x + dx, this.$_position.y + dy );
-    
     }
     /**
      * @internal
@@ -463,33 +433,6 @@ export class Sprite extends Entity implements ISprite {
      */
     set y( y:number ){
         this.$setY(y);
-    }
-    /**
-     * 指定した座標へ行く
-     * @internal
-     * @param {number} x 
-     * @param {number} y 
-     * @returns 
-     */
-    $goToXY( x: number, y: number ): void {
-
-        if(Utils.isNumber(x)){
-            if ( !Utils.isNumber(y)) {
-                return;
-            }
-            // @type {number}
-            const _x = x;
-            this.$setXY( _x, y );
-        }
-    }
-    /**
-     * @internal
-     * 指定した座標へ行く.
-     * @param x 
-     * @param y 
-     */
-    $moveTo( x: number, y: number ): void {
-        this.$goToXY( x, y );       
     }
     /**
      * 触っている枠を返す
@@ -889,30 +832,6 @@ export class Sprite extends Entity implements ISprite {
     }
     /**
      * @internal
-     * 向きを指定する
-     * @param {number} d 
-     * @returns {void}
-     */
-    $pointInDirection( d: number ): void {
-        if(!this.$isAlive()) return;
-
-        if(d < 0) {
-            let _direction = d % 360;
-            if( _direction < -180) {
-                _direction = 360 + _direction;
-            }
-            this.$_direction = _direction;
-        }else{
-            // _derection 0 以上 
-            let _direction = d % 360;
-            if( _direction > 180) {
-                _direction = _direction - 360;
-            }
-            this.$_direction = _direction;
-        }
-    }
-    /**
-     * @internal
      * 回転方向を指定する
      * @param {RotationStyle} style 
      * @returns {void}
@@ -967,6 +886,22 @@ export class Sprite extends Entity implements ISprite {
     $nextBackdrop(): void {
         const stage = this.playGround.stage;
         stage.$nextBackDrop();
+    }
+    /**
+     * @internal
+     * 前の背景にする
+     */
+    $prevBackdrop(): void {
+        const stage = this.playGround.stage;
+        stage.$prevBackdrop();
+    }
+    /**
+     * @internal
+     * どれかの背景にする
+     */
+    $randomBackdrop(): void {
+        const stage = this.playGround.stage;
+        stage.$randomBackdrop();
     }
     /**
      * @internal
@@ -1034,11 +969,12 @@ export class Sprite extends Entity implements ISprite {
         }
     }
     /**
+     * @internal
      * イメージ名を使って、スプライトにイメージを追加する
      * @param imageName {string}
      * @returns 
      */
-    protected async $addImage(imageName: string): Promise<void> {
+    public async $addImage(imageName: string): Promise<void> {
         let _imageData:S3ImageData;
         if(imageName == undefined){
             throw "【Sprite.Image.add】イメージデータの指定がありません"
@@ -1063,16 +999,42 @@ export class Sprite extends Entity implements ISprite {
         return;
     }
     /**
+     * @internal
      * イメージ名の配列を返す
      * @returns {string[]}
      */
-    protected $getImageNames(): string[] {
+    public $getImageNames(): string[] {
         if(this.costumes){
             const iterator = this.costumes.costumes.keys();
             const arr = Array.from(iterator);
             return arr;    
         }
         return [];
+    }
+    /**
+     * @internal
+     * イメージ名を使って、スプライトにイメージを追加する
+     * @param imageName {string}
+     * @returns 
+     */
+    public async $addFont(fontName: string): Promise<void> {
+        let _fontData:S3FontData;
+        if(fontName == undefined){
+            throw "【Sprite.Font.add】FONTデータの指定がありません"
+        }else if(typeof fontName == "string"){
+            _fontData = this.playGround.loadedFonts[fontName];
+            if(_fontData == undefined){
+                throw "【Sprite.Font.add】正しいイメージ名を指定してください"
+            }
+        }else{
+            //_imageData = imageName;
+            throw "【Sprite.Font.add】正しいイメージ名を指定してください"
+        }
+        if(_fontData['name'] == undefined || _fontData['data'] == undefined ){
+            throw "【Sprite.Font.add】正しいイメージデータを指定してください"
+        }
+        this._addFont(_fontData['name'], _fontData['data']);
+        return;
     }
     /**
      * @internal
@@ -1150,37 +1112,12 @@ export class Sprite extends Entity implements ISprite {
         });
     }
     /**
-     * Drawableが存在していることを確認する
-     * @returns {boolean}
-     */
-    protected $_isDrawableExist(): boolean {
-        const drawable = this.render.renderer._allDrawables[this.drawableID];
-        if(drawable == null){
-            return false;
-        }
-        return true;
-    }
-    /**
      * @internal
      * 自分自身の縦横表示サイズを得る
      * @returns {{w:number, h: number}}
      */
     $drawingDimensions(): {w: number, h: number} {
         return this.$getDrawingDimensions();
-    }
-    /**
-     * 自分自身の縦横表示サイズを得る
-     * @returns {{w:number, h: number}}
-     */
-    protected $getDrawingDimensions(): {w: number, h: number} {
-        let width = 0;
-        let height = 0  
-        if(this.$_isDrawableExist()){
-            const bounds = this.render.renderer.getBounds(this.drawableID);
-            height = Math.abs(bounds.top - bounds.bottom);
-            width = Math.abs(bounds.left - bounds.right);    
-        }   
-        return {w:width, h:height};
     }
     /**
      * @internal
@@ -1192,23 +1129,7 @@ export class Sprite extends Entity implements ISprite {
         const y = this.$_position.y
         return {x:x, y:y};
     }
-    /**
-     * @internal
-     * 現在の向きを取得する
-     * @returns {number}
-     */
-    $getCurrentDirection(): number {
-        return this.$_direction;
-    }
 
-    /**
-     * @internal
-     * 現在のスケールを取得する
-     * @returns {{w: number, h: number}}
-     */
-    public $getCurrentSize() {
-        return {w: this.$_scale.w, h: this.$_scale.h};
-    }
     /**
      * @internal
      * 質問をして答えを待つ
@@ -1282,9 +1203,6 @@ export class Sprite extends Entity implements ISprite {
 
         return direction;
     }
-    // get M(){
-    //     return this.Motion;
-    // }
 
     /**
      * 動き
@@ -1292,75 +1210,6 @@ export class Sprite extends Entity implements ISprite {
     get Motion() {
         return this._Motion;
     }
-    // /**
-    //  * 動き
-    //  */
-    // get Motion() {
-    //     return {
-    //         /** 位置 */
-    //         "Position" : this.Position,
-    //         /** 向き */
-    //         "Direction": this.Direction,
-    //         "getCurrentPosition": this.$getCurrentPosition.bind(this),
-    //         "getCurrentDirection": this.$getCurrentDirection.bind(this),
-    //         "moveSteps" : this.$moveSteps.bind(this),
-    //         "moveTo" : this.$moveTo.bind(this),
-    //         "ifOnEdgeBounds" : this.$ifOnEdgeBounds.bind(this),
-    //         "gotoRandomPosition": this.$gotoRandomPosition.bind(this),
-    //         "gotoMousePosition" : this.$gotoMousePosition.bind(this),
-    //         "gotoSprite" : this.$gotoSprite.bind(this),
-    //         "glideToPosition": this.$glideToPosition.bind(this),
-    //         /** マウスの位置へ向く */
-    //         "pointToMouse" : this.$pointToMouse.bind(this),
-    //         /** 指定したターゲットの位置へ向く */
-    //         "pointToTarget" : this.$pointToTarget.bind(this),
-    //         /** 角度を指定して向きを変える */
-    //         "pointInDerection" : this.$pointInDerection.bind(this),
-    //         /** 回転方法を指定する */
-    //         "setRotationStyle" : this.$setRotationStyle.bind(this),
-    //         //--- Entity
-    //         "gotoXY": this.$goToXY.bind(this),
-    //         "pointInDirection": this.$setDirection.bind(this),
-    //         "turnRightDegrees": this.$turnRight.bind(this),
-    //         "turnLeftDegrees" : this.$turnLeft.bind(this),
-    //         "setXY" : this.$setXY.bind(this),
-    //         "setX" : this.$setX.bind(this),
-    //         "setY" : this.$setY.bind(this),
-    //         "changeX" : this.$changeX.bind(this),
-    //         "changeY" : this.$changeY.bind(this),
-
-    //     };
-    // }
-
-    // /**
-    //  * コスチューム番号、コスチューム名を取り出すためのオブジェクト
-    //  * 使用例：this.Costume.no, this.Costume.name
-    //  * @returns {{no: number, name: string}}
-    //  */
-    // get Costume(): ISpriteCostume {
-    //     const me = this;
-    //     const costume = {"no": 0, "name": ""};
-    //     Object.defineProperty(costume, "no", {
-    //         // @type {number}
-    //         get : function() {
-    //             if(me.costumes)
-    //                 return me.costumes.currentSkinNo();
-    //             else
-    //                 return -1;
-    //         },
-    //     })
-    //     Object.defineProperty(costume, "name", {
-    //         // @type {string}
-    //         get : function() {
-    //             if(me.costumes)
-    //                 return me.costumes.currentSkinName();
-    //             else
-    //                 return '';
-    //         },
-    //     })
-
-    //     return costume;
-    // }
     
     /**
      * 背景番号、背景名を取り出すためのオブジェクト
@@ -1372,78 +1221,7 @@ export class Sprite extends Entity implements ISprite {
      */
     get Backdrop(): ISpriteBackdrop { 
         return this._Backdrop;
-        // const stage = this.playGround.stage;
-        // const backdrop : ISpriteBackdrop = {"no": 0, "name": ""};
-        // Object.defineProperty(backdrop, "no", {
-        //     get : function() {
-        //         return stage.backdrops.currentSkinNo();
-        //     },
-        // })
-        // Object.defineProperty(backdrop, "name", {
-        //     get : function() {
-        //         return stage.backdrops.currentSkinName();
-        //     },
-        // })
-        // return backdrop;
-
     }
-    // /**
-    //  * サイズを操作する
-    //  * ```ts
-    //  *  console.log(this.Size.w); // 横幅を取得する
-    //  *  console.log(this.Size.h); // 縦幅を取得する
-    //  * ```
-    //  * ```ts
-    //  *  this.Size.w = 100; // 横幅100%にする
-    //  *  this.Size.w = 50; // 縦幅50%にする
-    //  * ```
-    //  * ```ts
-    //  *  console.log(this.Size.scale); // スケールを取得する
-    //  *  this.Size.scale = {w:100, h:50}; // スケールを設定する
-    //  * ```
-    //  */
-    // get Size(){
-    //     const me = this;
-    //     const size = {
-    //         w: 0, h: 0, scale: {w:0,h:0},
-    //     }
-    //     Object.defineProperty(size, "w", {
-    //         get : function() {
-    //             const {w} = me.$getCurrentSize();
-    //             return w;
-    //         },
-    //         set : function(w) {
-    //             const {h} = me.$getCurrentSize();
-    //             me.$setScale(w, h);
-    //         }
-    //     })
-    //     Object.defineProperty(size, "h", {
-    //         get : function() {
-    //             const {h} = me.$getCurrentSize();
-    //             return h;
-    //         },
-    //         set : function(h) {
-    //             const {w} = me.$getCurrentSize();
-    //             me.$setScale(w, h);
-    //         }
-    //     })
-    //     Object.defineProperty(size, "scale", {
-    //         get : function() {
-    //             const {w, h} = me.$getCurrentSize();
-    //             return {w:w,h:h};
-    //         },
-    //         set : function(scale) {
-    //             if(scale && scale.w != undefined && scale.h != undefined){
-    //                 me.$setScale(scale.w, scale.h);
-    //             }
-    //         }
-    //     })
-
-    //     return size;
-    // }
-    // get L() {
-    //     return this.Looks;
-    // }
 
     /**
      * 見た目
@@ -1451,42 +1229,6 @@ export class Sprite extends Entity implements ISprite {
     get Looks() : ISpriteLooks {
         return this._Looks;
     }
-    // /**
-    //  * 見た目
-    //  */
-    // get Looks(){
-    //     return {
-    //         "Costume" : this.Costume,
-    //         "Backdrop" : this.Backdrop,
-    //         "nextCostume": this.$nextCostume.bind(this),
-    //         "switchCostume": this.$switchCostume.bind(this),
-    //         "nextBackdrop": this.$nextBackdrop.bind(this),       // Sprite-->Stageへ
-    //         "switchBackdrop": this.$switchBackdrop.bind(this),   // Sprite-->Stageへ
-    //         "say": this.$say.bind(this),
-    //         "sayForSecs": this.$sayForSecs.bind(this),
-    //         "think": this.$think.bind(this),
-    //         "thinkForSecs": this.$thinkForSecs.bind(this),
-    //         "changeSizeBy" : this.$changeSizeBy.bind(this),
-    //         "Size": this.Size,
-    //         "getSize" : this.$getCurrentSize.bind(this),
-    //         "setSize" : this.$setScale.bind(this),
-    //         "changeEffectBy": this.$changeEffectBy.bind(this),
-    //         "setEffect": this.$setEffectTo.bind(this),
-    //         "clearEffects": this.$clearEffect.bind(this),
-    //         "show": this.$show.bind(this),
-    //         "hide": this.$hide.bind(this),
-    //         "goToFront": this.$goToFront.bind(this),
-    //         "goToBack": this.$goToBack.bind(this),
-    //         "goForwardLayers": this.$goForwardLayers.bind(this),
-    //         "goBackwardLayers": this.$goBackwardLayers.bind(this),
-    //         "drawingDimensions":this.$drawingDimensions.bind(this),
-            
-
-    //     };
-    // }
-    // get C() {
-    //     return this.Control;
-    // }
 
     /**
      * 制御
@@ -1494,31 +1236,6 @@ export class Sprite extends Entity implements ISprite {
     get Control(): ISpriteControl {
         return this._Control;
     }
-    // /**
-    //  * 制御
-    //  */
-    // get Control() {
-    //     return {
-    //         "wait" : this.$waitSeconds.bind(this),
-    //         "waitUntil": this.$waitUntil.bind(this),
-    //         "waitWhile": this.$waitWhile.bind(this),
-    //         "cloneAndWait": this.$cloneAndWait.bind(this),
-    //         "clone": this.$clone.bind(this),
-    //         "removeAllClones": this.$removeClones.bind(this),
-    //         "whenCloned": this.$whenCloned.bind(this),
-    //         //---- Entity
-    //         "forever": this.forever.bind(this),
-    //         "while": this.while.bind(this),
-    //         "repeat": this.repeat.bind(this),
-    //         "repeatUntil": this.repeatUntil.bind(this),
-    //         "stopAll" : this.$stopAll.bind(this),
-    //         "remove"  : this.$remove.bind(this),
-    //         "alive"   : this.$isAlive.bind(this),
-    //         "stopThisScript" : this.$stopThisScript.bind(this),
-    //         "stopOtherScripts" : this.$stopOtherScripts.bind(this),
-
-    //     };
-    // }
 
     /**
      * 距離
@@ -1531,103 +1248,21 @@ export class Sprite extends Entity implements ISprite {
     get Distance() : ISpriteSensingDistance{
         return this._Distance;
     }
-    // get Distance(){
-    //     const me = this;
-    //     /** 他スプライトとの距離を計算する */
-    //     const distanceToOthers = function(otherSprite:Sprite) {
-    //         if(otherSprite && (otherSprite.isSprite === true )){
-    //             const obj1 = {
-    //                 x: me._Motion.Position.x,
-    //                 y: me._Motion.Position.y,
-    //             }
-    //             const obj2 = {
-    //                 x: otherSprite._Motion.Position.x,
-    //                 y: otherSprite._Motion.Position.y,
-    //             }
-    //             const _distance = Utils.distance(obj1, obj2);
-    //             return _distance;
-    //         }
-    //         return -1;
-    //     }
-    //     const distance = {
-    //         "mousePointer": 0,
-    //         "to": distanceToOthers,
-    //     };
-    //     Object.defineProperty(distance, "mousePointer", {
-    //         get : function() {
-    //             const obj1 = {
-    //                 x: me._Motion.Position.x,
-    //                 y: me._Motion.Position.y,
-    //             }
-    //             const obj2 = {
-    //                 x: me.Sensing.Mouse.x,
-    //                 y: me.Sensing.Mouse.y,
-    //             }
-    //             const _distance = Utils.distance(obj1, obj2);
-    //             return _distance;
-    //         },
-    //     })
-    //     return distance;
 
-    // }
     /**
      * 調べる
      */
     get Sensing() : ISpriteSensing {
         return this._Sensing;
     }
-    // get Sensing() {
-    //     return {
-    //         "askAndWait": this.$askAndWait.bind(this),
-    //         "isKeyDown" : this.$isKeyDown.bind(this),
-    //         "isKeyNotDown" : this.$isKeyNotDown.bind(this),
-    //         "isMouseDown" : this.$isMouseDown.bind(this),
-    //         "Mouse" : this.Mouse,
-    //         "Distance": this.Distance,
-    //         "timer" : this.$timer,
-    //         "resetTimer": this.$resetTimer.bind(this),
 
-    //         "isTouchingEdge" : this.$isTouchingEdge.bind(this),
-    //         "isTouchingVirticalEdge" : this.$isTouchingVirticalEdge.bind(this),
-    //         "isTouchingHorizontalEdge" : this.$isTouchingHorizontalEdge.bind(this),
-    //         "isNotMouseTouching" : this.$isNotMouseTouching.bind(this),
-    //         "isMouseTouching": this.$isMouseTouching.bind(this),
-    //         "isTouchingToSprite": this.$isTouchingTarget.bind(this),
-    //         "getTouchingSprites": this.$getTouchingTarget.bind(this),
-    //         "isTouchingToColor" : this.$isTouchingColor.bind(this),
-    //         "colorIsTouchingToColor" : this.$colorIsTouchingColor.bind(this),
-    //         "DragMode": this.DragMode,
-    //     }
-    // }
-    // get E() {
-    //     return this.Event;
-    // }
     /**
      * イベント
      */
     get Event() {
         return this._Event;
     }
-//     get Event() {
-//         return {
-//             "broadcast" : this.$broadcast.bind(this),
-//             "broadcastAndWait" : this.$broadcastAndWait.bind(this),
-//             // "broadcastToTargets": this.$broadcastToTargets.bind(this),
-//             // "broadcastAndWaitToTargets": this.$broadcastAndWaitToTargets.bind(this),
-//             "whenBroadcastReceived": this.$whenBroadcastReceived.bind(this),
-//             "whenRightNow": this.$whenRightNow.bind(this),
-//             "whenFlag": this.$whenFlag.bind(this),
-//             "whenKeyPressed": this.$whenKeyPressed.bind(this),
-// //            "whenMouseTouched": this.$whenMouseTouched.bind(this),
-// //            "whenTargetMouseTouched": this.$whenTouchingTarget.bind(this),
-//             "whenClicked": this.$whenClicked.bind(this),
-//             /** 背景が〇〇に変わったとき */
-//             "whenBackdropSwitches": this.$whenBackdropSwitches.bind(this),
 
-
-
-//         }
-//     }
     /**
      * イメージ
      */
@@ -1637,6 +1272,11 @@ export class Sprite extends Entity implements ISprite {
             "names" : this.$getImageNames.bind(this),
         }
     }
+
+    get Font (): ISpriteFont{
+        return this._Font;
+    }
+
     /**
      * サウンド
      */
@@ -1730,5 +1370,9 @@ export class Sprite extends Entity implements ISprite {
     }
     get Bubble() : ISpriteBubble {
         return this._SpriteBubble;
+    }
+
+    get SvgText() : ISvgText {
+        return this._SvgText;
     }
 };

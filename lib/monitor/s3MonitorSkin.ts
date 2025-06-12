@@ -3,11 +3,11 @@
  */
 const twgl = require('twgl.js');
 import { EventEmitter } from "events";
-import { S3CanvasMeasurementProvider } from "./s3CanvasMeasurementProvider";
+import { MeasurementProvider } from "../util/MeasurementProvider";
 import { MonitorRenderingConstants } from "./s3RenderConstants";
-import type { IDrawable } from "../render/IDrawable";
+import type { IDrawable } from "@Type/render/IDrawable";
 import { S3Silhouette } from "./s3Silhouette";
-import type { IRenderWebGL } from "../render/IRenderWebGL";
+import type { IRenderWebGL } from "@Type/render/IRenderWebGL";
 import type { TSize, TVec3 } from "@Type/common/typeCommon";
 import { IMonitorSkin } from "@Type/monitors/IMonitorSkin";
 
@@ -76,7 +76,7 @@ export class S3MonitorSkin extends EventEmitter implements IMonitorSkin {
     private _y: number;
     private _visible: boolean;
     public _canvas: HTMLCanvasElement|null;
-    private _measurementProvider: S3CanvasMeasurementProvider|null;
+    private _measurementProvider: MeasurementProvider|null;
 
     /** adding */
     private _dropping: boolean;
@@ -174,12 +174,12 @@ export class S3MonitorSkin extends EventEmitter implements IMonitorSkin {
     /**
      * @returns {CanvasRenderingContext2D}
      */
-    createCanvas() {
+    createCanvas(): CanvasRenderingContext2D {
         /** @type {HTMLCanvasElement} */
         this._canvas = document.createElement('canvas');
         const ctx = this._canvas.getContext('2d', { willReadFrequently: true });
         if(ctx == undefined) throw 'Unable to get ctx';
-        this._measurementProvider = new S3CanvasMeasurementProvider(ctx);
+        this._measurementProvider = new MeasurementProvider(ctx);
         return ctx;
     }
     getDefaultHeight(){
@@ -269,9 +269,9 @@ export class S3MonitorSkin extends EventEmitter implements IMonitorSkin {
         return this._ctx;
     }
     /**
-     * @returns {S3CanvasMeasurementProvider}
+     * @returns {MeasurementProvider}
      */
-    get measurementProvider() {
+    get measurementProvider(): MeasurementProvider {
         if(this._measurementProvider == undefined) throw 'measurementProvider null error';
         return this._measurementProvider;
     }

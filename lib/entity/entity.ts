@@ -19,12 +19,12 @@ import { Utils } from '../util/utils';
 import { ImageEffective } from '../../Type/entity/ImageEffective';
 import { SoundOption } from '../../Type/entity/SoundOption';
 import { PlayGround } from '../playGround';
-import { StageLayering } from './stageLayering';
 import type { TThreadObj } from '../controls/TThreadObj';
-import type { TPosition, TScale } from '@Type/common/typeCommon';
+import type { S3FontData, TPosition, TScale } from '@Type/common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
-import type { ScratchRenderProperties } from '../render/IRenderWebGL';
+//import type { ScratchRenderProperties } from '../render/IRenderWebGL';
+import { StageLayering, IStageLayering } from '../../Type/stage/CStageLayering';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
 declare type TBroadcastElementFunc = {
     func: CallableFunction,
@@ -88,6 +88,19 @@ export class Entity extends EventEmitter {
     protected modules?: Map<string, Promise<void>[]>;
     protected _isAlive: boolean;
     private _timer: number;
+    protected fontDatas?: S3FontData[];
+
+    getFontData(fontFamily:string): string|undefined {
+        if(this.fontDatas){
+            for(const font of this.fontDatas){
+                if(font.name == fontFamily){
+                    return font.data as string;
+                }
+            }
+        }
+        return undefined;
+    }
+
     constructor (name: string, layer: StageLayering, options:TEntityOptions = {} ){
         super();
         this.id = this._generateUUID();
@@ -131,6 +144,8 @@ export class Entity extends EventEmitter {
         this._isAlive = true;
         // タイマー用
         this._timer = performance.now();
+
+        this.fontDatas = [];
     }
     /**
      * 座標 {{x:number,y:number}}
@@ -164,6 +179,117 @@ export class Entity extends EventEmitter {
     set effect(_effect: {[key:string]: number}) {
         this.setEffectsEachProperties(_effect);
     }
+    /**
+     * @internal
+     * 動かす
+     * @param steps {number}
+     */
+    $moveSteps(steps: number): void {
+        const radians = MathUtil.degToRad(90 - this.$_direction);
+        const dx = steps * Math.cos(radians);
+        const dy = steps * Math.sin(radians);
+        this.$setXY( this.$_position.x + dx, this.$_position.y + dy );
+    
+    }
+    /**
+     * 指定した座標へ行く
+     * @internal
+     * @param {number} x 
+     * @param {number} y 
+     * @returns 
+     */
+    $goToXY( x: number, y: number ): void {
+
+        if(Utils.isNumber(x)){
+            if ( !Utils.isNumber(y)) {
+                return;
+            }
+            // @type {number}
+            const _x = x;
+            this.$setXY( _x, y );
+        }
+    }
+    /**
+     * @internal
+     * 指定した座標へ行く.
+     * @param x 
+     * @param y 
+     */
+    $moveTo( x: number, y: number ): void {
+        this.$goToXY( x, y );       
+    }
+    /**
+     * @internal
+     * 現在の向きを取得する
+     * @returns {number}
+     */
+    $getCurrentDirection(): number {
+        return this.$_direction;
+    }
+    /**
+     * @internal
+     * 向きを指定する
+     * @param {number} d 
+     * @returns {void}
+     */
+    $pointInDirection( d: number ): void {
+        if(!this.$isAlive()) return;
+
+        if(d < 0) {
+            let _direction = d % 360;
+            if( _direction < -180) {
+                _direction = 360 + _direction;
+            }
+            this.$_direction = _direction;
+        }else{
+            // _derection 0 以上 
+            let _direction = d % 360;
+            if( _direction > 180) {
+                _direction = _direction - 360;
+            }
+            this.$_direction = _direction;
+        }
+    }
+    /**
+     * 指定した層に移す
+     * @param {number} nLayers 
+     */
+    protected _goLayers(nLayers: number){
+        if (this.render.renderer) {
+            this.render.renderer.setDrawableOrder(this.drawableID, nLayers, StageLayering.SPRITE_LAYER, true);
+        }
+    }
+    /**
+     * @internal
+     * 最前面にする
+     */
+    $goToFront() : void {
+        this._goLayers(Infinity); // 最上位
+    }
+    /**
+     * @internal
+     * 最背面にする
+     */
+    $goToBack() : void {
+        this._goLayers(-Infinity); // 最下位
+    }
+    /**
+     * @internal
+     * 手前に出す
+     * @param nLayers {number}
+     */
+    $goForwardLayers (nLayers: number) : void {
+        this._goLayers(nLayers);
+    }
+    /**
+     * @internal
+     * 奥に下げる
+     * @param nLayers {number}
+     */
+    $goBackwardLayers (nLayers: number) : void {
+        this._goLayers(-nLayers);
+    }
+
     /**
      * @internal
      * @param changeW 
@@ -295,7 +421,8 @@ export class Entity extends EventEmitter {
         })
         return _allDone;
     }
-    protected async _addImage(name:string ,image:string|HTMLImageElement, costume) {
+    /** @internal */
+    public async _addImage(name:string ,image:string|HTMLImageElement, costume) {
         if(name == undefined || typeof name != "string"){
             throw "【Image.add】正しい name を指定してください"
         }
@@ -316,6 +443,20 @@ export class Entity extends EventEmitter {
             
         }
         await costume.addImage(name, image);
+    }
+    protected async _addFont(name:string ,image:string) {
+        if(name == undefined || typeof name != "string"){
+            throw "【Font.add】正しい name を指定してください"
+        }
+        const ImageError = "【Font.add】正しいFONTデータを指定してください";
+        if(image == undefined) throw ImageError
+        if(typeof image =="string"){
+            if(image.substring(0,10)!="data:font/")
+                throw ImageError            
+        }
+        if( this.fontDatas) {
+            this.fontDatas.push({name:name,data:image});
+        }
     }
 
     protected async _loadImage(name, imageUrl, costume) {
@@ -498,7 +639,7 @@ export class Entity extends EventEmitter {
      * @param name 
      * @returns 
      */
-    public async $startSoundUntilDone(name) {
+    public async $startSoundUntilDone(name: string): Promise<void> {
         if ( this.sounds ) {
             if(name){
                 this.$soundSwitch({name:name});
@@ -507,18 +648,48 @@ export class Entity extends EventEmitter {
         }
         return;
     }
-    protected $setPosition(x, y) {
-        if(typeof x == 'number'){
-            this.$_position.x = x;
-            this.$_position.y = y;    
-        }else{
-            const obj = x;
-            this.$_position.x = obj.x;
-            this.$_position.y = obj.y;    
+    protected $setPosition(x:number, y:number): void {
+        this.$_position.x = x;
+        this.$_position.y = y;  
+    }
+    /**
+     * @internal
+     * 自分自身の縦横表示サイズを得る
+     * @returns {{w:number, h: number}}
+     */
+    public $getDrawingDimensions(): {w: number, h: number} {
+        let width = 0;
+        let height = 0  
+        if(this.$_isDrawableExist()){
+            const bounds = this.render.renderer.getBounds(this.drawableID);
+            height = Math.abs(bounds.top - bounds.bottom);
+            width = Math.abs(bounds.left - bounds.right);    
+        }   
+        return {w:width, h:height};
+    }
+    /**
+     * Drawableが存在していることを確認する
+     * @returns {boolean}
+     */
+    protected $_isDrawableExist(): boolean {
+        const drawable = this.render.renderer._allDrawables[this.drawableID];
+        if(drawable == null){
+            return false;
         }
+        return true;
     }
 
-    protected $setScale(w:number, h:number): void {
+    /**
+     * @internal
+     * 現在のスケールを取得する
+     * @returns {{w: number, h: number}}
+     */
+    public $getCurrentSize() {
+        return {w: this.$_scale.w, h: this.$_scale.h};
+    }
+    
+    /** @internal */
+    public $setScale(w:number, h:number): void {
         if(typeof w == 'number'){
             this.$_scale.w = w;
             if( h == undefined) {
@@ -753,59 +924,6 @@ export class Entity extends EventEmitter {
             }    
         }
     }
-    // $broadcastToTargets(messageId, target, ...args) {
-    //     const runtime = playGround.runtime;
-    //     if(runtime){
-    //         const eventId = `message_${messageId}`;
-    //         this.modules.set(eventId, []);
-    //         const _targets:Entity[] = [];
-    //         if( Array.isArray(target) ) {
-    //             target.map(v=>{
-    //                 if( v instanceof Entity) {
-    //                     _targets.push(v);
-    //                 }
-    //             })
-    //         }else{
-    //             const _target = target;
-    //             if( _target instanceof Entity) {
-    //                 _targets.push(_target);
-    //             }
-    //         }
-    //         if(sendTargets.length > 0) {
-    //             runtime.emit(eventId, this.modules, _targets, ...args);
-    //         }     
-    //     }
-    // }
-    // async $broadcastAndWaitToTargets(messageId, target:Entity|Entity[], ...args) {
-    //     const runtime = playGround.runtime;
-    //     if(runtime){
-    //         const wait = this._libs.wait;
-    //         const eventId = `message_${messageId}`;
-    //         this.modules.set(eventId, []);
-    //         const _targets:Entity[] = [];
-    //         if( Array.isArray(target) ) {
-    //             target.map(v=>{
-    //                 if( v instanceof Entity) {
-    //                     _targets.push(v);
-    //                 }
-    //             })
-    //         }else{
-    //             const _target = target;
-    //             if( _target instanceof Entity) {
-    //                 _targets.push(_target);
-    //             }
-    //         }
-    //         if(sendTargets.length > 0) {
-    //             runtime.emit(eventId, this.modules, _targets, ...args);
-    //             await wait(10);
-    //             const promises = this.modules.get(eventId);
-    //             if(promises.length > 0) {
-    //                 await Promise.all(promises);
-    //                 return;
-    //             }
-    //         }    
-    //     }
-    // }
 
     /**
      * @internal
@@ -931,6 +1049,10 @@ export class Entity extends EventEmitter {
     protected $broadCastBackdropSwitch(backdropName: string) {
         const messageId = `BackdropSwitches_${backdropName}`;
         this.$broadcast(messageId, backdropName);
+    }
+    protected async $broadCastBackdropSwitchAndWait(backdropName: string) {
+        const messageId = `BackdropSwitches_${backdropName}`;
+        await this.$broadcastAndWait(messageId, backdropName);
     }
     /**
      * @internal
@@ -1086,7 +1208,11 @@ export class Entity extends EventEmitter {
 
     }
 
-    protected set visible( _visible: boolean ){
+    get visible( ): boolean {
+        return this._visible;
+    }
+
+    set visible( _visible: boolean ){
         this.updateVisible(_visible);
     }
     /**
@@ -1102,9 +1228,6 @@ export class Entity extends EventEmitter {
         this.visible = false;
     }
 
-    protected get visible() {
-        return this._visible;
-    }
     /**
      * @abstract
      */

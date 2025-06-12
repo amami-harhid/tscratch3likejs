@@ -4,7 +4,7 @@ import {eslint_S3_config} from "./eslint-plugin/index.js";
 const build_eslint_config = [
     ...eslint_S3_config,
     {
-        ignores: ["**/*.d.ts","lib/**/*.ts"],
+        ignores: ["**/*.d.ts","lib/**/*.ts", "eslint-plugin/**/*.js"],
     },
     {
         plugins: {},

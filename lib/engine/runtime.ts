@@ -5,13 +5,13 @@ import { EventEmitter } from 'events';
 // Virtual I/O devices.
 import { Keyboard } from '../io/keyboard';
 
-import type {IRenderWebGL} from '../render/IRenderWebGL';
+import type {IRenderWebGL} from '@Type/render/IRenderWebGL';
 declare type IODEVICES = {
     keyboard: Keyboard,
 }
 export class Runtime extends EventEmitter {
     private renderer:IRenderWebGL|undefined;
-    private ioDevices: IODEVICES;
+    public ioDevices: IODEVICES;
     /**
      * @constructor
      */
@@ -41,7 +41,7 @@ export class Runtime extends EventEmitter {
      * @param key {string}
      * @returns {boolean}
      */
-    keyIsDown(key: string) : boolean{
+    keyIsDown(key?: string) : boolean{
         return this.ioDevices.keyboard.keyIsDown(key);
     }
 
