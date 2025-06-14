@@ -32,7 +32,7 @@ git clone https://github.com/amami-harhid/templateTscrach3.git
 
 # Bugs
 
-## 2025/06/14(1)
+## 2025/06/14(1) 【完了6/14】
 StopOtherScriptの後でhideをするとhideしてくれない
 【A】hide()の後ろにログを入れてもログがでない。
 ```js
@@ -52,14 +52,14 @@ StopOtherScriptの後でhideをするとhideしてくれない
 stopOtherScripts()のなかの this は proxyではないため、threadIdを持っていない。
 そのため Threads「自分自身以外のスレッドを止める」の判定にて、自分自身を含めて止めていた。
 
-stopOtherScript(this) と Proxyである thisを渡すように変更した。
+stopOtherScript(this) と Proxyである thisを渡すように変更した【完了6/14】
 
 
 ## 2025/06/14(2)
 
 本体スプライトの ImageEffectが クローンに引き継がれない
 
-## 2025/06/14(3)
+## 2025/06/14(3) 【完了6/14】
 
 スプライトクローン側でPEN機能を使うと下記エラーが発生する
 createPenSkin()は 10回までしかできないのかな？
@@ -73,7 +73,7 @@ Scratch3-render / PenSkin
 ```ts
 this._renderer.on(RenderConstants.Events.NativeSizeChanged, this.onNativeSizeChanged);
 ```
-### 動作が遅くなっていく
+#### 動作が遅くなっていく
 PenSkin を disposeしていないので
 Sprite#remove() 時に Penをdisposeするようにした。
 --> disposeすると Stampも消えてしまう弊害あり( 本家と結果が違う )
@@ -81,3 +81,49 @@ Sprite#remove() 時に Penをdisposeするようにした。
 
 PenSkinは、スプライトごとに存在させるのではなく、通しで１個だけなのではないか？
 
+PenSkinは instanceは１個だけにする。(シングルトンにした)
+stamp()が撮れない。
+理屈はうまくいっているのであるが、よくわからない。
+シングルトンのままにしてスタンプが取れない理由を突き詰めて調査する。
+
+updateDrawableSkinIdのskinIdを間違えていた。--> 修正してうまくいった。【完了6/14】
+
+```ts
+renderer.updateDrawableSkinId(penDrawableId, skinId);
+```
+
+## 2025/06/14(4)【完了6/14】
+
+連続してクローンを作りながら、本体のコスチュームを変えていくとき、
+クローンされた側のコスチュームが正しく受け継がれない（微妙にずれてしまう）事象。
+
+クローン処理は非同期、クローンが終わらないうちに 本体のコスチュームを変える(Costume.next)が動いているためと推測される。
+
+ライブラリ側での対処は難しいので、スクリプト側で対処することにしたい
+
+#### 解決方法１（1ブロックごとにコスチュームを変えるとき）
+```ts
+await this.Control.clone();
+this.Looks.Costume.next();
+```
+#### 解決方法２（1ブロックごとにコスチュームを変えるとき）
+
+```ts
+this.Control.clone().then(_=>{
+    this.Looks.Costume.next();
+});
+```
+#### 解決方法３（1行ごとにコスチュームを変えるとき）
+
+```ts
+const promise = [];
+// eslint-disable-next-line loopCheck/s3-loop-plugin
+for(const x of xArr){
+    this.Motion.Position.x = x;
+    const clone = this.Control.clone();
+    promise.push(clone);
+}
+await Promise.all(promise);
+this.Looks.Costume.next();
+
+```

@@ -40,6 +40,7 @@ Pg.setting = async function setting() {
 
     stage.Event.whenFlag(async function*(){
         this.Looks.Backdrop.name = "Black";
+        this.Looks.Effect.set(Lib.ImageEffective.GHOST, 95);
     });
 
     textSprite.Event.whenFlag(async function*(){
@@ -75,6 +76,7 @@ Pg.setting = async function setting() {
         }
     });
     cherry.Event.whenFlag(async function(){
+        this.Pen.prepare();
         this.Looks.hide();
         this.Looks.Size.scale = {w:200, h:200};
         this.Looks.Effect.clear();
@@ -99,20 +101,18 @@ Pg.setting = async function setting() {
         this.Looks.Effect.set(Lib.ImageEffective.COLOR,Lib.getRandomValueInRange(0,240))
         const size = this.Looks.Size.w;
         this.Looks.Effect.set(Lib.ImageEffective.GHOST, 100 - size/50*100);
-        // クローンでPEN機能を使うと下記エラーが起こる
-        // MaxListenersExceededWarning: Possible EventEmitter memory leak detected
-        //let sign = Lib.getRandomValueInRange(-1,1);
         let degree = Lib.getRandomValueInRange(-15,15);
-        //this.Pen.prepare();
         for(;;) {
             let ySpeed = (180 - this.Motion.Position.y + 20)/360;
             this.Motion.Position.y -= Lib.getRandomValueInRange(5,10) * ySpeed;
             this.Motion.Position.x += Lib.getRandomValueInRange(-2,2);
             this.Motion.Direction.degree += degree;
+            this.Pen.stampStage();
+            this.Pen.stamp();
+
             if(this.Motion.Position.y < -170){
                 break;
             }
-            //this.Pen.stamp();
             yield;
         }
         this.Control.remove();

@@ -9,6 +9,32 @@ import type { TPenAttributes } from '@Type/pen';
 import { IPenSprite } from '@Type/sprite/pen/IPenSprite';
 
 const NotPrepareMessage = 'prepareが行われていません';
+class PenDrawable {
+    private static instance: PenDrawable;
+    private _skinId: number;
+    constructor(){
+        this._skinId = -1;
+    }
+    get skinId() :number {
+        return this._skinId;
+    }
+    static getInstance(): PenDrawable {
+        if(PenDrawable.instance == undefined){
+            PenDrawable.instance = new PenDrawable();
+        }
+        return PenDrawable.instance;
+    }
+
+    createPen(render: Render): number{
+        if(this._skinId == -1){
+            const penDrawableId = render.renderer.createDrawable(StageLayering.PEN_LAYER);
+            const skinId = render.renderer.createPenSkin();
+            render.renderer.updateDrawableSkinId(penDrawableId, skinId);
+            this._skinId = skinId;
+        }
+        return this._skinId;
+    }
+}
 export class PenSprite implements IPenSprite {
     private render: Render;
     private _skinId: number
@@ -21,9 +47,10 @@ export class PenSprite implements IPenSprite {
     private _x0?: number;
     private _y0?: number;
     private _sprite: Sprite;
-    private _penDrawableId: number;
+    //private _penDrawableId: number;
     private _Size: PenSpriteSize;
     private _HSVColor : PenSpriteHSVColor;
+    private _penDrawable: PenDrawable;
     /**
      * @constructor
      * @param render { Render } 
@@ -35,15 +62,18 @@ export class PenSprite implements IPenSprite {
         this._penAttributes = {color4f:[240,1,1,1], diameter: 1};
         this._penRgbAttributes = {color4f:[0,0,1,1], diameter: 1};
         this._penSize = 1;
-        this._penDrawableId = -1;
-        this._skinId = -1;
+        //this._penDrawableId = -1;
+        //this._skinId = -1;
         this._Size = new PenSpriteSize(this);
         this._HSVColor = new PenSpriteHSVColor(this);
+        this._penDrawable = PenDrawable.getInstance();
+        this._skinId = this._penDrawable.skinId;
     }
     _createPen() : void {
-        this._penDrawableId = this.render.renderer.createDrawable(StageLayering.PEN_LAYER);
-        this._skinId = this.render.renderer.createPenSkin();
-        this.render.renderer.updateDrawableSkinId(this._penDrawableId, this._skinId);
+        this._skinId = this._penDrawable.createPen(this.render);
+        // this._penDrawableId = this.render.renderer.createDrawable(StageLayering.PEN_LAYER);
+        // this._skinId = this.render.renderer.createPenSkin();
+        // this.render.renderer.updateDrawableSkinId(this._penDrawableId, this._skinId);
     }
     dispose(): void {
         // destroySkin(skinId)
@@ -182,7 +212,7 @@ export class PenSprite implements IPenSprite {
             console.error(NotPrepareMessage);
         }
         const stampDrawingID = this._sprite.drawableID;
-        if(this._skinId > -1 && stampDrawingID > -1 && this._sprite.DragMode.dragging == false){
+            if(this._skinId > -1 && stampDrawingID > -1 && this._sprite.DragMode.dragging == false){
             this.render.renderer.penStamp(this._skinId, stampDrawingID);
         }
     }

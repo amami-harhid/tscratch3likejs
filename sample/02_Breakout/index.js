@@ -49,28 +49,25 @@ Pg.setting = async function setting() {
         this.Looks.hide();
         this.Motion.Position.y = 150;
         const xArr = [-160,-120,-80,-40, 0, 40, 80, 120, 160];
-        // eslint2-disable-next-line loopCheck/s3-loop-plugin
+        // eslint-disable-next-line loopCheck/s3-loop-plugin
         for(const _ of Lib.Iterator(5)){
-            // eslint2-disable-next-line loopCheck/s3-loop-plugin
+            const promise = [];
+            // eslint-disable-next-line loopCheck/s3-loop-plugin
             for(const x of xArr){
                 this.Motion.Position.x = x;
-                this.Control.clone();
-                console.log('name========>', this.Looks.Costume.name);
-                yield;
+                const clone = this.Control.clone();
+                promise.push(clone);
             }
-            this.Motion.Position.y -= 25;
+            await Promise.all(promise);
             this.Looks.Costume.next();
-            yield;
+            this.Motion.Position.y -= 25;
         }
     });
     
     block.Control.whenCloned(async function(){
-        console.log('whenCloned')
-        console.log('name------->', this.Looks.Costume.name);
         //this.Looks.Costume.name = "1";
-        console.log(this.Looks.Costume.names);
+        console.log("clone==>", this.Looks.Costume.name);
         this.Looks.show();
-        console.log('x,y=',this.Motion.Position.x, this.Motion.Position.y);
     });
 
     textSprite.Event.whenFlag(async function*(){

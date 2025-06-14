@@ -195,7 +195,7 @@ export class Sprite extends Entity implements ISprite {
             const clones = this.originalSprite.clones;
             this.originalSprite.clones = clones.filter(s=> s.id !== this.id);
         }
-        this._Pen.dispose();
+        //this._Pen.dispose();
         this.stage.$removeSprite(this);
         try{
             this.render.renderer.destroyDrawable(this.drawableID, StageLayering.SPRITE_LAYER);
