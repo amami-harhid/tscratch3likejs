@@ -63,7 +63,8 @@ export class Sprite extends Entity implements ISprite {
     /** @internal */
     public isClone: boolean;
     private originalSprite?: Sprite|null;
-    private imageDatas?: S3ImageData[];
+    /** @internal */
+    public imageDatas?: S3ImageData[];
     private soundDatas?: S3SoundData[];
     private touchingEdge: boolean;
     /** @internal */
@@ -194,6 +195,7 @@ export class Sprite extends Entity implements ISprite {
             const clones = this.originalSprite.clones;
             this.originalSprite.clones = clones.filter(s=> s.id !== this.id);
         }
+        this._Pen.dispose();
         this.stage.$removeSprite(this);
         try{
             this.render.renderer.destroyDrawable(this.drawableID, StageLayering.SPRITE_LAYER);
@@ -287,7 +289,8 @@ export class Sprite extends Entity implements ISprite {
             if(this.imageDatas){
                 for(const d of this.imageDatas) {
                     // svg image の場合、createSVGSkin の中で非同期になることに注意すること
-                    await newSprite.$addImage(d.name); 
+//                    await newSprite.$addImage(d.name); 
+                    await newSprite._addImage(d.name, d.data, newSprite.costumes); 
                 }    
             }
             if(this.fontDatas){
@@ -1007,31 +1010,32 @@ export class Sprite extends Entity implements ISprite {
         }
         return [];
     }
-    /**
-     * @internal
-     * イメージ名を使って、スプライトにイメージを追加する
-     * @param imageName {string}
-     * @returns 
-     */
-    public async $addFont(fontName: string): Promise<void> {
-        let _fontData:S3FontData;
-        if(fontName == undefined){
-            throw "【Sprite.Font.add】FONTデータの指定がありません"
-        }else if(typeof fontName == "string"){
-            _fontData = this.pgMain.loadedFonts[fontName];
-            if(_fontData == undefined){
-                throw "【Sprite.Font.add】正しいイメージ名を指定してください"
-            }
-        }else{
-            //_imageData = imageName;
-            throw "【Sprite.Font.add】正しいイメージ名を指定してください"
-        }
-        if(_fontData['name'] == undefined || _fontData['data'] == undefined ){
-            throw "【Sprite.Font.add】正しいイメージデータを指定してください"
-        }
-        this._addFont(_fontData['name'], _fontData['data']);
-        return;
-    }
+    // /**
+    //  * @internal
+    //  * イメージ名を使って、スプライトにイメージを追加する
+    //  * @param imageName {string}
+    //  * @returns 
+    //  */
+    // public async $addFont(fontName: string): Promise<void> {
+    //     let _fontData:S3FontData;
+    //     if(fontName == undefined){
+    //         throw "【Sprite.Font.add】FONTデータの指定がありません"
+    //     }else if(typeof fontName == "string"){
+    //         _fontData = this.pgMain.loadedFonts[fontName];
+    //         if(_fontData == undefined){
+    //             throw "【Sprite.Font.add】正しいイメージ名を指定してください"
+    //         }
+    //     }else{
+    //         //_imageData = imageName;
+    //         throw "【Sprite.Font.add】正しいイメージ名を指定してください"
+    //     }
+    //     if(_fontData['name'] == undefined || _fontData['data'] == undefined ){
+    //         throw "【Sprite.Font.add】正しいイメージデータを指定してください"
+    //     }
+    //     this._addFont(_fontData['name'], _fontData['data']);
+    //     return;
+    // }
+
     /**
      * @internal
      * 言う
@@ -1336,6 +1340,9 @@ export class Sprite extends Entity implements ISprite {
         // });
         // return draggable;
 
+    }
+    set Pen(pen:ISpritePen) {
+        this._Pen = pen;
     }
     /**
      * ペン機能

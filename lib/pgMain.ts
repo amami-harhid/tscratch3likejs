@@ -19,10 +19,11 @@ import type { IPgFont, IPgImage, IPgSound, IPgMain } from '@Type/pgMain';
 import { Monitors } from './monitor/monitors';
 
 export class PgMain implements IPgMain {
-    static _instance;
+    /** @internal */
+    static _instance: PgMain;
 
     /**
-     * 
+     * @internal
      * @return {PgMain}
      */
     static getInstance(): PgMain {
@@ -31,22 +32,39 @@ export class PgMain implements IPgMain {
         }
         return PgMain._instance;
     }
+    /** @internal */
     public main?: HTMLElement;
-    private _id : string;
+    //private _id : string;
     private _runtime: Runtime|null; 
     private _render?: Render;
     private _libs: Libs;
     private _flag: HTMLElement|null;
     private mainTmp: HTMLElement|null;
     //private _nowLoading: string;
+    /**
+     * @internal
+     * 緑の旗が押されてプログラム動作中であることを知るフラグ
+     */
     public runningGame: boolean;
     private _stage: Stage|null;
     private _canvas: HTMLCanvasElement|null;
     private _textCanvas: HTMLCanvasElement|null;
     private _monitors: Monitors|null;
+    /**
+     * 事前ロード処理動作の定義
+     */
     public preload?() : Promise<void>;
+    /**
+     * 事前準備処理動作の定義
+     */
     public prepare?(): Promise<void>;
+    /**
+     * イベント定義処理の定義
+     */
     public setting?(): Promise<void>;
+    /**
+     * 1/FPSの間隔で実行される動作の定義
+     */
     public draw?(): Promise<void>;
     private _preloadImagePromise:Promise<{name:string, data:string|HTMLImageElement}>[];
     private _preloadSoundPromise: Promise<{name:string, data:Uint8Array<ArrayBuffer>}>[];
@@ -60,7 +78,7 @@ export class PgMain implements IPgMain {
     private _sound: IPgSound;
     private _font: IPgFont;
     constructor () {
-        this._id = this._generateUUID();
+        //this._id = this._generateUUID();
         this._runtime = null;
         this._preloadImagePromise = [];
         this._preloadSoundPromise = [];
@@ -68,7 +86,6 @@ export class PgMain implements IPgMain {
         this._loadedImages = {};
         this._loadedSounds = {};
         this._loadedFonts = {};
-//        this._dataPools = {};
         this._preloadDone = false;
         this._prepaeDone = false;
         this._stage = null;
@@ -78,74 +95,65 @@ export class PgMain implements IPgMain {
         this._flag = null;
         this.mainTmp = null;
         this.main = undefined;
-        //this.preload = null;
-        //this.prepare = null;
-        //this.setting = null;
-        //this.draw = null;
         this._textCanvas = null;
         this._libs = Libs.getInstance();
         this._libs.p = this;
-        //this._nowLoading = '';
         Threads.p = this;
         this._image = new PgImage(this);
         this._sound = new PgSound(this);
         this._font = new PgFont(this);
     }
-    get monitors() {
+    /** @internal */
+    get monitors(): Monitors | null {
         return this._monitors;
     }
-    set monitors(_monitors){
+    /** @internal */
+    set monitors(_monitors: Monitors){
         this._monitors = _monitors;
     }
+    /** @internal */
     isPrepareDone(){
         return this._prepaeDone;
     }
-    // clearPools() {
-    //     const _pool = this._dataPoolSprite;
-    //     for (let key in _pool){ 
-    //         delete this._dataPoolSprite[key]
-    //     }
-    // }
+    /** @internal */
     get loadedImages() {
         return this._loadedImages;
     }
+    /** @internal */
     get loadedSounds() {
         return this._loadedSounds;
     }
+    /** @internal */
     get loadedFonts() {
         return this._loadedFonts;
     }
-    // get dataPools() {
-    //     return this._dataPools;
-    // }
-    // set dataPools(_dataPool) {
-    //     this._dataPools = _dataPool;
-    // }
-
-    get Libs () {
+    /** 
+     * Libs
+     */
+    get Libs () : Libs {
         return this._libs;
     }
-    get Element () {
+    /** 
+     * Element
+     */
+    get Element () : typeof S3Element {
         return S3Element;
     }
-    get Stage () {
+    /** @internal */
+    get Stage (): typeof Stage {
         return Stage;
-    }    
+    }
+    /** @internal */
     _generateUUID () {
         return Utils.generateUUID();
     }
 
-    // set NowLoading (nowLoading){
-    //     this._nowLoading = nowLoading;
-    // }
-    // get NowLoading () {
-    //     return this._nowLoading;
-    // }
-
+    /** @internal */
     get threads () {
         return Threads.getInstance();
     }
     /**
+     * @internal
      * render を取得する
      */
     get render () : Render {
@@ -153,53 +161,90 @@ export class PgMain implements IPgMain {
         return this._render;
     }
     /**
+     * @internal
      * render を設定する
      */
-    set render( render ) {
+    set render( render: Render ) {
         // _init() の中で設定される。
         this._render = render;
     }
 
-    set runtime(runtime) {
+    /**
+     * @internal
+     */
+    set runtime(runtime: Runtime) {
         this._runtime = runtime;
     }
 
-    get runtime()  {
+    /**
+     * @internal
+     */
+    get runtime() : Runtime {
         if(this._runtime == undefined) throw 'runtime undefined error';
         return this._runtime;
     }
 
-    set stage ( stage ) {
+    /**
+     * @internal
+     * ステージ
+     */
+    set stage ( stage: Stage ) {
         this._stage = stage;
     }
 
-    get stage () {
+    /**
+     * @internal
+     * ステージ
+     */
+    get stage () :Stage{
         if( this._stage == undefined) throw 'stage undefined error';
         return this._stage;
     }
 
-    set canvas(canvas) {
+    /**
+     * @internal
+     * キャンバス
+     */
+    set canvas(canvas: HTMLCanvasElement) {
         this._canvas = canvas;
     }
-    get canvas() {
+    /**
+     * @internal
+     * キャンバス
+     */
+    get canvas() : HTMLCanvasElement{
         if(this._canvas == undefined) throw 'canvas undefined error';
         return this._canvas;
     }
-    set textCanvas(textCanvas) {
+    /**
+     * @internal
+     * テキスト用キャンバス
+     */
+    set textCanvas(textCanvas: HTMLCanvasElement) {
         this._textCanvas = textCanvas;
     }
-    get textCanvas() {
+    /**
+     * @internal
+     * テキスト用キャンバス
+     */
+    get textCanvas() :HTMLCanvasElement{
         if(this._textCanvas == undefined) throw 'textCanvas undefined error';
         return this._textCanvas;
     }
-    get $stageWidth () {
+    /** 
+     * ステージの幅
+     */
+    get stageWidth () : number {
         if(this._render){
             return this._render.stageWidth;
         }
         throw 'unable calclulate stageWidth';
     }
 
-    get $stageHeight () {
+    /** 
+     * ステージの高さ
+     */
+    get stageHeight () :number {
         if(this._render){
             return this._render.stageHeight;
         }
@@ -208,6 +253,7 @@ export class PgMain implements IPgMain {
 
 
     /**
+     * @internal
      * get randering rate ( when resized )
      * @returns 
      */
@@ -215,11 +261,12 @@ export class PgMain implements IPgMain {
         return this._libs.renderRate;        
     }
 
-
+    /** @internal */
     set flag ( flag:HTMLElement ) {
         this._flag = flag;
     }
 
+    /** @internal */
     get flag (): HTMLElement {
         if(this._flag){
             return this._flag;
@@ -227,31 +274,42 @@ export class PgMain implements IPgMain {
         throw 'unable to get flag element';
     }
 
-    ifMainExist() {
+    private ifMainExist() : HTMLElement | undefined {
         const main = document.getElementById('main');
         if(main) return main;
-        return false;
+        return undefined;
     }
+    /**
+     * 使用されていない 
+     * @internal 
+     */
     removeMainIfExist(){
         const main = this.ifMainExist();
         if(main){
             main.remove();
         }
     }
+    /**
+     * 使用されていない 
+     * @internal 
+     */
     async _reStart() {
         await this._setting();
     }
     /**
      * HTMLヘッダーtitle
      */
-    get title() {
+    get title() : string {
         return document.title;
     }
-    set title(_title) {
+    /**
+     * HTMLヘッダーtitle
+     */
+    set title(_title: string) {
         document.title = _title;
     }
-
-    async _init() {
+    /** @internal */
+    public async _init() {
         S3Element.p = this;
         // Now Loading 準備 START
         const mainTmp = document.createElement('main');

@@ -1,6 +1,3 @@
-/**
- * Stage
- */
 import { Backdrops } from "./backdrops";
 import { StageControl } from "./stage/stageControl";
 import { StageLooks } from "./stage/stageLooks";
@@ -11,6 +8,11 @@ import { Entity } from "./entity";
 import { QuestionBoxElement } from "../io/questionBoxElement";
 import { Sprite } from "./sprite";
 import { StageLayering } from "../../Type/stage/CStageLayering";
+import { StagePen } from "./stage/stagePen";
+import { SvgText } from "./entity/svgText";
+import { TextSprite } from "./text/textSprite";
+import { StageFont } from "./stage/stageFont";
+
 import type { TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TMouse } from "@Type/mouse";
 import type { TScale } from "@Type/common/typeCommon";
@@ -22,9 +24,12 @@ import type { IStageSensing } from "@Type/stage/IStageSensing";
 import type { IStageSound } from "@Type/stage/IStageSound";
 import type { ISprite } from "@Type/sprite";
 import type { ITextSprite } from "@Type/text";
-import { TextSprite } from "./text/textSprite";
 import type { ISvgText } from "@Type/svgText/ISvgText";
-import { SvgText } from "./entity/svgText";
+import type { IStagePen } from "@Type/stage/IStagePen";
+import type { IStageFont } from "@Type/stage/IStageFont";
+/**
+ * ステージ
+ */
 export class Stage extends Entity implements IStage{
     private scale: TScale;
     private direction: number;
@@ -32,16 +37,16 @@ export class Stage extends Entity implements IStage{
     public backdrops: Backdrops;
     private _sprites: Sprite[];
     private _textSprites: ITextSprite[];
-    //private skinIdx: number;
     /** @internal */
     public mouse: TMouse;
-    //private _Backdrop: IStageBackdrop;
     private _Control: IStageControl;
     private _Looks : IStageLooks;
     private _Event : IStageEvent;
     private _Sensing : IStageSensing;
     private _Sound: IStageSound;
+    private _Pen: IStagePen;
     private _SvgText: ISvgText;
+    private _Font: IStageFont;
     constructor( options:TEntityOptions ) {
         if(typeof options == "string") throw "new Stage() パラメータはオブジェクト型のみ"
         super( "stage", StageLayering.BACKGROUND_LAYER, options );
@@ -55,12 +60,10 @@ export class Stage extends Entity implements IStage{
         this.direction = (options && options.direction)? options.direction : 90;
         this.scale = (options && options.scale)? {w: options.scale.w, h: options.scale.h} : {w:100, h:100};
 
-        //this.keysCode = [];
-        //this.keysKey = [];
         this.backdrops = new Backdrops(this.pgMain);
         this._sprites = [];
         this._textSprites = [];
-        //this.skinIdx = -1;
+
         this.mouse = {scratchX:0, scratchY:0, x:0, y:0, down: false, pageX: 0, pageY: 0, clientX: 0, clientY: 0};
         const me = this;
         // これは Canvasをつくる Element クラスで実行したほうがよさそう（関連性強いため）
@@ -76,7 +79,6 @@ export class Stage extends Entity implements IStage{
             body.addEventListener('mousemove', (e:MouseEvent) => {
                 me.mouse.pageX = e.pageX;
                 me.mouse.pageY = e.pageY;
-                //me.mouse.down = true;
                 e.stopPropagation()
             });
             body.addEventListener('mouseup', (e:MouseEvent)=>{
@@ -96,9 +98,6 @@ export class Stage extends Entity implements IStage{
             me.mouse.scratchX = e.offsetX - this.pgMain.canvas.width/2;
             me.mouse.scratchY = this.pgMain.canvas.height/2 - e.offsetY;
 
-//            me.mouse.down = true;
-
-//            e.stopPropagation()
         }, {});
         canvas.addEventListener('mousedown', (e:MouseEvent) => {
             me.mouse.x = e.offsetX;
@@ -114,13 +113,14 @@ export class Stage extends Entity implements IStage{
         })
   
         this.pgMain.stage = this;
-//        this._Backdrop = new StageBackdrop(this);
         this._Control = new StageControl(this);
         this._Looks = new StageLooks(this);
         this._Event = new StageEvent(this);
         this._Sensing = new StageSensing(this);
         this._Sound = new StageSound(this);
         this._SvgText = new SvgText(this);
+        this._Pen = new StagePen(this);
+        this._Font = new StageFont(this);
     }
     /** @internal */
     get $sprites (): Sprite[] {
@@ -157,10 +157,8 @@ export class Stage extends Entity implements IStage{
             if (b.z > a.z) return +1;
             return 0;
         });
-//        let _z = -1;
         let _z = n1_sprites.length-1;
         const n2_sprites = n1_sprites.map(s=>{
-//            s.z = ++_z;
             s.z = --_z;
             return s;
         });
@@ -205,6 +203,7 @@ export class Stage extends Entity implements IStage{
 
     }
     /**
+     * @internal
      * 描画する
      */    
     draw(): void {
@@ -487,7 +486,7 @@ export class Stage extends Entity implements IStage{
     /**
      * 見た目
      */
-    get Looks() {
+    get Looks(): IStageLooks {
         return this._Looks;
     }
     /**
@@ -499,7 +498,7 @@ export class Stage extends Entity implements IStage{
     /**
      * 調べる
      */
-    get Sensing() {
+    get Sensing() : IStageSensing {
         return this._Sensing;
     }
 
@@ -518,7 +517,12 @@ export class Stage extends Entity implements IStage{
             "names" : this.$getImageNames.bind(this),
         }
     }
-
+    /**
+     * Font
+     */
+    get Font (): IStageFont{
+        return this._Font;
+    }
     /**
      * サウンド
      */
@@ -530,4 +534,7 @@ export class Stage extends Entity implements IStage{
         return this._SvgText;
     }
 
+    get Pen() : IStagePen {
+        return this._Pen;
+    }
 };

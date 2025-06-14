@@ -100,8 +100,9 @@ export class SpriteControl implements ISpriteControl {
     /**
      * このスプライトの他のスクリプトを停止する
      */
-    stopOtherScripts() : void {
-        this.entity.$stopOtherScripts();
+    stopOtherScripts(proxy:Sprite) : void {
+        const stopOtherScripts = this.entity.$stopOtherScripts.bind(proxy);
+        stopOtherScripts();
     }
 
 };

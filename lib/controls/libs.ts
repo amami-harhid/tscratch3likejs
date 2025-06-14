@@ -124,13 +124,13 @@ export class Libs {
      * ステージ幅
      */
     get stageWidth (): number {
-        return  this.p.$stageWidth;
+        return  this.p.stageWidth;
     }
     /**
      * ステージ高さ
      */
     get stageHeight (): number {
-        return this.p.$stageHeight;
+        return this.p.stageHeight;
     }
     /**
      * get rendering rate object
@@ -157,8 +157,8 @@ export class Libs {
         throw `unable calculate mouse position`;
     }
     get randomPoint () {
-        const randomPointX = (Math.random()-0.5)*this.p.$stageWidth;
-        const randomPointY = (Math.random()-0.5)*this.p.$stageHeight;
+        const randomPointX = (Math.random()-0.5)*this.p.stageWidth;
+        const randomPointY = (Math.random()-0.5)*this.p.stageHeight;
         return { x: randomPointX, y: randomPointY };
     }
     get randomDirection ()  {

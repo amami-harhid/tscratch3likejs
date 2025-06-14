@@ -23,6 +23,7 @@ import type { S3FontData, TPosition, TScale } from '@Type/common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
 import { StageLayering } from '../../Type/stage/CStageLayering';
+import { IEntity } from '@Type/entity/IEntity';
 declare type CLICK_EVENT_FUNCTION = (e: MouseEvent, _counter: number) => Promise<void>;
 declare type TBroadcastElementFunc = {
     func: CallableFunction,
@@ -33,7 +34,7 @@ declare type TBroadcastElement = {
     "eventId": string, 
     "funcArr": TBroadcastElementFunc[],
 }
-export class Entity extends EventEmitter {
+export class Entity extends EventEmitter implements IEntity{
     /** @internal */
     static clickFirstRegist = true;
     /** @internal */
@@ -94,7 +95,31 @@ export class Entity extends EventEmitter {
     set life(life: number) {
         this._life = life;
     }
-
+    /**
+     * @internal
+     * イメージ名を使って、スプライトにイメージを追加する
+     * @param imageName {string}
+     * @returns 
+     */
+    public async $addFont(fontName: string): Promise<void> {
+        let _fontData:S3FontData;
+        if(fontName == undefined){
+            throw "【Sprite.Font.add】FONTデータの指定がありません"
+        }else if(typeof fontName == "string"){
+            _fontData = this.pgMain.loadedFonts[fontName];
+            if(_fontData == undefined){
+                throw "【Sprite.Font.add】正しいイメージ名を指定してください"
+            }
+        }else{
+            //_imageData = imageName;
+            throw "【Sprite.Font.add】正しいイメージ名を指定してください"
+        }
+        if(_fontData['name'] == undefined || _fontData['data'] == undefined ){
+            throw "【Sprite.Font.add】正しいイメージデータを指定してください"
+        }
+        this._addFont(_fontData['name'], _fontData['data']);
+        return;
+    }
     getFontData(fontFamily:string): string|undefined {
         if(this.fontDatas){
             for(const font of this.fontDatas){
@@ -1319,7 +1344,6 @@ export class Entity extends EventEmitter {
 
         // @ts-ignore (proxy properties undefined error)
         const threadId = _entity.threadId;
-
         const obj = this.threads.createObj();
         obj.entityId = _entity.id;
         obj.threadId = threadId; //this.id;

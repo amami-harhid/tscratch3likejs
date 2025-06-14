@@ -1,4 +1,5 @@
 import type { TEntityOptions } from '@Type/entity/TEntityOptions';
+import { ISprite } from '.';
 /**
  * Sprite Control(制御)
  */
@@ -70,6 +71,6 @@ export interface ISpriteControl {
     /**
      * このスプライトの他のスクリプトを停止する
      */
-    stopOtherScripts() : void;
+    stopOtherScripts(proxy:ISprite) : void;
 
 };

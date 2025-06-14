@@ -45,10 +45,25 @@ export class PenSprite implements IPenSprite {
         this._skinId = this.render.renderer.createPenSkin();
         this.render.renderer.updateDrawableSkinId(this._penDrawableId, this._skinId);
     }
-
+    dispose(): void {
+        // destroySkin(skinId)
+        if(this._skinId>-1){
+            this.render.renderer.destroySkin(this._skinId);
+        }
+    }
+    isPrepareDone() : boolean {
+        if( this._skinId > -1 ) {
+            return true;
+        }
+        return false;
+    }
     prepare() : void {
         if(this._skinId == -1){
-            this._createPen();
+            try{
+                this._createPen();
+            }catch(e){
+                console.log('fail in createPen')
+            }
         }
         this.penClear();
     }

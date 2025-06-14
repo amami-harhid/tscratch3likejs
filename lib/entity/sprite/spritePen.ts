@@ -18,7 +18,13 @@ export class SpritePen implements ISpritePen{
     prepare(): void {
         this.penSprite.prepare();
     }
+    dispose(): void {
+        this.penSprite.dispose();
+    }
 
+    isPrepareDone(): boolean {
+        return this.penSprite.isPrepareDone();
+    }
     clear(): void {
         this.penSprite.penClear();
     }

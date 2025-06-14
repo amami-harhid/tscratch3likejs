@@ -1,10 +1,6 @@
-import type { IEntitySound } from "./IEntitySound";
-import type { IEntityImage } from "./IEntityImage";
-import { Render } from "@Lib/render/render";
+import { IRender } from "../render/IRender";
 export declare interface IEntity {
     readonly drawableID: number;
-    readonly render: Render
+    readonly render: IRender
     readonly id: string;
-    readonly Sound: IEntitySound;
-    readonly Image: IEntityImage;
 };

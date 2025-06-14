@@ -16,13 +16,15 @@ const Apple = "Apple";
 const RosetE = "RosetE";
 const Kaisotai = 'Kaisotai';
 const TogeMaruGothic = 'TogeMaruGothic';
+const HarryPotter = 'HarryPotter';
 const Gion = 'Gion';
 let stage;
-let cat, cat2;
+let cat, cat2, cat3;
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
 import { Texts } from './sub/texts.js';
 import { Texts2 } from './sub/texts2.js';
+import { Texts3 } from './sub/texts3.js';
 
 Pg.preload = async function preload() {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic );
@@ -32,7 +34,7 @@ Pg.preload = async function preload() {
     this.Font.load('/assets/fonts/ResotE-Rose-89c1.woff', RosetE);
     this.Font.load('/assets/fonts/Kaisotai-Next-UP-B.woff2', Kaisotai);
     this.Font.load('/assets/fonts/TogeMaruGothic-700-Bold.woff', TogeMaruGothic);
-
+    this.Font.load('/assets/fonts/HarryPotter-ov4z.woff', HarryPotter);
 }
 Pg.prepare = async function prepare() {
 
@@ -40,6 +42,7 @@ Pg.prepare = async function prepare() {
     await stage.Sound.add( Gion );
     await stage.SvgText.add('BackDrop', backdrop);    
     cat = new Lib.Sprite(Cat);
+    cat.Font.add(HarryPotter);
     cat.Looks.hide();
     const promiseArr = []
     // eslint-disable-next-line loopCheck/s3-loop-plugin
@@ -48,8 +51,8 @@ Pg.prepare = async function prepare() {
         const color = 'white';
         const fontSize = 25;
         const fontStyle = 'normal';
-        const svg = cat.SvgText.toSvg(texts, fontSize, fontStyle, color, RosetE);
-        const add = cat.SvgText.add(`${counter}`, svg, RosetE);
+        const svg = cat.SvgText.toSvg(texts, fontSize, fontStyle, color, TogeMaruGothic);
+        const add = cat.SvgText.add(`${counter}`, svg, TogeMaruGothic);
         promiseArr.push(add);
     }
     await Promise.all(promiseArr);
@@ -73,6 +76,23 @@ Pg.prepare = async function prepare() {
     }
     await Promise.all(promiseArr2);
 
+    cat3 = new Lib.Sprite(Cat);
+    await cat3.Font.add( HarryPotter );    
+    cat3.Looks.hide();
+    const promiseArr3 = []
+    // eslint-disable-next-line loopCheck/s3-loop-plugin
+    for(const counter of Lib.Iterator(Texts3.length)){
+        const texts = Texts3[counter];
+        const color = 'red';
+        const fontSize = 12;
+        const fontStyle = 'normal';
+        const svg = cat3.SvgText.toSvg(texts, fontSize, fontStyle, color, HarryPotter);
+        const add = cat3.SvgText.add(`${counter}`, svg, HarryPotter);
+        promiseArr3.push(add);
+    }
+    await Promise.all(promiseArr3);
+
+
 }
 Pg.setting = async function setting() {
     cat.Event.whenFlag(async function*(){
@@ -89,10 +109,14 @@ Pg.setting = async function setting() {
     });
     stage.Event.whenBroadcastReceived('Start', async function*(){
         this.Looks.Effect.set(Lib.ImageEffective.GHOST, 95);
+        this.Pen.clear();
         for(;;){
             await this.Sound.playUntilDone(Gion);
             yield;
         }
+    })
+    stage.Event.whenBroadcastReceived('Clear', async function*(){
+        this.Pen.clear();
     })
     cat2.Event.whenBroadcastReceived('Start', async function*(){
         this.Looks.Size.scale = {w:200, h:200};
@@ -124,7 +148,8 @@ Pg.setting = async function setting() {
         }
         await this.Control.wait(1);
         this.Looks.hide();
-        await this.Control.wait(1);
+        this.Event.broadcast('Clear');
+        await this.Control.wait(3);
         this.Control.stopAll();
     
     });
@@ -135,7 +160,7 @@ Pg.setting = async function setting() {
         this.Pen.Size.thickness = 1000;
         this.Pen.HSVColor.brightness = 0;
         this.Pen.HSVColor.transparency = 100;//99.5;
-        this.Pen.clear();
+        //this.Pen.clear();
         this.Pen.down();
         let dx = 2;
         for(;;) {
@@ -156,4 +181,23 @@ Pg.setting = async function setting() {
             yield;
         }
     });
+
+    cat3.Event.whenBroadcastReceived('Start2', async function*(){
+        this.Looks.Size.scale = {w:200, h:250};
+        this.Motion.Position.xy = {x:0, y:180};
+        this.Looks.Costume.name = '1';
+        this.Motion.Direction.degree = 90;
+        this.Looks.Layer.gotoBack();
+        this.Looks.show();
+        for(;;) {
+            this.Motion.Position.y += -2;
+            this.Looks.Effect.change(Lib.ImageEffective.COLOR, 2);
+            if(this.Motion.Position.y < -180){
+                this.Looks.Costume.next();
+                this.Motion.Position.y = 180;
+            }
+            yield;
+        }
+    });   
+
 }

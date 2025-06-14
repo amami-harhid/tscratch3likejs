@@ -10,6 +10,17 @@ export interface IPenSprite {
      * ペンを準備する
      */
     prepare(): void;
+
+    /**
+     * ペンを破棄する
+     */
+    dispose(): void;
+
+    /**
+     * ペン準備済
+     */
+    isPrepareDone(): boolean;
+
     /**
      * ペン描画をクリアする
      */

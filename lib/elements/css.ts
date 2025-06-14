@@ -1,5 +1,7 @@
-const {NowLoadingSVG} = await import(/* webpackMode: "eager" */ '../assets/nowLoading');
-export const S3CSS = {
+const { NowLoadingSVG } = await import(/* webpackMode: "eager" */ '../assets/nowLoading');
+import type { TS3CSS } from '@Type/elements/IS3Element';
+
+export const S3CSS: TS3CSS = {
     documentCss : `
 * { 
         box-sizing: border-box;

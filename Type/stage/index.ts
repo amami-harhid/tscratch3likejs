@@ -11,6 +11,7 @@ import { IStageEvent } from './IStageEvent';
 import { IStageImage } from './IStageImage';
 import { IStageSound } from './IStageSound';
 import { ISvgText } from '@Type/svgText/ISvgText';
+import { IStageFont } from './IStageFont';
 
 export type TStage = IStage;
 export interface SStage extends IStage{
@@ -55,6 +56,12 @@ export interface IStage extends IEntity {
      * サウンド
      */
     readonly Sound : IStageSound;
-
+    /**
+     * Font
+     */
+    readonly Font : IStageFont;
+    /**
+     * SvgText
+     */
     readonly SvgText: ISvgText;
 };

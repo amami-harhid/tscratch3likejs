@@ -24,6 +24,9 @@ export class SvgText implements ISvgText {
         if(this._entity instanceof Sprite) {
             const sprite = this._entity as Sprite;
             const costumes = sprite.costumes;
+            if(sprite.imageDatas){
+                sprite.imageDatas.push({name:name, data:image});
+            }
             await this._entity._addImage(name, image, costumes);
         }else if(this._entity instanceof Stage){
             const stage = this._entity as Stage;

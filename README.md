@@ -30,3 +30,54 @@ https://amami-harhid.github.io/tscratch3likejs/testTs
 # template 
 git clone https://github.com/amami-harhid/templateTscrach3.git
 
+# Bugs
+
+## 2025/06/14(1)
+StopOtherScriptの後でhideをするとhideしてくれない
+【A】hide()の後ろにログを入れてもログがでない。
+```js
+    textSprite.Event.whenBroadcastReceived('IntroStart', async function*(){
+        for(;;){
+            if(this.Sensing.isMouseTouching() && this.Sensing.isMouseDown()){
+                this.Event.broadcast('CherryStart');
+                this.Control.stopOtherScripts();
+                // StopOtherScriptの後でhideをするとhideしない。
+                this.Looks.hide(); // <=== 【A】
+                break;
+            }
+            yield;
+        }
+    });
+```
+stopOtherScripts()のなかの this は proxyではないため、threadIdを持っていない。
+そのため Threads「自分自身以外のスレッドを止める」の判定にて、自分自身を含めて止めていた。
+
+stopOtherScript(this) と Proxyである thisを渡すように変更した。
+
+
+## 2025/06/14(2)
+
+本体スプライトの ImageEffectが クローンに引き継がれない
+
+## 2025/06/14(3)
+
+スプライトクローン側でPEN機能を使うと下記エラーが発生する
+createPenSkin()は 10回までしかできないのかな？
+
+```
+MaxListenersExceededWarning: Possible EventEmitter memory leak detected
+```
+放置していてたとえばスタンプを取り続けると動作が遅くなっていく。
+Scratch3-render / PenSkin 
+
+```ts
+this._renderer.on(RenderConstants.Events.NativeSizeChanged, this.onNativeSizeChanged);
+```
+### 動作が遅くなっていく
+PenSkin を disposeしていないので
+Sprite#remove() 時に Penをdisposeするようにした。
+--> disposeすると Stampも消えてしまう弊害あり( 本家と結果が違う )
+遅くはならなくなったが、それでも、MaxListenersExceededWarningは表示される。
+
+PenSkinは、スプライトごとに存在させるのではなく、通しで１個だけなのではないか？
+

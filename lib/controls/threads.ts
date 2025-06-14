@@ -167,6 +167,7 @@ export class Threads {
     stopOtherScripts(entity){
         const me = this;
         for(const obj of me.threadArr){
+
             // @ts-ignore undefined error (entity.threadId). 
             if(obj.entity && obj.entity.id == entity.id && obj.threadId != entity.threadId){
                 // 実行中のスレッドの途中の場合、

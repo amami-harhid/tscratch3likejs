@@ -70,8 +70,15 @@ export interface ISprite extends IEntity {
      */
     readonly Sound: ISpriteSound;
 
-
+    /**
+     * Font
+     */
     readonly Font : ISpriteFont;
+    /**
+     * SvgText
+     */
+    readonly SvgText: ISvgText;
+
     /**
      * 音声合成
      */
@@ -91,6 +98,5 @@ export interface ISprite extends IEntity {
      */
     life : number;
 
-    readonly SvgText: ISvgText;
 
 };

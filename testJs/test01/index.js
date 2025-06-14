@@ -1,10 +1,10 @@
 /**
- * test01
- * 変数モニターを表示する
+ * sample01
+ * 桜の花びらが舞う
  */
 import {Pg, Lib} from '../../build/index.js';
 
-Pg.title = "【test01】変数モニターを表示する"
+Pg.title = "【sample01】桜の花びらが舞う"
 
 const Jurassic01 = "Jurassic01";
 const Chill = "Chill";

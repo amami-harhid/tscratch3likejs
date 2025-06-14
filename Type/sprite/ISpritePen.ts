@@ -8,6 +8,15 @@ export interface ISpritePen {
      * 準備する
      */
     prepare() : void;
+    /**
+     * 破棄する
+     */
+    dispose(): void;
+
+    /**
+     * 準備済
+     */
+    isPrepareDone(): boolean;
 
     /**
      * ペン描画をクリアする
