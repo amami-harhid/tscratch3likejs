@@ -127,3 +127,11 @@ await Promise.all(promise);
 this.Looks.Costume.next();
 
 ```
+
+# 改良
+
+## Position.xy = {x: 0, y: 0};
+
+{} を与えるとき、{x: 0, y: 0} と同じにしたい。
+[0,0] を与えたら、{x: 0, y: 0} と同じにしたい。
+
