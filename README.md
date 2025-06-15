@@ -135,3 +135,26 @@ this.Looks.Costume.next();
 {} を与えるとき、{x: 0, y: 0} と同じにしたい。
 [0,0] を与えたら、{x: 0, y: 0} と同じにしたい。
 
+## getRandomValueInRange
+
+random, randomInteger としたい。
+
+## clone()
+
+本体の Image,Sound,Font 
+
+### Image の場合、
+skinId をクローン側で作るのではなく、本体の保有するskinId を共有したらよさそう。
+drawableIDだけはクローンで作る。
+
+クローン側で本体スプライトを保持しているので、Costumesを参照できるはず。
+クローンを作るとき( new するとき)、クローン作成時には Costumes のコンストラクタに
+親スプライトのインスタンスを渡すことで 親のcostumes をコピーして引き継ぐ。
+
+
+### Sound の場合、
+SoundPlayer をクローン側で作るのではなく、本体の保有するSoundPlayerを共有したらよさそう。
+
+クローン側で本体スプライトを保持しているので、そこから本体のSoundPlayerを参照できるはず。
+
+### Fontデータの場合、
