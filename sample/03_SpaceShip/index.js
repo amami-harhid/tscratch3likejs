@@ -17,6 +17,7 @@ let debri;
 let bottom;
 
 Pg.preload = async function preload() {
+    this.Image.load('./assets/Explosion.svg', Constant.Explosion);
     this.Image.load('./assets/universe_asteroid02.svg', Constant.Asteroid);
     this.Image.load('./assets/spaceShip1.svg', Constant.Spaceship01 );
     this.Image.load('./assets/spaceShip2.svg', Constant.Spaceship02 );
@@ -24,6 +25,7 @@ Pg.preload = async function preload() {
     this.Font.load('./assets/HarryPotter-ov4z.woff', Constant.HarryPotter);
     this.Sound.load('./assets/explosion.wav', Constant.Explosion);
     this.Sound.load('./assets/shot.wav', Constant.Shot);
+    this.Sound.load('./assets/spaceship-whoosh-video-game-sound-320171.mp3', Constant.SpaceShipWoosh);
 }
 Pg.prepare = async function prepare() {
     // ステージを作る
@@ -31,6 +33,7 @@ Pg.prepare = async function prepare() {
     // ステージに背景を追加
     await stage.Image.add(Constant.Asteroid);
     await stage.SvgText.add( '1', BlackBackdrop );
+    await stage.Sound.add(Constant.SpaceShipWoosh);
     stage.Looks.Effect.set(Lib.ImageEffective.GHOST, 20);
     
     spaceShip = new Lib.Sprite('spaceShip');
@@ -66,6 +69,7 @@ Pg.prepare = async function prepare() {
     await debri.SvgText.add('1', Debris('white'));
     await debri.SvgText.add('2', Debris('blue'));
     await debri.SvgText.add('3', Debris('red'));
+    await debri.Image.add(Constant.Explosion);
     debri.Looks.Size.scale = {w:20, h:20}
     await debri.Sound.add(Constant.Explosion);
     debri.Looks.hide();
@@ -75,6 +79,10 @@ Pg.setting = async function setting() {
 
     stage.Event.whenFlag(async function*(){
         this.Looks.Backdrop.name = '1';
+        for(;;){
+            await this.Sound.playUntilDone(Constant.SpaceShipWoosh);
+            yield;
+        }
     });
     textSprite.Event.whenFlag(async function*(){
         this.Looks.Effect.set(Lib.ImageEffective.GHOST, 90);
@@ -136,11 +144,12 @@ Pg.setting = async function setting() {
         this.Looks.Costume.name = '1';
         this.Motion.Position.x = 0;
         this.Motion.Position.y = 180;
+        const costumes = ['1','2','3'];
         for(;;) {
             this.Motion.Position.x = Lib.getRandomValueInRange(-240, 240);
             await this.Control.wait(2);
             this.Control.clone();
-            this.Looks.Costume.next();
+            this.Looks.Costume.name = costumes[Lib.getRandomValueInRange(0,2)];
             yield;
         }
     });
@@ -154,12 +163,16 @@ Pg.setting = async function setting() {
             }
             if(this.Sensing.isTouchingToSprites([ball])){
                 this.Sound.play(Constant.Explosion);
+                this.Looks.Costume.name = Constant.Explosion;
+                this.Looks.Size.scale = {w:20,h:20};
+                this.Looks.Effect.set(Lib.ImageEffective.GHOST, 50);
                 break;
             }
             this.Motion.Position.y += Lib.getRandomValueInRange(-5, 1)/2;
             this.Motion.Direction.degree += 1;
             yield;
         }
+        await this.Control.wait(0.5);
         this.Control.remove();
     })
 }
