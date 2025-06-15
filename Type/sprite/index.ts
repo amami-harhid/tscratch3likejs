@@ -97,6 +97,10 @@ export interface ISprite extends IEntity {
      * 生存期間 ( およその秒数 )
      */
     life : number;
+    /**
+     * クローンの配列
+     */
+    clones? : ISprite[];
 
-
+    isClone: boolean;
 };

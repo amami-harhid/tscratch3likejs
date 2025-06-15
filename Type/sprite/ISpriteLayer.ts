@@ -2,17 +2,14 @@
 export interface ISpriteLayer {
  
     /**
-     * @internal
      * 最前面にする
      */
     gotoFront() : void;
     /**
-     * @internal
      * 最背面にする
      */
     gotoBack() : void;
     /**
-     * @internal
      * 手前に出す
      * @param nLayer {number} - 階層数 
      */
