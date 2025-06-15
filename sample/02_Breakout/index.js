@@ -8,6 +8,7 @@ import { Block } from './sub/Block.js';
 import { Ball } from './sub/Ball.js';
 import { Bar } from './sub/Bar.js'
 import { Bottom } from './sub/Bottom.js';
+import { PositionRegist } from './sub/PositionRegist.js';
 
 Pg.title = "ブロック崩し"
 
@@ -17,6 +18,7 @@ let textSprite;
 let ball;
 let bar;
 let bottom;
+const positionRegist = PositionRegist.getInstance();
 
 Pg.preload = async function preload() {
     this.Image.load('./assets/Forest.png', Constant.Forest );
@@ -91,6 +93,18 @@ Pg.setting = async function setting() {
     block.Control.whenCloned(async function(){
         this.Looks.show();
     });
+    block.Control.whenCloned(async function*(){
+        for(;;){
+            if(this.Sensing.isTouchingToSprites([ball])){
+                this.Event.broadcast('ballTouch');
+                this.Looks.hide();
+                break;
+            }
+            yield;
+        }
+        await this.Control.wait(0.5);
+        this.Control.remove();
+    });
 
     textSprite.Event.whenFlag(async function*(){
         this.Looks.Costume.name = "1";
@@ -106,12 +120,27 @@ Pg.setting = async function setting() {
     textSprite.Event.whenBroadcastReceived('IntroStart', async function*(){
         for(;;){
             if(this.Sensing.isMouseTouching()){
-                this.Event.broadcast('Start');
+                this.Event.broadcast('Question');
                 this.Looks.hide();
                 break;
             }
             yield;
         }
+    });
+    let barSize = 0;
+    stage.Event.whenBroadcastReceived('Question', async function*(){
+        for(;;) {
+            const level = await this.Sensing.askAndWait('むずかしさはどうする？( 1:簡単, 2:ふつう, 3:難しい )');
+            if(level == '1' || level == '2' || level == '3'){
+                const _level = parseInt(level);
+                if(_level == 1) barSize = 3;
+                if(_level == 2) barSize = 2;
+                if(_level == 3) barSize = 1;
+                break;
+            }
+            yield;
+        }
+        this.Event.broadcast('Start');
     });
 
     textSprite.Event.whenBroadcastReceived('IntroStart', async function*(){
@@ -138,26 +167,23 @@ Pg.setting = async function setting() {
         this.Event.broadcast('GAME_START');
     });
 
+    ball.Event.whenBroadcastReceived('ballTouch', async function(){
+        this.Motion.Direction.degree += (Lib.getRandomValueInRange(-5, 5)+180);
+    });
     ball.Event.whenBroadcastReceived('GAME_START', async function*(){
         this.Motion.Direction.degree = 180;
+        const barDimension = bar.Looks.Size.drawingSize;
         for(;;){
-
             this.Motion.Move.steps(10);
             if(this.Sensing.isTouchingToSprites([bar])){
-                this.Motion.Move.steps(-20);
-                this.Motion.Direction.degree = -(this.Motion.Direction.degree)/180;
-                this.Motion.Direction.degree += Lib.getRandomValueInRange(-5,5);
-                console.log(this.Motion.Direction.degree);
-            }
-            if(this.Sensing.isTouchingToSprites([bottom])) {
+                this.Motion.Position.y += barDimension.h*3;
+                const speed = positionRegist.get(3) - bar.Motion.Position.x;
+                const degree = this.Motion.Direction.degree;
+                this.Motion.Direction.degree += (Lib.getRandomValueInRange(-5, -5)*speed -degree);
+            }else if(this.Sensing.isTouchingToSprites([bottom])) {
                 break;
             }
-            if(this.Sensing.isTouchingEdge()) {
-                this.Motion.Move.steps(-5);
-                this.Motion.Direction.degree = -(this.Motion.Direction.degree)/180;
-                this.Motion.Direction.degree += Lib.getRandomValueInRange(-5,5);
-
-            }
+            this.Motion.Move.ifOnEdgeBounds();
             yield;
         }
         this.Control.stopAll();
@@ -169,8 +195,17 @@ Pg.setting = async function setting() {
     });
     bar.Event.whenBroadcastReceived('Start', async function(){
         this.Motion.Position.xy = {x:0,y:-170};
-        this.Looks.Size.scale = {w:150, h:150};
+        this.Looks.Size.scale = {w:barSize*100, h:150};
+        positionRegist.clear(this.Motion.Position.x);
         this.Looks.show();
     });
-
+    bar.Event.whenBroadcastReceived('Start', async function*(){
+        for(;;){
+            const mousePos = Lib.mousePosition;
+            const selfPosition = this.Motion.Position.xy;
+            this.Motion.Move.toXY(mousePos.x, selfPosition.y);
+            positionRegist.set(this.Motion.Position.x);
+            yield;
+        }
+    });
 }

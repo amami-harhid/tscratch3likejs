@@ -163,7 +163,7 @@ Pg.setting = async function setting() {
     });
     // メッセージ(GameOver)を受け取ったときの動作
     paddle.Event.whenBroadcastReceived('GameOver', async function(this:Sprite){
-        this.Control.stopOtherScripts();
+        this.Control.stopOtherScripts(this);
     });
 
     let blockCount = 0;
