@@ -25,7 +25,7 @@ Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
     await stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
-    await cat.Image.add( Cat );
+    cat.Image.set( Cat );
     cat.Looks.Size.scale = {w: 300, h: 300};
 }
 

@@ -61,6 +61,14 @@ export class Costumes {
             return this.skinId;
         }
     }
+    setSkin(name:string, drawableID:number, skinId: number) :void{
+        this.costumes.set( name , skinId);
+        this.render.renderer.updateDrawableSkinId( drawableID, skinId );
+
+        if( this.skinId == -1) {
+            this.skinId = skinId; // 初回のSkinId 
+        }
+    }
     async addImage(name:string, image: string|HTMLImageElement): Promise<void> {
         await this._setSkin(name, image);
         await Utils.wait(1000/Env.fps);
@@ -86,7 +94,12 @@ export class Costumes {
                 this.costumes.set( name , _skinId);
                 if( this.skinId == -1) {
                     this.skinId = _skinId; // 初回のSkinId 
-                }    
+                }
+                // preload以外の場所で イメージを追加したときの考慮
+                const loadedImage = this._p.loadedImages[name];
+                if(loadedImage == undefined){
+                    this._p.loadedImages[name] = {name:name,data:_svgText,skinId:_skinId};
+                }
             });
         }else{
             //console.log('costumes._setSkin _setBitmapSkin ', _img)
@@ -95,6 +108,10 @@ export class Costumes {
             this.costumes.set( name , _skinId);
             if( this.skinId == -1) {
                 this.skinId = _skinId; // 初回のSkinId 
+            }
+            const loadedImage = this._p.loadedImages[name];
+            if(loadedImage == undefined){
+                this._p.loadedImages[name] = {name:name,data:_bitmap,skinId:_skinId};
             }
         }
     }
@@ -192,8 +209,11 @@ export class Costumes {
             const costumesKeys = Array.from(this.costumes.keys());
             for(const name of costumesKeys) {
                 const skinId = this.getSkinId(name);
-                if(skinId > 0){
-                    this.render.renderer.destroySkin(skinId);
+                if(skinId > -1){
+                    const skin = this.render.renderer._allSkins[skinId];
+                    if(skin) {
+                        this.render.renderer.destroySkin(skinId);
+                    }
                 }
             }
             this.costumes.clear();    
@@ -315,7 +335,7 @@ export class Costumes {
         }else{
             return -1;
         }
-    } 
+    }
     update( drawableID: number, effect = {} ) {
         if(this.render && this.render.renderer){
             const _skinId = this.skinId;

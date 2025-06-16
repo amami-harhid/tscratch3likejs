@@ -205,8 +205,9 @@ export class Sprite extends Entity implements ISprite {
         }finally{
             this._isAlive = false;
         }
-        if(this.costumes)
+        if(this.costumes && this.isClone === false){
             this.costumes.destroyAllSkin();
+        }
 
         this.$delete();
     }
@@ -229,21 +230,21 @@ export class Sprite extends Entity implements ISprite {
     $isAlive(): boolean {
         return this._isAlive ==  true;
     }
-    /**
-     * クローンを作って待つ
-     * @param {*} options 
-     * @returns {Promise<void>}
-     */
-    protected async $cloneAndWait(options = {}): Promise<void>{
-        await this.$clone(options);
-    }
+    // /**
+    //  * クローンを作って待つ
+    //  * @param {*} options 
+    //  * @returns {Promise<void>}
+    //  */
+    // protected async $cloneAndWait(options = {}): Promise<void>{
+    //     await this.$clone(options);
+    // }
     /**
      * @internal
      * クローンを作る
      * @param options 
      * @returns 
      */
-    async $clone(options = {}): Promise<void> {
+    $clone(options = {}): void {
         if(this.isClone == false){
             if(this.clones == undefined) this.clones = [];
             const newName = `${this.name}_${this.clones.length+1}`;
@@ -290,13 +291,16 @@ export class Sprite extends Entity implements ISprite {
                 for(const d of this.imageDatas) {
                     // svg image の場合、createSVGSkin の中で非同期になることに注意すること
 //                    await newSprite.$addImage(d.name); 
-                    await newSprite._addImage(d.name, d.data, newSprite.costumes); 
+                    const name = d.name;
+                    const skinId = d.skinId;
+                    newSprite.$setSkin(name, skinId);
+                    //await newSprite._addImage(d.name, d.data, newSprite.costumes); 
                 }    
             }
             if(this.fontDatas){
                 for(const f of this.fontDatas) {
                     // svg image の場合、createSVGSkin の中で非同期になることに注意すること
-                    await newSprite.$addFont(f.name); 
+                    newSprite.$addFont(f.name); 
                 }    
             }
             if(this.costumes){
@@ -311,9 +315,12 @@ export class Sprite extends Entity implements ISprite {
                     const _soundData:S3SoundData = {};
                     _soundData.name = d.name;
                     _soundData.data = d.data;
-                    //const _options = d.options;
-                    if(this.soundDatas) await newSprite.$addSound(_soundData.name);
-                    //await newSprite.$addSound(_soundData);
+                    // _soundData.soundPlayer = d.soundPlayer;
+                    // _soundData.effectChain = d.effectChain;
+                    newSprite.$setSound(_soundData.name);
+
+                    //if(this.soundDatas) await newSprite.$addSound(_soundData.name);
+
                     // options引き継ぐ
                     const _vol = this.$getSoundVolume();
                     const _pitch = this.$getSoundPitch();
@@ -933,6 +940,21 @@ export class Sprite extends Entity implements ISprite {
     //     this._loadImage(name, imageUrl, this.costumes);
     // }
 
+    public $setSound(soundName: string): void {
+        const _soundData = this.pgMain.loadedSounds[soundName];
+        if(_soundData == undefined){
+            throw "【Sprite.Sound.add】正しいサウンド名を指定してください"
+        }
+        const soundPlayer = _soundData.soundPlayer;
+        const effectChain = _soundData.effectChain;
+        if(this.soundDatas){
+            this.soundDatas.push(_soundData);
+            super.$setSound(soundName);
+            if(this.sounds) {
+                this.sounds.set(soundName, soundPlayer, {effects: effectChain} );
+            }
+        }
+    }
     /**
      * @internal
      * サウンド名を使ってサウンドをスプライトに追加する
@@ -967,6 +989,20 @@ export class Sprite extends Entity implements ISprite {
             return promise;    
         }
     }
+    public $setSkin(imageName: string) : void {
+        let _imageData:S3ImageData = this.pgMain.loadedImages[imageName];
+        if(_imageData == undefined) {
+            throw "【Sprite.Image.add】正しいイメージ名を指定してください"
+        }
+        if( this.imageDatas) {
+            this.imageDatas.push(_imageData);
+        }
+        const skinId = _imageData.skinId;
+        if(this.costumes){
+            this.costumes.setSkin(imageName, this.drawableID, skinId);
+        }
+
+    }
     /**
      * @internal
      * イメージ名を使って、スプライトにイメージを追加する
@@ -989,11 +1025,14 @@ export class Sprite extends Entity implements ISprite {
         if(_imageData['name'] == undefined || _imageData['data'] == undefined ){
             throw "【Sprite.Image.add】正しいイメージデータを指定してください"
         }
+        if(_imageData['skinId'] == undefined ){
+            throw "【Sprite.Image.add】正しいイメージデータを指定してください"
+        }
         if( this.imageDatas) {
             this.imageDatas.push(_imageData);
             const name = _imageData.name;
             const data = _imageData.data;
-            await this._addImage(name, data, this.costumes);    
+            await this._addImage(name, data, this.costumes);
         }
         return;
     }
@@ -1269,6 +1308,7 @@ export class Sprite extends Entity implements ISprite {
     get Image (){
         return {
             "add": this.$addImage.bind(this),
+            "set": this.$setSkin.bind(this),
             "names" : this.$getImageNames.bind(this),
         }
     }

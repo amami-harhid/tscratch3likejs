@@ -5,4 +5,5 @@ export const Constant = {
     Cherry : "Cherry",
     Togemaru : "Togemaru",
     HarryPotter: "HarryPotter",
+    Pew: 'Pew',
 }

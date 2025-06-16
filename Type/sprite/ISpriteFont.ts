@@ -3,7 +3,7 @@
  */
 export interface ISpriteFont {
 
-    add(fontName: string) : Promise<void>;
+    add(fontName: string) : void;
 
     get names() : string [];
 };

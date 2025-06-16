@@ -23,6 +23,7 @@ const positionRegist = PositionRegist.getInstance();
 Pg.preload = async function preload() {
     this.Image.load('./assets/Forest.png', Constant.Forest );
     this.Sound.load('./assets/ClassicalPiano.wav', Constant.ClassicPiano );
+    this.Sound.load('./assets/Pew.wav', Constant.Pew );
     this.Font.load('./assets/TogeMaruGothic-700-Bold.woff', Constant.Togemaru);
     this.Font.load('./assets/HarryPotter-ov4z.woff', Constant.HarryPotter);
 }
@@ -30,12 +31,16 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
-    await stage.Image.add( Constant.Forest );
+    stage.Image.set( Constant.Forest );
+    stage.Sound.set(Constant.ClassicPiano);
+    await stage.Sound.setOption(Lib.SoundOption.VOLUME, 10);
     
+
     block = new Lib.Sprite('block');
     await block.SvgText.add( "1", Block("#f00000") );
     await block.SvgText.add( "2", Block("#00F000") );
     await block.SvgText.add( "3", Block("#0000F0") );
+    block.Sound.set(Constant.Pew);
     block.Looks.hide();
 
     textSprite = new Lib.Sprite('Introduction');
@@ -67,6 +72,10 @@ Pg.setting = async function setting() {
 
     stage.Event.whenFlag(async function*(){
         this.Looks.Backdrop.name = "Black";
+        for(;;){
+            await stage.Sound.playUntilDone(Constant.ClassicPiano);
+            yield;
+        }
     });
     block.Event.whenFlag(async function(){
         this.Looks.hide();
@@ -77,15 +86,16 @@ Pg.setting = async function setting() {
         const xArr = [-160,-120,-80,-40, 0, 40, 80, 120, 160];
         // eslint-disable-next-line loopCheck/s3-loop-plugin
         for(const _ of Lib.Iterator(5)){
-            const promise = [];
+            //const promise = [];
             // eslint-disable-next-line loopCheck/s3-loop-plugin
             for(const x of xArr){
                 this.Motion.Position.x = x;
-                const clone = this.Control.clone();
-                promise.push(clone);
+                this.Control.clone();
+                this.Looks.Costume.next();
+                // const clone = this.Control.clone();
+                // promise.push(clone);
             }
-            await Promise.all(promise);
-            this.Looks.Costume.next();
+            // await Promise.all(promise);
             this.Motion.Position.y -= 25;
         }
     });
@@ -96,6 +106,7 @@ Pg.setting = async function setting() {
     block.Control.whenCloned(async function*(){
         for(;;){
             if(this.Sensing.isTouchingToSprites([ball])){
+                this.Sound.play(Constant.Pew);
                 this.Event.broadcast('ballTouch');
                 this.Looks.hide();
                 break;
@@ -130,7 +141,7 @@ Pg.setting = async function setting() {
     let barSize = 0;
     stage.Event.whenBroadcastReceived('Question', async function*(){
         for(;;) {
-            const level = await this.Sensing.askAndWait('むずかしさはどうする？( 1:簡単, 2:ふつう, 3:難しい )');
+            const level = await this.Sensing.askAndWait('PLAY MODE( 1:EASY, 2:NORMAL, 3:HARD )');
             if(level == '1' || level == '2' || level == '3'){
                 const _level = parseInt(level);
                 if(_level == 1) barSize = 3;

@@ -3,7 +3,7 @@
  */
 export interface IStageFont {
 
-    add(fontName: string) : Promise<void>;
+    add(fontName: string) : void;
 
     get names() : string [];
 };

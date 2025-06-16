@@ -10,8 +10,8 @@ export class SpriteFont implements ISpriteFont {
         this.entity = entity;
     }
 
-    async add(fontName: string) : Promise<void>{
-        await this.entity.$addFont(fontName);
+    add(fontName: string) : void{
+        this.entity.$addFont(fontName);
     }
 
     get names() : string[] {

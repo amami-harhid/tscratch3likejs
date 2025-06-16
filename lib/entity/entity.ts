@@ -75,7 +75,7 @@ export class Entity extends EventEmitter implements IEntity{
     protected $_scale: TScale;
     protected $_direction: number;
     protected _visible: boolean;
-    private sounds: Sounds|undefined;
+    protected sounds: Sounds|undefined;
     private importAllDone: boolean[];
     private importIdx: number;
     protected $_prev_position: TPosition;
@@ -101,7 +101,7 @@ export class Entity extends EventEmitter implements IEntity{
      * @param imageName {string}
      * @returns 
      */
-    public async $addFont(fontName: string): Promise<void> {
+    public $addFont(fontName: string): void {
         let _fontData:S3FontData;
         if(fontName == undefined){
             throw "【Sprite.Font.add】FONTデータの指定がありません"
@@ -474,7 +474,7 @@ export class Entity extends EventEmitter implements IEntity{
         }
         await costume.addImage(name, image);
     }
-    protected async _addFont(name:string ,image:string) {
+    protected _addFont(name:string ,image:string): void {
         if(name == undefined || typeof name != "string"){
             throw "【Font.add】正しい name を指定してください"
         }
@@ -505,9 +505,16 @@ export class Entity extends EventEmitter implements IEntity{
      * @abstract
      * @internal
      */
-    public async $addSound(soundName: string): Promise<void> {
-
+    public $setSound(soundName: string): void {
+        if( !this.sounds ) this.sounds = new Sounds(this);
     }
+    /** 
+     * @abstract
+     * @internal
+     */
+    public async $addSound(soundName: string): Promise<void> {
+    }
+
     protected async _addSound(name:string, soundData:Uint8Array<ArrayBuffer>, options={}) {
         if(name == undefined || typeof name != "string"){
             throw "【Sound.add】正しい name を指定してください"

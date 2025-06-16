@@ -15,7 +15,7 @@ import { StageFont } from "./stage/stageFont";
 
 import type { TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TMouse } from "@Type/mouse";
-import type { TScale } from "@Type/common/typeCommon";
+import type { S3ImageData, TScale } from "@Type/common/typeCommon";
 import type { IStage } from "@Type/stage";
 import type { IStageControl } from "@Type/stage/IStageControl";
 import type { IStageLooks } from "@Type/stage/IStageLooks";
@@ -209,6 +209,20 @@ export class Stage extends Entity implements IStage{
     draw(): void {
         this.render.renderer.draw();
     }
+
+    public $setSound(soundName: string): void {
+        const _soundData = this.pgMain.loadedSounds[soundName];
+        if(_soundData == undefined){
+            throw "【Sprite.Sound.add】正しいサウンド名を指定してください"
+        }
+        const soundPlayer = _soundData.soundPlayer;
+        const effectChain = _soundData.effectChain;
+        super.$setSound(soundName);
+        if(this.sounds) {
+            this.sounds.set(soundName, soundPlayer, {effects: effectChain} );
+        }
+    }
+
     /**
      * @internal
      * サウンド名をもとに、ステージへサウンドを追加する
@@ -239,6 +253,19 @@ export class Stage extends Entity implements IStage{
         const promise = this._addSound(name, data, {})
         return promise;
     }
+    public $setSkin(imageName: string) : void {
+        let _imageData:S3ImageData = this.pgMain.loadedImages[imageName];
+        if(_imageData == undefined) {
+            throw "【Stage.Image.add】正しいイメージ名を指定してください"
+        }
+
+        const skinId = _imageData.skinId;
+        if(this.backdrops){
+            this.backdrops.setSkin(imageName, this.drawableID, skinId);    
+        }
+
+    }
+
     /**
      * @internal
      * イメージ名を使ってイメージをステージへ追加する
@@ -514,6 +541,7 @@ export class Stage extends Entity implements IStage{
     get Image() {
         return {
             "add": this.$addImage.bind(this),
+            "set": this.$setSkin.bind(this),
             "names" : this.$getImageNames.bind(this),
         }
     }

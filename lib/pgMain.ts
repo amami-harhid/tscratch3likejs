@@ -17,6 +17,12 @@ import { Stage } from './entity/stage';
 
 import type { IPgFont, IPgImage, IPgSound, IPgMain } from '@Type/pgMain';
 import { Monitors } from './monitor/monitors';
+import { ISvgSkin } from '@Type/render/ISvgSkin';
+import { ISkin } from '@Type/render/ISkin';
+import { SoundPlayer } from './sounds/soundPlayer';
+import type { IAudioEngine, IScratchSoundPlayer, TEffectChain } from '@Type/sound/IAudioEngine';
+
+const AudioEngine = require('scratch-audio');
 
 export class PgMain implements IPgMain {
     /** @internal */
@@ -69,13 +75,14 @@ export class PgMain implements IPgMain {
     private _preloadImagePromise:Promise<{name:string, data:string|HTMLImageElement}>[];
     private _preloadSoundPromise: Promise<{name:string, data:Uint8Array<ArrayBuffer>}>[];
     private _preloadFontPromise: Promise<{name:string, data:string}>[];
-    private _loadedImages: {name?:string, data?:string|HTMLImageElement};
-    private _loadedSounds: {name?:string, data?:Uint8Array<ArrayBuffer>};
+    private _loadedImages: {name?:string, data?:string|HTMLImageElement, skinId?:number};
+    private _loadedSounds: {name?:string, data?:Uint8Array<ArrayBuffer>, soundPlayer?: IScratchSoundPlayer, effectChain?: TEffectChain};
     private _loadedFonts: {name?:string,data?:string};
     private _preloadDone: boolean;
     private _prepaeDone: boolean;
     private _image: IPgImage;
     private _sound: IPgSound;
+    private audioEngine: IAudioEngine;
     private _font: IPgFont;
     constructor () {
         //this._id = this._generateUUID();
@@ -102,6 +109,7 @@ export class PgMain implements IPgMain {
         this._image = new PgImage(this);
         this._sound = new PgSound(this);
         this._font = new PgFont(this);
+        this.audioEngine = new AudioEngine();
     }
     /** @internal */
     get monitors(): Monitors | null {
@@ -325,7 +333,6 @@ export class PgMain implements IPgMain {
         document.body.appendChild(mainTmp);
         await Utils.wait(100);
         this._preload();
-        await this._waitUntilPreloadDone();
 
         S3Element.p = this;
         this.main = await S3Element.init();
@@ -335,6 +342,7 @@ export class PgMain implements IPgMain {
         }
         main.classList.add(S3Element.DISPLAY_NONE);
         this._render = new Render();
+        await this._waitUntilPreloadDone();
         Render.p = this;
 
         this._runtime = new Runtime();
@@ -436,32 +444,56 @@ export class PgMain implements IPgMain {
         this._preloadFontPromise.push(font);
         return font;
     }
-    spriteClone( src, callback ) {
-        if( src instanceof Sprite ) {
-            const _src = src;
-            _src.$clone().then( async( c ) =>{
-                if( callback ) {
-                    const _callback = callback.bind( c );
-                    _callback();
-                }
-            });
-        }
-    }
+    // spriteClone( src, callback ) {
+    //     if( src instanceof Sprite ) {
+    //         const _src = src;
+    //         _src.$clone().then( async( c ) =>{
+    //             if( callback ) {
+    //                 const _callback = callback.bind( c );
+    //                 _callback();
+    //             }
+    //         });
+    //     }
+    // }
 
     get preloadDone() {
         return this._preloadDone;
     }
     async _waitUntilPreloadDone() {
         if(this._preloadImagePromise.length > 0 ) {
+            if(this._render == undefined) return;
             const _images = await Promise.all(this._preloadImagePromise);
             for(const v of _images) {
-                this._loadedImages[v.name] = {'name': v.name, 'data': v.data };
+                if(typeof v.data == "string"){
+                    if(ImageLoader.isSVG(v.data)){
+                        const skinId = this._render.renderer.createSVGSkin(v.data);                    
+                        this._loadedImages[v.name] = {'name': v.name, 'data': v.data, skinId: skinId };
+                        // willReadFrequently を設定するために SKINインスタンスを取り出し、
+                        // SVGSkinのコンストラクターで実施すみの下記【A】２行をやり直す。
+                        const _skin = this._render.renderer._allSkins[skinId];
+                        if(_skin._canvas) _skin._canvas.remove(); // <== 念のため削除
+                        const _svgSkin: ISvgSkin = _skin as ISvgSkin;
+                        /*【A】*/_svgSkin._canvas = document.createElement('canvas');
+                        /*【A】*/_svgSkin._context = _svgSkin._canvas.getContext("2d", { willReadFrequently: true });
+                    }
+                }else{
+                    const bitmap = v.data as HTMLImageElement;
+                    const skinId = await this._render.renderer.createBitmapSkin(bitmap);
+                    this._loadedImages[v.name] = {'name': v.name, 'data': v.data, skinId: skinId };
+                    // bitmapの場合、ctx を作り出していない様子なのでwillReadFrequently を設定しない。 
+                }
             }    
         }
         if( this._preloadSoundPromise.length > 0 ) {
             const _sounds = await Promise.all(this._preloadSoundPromise);
             for(const v of _sounds) {
-                this._loadedSounds[v.name] = {'name' : v.name, 'data': v.data };
+                const name = v.name;
+                const data = v.data;
+                const _soundPlayer:IScratchSoundPlayer = await this.audioEngine.decodeSoundPlayer({data});
+                const _effects:TEffectChain = this.audioEngine.createEffectChain();
+                const _options = {effects:_effects};
+                const soundPlayer = new SoundPlayer(name, _soundPlayer, _options);
+                this._loadedSounds[v.name] = {'name' : v.name, 'data': v.data, soundPlayer: _soundPlayer, effectChain: _effects };
             }    
         }
         if ( this._preloadFontPromise.length > 0 ) {

@@ -1,3 +1,5 @@
+import { IScratchSoundPlayer, TEffectChain } from "@Type/sound/IAudioEngine";
+
 /** 位置 */
 export declare type TPositionCanEmpty = {
     x?: number,
@@ -55,6 +57,6 @@ export declare type TVec3 = {
     y: number,
     z: number,
 }
-export declare type S3ImageData = {name:string, data:string|HTMLImageElement};
-export declare type S3SoundData = {name?:string, data?:Uint8Array<ArrayBuffer>};
+export declare type S3ImageData = {name:string, data:string|HTMLImageElement, skinId:number};
+export declare type S3SoundData = {name?:string, data?:Uint8Array<ArrayBuffer>, soundPlayer?: IScratchSoundPlayer;effectChain?: TEffectChain};
 export declare type S3FontData = {name?:string, data?:string};

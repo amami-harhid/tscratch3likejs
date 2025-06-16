@@ -7,6 +7,7 @@ export interface IEntitySound {
      * @param soundName {string} - 音の名前
      */
     add(soundName: string) : Promise<void>;
+
     /**
      * 音を鳴らす
      * @param soundName {string} - 音の名前

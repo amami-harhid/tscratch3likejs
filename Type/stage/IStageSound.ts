@@ -2,4 +2,12 @@ import type { IEntitySound } from "../entity/IEntitySound";
 /**
  * Stage Sound(サウンド)
  */
-export type IStageSound = IEntitySound;
+export interface IStageSound extends IEntitySound {
+
+    /**
+     * 音を追加する
+     * @param soundName 
+     */
+    set(soundName: string) : void;
+
+}

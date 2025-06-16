@@ -4,7 +4,7 @@
 const AudioEngine = require('scratch-audio');
 import { Entity } from '../entity/entity';
 import { SoundLoader } from '../importer/soundLoader';
-import type { IAudioEngine, TSoundPlayerOption } from '@Type/sound/IAudioEngine';
+import type { IAudioEngine, IScratchSoundPlayer, TSoundPlayerOption } from '@Type/sound/IAudioEngine';
 import { SoundPlayer } from './soundPlayer';
 
 export class Sounds {
@@ -47,6 +47,16 @@ export class Sounds {
         soundPlayer.connect();
 
     }
+    set( name: string , decodedSoundPlayer: IScratchSoundPlayer, options:TSoundPlayerOption = {}) {
+        const soundPlayer = new SoundPlayer(name, decodedSoundPlayer, options);
+        if(this.soundPlayer == null){
+            this.soundPlayer = soundPlayer;
+        }
+        this.soundPlayers.set(name, soundPlayer);
+        // effects は インスタンスを作るときに渡しているので引数省略。
+        soundPlayer.connect();
+    }
+
     /**
      * 
      * @param {string} name 

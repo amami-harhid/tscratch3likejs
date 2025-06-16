@@ -39,33 +39,33 @@ Pg.preload = async function preload() {
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Image.add( NeonTunnel );
-    await stage.Sound.add( Chill );
+    stage.Image.set( NeonTunnel );
+    stage.Sound.set( Chill );
 
     ball = new Lib.Sprite('ball');
-    await ball.Image.add( BallA );
+    ball.Image.set( BallA );
     ball.Looks.Size.scale = {w: 50, h: 50};
-    ball.Sensing.DragMode.draggable = true;
+    ball.Sensing.DragMode.draggable = false; //true;
 
     paddle = new Lib.Sprite("paddle");
     //paddle.visible = false;
-    await paddle.Image.add( Paddle );
+    paddle.Image.set( Paddle );
     paddle.Motion.Move.toXY(0, -140);
 
     block = new Lib.Sprite( "block");
-    await block.Image.add( Block );
+    block.Image.set( Block );
     await block.Sound.add(Pew);
     block.Motion.Move.toXY(-220,-150);
     block.Looks.Size.scale = {w: 20,h: 20};
     block.Looks.hide();
 
     line = new Lib.Sprite( "line" );
-    await line.Image.add( Line );
+    line.Image.set( Line );
     line.Motion.Move.toXY(0, -180);
 
     title = new Lib.Sprite("title");
-    await title.Image.add(YouWon);
-    await title.Image.add(GameOver);
+    title.Image.set(YouWon);
+    title.Image.set(GameOver);
     title.Looks.hide();
 }
 
@@ -152,7 +152,7 @@ Pg.setting = async function setting() {
     });
     // メッセージ(GameOver)を受け取ったときの動作
     paddle.Event.whenBroadcastReceived('GameOver', async function(){
-        this.Control.stopOtherScripts();
+        this.Control.stopOtherScripts(this);
     });
 
     let blockCount = 0;
@@ -206,13 +206,13 @@ Pg.setting = async function setting() {
     })
     // メッセージ(YouWon)を受け取ったときの動作
     title.Event.whenBroadcastReceived(YouWon, async function(){
-        this.Looks.switchCostume(YouWon);
+        this.Looks.Costume.name = YouWon;
         this.Looks.show();
         Pg.Control.stopAll();
     });
     // メッセージ(GameOver)を受け取ったときの動作
     title.Event.whenBroadcastReceived(GameOver, async function(){
-        this.Looks.switchCostume(GameOver);
+        this.Looks.Costume.name = GameOver;
         this.Looks.show();
         Pg.Control.stopAll();
     });

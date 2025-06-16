@@ -19,6 +19,7 @@ export class EntitySound implements IEntitySound {
     async add(soundName: string) : Promise<void>{
         this.entity.$addSound(soundName);
     }
+
     /**
      * 音を鳴らす
      * @param soundName {string} - 音の名前
