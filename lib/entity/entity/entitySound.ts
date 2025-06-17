@@ -16,10 +16,10 @@ export class EntitySound implements IEntitySound {
      * 音を追加する
      * @param soundName {string} - 音の名前
      */
-    async add(soundName: string) : Promise<void>{
-        this.entity.$addSound(soundName);
+    add(soundName: string) : void {
+        this.entity.$setSound(soundName);
     }
-
+    
     /**
      * 音を鳴らす
      * @param soundName {string} - 音の名前
@@ -41,8 +41,8 @@ export class EntitySound implements IEntitySound {
      * 
      * {@link SoundOption}
      */
-    async setOption(key: SoundOption, value:number): Promise<void>{
-        await this.entity.$setOption(key, value);
+    setOption(key: SoundOption, value:number): void{
+        this.entity.$setOption(key, value);
     }
     /**
      * サウンドオプションを指定値ずつ変える

@@ -14,11 +14,4 @@ export class SpriteSound extends EntitySound implements ISpriteSound {
         super(entity);
         this.entity = entity;
     }
-    /**
-     * 音を追加する
-     * @param soundName 
-     */
-    set( name: string ) : void {
-        this.entity.$setSound(name);
-    }
 };

@@ -452,7 +452,7 @@ export class Entity extends EventEmitter implements IEntity{
         return _allDone;
     }
     /** @internal */
-    public async _addImage(name:string ,image:string|HTMLImageElement, costume) {
+    public _addImage(name:string ,image:string|HTMLImageElement, costume) {
         if(name == undefined || typeof name != "string"){
             throw "【Image.add】正しい name を指定してください"
         }
@@ -472,7 +472,16 @@ export class Entity extends EventEmitter implements IEntity{
             }
             
         }
-        await costume.addImage(name, image);
+        if(costume){ 
+            if(typeof image == 'string') {
+                const skinId = this.render.renderer.createSVGSkin(image);
+                costume.setSkin(name, this.drawableID, skinId);
+            }else{
+                const skinId = this.render.renderer.createBitmapSkin(image);
+                costume.setSkin(name, this.drawableID, skinId);
+            }
+        }
+        //await costume.addImage(name, image);
     }
     protected _addFont(name:string ,image:string): void {
         if(name == undefined || typeof name != "string"){
@@ -568,7 +577,7 @@ export class Entity extends EventEmitter implements IEntity{
         throw 'sounds undefined error';
     }
     /** @internal */
-    public async $setOption(key:SoundOption, value: number) {
+    public $setOption(key:SoundOption, value: number) {
         if( key == SoundOption.VOLUME ){
             this.$setSoundVolume(value);
         }else if(key == SoundOption.PITCH ){
@@ -578,7 +587,7 @@ export class Entity extends EventEmitter implements IEntity{
         }
         // 音量変更時直後の再生にて 最初に雑音「ブッ」が入る。
         // FPS分待つことで解消させる
-        await this._libs.wait(1000/33*2);
+        // await this._libs.wait(1000/33*2);
     }
     /** @internal */
     public async $clearSoundEffect() {

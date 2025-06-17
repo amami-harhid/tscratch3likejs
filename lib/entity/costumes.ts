@@ -133,7 +133,7 @@ export class Costumes {
     }
     async _setBitmapSkin( bitmap: HTMLImageElement) {
         if(this.render && this.render.renderer){
-            const skinId = await this.render.renderer.createBitmapSkin(bitmap);
+            const skinId = this.render.renderer.createBitmapSkin(bitmap);
             return skinId;        
         }
         throw 'unable to execute createBitmapSkin';

@@ -26,7 +26,7 @@ import tseslint from "typescript-eslint";
 import {awaitControlRulesPlugin} from "./eslintAwaitControlRulePlugin.js";
 import {awaitEventRulesPlugin } from "./eslintAwaitEventRulePlugin.js";
 import {awaitExtensionsRulesPlugin} from "./eslintAwaitExtensionsRulePlugin.js";
-import {awaitImageRulesPlugin} from "./eslintAwaitImageRulePlugin.js";
+//import {awaitImageRulesPlugin} from "./eslintAwaitImageRulePlugin.js";
 import {awaitLooksRulesPlugin} from "./eslintAwaitLooksRulePlugin.js";
 import {awaitMoveRulesPlugin} from "./eslintAwaitMoveRulePlugin.js";
 import {awaitLibRulesPlugin} from "./eslintAwaitLibRulePlugin.js";
@@ -53,7 +53,7 @@ const eslint_S3_config = [
             awaitControl : awaitControlRulesPlugin,
             awaitEvent : awaitEventRulesPlugin,
             awaitExtensions: awaitExtensionsRulesPlugin,
-            awaitImage : awaitImageRulesPlugin,
+            //awaitImage : awaitImageRulesPlugin,
             awaitLooks : awaitLooksRulesPlugin,
             awaitMove: awaitMoveRulesPlugin,
             awaitLib : awaitLibRulesPlugin,
@@ -91,7 +91,7 @@ const eslint_S3_config = [
             'awaitControl/await-control-plugin': 'error',
             'awaitEvent/await-event-plugin': 'error',
             'awaitExtensions/await-extensions-plugin': 'error',
-            'awaitImage/await-image-plugin': 'error',
+            //'awaitImage/await-image-plugin': 'error',
             'awaitLib/await-lib-plugin': 'error',
             'awaitLooks/await-looks-plugin': 'error',
             'awaitMove/await-move-plugin': 'error',

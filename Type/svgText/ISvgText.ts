@@ -1,6 +1,6 @@
 export interface ISvgText {
 
-    add( name: string, svgText: string, fontFamily?: string): Promise<void>;
+    add( name: string, svgText: string, fontFamily?: string): void;
     mesure(texts:string[], fontSize:number, fontStyle?:string, fontFamily?: string): {w:number, h:number}
     toSvg(textArr: string[], fontSize?: number, fontStyle?: string, color?: string, fontFamily?:string): string;
 }

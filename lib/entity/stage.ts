@@ -540,8 +540,7 @@ export class Stage extends Entity implements IStage{
      */
     get Image() {
         return {
-            "add": this.$addImage.bind(this),
-            "set": this.$setSkin.bind(this),
+            "add": this.$setSkin.bind(this),
             "names" : this.$getImageNames.bind(this),
         }
     }

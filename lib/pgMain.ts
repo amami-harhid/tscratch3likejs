@@ -491,9 +491,7 @@ export class PgMain implements IPgMain {
                 const data = v.data;
                 const _soundPlayer:IScratchSoundPlayer = await this.audioEngine.decodeSoundPlayer({data});
                 const _effects:TEffectChain = this.audioEngine.createEffectChain();
-                const _options = {effects:_effects};
-                const soundPlayer = new SoundPlayer(name, _soundPlayer, _options);
-                this._loadedSounds[v.name] = {'name' : v.name, 'data': v.data, soundPlayer: _soundPlayer, effectChain: _effects };
+                this._loadedSounds[v.name] = {'name' : name, 'data': data, soundPlayer: _soundPlayer, effectChain: _effects };
             }    
         }
         if ( this._preloadFontPromise.length > 0 ) {

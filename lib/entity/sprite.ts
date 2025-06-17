@@ -998,7 +998,7 @@ export class Sprite extends Entity implements ISprite {
             this.imageDatas.push(_imageData);
         }
         const skinId = _imageData.skinId;
-        if(this.costumes){
+        if(this.costumes){ 
             this.costumes.setSkin(imageName, this.drawableID, skinId);
         }
 
@@ -1307,8 +1307,7 @@ export class Sprite extends Entity implements ISprite {
      */
     get Image (){
         return {
-            "add": this.$addImage.bind(this),
-            "set": this.$setSkin.bind(this),
+            "add": this.$setSkin.bind(this),
             "names" : this.$getImageNames.bind(this),
         }
     }

@@ -16,8 +16,4 @@ export class StageSound extends EntitySound implements IStageSound {
         super(entity);
         this.entity = entity;
     }
-
-    set(name:string) : void {
-        this.entity.$setSound(name);
-    }
 };

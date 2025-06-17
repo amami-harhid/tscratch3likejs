@@ -31,47 +31,47 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
-    await stage.Image.add(Constant.Asteroid);
-    await stage.SvgText.add( '1', BlackBackdrop );
-    await stage.Sound.add(Constant.SpaceShipWoosh);
+    stage.Image.add(Constant.Asteroid);
+    stage.SvgText.add( '1', BlackBackdrop );
+    stage.Sound.add(Constant.SpaceShipWoosh);
     stage.Looks.Effect.set(Lib.ImageEffective.GHOST, 20);
     
     spaceShip = new Lib.Sprite('spaceShip');
-    await spaceShip.Image.add(Constant.Spaceship01);
-    await spaceShip.Image.add(Constant.Spaceship02);
+    spaceShip.Image.add(Constant.Spaceship01);
+    spaceShip.Image.add(Constant.Spaceship02);
     spaceShip.Looks.Size.scale = {w:20,h:20};
     spaceShip.Motion.Position.xy = {x:0, y:-150};
-    await spaceShip.Sound.add(Constant.Shot);
+    spaceShip.Sound.add(Constant.Shot);
     spaceShip.Looks.hide();
 
     textSprite = new Lib.Sprite('Introduction');
     textSprite.Looks.Size.scale = {w:200,h:200};
-    await textSprite.Font.add(Constant.HarryPotter);
+    textSprite.Font.add(Constant.HarryPotter);
     const fontSize = 35;
     const fontStyle = 'italic';
     const color = '#ffffff';
     const fontFamily = Constant.HarryPotter;
     const text1 = textSprite.SvgText.toSvg(["Space ship game"], fontSize, fontStyle, color, fontFamily);
-    await textSprite.SvgText.add("1", text1, fontFamily );
+    textSprite.SvgText.add("1", text1, fontFamily );
 
     bottom = new Lib.Sprite('bottom');
-    bottom.SvgText.add('1', Bottom('black'));
+    bottom.SvgText.add('black', Bottom('black'));
     bottom.Motion.Position.xy = {x:0, y:-180};
     bottom.Looks.Layer.gotoBack();
     bottom.Looks.Effect.set(Lib.ImageEffective.GHOST, 100);
 
     ball = new Lib.Sprite('ball');
-    await ball.SvgText.add('1', Ball('white'));
+    ball.SvgText.add('ball', Ball('white'));
     ball.Looks.Size.scale = {w:10, h:10};
     ball.Looks.hide();
 
     debri = new Lib.Sprite('Debri');
-    await debri.SvgText.add('1', Debris('white'));
-    await debri.SvgText.add('2', Debris('blue'));
-    await debri.SvgText.add('3', Debris('red'));
-    await debri.Image.add(Constant.Explosion);
+    debri.SvgText.add('debri1', Debris('white'));
+    debri.SvgText.add('debri2', Debris('blue'));
+    debri.SvgText.add('debri3', Debris('red'));
+    debri.Image.add(Constant.Explosion);
     debri.Looks.Size.scale = {w:20, h:20}
-    await debri.Sound.add(Constant.Explosion);
+    debri.Sound.add(Constant.Explosion);
     debri.Looks.hide();
 
 }
@@ -124,6 +124,7 @@ Pg.setting = async function setting() {
     });
 
     ball.Control.whenCloned(async function*(){
+        this.Looks.Costume.name = 'ball1';
         this.Motion.Move.toSprite(spaceShip);
         this.Motion.Direction.degree = 0;
         const Steps = 10;
@@ -141,10 +142,10 @@ Pg.setting = async function setting() {
 
     debri.Event.whenFlag(async function*(){
         this.Looks.hide();
-        this.Looks.Costume.name = '1';
+        this.Looks.Costume.name = 'debri1';
         this.Motion.Position.x = 0;
         this.Motion.Position.y = 180;
-        const costumes = ['1','2','3'];
+        const costumes = ['debri1','debri2','debri3'];
         for(;;) {
             this.Motion.Position.x = Lib.getRandomValueInRange(-240, 240);
             await this.Control.wait(2);

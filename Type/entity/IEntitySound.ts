@@ -6,7 +6,7 @@ export interface IEntitySound {
      * 音を追加する
      * @param soundName {string} - 音の名前
      */
-    add(soundName: string) : Promise<void>;
+    add(soundName: string) : void;
 
     /**
      * 音を鳴らす
@@ -25,7 +25,7 @@ export interface IEntitySound {
      * 
      * {@link SoundOption}
      */
-    setOption(key: SoundOption, value:number): Promise<void>;
+    setOption(key: SoundOption, value:number): void;
     /**
      * サウンドオプションを指定値ずつ変える
      * @param key {TypeSoundOption} - サウンドオプションキー

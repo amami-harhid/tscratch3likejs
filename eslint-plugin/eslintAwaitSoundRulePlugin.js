@@ -13,9 +13,9 @@ const awaitSoundRule = {
             Identifier(node) {
                 if(node.type == 'Identifier' &&
                   (
-                      node.name == 'add' ||
-                      node.name == 'playUntilDone' ||
-                      node.name == 'setOption'
+                      //node.name == 'add' ||
+                      //node.name == 'setOption' ||
+                      node.name == 'playUntilDone'
                   )
                 ) {
                     if(node.parent.type == 'MemberExpression') {  

@@ -22,16 +22,16 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
-    await stage.Image.add( Constant.Forest );
-    await stage.SvgText.add( "Black", BlackBackdrop );
+    stage.Image.add( Constant.Forest );
+    stage.SvgText.add( "Black", BlackBackdrop );
     textSprite = new Lib.Sprite('Introduction');
-    await textSprite.Font.add(Constant.Togemaru);
-    await addSvg(textSprite, "0", ["Gathering cherry blossom petals"], Constant.Togemaru );
-    await addSvg(textSprite, "1", ["Touch me to start."], Constant.Togemaru );
+    textSprite.Font.add(Constant.Togemaru);
+    addSvg(textSprite, "0", ["Gathering cherry blossom petals"], Constant.Togemaru );
+    addSvg(textSprite, "1", ["Touch me to start."], Constant.Togemaru );
     textSprite.Looks.hide();
 
     cherry = new Lib.Sprite('Cherry');
-    await cherry.Image.add( Constant.Cherry );
+    cherry.Image.add( Constant.Cherry );
     cherry.Looks.Size.scale = {w: 20, h: 20};
     cherry.Looks.hide();
 

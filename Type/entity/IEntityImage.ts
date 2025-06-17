@@ -16,7 +16,7 @@ export interface IEntityImage {
      *  await stage.Image.add('Jurassic');
      * ```
      */
-    add(name: string): Promise<void>;
+    add(name: string): void;
     /**
      * 追加されている画像名を配列で受け取る
      * ```ts

@@ -31,27 +31,27 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
-    stage.Image.set( Constant.Forest );
-    stage.Sound.set(Constant.ClassicPiano);
-    await stage.Sound.setOption(Lib.SoundOption.VOLUME, 10);
+    stage.Image.add( Constant.Forest );
+    stage.Sound.add(Constant.ClassicPiano);
+    stage.Sound.setOption(Lib.SoundOption.VOLUME, 10);
     
 
     block = new Lib.Sprite('block');
-    await block.SvgText.add( "1", Block("#f00000") );
-    await block.SvgText.add( "2", Block("#00F000") );
-    await block.SvgText.add( "3", Block("#0000F0") );
-    block.Sound.set(Constant.Pew);
+    block.SvgText.add( "1", Block("#f00000") );
+    block.SvgText.add( "2", Block("#00F000") );
+    block.SvgText.add( "3", Block("#0000F0") );
+    block.Sound.add(Constant.Pew);
     block.Looks.hide();
 
     textSprite = new Lib.Sprite('Introduction');
-    await textSprite.Font.add(Constant.Togemaru);
-    await addSvg(textSprite, "0", ["ブロック崩し"], Constant.Togemaru );
-    await addSvg(textSprite, "1", ["Touch me to start."], Constant.Togemaru );
+    textSprite.Font.add(Constant.Togemaru);
+    addSvg(textSprite, "0", ["ブロック崩し"], Constant.Togemaru );
+    addSvg(textSprite, "1", ["Touch me to start."], Constant.Togemaru );
     textSprite.Looks.hide();
 
     ball = new Lib.Sprite('ball');
     ball.SvgText.add("Ball", Ball("#ff0000") );
-    await ball.Font.add(Constant.HarryPotter);
+    ball.Font.add(Constant.HarryPotter);
     const X = ball.SvgText.toSvg(['X'], 20, "normal", "red", Constant.HarryPotter);
     ball.SvgText.add("X", X, Constant.HarryPotter);
     ball.Motion.Position.xy = {x:0,y:-100};
@@ -72,8 +72,12 @@ Pg.setting = async function setting() {
 
     stage.Event.whenFlag(async function*(){
         this.Looks.Backdrop.name = "Black";
+        let volume = 5;
         for(;;){
+            stage.Sound.setOption(Lib.SoundOption.VOLUME, volume);
             await stage.Sound.playUntilDone(Constant.ClassicPiano);
+            if(volume < 100)
+                volume += 10;
             yield;
         }
     });

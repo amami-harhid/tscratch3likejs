@@ -19,7 +19,7 @@ export class SvgText implements ISvgText {
         this._svgTextCreator = SvgTextCreator.getInstance();
         //console.log('this._svgTextCreator', this._svgTextCreator);
     }
-    private async addImage(name:string, image:string): Promise<void> {
+    private addImage(name:string, image:string): void {
         //console.log(image);
         if(this._entity instanceof Sprite) {
             const sprite = this._entity as Sprite;
@@ -27,20 +27,20 @@ export class SvgText implements ISvgText {
             if(sprite.imageDatas){
                 sprite.imageDatas.push({name:name, data:image, skinId:-1});
             }
-            await this._entity._addImage(name, image, costumes);
+            this._entity._addImage(name, image, costumes);
         }else if(this._entity instanceof Stage){
             const stage = this._entity as Stage;
             const backdrops = stage.backdrops;
-            await this._entity._addImage(name, image, backdrops);
+            this._entity._addImage(name, image, backdrops);
         }
     }
-    async add(name: string, svgString: string, fontFamily?: string): Promise<void>{
+    add(name: string, svgString: string, fontFamily?: string): void {
         const parser = new DOMParser();
         let svgDom = parser.parseFromString(svgString, 'text/xml');
         if(svgDom.childNodes.length < 1 ||
             svgDom.documentElement.localName !== 'svg') {
             const svgTextError = SvgTextError();
-            await this.addImage(name, svgTextError);
+            this.addImage(name, svgTextError);
             return;
             //throw 'SVGではないですよ';
         }
@@ -82,13 +82,13 @@ export class SvgText implements ISvgText {
             const serializer = new XMLSerializer();
             const svgText = serializer.serializeToString(svgTag);
             //console.log(svgText);
-            await this.addImage(name, svgText);
+            this.addImage(name, svgText);
 
         }else{
             const serializer = new XMLSerializer();
             const svgText = serializer.serializeToString(svgTag);
             //console.log(svgText);
-            await this.addImage(name, svgText);
+            this.addImage(name, svgText);
         }
     }
     mesure(texts:string[], fontSize?:number, fontStyle?:string, fontFamily?: string): {w:number, h:number}{
