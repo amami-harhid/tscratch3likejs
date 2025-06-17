@@ -41,7 +41,7 @@ export interface ISpriteControl {
      * クローンを作る
      * @param options? {TEntityOptions} - オプション 
      */
-    clone(options?:TEntityOptions): Promise<void>;
+    clone(options?:TEntityOptions): void;
     /**
      * クローンを全て削除する
      */

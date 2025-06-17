@@ -32,7 +32,7 @@ Pg.prepare = async function prepare() {
 
     cherry = new Lib.Sprite('Cherry');
     cherry.Image.add( Constant.Cherry );
-    cherry.Looks.Size.scale = {w: 20, h: 20};
+    cherry.Looks.Size.scale = [20, 20];
     cherry.Looks.hide();
 
 }
@@ -78,7 +78,7 @@ Pg.setting = async function setting() {
     cherry.Event.whenFlag(async function(){
         this.Pen.prepare();
         this.Looks.hide();
-        this.Looks.Size.scale = {w:200, h:200};
+        this.Looks.Size.scale = [200,200];
         this.Looks.Effect.clear();
         this.Motion.Rotation.style = Lib.RotationStyle.ALL_AROUND;
     });

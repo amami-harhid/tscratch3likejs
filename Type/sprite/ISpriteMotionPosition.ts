@@ -1,3 +1,5 @@
+import { TPositionArray } from "../common/typeCommon";
+
 /**
  * Sprite-Motion-Position
  */
@@ -25,5 +27,5 @@ export interface ISpriteMotionPosition {
     /** 
      * XY座標 
      */
-    set xy( xy: {x:number, y:number});
+    set xy( xy: {x:number, y:number}|TPositionArray);
 };

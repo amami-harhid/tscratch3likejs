@@ -37,16 +37,16 @@ Pg.prepare = async function prepare() {
     
 
     block = new Lib.Sprite('block');
-    block.SvgText.add( "1", Block("#f00000") );
-    block.SvgText.add( "2", Block("#00F000") );
-    block.SvgText.add( "3", Block("#0000F0") );
+    block.SvgText.add( "B1", Block("#f00000") );
+    block.SvgText.add( "B2", Block("#00F000") );
+    block.SvgText.add( "B3", Block("#0000F0") );
     block.Sound.add(Constant.Pew);
     block.Looks.hide();
 
     textSprite = new Lib.Sprite('Introduction');
     textSprite.Font.add(Constant.Togemaru);
-    addSvg(textSprite, "0", ["ブロック崩し"], Constant.Togemaru );
-    addSvg(textSprite, "1", ["Touch me to start."], Constant.Togemaru );
+    addSvg(textSprite, "T0", ["ブロック崩し"], Constant.Togemaru );
+    addSvg(textSprite, "T1", ["Touch me to start."], Constant.Togemaru );
     textSprite.Looks.hide();
 
     ball = new Lib.Sprite('ball');
@@ -54,17 +54,17 @@ Pg.prepare = async function prepare() {
     ball.Font.add(Constant.HarryPotter);
     const X = ball.SvgText.toSvg(['X'], 20, "normal", "red", Constant.HarryPotter);
     ball.SvgText.add("X", X, Constant.HarryPotter);
-    ball.Motion.Position.xy = {x:0,y:-100};
+    ball.Motion.Position.xy = [0, -100];//{x:0,y:-100};
     ball.Looks.hide();
 
     bar = new Lib.Sprite('bar');
     bar.SvgText.add("Bar", Bar("blue"));
-    bar.Motion.Position.xy = {x:0,y:-170};
+    bar.Motion.Position.xy = [0, -160];//{x:0,y:-160};
     bar.Looks.hide();
 
     bottom = new Lib.Sprite('Bottom');
     bottom.SvgText.add('Bottom', Bottom('#ff0000'));
-    bottom.Motion.Position.xy = {x:0,y:-183};
+    bottom.Motion.Position.xy = [0, -183]; //{x:0,y:-183};
 
 
 }
@@ -122,7 +122,7 @@ Pg.setting = async function setting() {
     });
 
     textSprite.Event.whenFlag(async function*(){
-        this.Looks.Costume.name = "1";
+        this.Looks.Costume.name = "T1";
         this.Looks.show();
         this.Event.broadcast('IntroStart');
         for(;;) {
@@ -172,7 +172,7 @@ Pg.setting = async function setting() {
     });
 
     ball.Event.whenBroadcastReceived('Start', async function(){
-        this.Motion.Position.xy = {x:0,y:0};
+        this.Motion.Position.xy = [0,0];//{x:0,y:0};
         this.Looks.show();
         const key = Lib.Keyboard.SPACE
         const isKeyDown = ()=>{
@@ -209,8 +209,8 @@ Pg.setting = async function setting() {
         this.Looks.hide();
     });
     bar.Event.whenBroadcastReceived('Start', async function(){
-        this.Motion.Position.xy = {x:0,y:-170};
-        this.Looks.Size.scale = {w:barSize*100, h:150};
+        this.Motion.Position.xy = [0, -160];//{x:0,y:-160};
+        this.Looks.Size.scale = [barSize*100, 150];//{w:barSize*100, h:150};
         positionRegist.clear(this.Motion.Position.x);
         this.Looks.show();
     });

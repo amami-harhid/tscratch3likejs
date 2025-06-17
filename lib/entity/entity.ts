@@ -475,9 +475,11 @@ export class Entity extends EventEmitter implements IEntity{
         if(costume){ 
             if(typeof image == 'string') {
                 const skinId = this.render.renderer.createSVGSkin(image);
+                this.pgMain.loadedImages[name] = {name:name,data:image,skinId:skinId};
                 costume.setSkin(name, this.drawableID, skinId);
             }else{
                 const skinId = this.render.renderer.createBitmapSkin(image);
+                this.pgMain.loadedImages[name] = {name:name,data:image,skinId:skinId};
                 costume.setSkin(name, this.drawableID, skinId);
             }
         }

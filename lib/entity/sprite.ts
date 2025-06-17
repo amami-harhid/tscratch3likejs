@@ -992,6 +992,8 @@ export class Sprite extends Entity implements ISprite {
     public $setSkin(imageName: string) : void {
         let _imageData:S3ImageData = this.pgMain.loadedImages[imageName];
         if(_imageData == undefined) {
+            console.log('this.pgMain.loadedImages', this.pgMain.loadedImages);
+            console.log('imageName', imageName);
             throw "【Sprite.Image.add】正しいイメージ名を指定してください"
         }
         if( this.imageDatas) {
@@ -1189,6 +1191,7 @@ export class Sprite extends Entity implements ISprite {
      * 位置
      */
     get Position() {
+
         const me = this;
         const position = {
             "x" : 0,

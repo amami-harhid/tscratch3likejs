@@ -1,3 +1,5 @@
+import { TScaleArr } from "../common/typeCommon";
+
 /** サイズ */
 export interface ISpriteSize {
 
@@ -53,7 +55,7 @@ export interface ISpriteSize {
      *  this.Looks.Size.scale = {w:scale.w +10, h:scale.h +20};
      * ```
      */
-    set scale(scale:{w:number,h:number});
+    set scale(scale:{w:number,h:number}|TScaleArr);
 
     /**
      * 自分自身の縦横表示サイズを得る

@@ -56,8 +56,8 @@ export class SpriteControl implements ISpriteControl {
      * クローンを作る
      * @param options? {TEntityOptions} - オプション 
      */
-    async clone(options?:TEntityOptions): Promise<void>{
-        return await this.entity.$clone(options);
+    clone(options?:TEntityOptions): void{
+        return this.entity.$clone(options);
     }
     /**
      * クローンを全て削除する

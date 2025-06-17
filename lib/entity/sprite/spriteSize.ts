@@ -1,7 +1,10 @@
+import { Utils } from 'lib/util/utils';
 import { Sprite } from '../sprite';
+import { TScaleArr } from '@Type/common/typeCommon';
+import { ISpriteSize } from '@Type/sprite/ISpriteSize';
 
 /** サイズ */
-export class SpriteSize {
+export class SpriteSize implements ISpriteSize {
 
     private entity: Sprite;
     /**
@@ -78,8 +81,12 @@ export class SpriteSize {
      *  this.Looks.Size.scale = {w:scale.w +10, h:scale.h +20};
      * ```
      */
-    set scale(scale:{w:number,h:number}) {
-        this.entity.$setScale(scale.w, scale.h);
+    set scale( scale : { w:number, h:number} | TScaleArr ) {
+        if( 'w' in scale ){
+            this.entity.$setScale(scale.w, scale.h);
+        }else {
+            this.entity.$setScale(scale[0], scale[1]);            
+        }
     }
 
     /**
