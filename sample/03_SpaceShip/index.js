@@ -35,7 +35,7 @@ Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
     // ステージに背景を追加
     stage.Image.add(Constant.Asteroid);
-    stage.SvgText.add( '1', BlackBackdrop );
+    stage.SvgText.add( BlackBackdrop, BlackBackdrop );
     stage.Looks.Effect.set(Lib.ImageEffective.GHOST, 20);
     stage.Sound.add(Constant.SpaceShipWoosh);
     stage.Sound.setOption(Lib.SoundOption.VOLUME, 120);
@@ -74,9 +74,6 @@ Pg.prepare = async function prepare() {
     debri.Image.add(Constant.Meteo01);
     debri.Image.add(Constant.Meteo02);
     debri.Image.add(Constant.Meteo03);
-    // debri.SvgText.add('debri1', Debris('white'));
-    // debri.SvgText.add('debri2', Debris('blue'));
-    // debri.SvgText.add('debri3', Debris('red'));
     debri.Image.add(Constant.Explosion);
     debri.Looks.Size.scale = {w:50, h:50}
     debri.Sound.add(Constant.Explosion);
@@ -86,7 +83,7 @@ Pg.prepare = async function prepare() {
 Pg.setting = async function setting() {
 
     stage.Event.whenFlag(async function*(){
-        this.Looks.Backdrop.name = '1';
+        this.Looks.Backdrop.name = BlackBackdrop;
         for(;;){
             await this.Sound.playUntilDone(Constant.SpaceShipWoosh);
             yield;
