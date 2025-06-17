@@ -8,4 +8,8 @@ export const Constant = {
     Togemaru: "Togemaru",
     Explosion: "Explosion",
     Shot: "shot",
+    Meteo01: 'Meteo01',
+    Meteo02: 'Meteo02',
+    Meteo03: 'Meteo03',
+
 }

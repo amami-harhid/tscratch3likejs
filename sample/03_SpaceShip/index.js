@@ -5,7 +5,6 @@ import {Pg, Lib} from '../../build/index.js';
 import { Constant } from './sub/constants.js';
 import { Ball } from './sub/Ball.js';
 import { BlackBackdrop } from './sub/blackBacdrop.js';
-import { Debris } from './sub/Debris.js';
 import { Bottom } from './sub/Bottom.js';
 
 Pg.title = "Space ship game"
@@ -17,6 +16,10 @@ let debri;
 let bottom;
 
 Pg.preload = async function preload() {
+    this.Image.load('./assets/meteo01.svg', Constant.Meteo01);
+    this.Image.load('./assets/meteo02.svg', Constant.Meteo02);
+    this.Image.load('./assets/meteo03.svg', Constant.Meteo03);
+
     this.Image.load('./assets/Explosion.svg', Constant.Explosion);
     this.Image.load('./assets/universe_asteroid02.svg', Constant.Asteroid);
     this.Image.load('./assets/spaceShip1.svg', Constant.Spaceship01 );
@@ -25,7 +28,7 @@ Pg.preload = async function preload() {
     this.Font.load('./assets/HarryPotter-ov4z.woff', Constant.HarryPotter);
     this.Sound.load('./assets/explosion.wav', Constant.Explosion);
     this.Sound.load('./assets/shot.wav', Constant.Shot);
-    this.Sound.load('./assets/spaceship-whoosh-video-game-sound-320171.mp3', Constant.SpaceShipWoosh);
+    this.Sound.load('./assets/spaceship-whoosh.mp3', Constant.SpaceShipWoosh);
 }
 Pg.prepare = async function prepare() {
     // ステージを作る
@@ -33,8 +36,10 @@ Pg.prepare = async function prepare() {
     // ステージに背景を追加
     stage.Image.add(Constant.Asteroid);
     stage.SvgText.add( '1', BlackBackdrop );
-    stage.Sound.add(Constant.SpaceShipWoosh);
     stage.Looks.Effect.set(Lib.ImageEffective.GHOST, 20);
+    stage.Sound.add(Constant.SpaceShipWoosh);
+    stage.Sound.setOption(Lib.SoundOption.VOLUME, 120);
+    stage.Sound.setOption(Lib.SoundOption.PITCH, -150);
     
     spaceShip = new Lib.Sprite('spaceShip');
     spaceShip.Image.add(Constant.Spaceship01);
@@ -66,11 +71,14 @@ Pg.prepare = async function prepare() {
     ball.Looks.hide();
 
     debri = new Lib.Sprite('Debri');
-    debri.SvgText.add('debri1', Debris('white'));
-    debri.SvgText.add('debri2', Debris('blue'));
-    debri.SvgText.add('debri3', Debris('red'));
+    debri.Image.add(Constant.Meteo01);
+    debri.Image.add(Constant.Meteo02);
+    debri.Image.add(Constant.Meteo03);
+    // debri.SvgText.add('debri1', Debris('white'));
+    // debri.SvgText.add('debri2', Debris('blue'));
+    // debri.SvgText.add('debri3', Debris('red'));
     debri.Image.add(Constant.Explosion);
-    debri.Looks.Size.scale = {w:20, h:20}
+    debri.Looks.Size.scale = {w:50, h:50}
     debri.Sound.add(Constant.Explosion);
     debri.Looks.hide();
 
@@ -142,20 +150,22 @@ Pg.setting = async function setting() {
 
     debri.Event.whenFlag(async function*(){
         this.Looks.hide();
-        this.Looks.Costume.name = 'debri1';
+        this.Looks.Costume.name = Constant.Meteo01;
         this.Motion.Position.x = 0;
         this.Motion.Position.y = 180;
-        const costumes = ['debri1','debri2','debri3'];
+        const costumes = [Constant.Meteo01,Constant.Meteo02,Constant.Meteo03];
         for(;;) {
             this.Motion.Position.x = Lib.getRandomValueInRange(-240, 240);
-            await this.Control.wait(2);
+            await this.Control.wait(1);
             this.Control.clone();
             this.Looks.Costume.name = costumes[Lib.getRandomValueInRange(0,2)];
             yield;
         }
     });
     debri.Control.whenCloned(async function*(){
-        this.Looks.Size.scale = {w:50,h:15};
+        const scale = Lib.getRandomValueInRange(50,100);
+        this.Looks.Size.scale = {w:scale,h:scale};
+        const degree = Lib.getRandomValueInRange(-1,5)
         this.Looks.show();
         for(;;) {
             if(this.Sensing.isTouchingToSprites([bottom])) {
@@ -165,12 +175,12 @@ Pg.setting = async function setting() {
             if(this.Sensing.isTouchingToSprites([ball])){
                 this.Sound.play(Constant.Explosion);
                 this.Looks.Costume.name = Constant.Explosion;
-                this.Looks.Size.scale = {w:20,h:20};
-                this.Looks.Effect.set(Lib.ImageEffective.GHOST, 50);
+                this.Looks.Size.scale = {w:120,h:120};
+                this.Looks.Effect.set(Lib.ImageEffective.GHOST, 80);
                 break;
             }
             this.Motion.Position.y += Lib.getRandomValueInRange(-5, 1)/2;
-            this.Motion.Direction.degree += 1;
+            this.Motion.Direction.degree += degree;
             yield;
         }
         await this.Control.wait(0.5);
