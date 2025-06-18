@@ -910,9 +910,9 @@ export class Entity extends EventEmitter implements IEntity{
      * @internal
      * 指定した色に触れているかを判定する
      * @param {string} targetRgb #始まりのカラー文字列
-     * @returns {Promise.<boolean>} 色にタッチしたとき true
+     * @returns {boolean} 色にタッチしたとき true
      */
-    public async $isTouchingColor(targetRgb: string): Promise<boolean> {
+    public $isTouchingColor(targetRgb: string): boolean {
         if(this.render && this.render.renderer && targetRgb &&
             typeof targetRgb === 'string' && targetRgb.substring(0, 1) === '#'
         ){
@@ -929,7 +929,7 @@ export class Entity extends EventEmitter implements IEntity{
      * @param {string} maskRgb - 先頭#
      * @returns 
      */
-    public async $colorIsTouchingColor(targetRgb:string, maskRgb:string): Promise<boolean> {
+    public $colorIsTouchingColor(targetRgb:string, maskRgb:string): boolean {
         if(this.render && this.render.renderer && 
             targetRgb && typeof targetRgb === 'string' && targetRgb.substring(0, 1) === '#' &&
             maskRgb && typeof maskRgb === 'string' && maskRgb.substring(0, 1) === '#'
@@ -937,7 +937,7 @@ export class Entity extends EventEmitter implements IEntity{
             const _renderer = this.render.renderer;
             const _targetRgb = this._libs.Cast.toRgbColorObject(targetRgb);
             const _maskRgb = this._libs.Cast.toRgbColorObject(maskRgb);
-            return await _renderer.isTouchingColor(this.drawableID, 
+            return _renderer.isTouchingColor(this.drawableID, 
                                     _targetRgb, 
                                     _maskRgb);
         }

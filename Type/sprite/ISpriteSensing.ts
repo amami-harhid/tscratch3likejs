@@ -59,7 +59,7 @@ export interface ISpriteSensing extends IEntitySensing{
      * @param target {string} - 色,先頭#,16進数
      * @returns 
      */
-    isTouchingToColor(target: string): Promise<boolean>;
+    isTouchingToColor(target: string): boolean;
 
     /**
      * 指定した色(target)に自身の色(mask)が触れたことを判定する
@@ -67,7 +67,7 @@ export interface ISpriteSensing extends IEntitySensing{
      * @param mask {string} - 色,先頭#,16進数
      * @returns 
      */
-    colorIsTouchingToColor(target: string, mask: string): Promise<boolean>;
+    colorIsTouchingToColor(target: string, mask: string): boolean;
 
     /**
      * Drag Mode

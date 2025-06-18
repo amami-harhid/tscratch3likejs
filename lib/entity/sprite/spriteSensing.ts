@@ -80,6 +80,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     isTouchingEdge() : boolean {
+        this.entity.update();
         return this.entity.$isTouchingEdge();
     }
     /**
@@ -87,12 +88,14 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     isTouchingVirticalEdge() : boolean {
+        this.entity.update();
         return this.entity.$isTouchingVirticalEdge();
     }
     /**
      * 水平方向の枠に触っていることを判定する
      */
     isTouchingHorizontalEdge(): boolean {
+        this.entity.update();
         return this.entity.$isTouchingHorizontalEdge();
     }
     isTouchingToSprites(sprites: ISprite[]): boolean {
@@ -133,8 +136,9 @@ export class SpriteSensing implements ISpriteSensing {
      * @param target {string} - 色,先頭#,16進数
      * @returns 
      */
-    async isTouchingToColor(target: string): Promise<boolean> {
-        return await this.entity.$isTouchingColor(target);
+    isTouchingToColor(target: string): boolean {
+        this.entity.update();
+        return this.entity.$isTouchingColor(target);
     }
     /**
      * 指定した色(target)に自身の色(mask)が触れたことを判定する
@@ -142,8 +146,9 @@ export class SpriteSensing implements ISpriteSensing {
      * @param mask {string} - 色,先頭#,16進数
      * @returns 
      */
-    async colorIsTouchingToColor(target: string, mask: string): Promise<boolean> {
-        return await this.entity.$colorIsTouchingColor(target, mask);
+    colorIsTouchingToColor(target: string, mask: string):  boolean {
+        this.entity.update();
+        return this.entity.$colorIsTouchingColor(target, mask);
     }
     /**
      * Drag Mode
