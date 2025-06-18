@@ -11,7 +11,6 @@ let frog;
 let text;
 
 Pg.preload = async function preload() {
-    console.log('Constant.Maze1',Constant.Maze1)
     this.Image.load('./assets/maze1.svg', Constant.Maze1);
     this.Image.load('./assets/maze2.svg', Constant.Maze2);
     this.Image.load('./assets/maze3.svg', Constant.Maze3);
@@ -36,7 +35,7 @@ Pg.prepare = async function prepare() {
     text = new Lib.Sprite('text');
     text.Font.add(Constant.Togemaru);
     const fontSize = 35;
-    const fontStyle = 'italic';
+    const fontStyle = 'bold';
     const color = '#000';
     const fontFamily = Constant.Togemaru;
     const text1 = text.SvgText.toSvg(["Maze game"], fontSize, fontStyle, color, fontFamily);
