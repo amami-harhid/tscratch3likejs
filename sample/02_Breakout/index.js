@@ -198,7 +198,7 @@ Pg.setting = async function setting() {
             }else if(this.Sensing.isTouchingToSprites([bottom])) {
                 break;
             }
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             yield;
         }
         this.Control.stopAll();

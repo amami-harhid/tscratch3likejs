@@ -495,17 +495,17 @@ export class Sprite extends Entity implements ISprite {
     protected $_ifOnEdgeBounds(): void {
 //        this._ifOnEdgeBoundsFlag = false;
         if(!this.$isAlive()) return;
-        
+        if(this.costumes){
+            //this.costumes.updatePosition(this.drawableID, this.$_position);
+        }
         const drawable = this.render.renderer._allDrawables[this.drawableID];
         if( drawable == null || drawable.skin == null) return;
         const bounds = this.render.renderer.getBounds(this.drawableID);
         if (!bounds) return;
 
-        const oldX = this.$_position.x;
-        const oldY = this.$_position.y;
-
         const stageWidth = this.render.stageWidth;
         const stageHeight = this.render.stageHeight;
+        //console.log('stageWidth, stageHeight, bounds', stageWidth, stageHeight, bounds)
         const distLeft = Math.max(0, (stageWidth / 2) + bounds.left);
         const distTop = Math.max(0, (stageHeight / 2) - bounds.top);
         const distRight = Math.max(0, (stageWidth / 2) - bounds.right);
@@ -532,26 +532,34 @@ export class Sprite extends Entity implements ISprite {
         if (minDist > 0) {
             return;// Not touching any edge
         }
+        //console.log('bounds', bounds)
+        //console.log('nearestEdge', nearestEdge);
+        // 直前の位置へ戻す($_positoinの中身を直前の値に戻す)
+        //this.backToPrevPosition();
+
 //        this._ifOnEdgeBoundsFlag = true;// 端にふれている。
         // Point away from the nearest edge.
         const radians = MathUtil.degToRad(90 - this.$_direction);
         let dx = Math.cos(radians);
         let dy = -Math.sin(radians);
+        let _dx = dx;
+        let _dy = dy;
         if (nearestEdge === 'left') {
-            dx = Math.max(0.2, Math.abs(dx));
+            _dx = Math.max(0.2, Math.abs(dx));
         } else if (nearestEdge === 'top') {
-            dy = Math.max(0.2, Math.abs(dy));
+            _dy = Math.max(0.2, Math.abs(dy));
         } else if (nearestEdge === 'right') {
-            dx = 0 - Math.max(0.2, Math.abs(dx));
+            _dx = 0 - Math.max(0.2, Math.abs(dx));
         } else if (nearestEdge === 'bottom') {
-            dy = 0 - Math.max(0.2, Math.abs(dy));
+            _dy = 0 - Math.max(0.2, Math.abs(dy));
         }
-        const newDirection = MathUtil.radToDeg(Math.atan2(dy, dx)) + 90;
+        const newDirection = MathUtil.radToDeg(Math.atan2(_dy, _dx)) + 90;
         this.$_direction = newDirection;
         // Keep within the stage.
         if(this.costumes ) {
-//            this.$_keepInFence(this.costumes._position.x, this.costumes._position.y);
-            this.$_keepInFence(this.$_position.x, this.$_position.y);
+            //this.costumes.setDirection(newDirection);
+            this.costumes.updateDirection(this.drawableID, this.$_direction);
+            this.$_keepInFence(this.$_position.x+dx, this.$_position.y+dy);
         }
     }
     /**
@@ -587,11 +595,6 @@ export class Sprite extends Entity implements ISprite {
         if(!this.$isAlive()) return;
         const fencedPosition = this.$_keepInFencePosition(x, y);
         if(fencedPosition){
-            // this._ifOnEdgeBoundsPosition.x = fencedPosition[0];
-            // this._ifOnEdgeBoundsPosition.y = fencedPosition[1];
-            
-            //this.$_position.x = fencedPosition[0];
-            //this.$_position.y = fencedPosition[1];
             this.$setXY(fencedPosition[0],fencedPosition[1]);
         }
     }
@@ -619,26 +622,30 @@ export class Sprite extends Entity implements ISprite {
         };
         // Adjust the known bounds to the target position.
         if(this.costumes){
-            bounds.left += (newX - this.costumes._position.x);
-            bounds.right += (newX - this.costumes._position.x);
-            bounds.top += (newY - this.costumes._position.y);
-            bounds.bottom += (newY - this.costumes._position.y);    
+            // bounds.left += (newX - this.costumes._position.x);
+            // bounds.right += (newX - this.costumes._position.x);
+            // bounds.top += (newY - this.costumes._position.y);
+            // bounds.bottom += (newY - this.costumes._position.y);
+            bounds.left += (newX - this.$_position.x);
+            bounds.right += (newX - this.$_position.x);
+            bounds.top += (newY - this.$_position.y);
+            bounds.bottom += (newY - this.$_position.y);
         }
         // Find how far we need to move the target position.
         let dx = 0;
         let dy = 0;
-        let hosei = 0; // 補正用（現在補正はゼロ）
         if (bounds.left < fence.left) {
-            dx += fence.left - bounds.left +hosei;
+            dx += fence.left - bounds.left;
         }
         if (bounds.right > fence.right) {
-            dx += fence.right - bounds.right -hosei;
+            dx += fence.right - bounds.right;
         }
         if (bounds.top > fence.top) {
-            dy += fence.top - bounds.top -hosei;
+            dy += fence.top - bounds.top;
         }
         if (bounds.bottom < fence.bottom) {
-            dy += fence.bottom - bounds.bottom +hosei;
+            //dy += fence.bottom - bounds.bottom +hosei;
+            dy += fence.bottom - bounds.bottom;
         }
         return [newX + dx , newY + dy];
     }
@@ -992,8 +999,6 @@ export class Sprite extends Entity implements ISprite {
     public $setSkin(imageName: string) : void {
         let _imageData:S3ImageData = this.pgMain.loadedImages[imageName];
         if(_imageData == undefined) {
-            console.log('this.pgMain.loadedImages', this.pgMain.loadedImages);
-            console.log('imageName', imageName);
             throw "【Sprite.Image.add】正しいイメージ名を指定してください"
         }
         if( this.imageDatas) {

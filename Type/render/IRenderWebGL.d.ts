@@ -203,6 +203,13 @@ export declare interface IRenderWebGL {
      */
     updateDrawablePosition(drawableID: number, position: TPositionArray): void;
     /**
+     * Update a drawable's direction.
+     * @param drawableID 
+     * @param direction 
+     */
+    updateDrawableDirection (drawableID: number, direction: number): void;
+
+    /**
      * update position, direction, scale, or effect properties
      * @param drawableID {number}
      * @param properties {ScratchRenderProperties}

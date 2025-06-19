@@ -212,7 +212,8 @@ export class PenSprite implements IPenSprite {
             console.error(NotPrepareMessage);
         }
         const stampDrawingID = this._sprite.drawableID;
-            if(this._skinId > -1 && stampDrawingID > -1 && this._sprite.DragMode.dragging == false){
+        if(this._skinId > -1 && stampDrawingID > -1 && this._sprite.DragMode.dragging == false){
+            this._sprite.update();        
             this.render.renderer.penStamp(this._skinId, stampDrawingID);
         }
     }

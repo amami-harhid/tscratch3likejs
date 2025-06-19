@@ -173,7 +173,7 @@ Pg.setting = async function setting() {
             this.Motion.Move.steps(1);
             //console.log(this.Looks.Size.drawingSize);
             // 端に触れたら跳ね返る
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             this.Pen.stampStage();
             this.Pen.stamp();
             this.Looks.Effect.change(Lib.ImageEffective.COLOR, 1);

@@ -1493,18 +1493,28 @@ export class Entity extends EventEmitter implements IEntity{
 
     }
     /**
+     * 直前の位置へ戻す
+     */
+    protected backToPrevPosition() {
+        this.$_position.x = this.$_prev_position.x;
+        this.$_position.y = this.$_prev_position.y;
+        this.render.renderer.updateDrawablePosition(this.drawableID, [this.$_position.x, this.$_position.y]);
+    }
+    /**
      * @internal
      * ポジションプロパティを更新する
      * @param {number} x 
      * @param {number} y 
      */
     public $setXY(x:number, y:number) : void {
+        this.$_prev_position.x = this.$_position.x;
+        this.$_prev_position.y = this.$_position.y;
         if(this.$_isDrawableActive(this.drawableID)){
             const _renderer = this.render.renderer;
             const _position = _renderer.getFencedPositionOfDrawable(this.drawableID, [x, y]);
             this.$_position.x = _position[0];
             this.$_position.y = _position[1];
-            //_renderer.updateDrawablePosition(this.drawableID, _position);
+            _renderer.updateDrawablePosition(this.drawableID, _position);
         }else{
             this.$_position.x = x;
             this.$_position.y = y;

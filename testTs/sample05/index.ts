@@ -22,9 +22,9 @@ Pg.preload = async function(this: PgMain) {
 // 事前準備処理
 Pg.prepare = async function() {
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
+    stage.Image.add( Jurassic );
     cat = new Lib.Sprite( Cat );
-    await cat.Image.add( Cat );
+    cat.Image.add( Cat );
     cat.Looks.hide();
 }
 // イベント定義処理

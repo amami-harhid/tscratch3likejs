@@ -37,26 +37,26 @@ Pg.preload = async function(this: PgMain) {
 Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
-    await stage.Sound.add( Chill );
+    stage.Image.add( Jurassic );
+    stage.Sound.add( Chill );
 
     // ネコ１を作る
     cat1 = new Lib.Sprite("Cat1");
-    await cat1.Image.add( Cat );
+    cat1.Image.add( Cat );
     cat1.Motion.Move.toXY( -Lib.stageWidth/4, +Lib.stageHeight/4 );
     cat1.Looks.Effect.set(Lib.ImageEffective.COLOR, 50);
     cat1.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
 
     // ネコ２を作る
     cat2 = new Lib.Sprite("Cat2");
-    await cat2.Image.add( Cat );
+    cat2.Image.add( Cat );
     cat2.Motion.Move.toXY( 0, 0 );
     cat2.Looks.Effect.set(Lib.ImageEffective.COLOR, 0);
     cat2.Motion.Rotation.style = Lib.RotationStyle.ALL_AROUND;
 
     // ネコ３を作る
     cat3 = new Lib.Sprite("Cat3");
-    await cat3.Image.add( Cat );
+    cat3.Image.add( Cat );
     cat3.Motion.Move.toXY( Lib.stageWidth /4, -Lib.stageHeight/4 );
     cat3.Looks.Effect.set( Lib.ImageEffective.COLOR, 10);
     cat3.Motion.Rotation.style = Lib.RotationStyle.DONT_ROTATE;
@@ -67,7 +67,7 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ステージ)
     stage.Event.whenFlag(async function*( this: Stage ) {
         // 音量=50
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 50 );
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 50 );
         // ずっと繰り返す
         for(;;){
             // 終わるまで音を鳴らす

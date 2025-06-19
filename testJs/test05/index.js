@@ -7,7 +7,7 @@ import {Pg, Lib} from '../../build/index.js';
 Pg.title = "【Test05】端に触れたら跳ね返るの動作を本家に近づける"
 
 const Env = Lib.Env;
-Env.fps = 60;
+Env.fps = 30;
 //dconst NeonTunnel = "NeonTunnel";
 const Chill = "Chill";
 const Cat = "Cat";
@@ -23,28 +23,27 @@ Pg.preload = async function preload() {
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Sound.add( Chill );
+    stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
-    cat.Image.set( Cat );
-    cat.Looks.Size.scale = {w: 300, h: 300};
+    cat.Image.add( Cat );
+    cat.Looks.Size.scale = {w: 100, h: 100};
 }
 
 Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     cat.Event.whenFlag(async function*(){
+        this.Motion.Position.xy = [0, 0];
         this.Motion.Direction.degree = 60;
-        console.log('b1')
         this.Pen.prepare();
-        console.log('b2')
-        this.Pen.Size.thickness = 1000;
-        this.Pen.HSVColor.transparency = 95;
         this.Pen.clear();
         await this.Control.waitUntil(()=>Lib.anyKeyIsDown());
-        this.Pen.down();
-        for(const _ of Lib.Iterator(5000)){
+        //this.Pen.down();
+        for(;;){
+            await this.Control.waitUntil(()=>this.Sensing.isKeyDown(Lib.Keyboard.SPACE));
+            await this.Control.waitUntil(()=>this.Sensing.isKeyNotDown (Lib.Keyboard.SPACE));
             this.Motion.Move.steps(10);
-            this.Motion.Move.ifOnEdgeBounds();
-            this.Looks.Effect.change(Lib.ImageEffective.COLOR, 5);
+            this.Motion.Move.ifOnEdgeBounce();
+            //this.Looks.Effect.change(Lib.ImageEffective.COLOR, 5);
             this.Pen.stamp();
             yield;
         }

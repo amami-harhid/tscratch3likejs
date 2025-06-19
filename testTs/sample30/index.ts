@@ -34,12 +34,12 @@ Pg.prepare = async function () {
     // ステージを作成
     stage = new Lib.Stage();
     // 背景追加
-    await stage.Sound.add(Chill);
+    stage.Sound.add(Chill);
 
     // スプライトネコを作成
     cat = new Lib.Sprite(Cat);
     // コスチューム追加
-    await cat.Image.add(Cat);
+    cat.Image.add(Cat);
     // 大きさ
     cat.Looks.Size.scale = {w: 150, h:150};
 }
@@ -84,7 +84,7 @@ Pg.setting = async function () {
             // 色の効果を 1ずつ変える
             this.Looks.Effect.change(Lib.ImageEffective.COLOR,1);
             this.Motion.Move.steps(5);
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             // スタンプをとる
             this.Pen.stamp();
             this.Pen.down();

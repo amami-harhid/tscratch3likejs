@@ -60,49 +60,49 @@ Pg.preload = async function preload(this: PgMain) {
 
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Image.add( Constant.Jurassic );
-    await stage.Sound.add( Constant.Chill );
+    stage.Image.add( Constant.Jurassic );
+    stage.Sound.add( Constant.Chill );
     sprite = new Lib.Sprite("sprite");
     sprite.Looks.hide(); // 非表示
-    await sprite.Image.add( Constant.Apple );
-    await sprite.Image.add( Constant.Arrow1_a );
-    await sprite.Image.add( Constant.Ballerina_a );
-    await sprite.Image.add( Constant.Balloon1_a );
-    await sprite.Image.add( Constant.Bear_a );
-    await sprite.Image.add( Constant.Bell1 );
-    await sprite.Image.add( Constant.Bowl_a );
-    await sprite.Image.add( Constant.Bowtie );
-    await sprite.Image.add( Constant.Broom );
-    await sprite.Image.add( Constant.Bread );
-    await sprite.Image.add( Constant.Cake_a );
+    sprite.Image.add( Constant.Apple );
+    sprite.Image.add( Constant.Arrow1_a );
+    sprite.Image.add( Constant.Ballerina_a );
+    sprite.Image.add( Constant.Balloon1_a );
+    sprite.Image.add( Constant.Bear_a );
+    sprite.Image.add( Constant.Bell1 );
+    sprite.Image.add( Constant.Bowl_a );
+    sprite.Image.add( Constant.Bowtie );
+    sprite.Image.add( Constant.Broom );
+    sprite.Image.add( Constant.Bread );
+    sprite.Image.add( Constant.Cake_a );
 
-    await sprite.Image.add( Constant.Casey_a );
-    await sprite.Image.add( Constant.CatFlying_a );
-    await sprite.Image.add( Constant.Catcher_a );
-    await sprite.Image.add( Constant.Chick_a );
-    await sprite.Image.add( Constant.CityBus_a );
-    await sprite.Image.add( Constant.Cloud );
-    await sprite.Image.add( Constant.Crab_a );
-    await sprite.Image.add( Constant.Crystal_b );
-    await sprite.Image.add( Constant.Dinosaur1_a );
-    await sprite.Image.add( Constant.Dinosaur2_a );
-    await sprite.Image.add( Constant.Dinosaur3_a );
-    await sprite.Image.add( Constant.Dinosaur4_a );
+    sprite.Image.add( Constant.Casey_a );
+    sprite.Image.add( Constant.CatFlying_a );
+    sprite.Image.add( Constant.Catcher_a );
+    sprite.Image.add( Constant.Chick_a );
+    sprite.Image.add( Constant.CityBus_a );
+    sprite.Image.add( Constant.Cloud );
+    sprite.Image.add( Constant.Crab_a );
+    sprite.Image.add( Constant.Crystal_b );
+    sprite.Image.add( Constant.Dinosaur1_a );
+    sprite.Image.add( Constant.Dinosaur2_a );
+    sprite.Image.add( Constant.Dinosaur3_a );
+    sprite.Image.add( Constant.Dinosaur4_a );
 
-    await sprite.Image.add( Constant.Diver2 );
-    await sprite.Image.add( Constant.Dog1_a );
-    await sprite.Image.add( Constant.Dog2_c );
-    await sprite.Image.add( Constant.Donut );
-    await sprite.Image.add( Constant.Dorian_a );
-    await sprite.Image.add( Constant.Dove_a );
+    sprite.Image.add( Constant.Diver2 );
+    sprite.Image.add( Constant.Dog1_a );
+    sprite.Image.add( Constant.Dog2_c );
+    sprite.Image.add( Constant.Donut );
+    sprite.Image.add( Constant.Dorian_a );
+    sprite.Image.add( Constant.Dove_a );
 
-    await sprite.Image.add( Constant.Dragon1_b );
-    await sprite.Image.add( Constant.Dragon_a );
-    await sprite.Image.add( Constant.Glow_1 );
-    await sprite.Image.add( Constant.Gobo_a );
-    await sprite.Image.add( Constant.Story_Z_3 );
+    sprite.Image.add( Constant.Dragon1_b );
+    sprite.Image.add( Constant.Dragon_a );
+    sprite.Image.add( Constant.Glow_1 );
+    sprite.Image.add( Constant.Gobo_a );
+    sprite.Image.add( Constant.Story_Z_3 );
 
-    await sprite.Sound.add( Constant.Rip );
+    sprite.Sound.add( Constant.Rip );
     // 縦横 200%のサイズにする
     sprite.Looks.Size.scale = {w: 200, h: 200}; 
 
@@ -114,7 +114,7 @@ Pg.setting = async function setting() {
     
     // 旗が押されたときの動作
     stage.Event.whenFlag(async function*(this:Stage){
-        await this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
+        this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
         // ずっと繰り返す
         for(;;){
             // 終わるまで音を鳴らす

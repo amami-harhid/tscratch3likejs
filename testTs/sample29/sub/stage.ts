@@ -8,9 +8,9 @@ export class StageEx extends Lib.Stage {
      */
     async prepare() {
 
-        await this.Image.add( Constants.Jurassic  );
-        await this.Image.add( Constants.Backdrop );
-        await this.Sound.add( Constants.Chill );
+        this.Image.add( Constants.Jurassic  );
+        this.Image.add( Constants.Backdrop );
+        this.Sound.add( Constants.Chill );
     
     }
     /**

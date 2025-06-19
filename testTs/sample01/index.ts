@@ -16,7 +16,7 @@ Pg.preload = async function(this:PgMain) {
 // 事前準備処理
 Pg.prepare = async function() {
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
+    stage.Image.add( Jurassic );
 }
 
 // イベント定義処理

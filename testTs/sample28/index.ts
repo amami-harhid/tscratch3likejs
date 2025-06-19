@@ -41,15 +41,15 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
-    await stage.Image.add( Jurassic01 );
+    stage.Image.add( Jurassic01 );
     // Chill を追加
-    await stage.Sound.add( Chill );
+    stage.Sound.add( Chill );
 
     // スプライト(ネコ)を作る
     cat = new Lib.Sprite("cat");
     // コスチュームを追加
-    await cat.Image.add( Cat01 );
-    await cat.Image.add( Cat02 );
+    cat.Image.add( Cat01 );
+    cat.Image.add( Cat02 );
 
     // 変数モニター
     monitors = new Lib.Monitors();

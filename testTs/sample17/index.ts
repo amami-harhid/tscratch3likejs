@@ -38,17 +38,17 @@ Pg.preload = async function(this: PgMain) {
 Pg.prepare = async function() {
     // ステージを作る
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
-    await stage.Sound.add( Chill );
+    stage.Image.add( Jurassic );
+    stage.Sound.add( Chill );
     // 十字を作る
     cross = new Lib.Sprite("Cross");
-    await cross.Image.add( Cross01 );
-    await cross.Image.add( Cross02 );
+    cross.Image.add( Cross01 );
+    cross.Image.add( Cross02 );
     cross.Looks.Size.scale = {w: 300, h: 300};
     // 蝶を作る
     butterfly = new Lib.Sprite("Butterfly");
-    await butterfly.Image.add( Butterfly01 );
-    await butterfly.Image.add( Butterfly02 );
+    butterfly.Image.add( Butterfly01 );
+    butterfly.Image.add( Butterfly02 );
     butterfly.Looks.hide();
 }
 // イベント定義処理
@@ -56,7 +56,7 @@ Pg.setting = async function() {
     // 旗が押されたときの動作(ステージ)
     stage.Event.whenFlag( async function*( this:Stage ) {
         // 音量=20
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 20 )
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 20 )
         // ずっと繰り返す
         for(;;){
             // 終わるまで音を鳴らす

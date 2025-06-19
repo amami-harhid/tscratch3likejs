@@ -27,11 +27,11 @@ Pg.preload = async function preload(this: PgMain) {
 // 事前準備処理
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
-    await stage.Sound.add( Chill );
+    stage.Image.add( Jurassic );
+    stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");
     cat.Motion.Move.toXY( 0, 0 );
-    await cat.Image.add( Cat );
+    cat.Image.add( Cat );
 }
 // イベント定義処理
 Pg.setting = async function setting() {
@@ -39,7 +39,7 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ステージ)
     stage.Event.whenFlag(async function*( this:Stage ) {
         // 音量 10
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 10);
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 10);
         // ずっと繰り返す
         for(;;){
             // 終わるまで音を鳴らす

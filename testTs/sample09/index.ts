@@ -26,11 +26,11 @@ Pg.preload = async function preload(this: PgMain) {
 // 事前準備処理
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
-    await stage.Sound.add( Chill );
+    stage.Image.add( Jurassic );
+    stage.Sound.add( Chill );
     cat = new Lib.Sprite( "Cat" );
-    await cat.Image.add( Cat );
-    await cat.Sound.add( Mya );
+    cat.Image.add( Cat );
+    cat.Sound.add( Mya );
 }
 
 // 向き
@@ -42,7 +42,7 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ステージ)
     stage.Event.whenFlag(async function*(this:Stage){
         // 音量= 50
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 50);
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 50);
         // ずっと繰り返す
         for(;;){
             // 終わるまで音を鳴らす
@@ -56,7 +56,7 @@ Pg.setting = async function setting() {
         this.Motion.Move.toXY( 0, 0 );  // 配置中央
         this.Motion.Direction.degree = 90;  // 向き90度
         // ネコの音を 音量=20 とする
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
     });
     
     // 向き
@@ -86,7 +86,7 @@ Pg.setting = async function setting() {
             // 進む。
             this.Motion.Move.steps(catStep);
             // 端に触れたら跳ね返る
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             // 端にタッチしたとき
             if(this.Sensing.isTouchingEdge() ){
                 // ミャーと鳴く。

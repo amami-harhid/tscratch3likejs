@@ -54,7 +54,7 @@ Pg.prepare = async function prepare() {
 
     block = new Lib.Sprite( "block");
     block.Image.set( Block );
-    await block.Sound.add(Pew);
+    block.Sound.add(Pew);
     block.Motion.Move.toXY(-220,-150);
     block.Looks.Size.scale = {w: 20,h: 20};
     block.Looks.hide();
@@ -72,7 +72,7 @@ Pg.prepare = async function prepare() {
 Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     stage.Event.whenFlag(async function*(){
-        await this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
+        this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
         for(;;){
             await this.Sound.playUntilDone(Chill);
             yield;
@@ -99,7 +99,7 @@ Pg.setting = async function setting() {
         //this.Looks.say('');
         for(;;){
             this.Motion.Move.steps(BallSpeed);
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             if(this.Sensing.isTouchingEdge()){
                 const randomDegree = Lib.getRandomValueInRange(-25, 25);
                 this.Motion.Direction.degree += randomDegree;    
@@ -194,11 +194,9 @@ Pg.setting = async function setting() {
                     this.Looks.hide();
                     break;
                 }
-            }    
-            //this.render.renderer.draw();
+            }
             yield;
         }
-        //this.$remove();
     });
     // 緑の旗が押されたときの動作
     title.Event.whenFlag(async function(){

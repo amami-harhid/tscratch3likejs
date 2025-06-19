@@ -21,19 +21,19 @@ Pg.preload = async function preload() {
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    //await stage.Image.add( NeonTunnel );
-    await stage.Sound.add( Chill );
+    //stage.Image.add( NeonTunnel );
+    stage.Sound.add( Chill );
 
     ball = new Lib.Sprite('ball');
-    await ball.Image.add( BallA );
-    ball.Looks.Size.scale = {w: 150, h: 150};
+    ball.Image.add( BallA );
+    ball.Looks.Size.scale = {w: 100, h: 100};
     ball.Sensing.DragMode.draggable = true;
 }
 
 Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     stage.Event.whenFlag(async function*(){
-        await this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
+        this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
         for(;;){
             await this.Sound.playUntilDone(Chill);
             yield;
@@ -56,7 +56,7 @@ Pg.setting = async function setting() {
         for(const _ of Lib.Iterator(5000)){
             this.Motion.Direction.degree += 5;
             this.Motion.Move.steps(10);
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             this.Pen.HSVColor.hue += 5;
             //this.Pen.setPenHue(hue);
             //this.Pen.drawLine();

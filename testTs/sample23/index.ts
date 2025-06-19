@@ -41,34 +41,34 @@ Pg.preload = async function preload(this: PgMain) {
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Image.add( NeonTunnel );
-    await stage.Sound.add( Chill );
+    stage.Image.add( NeonTunnel );
+    stage.Sound.add( Chill );
     ball = new Lib.Sprite();
-    await ball.Image.add( BallA );
+    ball.Image.add( BallA );
     //ball.Motion.setXY(0,-100);
     ball.Looks.Size.scale = {w: 50, h: 50};
 
     paddle = new Lib.Sprite("paddle");
-    await paddle.Image.add( Paddle );
+    paddle.Image.add( Paddle );
     paddle.Motion.Move.toXY(0, -140);
     block = new Lib.Sprite( "block");
     block.Looks.hide();
-    await block.Image.add( Block );
-    await block.Sound.add(Pew);
+    block.Image.add( Block );
+    block.Sound.add(Pew);
     block.Motion.Move.toXY(-220,180);
     line = new Lib.Sprite( "line" );
-    await line.Image.add( Line );
+    line.Image.add( Line );
     line.Motion.Move.toXY(0, -180);
     title = new Lib.Sprite("title");
-    await title.Image.add(YouWon);
-    await title.Image.add(GameOver);
+    title.Image.add(YouWon);
+    title.Image.add(GameOver);
     title.Looks.hide();
 }
 
 Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     stage.Event.whenFlag(async function*(this:Stage){
-        await this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
+        this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
         for(;;){
             await this.Sound.playUntilDone(Chill);
             yield;
@@ -99,7 +99,7 @@ Pg.setting = async function setting() {
         this.Looks.Bubble.say('');
         for(;;){
             this.Motion.Move.steps(BallSpeed);
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             if(this.Sensing.isTouchingEdge()){
                 const randomDegree = Lib.getRandomValueInRange(-25, 25);
                 this.Motion.Direction.degree += randomDegree;    

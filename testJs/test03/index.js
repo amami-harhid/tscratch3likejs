@@ -164,7 +164,7 @@ Pg.setting = async function setting() {
         //this.Looks.say('');
         for(;;){
             this.Motion.Move.steps(BallSpeed);
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             if(this.Sensing.isTouchingEdge()){
                 const randomDegree = Lib.getRandomValueInRange(-25, 25);
                 this.Motion.Direction.degree += randomDegree;    
@@ -216,7 +216,7 @@ Pg.setting = async function setting() {
     });
     // メッセージ(GameOver)を受け取ったときの動作
     paddle.Event.whenBroadcastReceived('GameOver', async function(){
-        this.Control.stopOtherScripts();
+        this.Control.stopOtherScripts(this);
     });
 
     let blockCount = 0;

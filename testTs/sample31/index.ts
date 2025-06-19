@@ -41,10 +41,10 @@ Pg.prepare = async function () {
     // create instance
     cat = new Cat();
     // execute stage prepare
-    await cat.Image.add( Constants.Cat01 );
+    cat.Image.add( Constants.Cat01 );
 
     guideCat = new Lib.Sprite("guide");
-    await guideCat.Image.add( Constants.Cat01);
+    guideCat.Image.add( Constants.Cat01);
     guideCat.Looks.Size.scale = {w: 50, h: 50};
     guideCat.Motion.Position.xy = {x:-150, y:150};
 }

@@ -336,6 +336,32 @@ export class Costumes {
             return -1;
         }
     }
+    updatePosition( drawableID: number, position: TPosition ): void {
+        this._position.x = position.x;
+        this._position.y = position.y;
+        if(this.render && this.render.renderer){
+            const _skinId = this.skinId;
+            if( _skinId > -1 && this.isSvgSkin( _skinId ) ) {
+                if( !this.isSvgComplete( _skinId )) {
+                    return;
+                }     
+            }
+            this.render.renderer.updateDrawablePosition (drawableID, [position.x, position.y]);
+        }
+
+    }
+    updateDirection( drawableID: number, direction: number): void {
+        this._direction = direction;
+        if(this.render && this.render.renderer){
+            const _skinId = this.skinId;
+            if( _skinId > -1 && this.isSvgSkin( _skinId ) ) {
+                if( !this.isSvgComplete( _skinId )) {
+                    return;
+                }     
+            }
+            this.render.renderer.updateDrawableDirection(drawableID, direction);
+        }
+    }
     update( drawableID: number, effect = {} ) {
         if(this.render && this.render.renderer){
             const _skinId = this.skinId;

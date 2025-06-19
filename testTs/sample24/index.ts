@@ -29,14 +29,14 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
-    await stage.Image.add( NeonTunnel );
+    stage.Image.add( NeonTunnel );
     // Chill を追加
-    await stage.Sound.add( Chill );
+    stage.Sound.add( Chill );
 
     // スプライト(ball)を作る
     ball = new Lib.Sprite("ball");
     // コスチュームを追加
-    await ball.Image.add( BallA );
+    ball.Image.add( BallA );
     // 大きさを 横120%,縦120% にする
     ball.Looks.Size.scale = {w: 120, h: 120 };
 }
@@ -49,7 +49,7 @@ Pg.setting = async function setting() {
      */
     stage.Event.whenFlag(async function(this:Stage){
         // 音量を 5にする
-        await this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
+        this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
         await this.Control.wait(1);
         this.Event.broadcast('START');
     });

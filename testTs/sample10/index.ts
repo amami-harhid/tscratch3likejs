@@ -28,11 +28,11 @@ Pg.preload = async function preload(this: PgMain) {
 // 事前準備処理
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
-    await stage.Sound.add( Chill );
+    stage.Image.add( Jurassic );
+    stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");
-    await cat.Image.add( Cat );
-    await cat.Sound.add( Mya );
+    cat.Image.add( Cat );
+    cat.Sound.add( Mya );
     cat.Motion.Move.toXY( 200, 150 );
     cat.Motion.Direction.degree = 90;
 }
@@ -42,7 +42,7 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ステージ)
     stage.Event.whenFlag(async function*(this:Stage) {
         // 音量 50
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 50);
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 50);
         // ずっと繰り返す
         for(;;){
             // 終わるまで音を鳴らす
@@ -58,7 +58,7 @@ Pg.setting = async function setting() {
         // 向き初期化
         this.Motion.Direction.degree = 90;
         // 音量 20
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 20);
     });
     // 回転量
     const _changeDirection = 1;
@@ -77,7 +77,7 @@ Pg.setting = async function setting() {
         for(;;){
             // マウスカーソルでタッチしたら、クローンを作る
             if( this.Sensing.isMouseTouching() ) {
-                await this.Control.clone();
+                this.Control.clone();
                 // マウスタッチしている間、待つ
                 await this.Control.waitWhile( ()=>this.Sensing.isMouseTouching() ); 
             }
@@ -98,7 +98,7 @@ Pg.setting = async function setting() {
             // 進む
             this.Motion.Move.steps( steps );
             // 端に触れたら跳ね返る
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             if(this.Sensing.isTouchingEdge() ){
                 // ミャーと鳴く。
                 this.Sound.play(Mya)

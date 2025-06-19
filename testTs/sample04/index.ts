@@ -16,15 +16,15 @@ Pg.preload = async function(this:PgMain) {
 // 事前準備処理
 Pg.prepare = async function() {
     stage = new Lib.Stage();
-    await stage.Image.add( ImageNameJurassic );
-    await stage.Sound.add( Chill );
+    stage.Image.add( ImageNameJurassic );
+    stage.Sound.add( Chill );
 }
 // イベント定義処理
 Pg.setting = async function() {
 
     stage.Event.whenFlag( async function(this:Stage){
         // 音量20
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 20)
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 20)
     })
 
     // ステージをクリックしたときの動作

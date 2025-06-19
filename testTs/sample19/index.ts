@@ -37,15 +37,15 @@ Pg.preload = async function(this: PgMain) {
 Pg.prepare = async function prepare() {
 
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
+    stage.Image.add( Jurassic );
 
     cat = new Lib.Sprite("Cat");
-    await cat.Image.add( Cat1 );
-    await cat.Image.add( Cat2 );
+    cat.Image.add( Cat1 );
+    cat.Image.add( Cat2 );
     cat.Motion.Direction.degree = 75;
     cat2 = new Lib.Sprite("Cat2");
-    await cat2.Image.add( Cat1 );
-    await cat2.Image.add( Cat2 );
+    cat2.Image.add( Cat1 );
+    cat2.Image.add( Cat2 );
     cat2.Motion.Direction.degree = 115;
     cat2.Motion.Move.toXY( -20, -120 );
 }
@@ -72,7 +72,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // もし端に着いたら跳ね返る
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             // 進む
             this.Motion.Move.steps(WALK_STEP);
             yield;
@@ -151,7 +151,7 @@ Pg.setting = async function setting() {
                 // 空文字で「言う」( ==> フキダシ消える )
                 this.Looks.Bubble.say();
                 // 他のスクリプトを止める
-                this.Control.stopOtherScripts();
+                this.Control.stopOtherScripts(this);
                 // このスクリプトを止める
                 this.Control.stopThisScript();
             }
@@ -169,7 +169,7 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // もし端に着いたら跳ね返る
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             // 進む
             this.Motion.Move.steps(WALK_STEP);
             yield;
@@ -190,7 +190,7 @@ Pg.setting = async function setting() {
                 // 空文字で「言う」( ==> フキダシ消える )
                 this.Looks.Bubble.say();
                 // 他のスクリプトを止める
-                this.Control.stopOtherScripts();
+                this.Control.stopOtherScripts(this);
                 // このスクリプトを止める
                 this.Control.stopThisScript();
                 // 繰り返しを抜ける

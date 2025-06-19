@@ -40,16 +40,16 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
-    await stage.Image.add( Jurassic01 );
+    stage.Image.add( Jurassic01 );
     // Chill を追加
-    await stage.Sound.add( Chill );
+    stage.Sound.add( Chill );
 
     // スプライト(ball)を作る
     cat = new Lib.Sprite("cat");
     // コスチュームを追加
-    await cat.Image.add( Cat01 );
-    await cat.Image.add( Cat02 );
-    await cat.Sound.add( Rip );
+    cat.Image.add( Cat01 );
+    cat.Image.add( Cat02 );
+    cat.Sound.add( Rip );
 
     monitors = new Lib.Monitors();
     monitors.add(MonitorNameSCORE, 'スコア');

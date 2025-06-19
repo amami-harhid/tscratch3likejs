@@ -28,7 +28,7 @@ export class SpriteMotionMove implements ISpriteMotionMove {
     /**
      * もし端に振れたら跳ね返る
      */
-    ifOnEdgeBounds(): void {
+    ifOnEdgeBounce(): void {
         this.entity.$ifOnEdgeBounds();
     }
     /**

@@ -37,7 +37,7 @@ Pg.prepare = async function () {
     // create instance
     cat = new Cat();
     // execute stage prepare
-    await cat.Image.add( Constants.Cat01 );
+    cat.Image.add( Constants.Cat01 );
 }
 
 Pg.setting = async function () {

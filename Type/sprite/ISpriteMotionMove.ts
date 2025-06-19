@@ -15,7 +15,7 @@ export interface ISpriteMotionMove {
     /**
      * もし端に振れたら跳ね返る
      */
-    ifOnEdgeBounds(): void;
+    ifOnEdgeBounce(): void;
     /**
      * ステージ上のランダムな位置へ移動する
      */

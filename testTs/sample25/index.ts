@@ -30,16 +30,16 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
     // ステージに背景を追加
-    await stage.Image.add( Jurassic01 );
-    await stage.Image.add( Jurassic02 );
+    stage.Image.add( Jurassic01 );
+    stage.Image.add( Jurassic02 );
     stage.Looks.Backdrop.name = Jurassic01;
     // Chill を追加
-    await stage.Sound.add( Chill );
+    stage.Sound.add( Chill );
 
     // スプライト(ball)を作る
     ball = new Lib.Sprite("ball");
     // コスチュームを追加
-    await ball.Image.add( BallA );
+    ball.Image.add( BallA );
     // 大きさを 横120%,縦120% にする
     ball.Looks.Size.scale = {w: 120, h: 120};
 
@@ -78,7 +78,7 @@ Pg.setting = async function setting() {
     stage.Event.whenBroadcastReceived('START', async function*(this:Stage){
 
         // 音量を 5にする
-        await this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
+        this.Sound.setOption(Lib.SoundOption.VOLUME, 5);
         // ずっと繰り返す
         for(;;){
             // 終わるまで鳴らす

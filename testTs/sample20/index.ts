@@ -42,20 +42,20 @@ Pg.preload = async function(this: PgMain) {
 // 事前準備処理
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Image.add( BackDrop );
+    stage.Image.add( BackDrop );
 
     cat = new Lib.Sprite("Cat");
     cat.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
     //cat.Motion.setRotationStyle( Lib.RotationStyle.LEFT_RIGHT );
-    await cat.Image.add( Cat1 );
-    await cat.Image.add( Cat2 );
+    cat.Image.add( Cat1 );
+    cat.Image.add( Cat2 );
     cat.Motion.Move.toXY( -150, 0 );
     cat.Motion.Direction.degree = 90;
     cat.Looks.hide();
     cat2 = new Lib.Sprite("Cat2");
     cat2.Motion.Rotation.style = Lib.RotationStyle.LEFT_RIGHT;
-    await cat2.Image.add( Cat1 );
-    await cat2.Image.add( Cat2 );
+    cat2.Image.add( Cat1 );
+    cat2.Image.add( Cat2 );
     cat2.Motion.Direction.degree = -90;
     cat2.Motion.Move.toXY( 150, 0 );
     cat2.Looks.hide();

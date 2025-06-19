@@ -24,8 +24,8 @@ import { SoundOption } from '../../Type/entity/SoundOption';
 import { KEYBOARD_KEYS } from '../../Type/io/IKeyboard';
 import { Point } from '@Type/common/point';
 import { TextSprite } from '../entity/text/textSprite';
-export class Libs {
 
+export class Libs {
     get TextSprite() {
         return TextSprite;
     }

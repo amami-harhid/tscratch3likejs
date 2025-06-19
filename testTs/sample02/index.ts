@@ -17,8 +17,8 @@ Pg.preload = async function(this:PgMain) {
 // 事前準備処理
 Pg.prepare = async function() {
     stage = new Lib.Stage();
-    await stage.Image.add( White );
-    await stage.Image.add( Jurassic );
+    stage.Image.add( White );
+    stage.Image.add( Jurassic );
     stage.Looks.Backdrop.name = White;
 }
 // イベント定義処理

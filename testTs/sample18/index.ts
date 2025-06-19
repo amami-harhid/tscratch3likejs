@@ -37,13 +37,13 @@ Pg.preload = async function(this: PgMain) {
 Pg.prepare = async function prepare() {
     // ステージを作る
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
-    await stage.Sound.add( Chill );
+    stage.Image.add( Jurassic );
+    stage.Sound.add( Chill );
     // 十字を作る
     cross = new Lib.Sprite("Cross");
-    await cross.Image.add( Cross01 );
-    await cross.Image.add( Cross02 );
-    await cross.Sound.add( Pew );
+    cross.Image.add( Cross01 );
+    cross.Image.add( Cross02 );
+    cross.Sound.add( Pew );
     cross.Looks.Size.scale = {w: 100, h: 100};
     // 座標x を ステージの真ん中にする 
     cross.Motion.Position.x = 0; 
@@ -56,7 +56,7 @@ Pg.setting = async function setting() {
     // 旗が押されたときの動作(ステージ)
     stage.Event.whenFlag(async function*( this: Stage) {
         // 音量=50
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 50 );
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 50 );
         // ずっと繰り返す
         for(;;){
             // 終わるまで音を鳴らす
@@ -77,9 +77,9 @@ Pg.setting = async function setting() {
         // 座標y を ステージの高さの半分×0.6だけ下げる 
         this.Motion.Position.y = -Lib.stageHeight/2 * 0.6; 
         // 音量=200
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 200 );
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 200 );
         // ピッチ=150 (再生速度をあげる = 音を短く高く)
-        await this.Sound.setOption( Lib.SoundOption.PITCH, -150 );
+        this.Sound.setOption( Lib.SoundOption.PITCH, -150 );
     });
 
     // 進む速さ
@@ -152,9 +152,9 @@ Pg.setting = async function setting() {
     // クローンされたときの動作（十字）
     cross.Control.whenCloned( async function*( this: Sprite ) {
         // 音量 50
-        await this.Sound.setOption( Lib.SoundOption.VOLUME, 50 );
+        this.Sound.setOption( Lib.SoundOption.VOLUME, 50 );
         // ピッチ 50 ( 低音にする )
-        await this.Sound.setOption( Lib.SoundOption.PITCH, -50 );
+        this.Sound.setOption( Lib.SoundOption.PITCH, -50 );
         // ずっと繰り返す
         for(;;){
             // 右へ回転する

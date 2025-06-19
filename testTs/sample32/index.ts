@@ -39,13 +39,12 @@ Pg.preload = async function (this: PgMain) {
 Pg.prepare = async function () {
     // create instance
     stage = new Lib.Stage();
-    await stage.Sound.add( Gion );
-    await stage.SvgText.add('BackDrop', backdrop);   
+    stage.Sound.add( Gion );
+    stage.SvgText.add('BackDrop', backdrop);   
 
     // create instance
     cat = new Lib.Sprite(Cat);
     cat.Looks.hide();
-    const promiseArr:Promise<void>[] = []
     // eslint-disable-next-line loopCheck/s3-loop-plugin
     for(const counter of Lib.Iterator(Texts.length)){
         const texts = Texts[counter];
@@ -53,18 +52,15 @@ Pg.prepare = async function () {
         const fontSize = 25;
         const fontStyle = 'normal';
         const svg = cat.SvgText.toSvg(texts, fontSize, fontStyle, color, RosetE);
-        const add = cat.SvgText.add(`${counter}`, svg);
-        promiseArr.push(add);
+        cat.SvgText.add(`${counter}`, svg);
     }
-    await Promise.all(promiseArr);
 
     cat2 = new Lib.Sprite(Cat2);
-    await cat2.Font.add( RosetE );
-    await cat2.Font.add( Kaisotai );
-    await cat2.Font.add( TogeMaruGothic );
+    cat2.Font.add( RosetE );
+    cat2.Font.add( Kaisotai );
+    cat2.Font.add( TogeMaruGothic );
     cat2.Looks.hide();
 
-    const promiseArr2:Promise<void>[] = []
     // eslint-disable-next-line loopCheck/s3-loop-plugin
     for(const counter of Lib.Iterator(Texts2.length)){
         const texts = Texts2[counter];
@@ -72,10 +68,8 @@ Pg.prepare = async function () {
         const fontSize = 15;
         const fontStyle = 'normal';
         const svg = cat2.SvgText.toSvg(texts, fontSize, fontStyle, color, Kaisotai);
-        const add = cat2.SvgText.add(`${counter}`, svg);
-        promiseArr2.push(add);
+        cat2.SvgText.add(`${counter}`, svg);
     }
-    await Promise.all(promiseArr2);
 
 }
 
@@ -154,7 +148,7 @@ Pg.setting = async function () {
             this.Motion.Move.steps(1);
             //console.log(this.Looks.Size.drawingSize);
             // 端に触れたら跳ね返る
-            this.Motion.Move.ifOnEdgeBounds();
+            this.Motion.Move.ifOnEdgeBounce();
             this.Pen.stampStage();
             this.Pen.stamp();
             this.Looks.Effect.change(Lib.ImageEffective.COLOR, 1);

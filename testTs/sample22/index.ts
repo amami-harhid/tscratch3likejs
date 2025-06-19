@@ -23,17 +23,17 @@ Pg.preload = async function preload(this: PgMain) {
 
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    await stage.Image.add( Jurassic );
-    await stage.Sound.add( Chill );
+    stage.Image.add( Jurassic );
+    stage.Sound.add( Chill );
     const scale: TScale = {w:200,h:200};
     cat = new Lib.Sprite("Cat", {scale: scale});//サイズを２倍にしています
-    await cat.Image.add( Cat );
+    cat.Image.add( Cat );
 }
 
 Pg.setting = async function setting() {
 
     stage.Event.whenFlag(async function*(this:Stage){
-        await this.Sound.setOption(Lib.SoundOption.VOLUME, 20);
+        this.Sound.setOption(Lib.SoundOption.VOLUME, 20);
         for(;;){
             await this.Sound.playUntilDone(Chill);
             yield;

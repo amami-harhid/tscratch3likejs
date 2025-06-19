@@ -29,15 +29,15 @@ Pg.prepare = async function prepare() {
     console.log(Lib);
     stage = new Lib.Stage();
     // ステージに背景を追加
-    await stage.Image.add( Jurassic01 );
+    stage.Image.add( Jurassic01 );
     // Chill を追加
-    await stage.Sound.add( Chill );
+    stage.Sound.add( Chill );
 
     // スプライト(ネコ)を作る
     cat = new Lib.Sprite("cat");
     // コスチュームを追加
-    await cat.Image.add( Cat01 );
-    await cat.Image.add( Cat02 );
+    cat.Image.add( Cat01 );
+    cat.Image.add( Cat02 );
     cat.Motion.Position.y = 100;
     monitors = new Lib.Monitors();
     monitors.add('M01', '秒数');
@@ -74,8 +74,7 @@ Pg.setting = async function setting() {
     });
     cat.Event.whenBroadcastReceived('START', async function(){
         this.threadName = 'cat whenBroadcastReceived Thread [02]';
-        console.log('stopOtherScripts() In cat whenBroadcastReceived Thread [02]')
-        this.Control.stopOtherScripts();
+        this.Control.stopOtherScripts(this);
 
     });
 
@@ -84,7 +83,7 @@ Pg.setting = async function setting() {
         // 4秒後に「ステージの他のスクリプトを止める」
         await this.Control.wait(4);
         // 4秒後に StageのstopOtherScripts
-        this.Control.stopOtherScripts();
+        this.Control.stopOtherScripts(this);
         await this.Control.wait(20);
         // 4秒後にSTART ---> catの中でstopOtherScripts
         this.Event.broadcast('START');
@@ -97,8 +96,8 @@ Pg.setting = async function setting() {
     stage.Event.whenFlag(async function*(){
         this.threadName = 'Stage whenFlag Thread [02]';
         // 音量 10
-        await this.Sound.setOption(Lib.SoundOption.VOLUME, 50);
-        await this.Sound.setOption(Lib.SoundOption.PITCH, 150);
+        this.Sound.setOption(Lib.SoundOption.VOLUME, 50);
+        this.Sound.setOption(Lib.SoundOption.PITCH, 150);
         // ずっと繰り返す
         for(;;){
             // 終わるまで音を鳴らす
