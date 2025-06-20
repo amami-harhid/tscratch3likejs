@@ -25,7 +25,7 @@ testTs フォルダを参照してください。
 
 ビルド結果を使った動作確認をしたいときは次より参照してください。
 
-https://amami-harhid.github.io/tscratch3likejs/testTs
+http://ts3.mirai-logic.com/testTs
 
 # template 
 git clone https://github.com/amami-harhid/templateTscrach3.git
@@ -92,7 +92,7 @@ updateDrawableSkinIdのskinIdを間違えていた。--> 修正してうまく�
 renderer.updateDrawableSkinId(penDrawableId, skinId);
 ```
 
-## 2025/06/14(4)【完了6/14】
+## 2025/06/14(4)【完了6/19】同期型に改良
 
 連続してクローンを作りながら、本体のコスチュームを変えていくとき、
 クローンされた側のコスチュームが正しく受け継がれない（微妙にずれてしまう）事象。
@@ -130,31 +130,17 @@ this.Looks.Costume.next();
 
 # 改良
 
-## Position.xy = {x: 0, y: 0};
+## Position.xy = {x: 0, y: 0}; 【完了 6/20】
 
-{} を与えるとき、{x: 0, y: 0} と同じにしたい。
-[0,0] を与えたら、{x: 0, y: 0} と同じにしたい。
+{} を与えるとき、{x: 0, y: 0} と同じにしたい。【完了 6/20】
+[0,0] を与えたら、{x: 0, y: 0} と同じにしたい。【完了 6/19】
 
-## getRandomValueInRange
+Looks.Size.scale も同様とする 【完了 6/20】
+
+## getRandomValueInRange 【完了 6/20】
 
 random, randomInteger としたい。
 
-## clone()
+## clone()【完了 6/19】
 
-本体の Image,Sound,Font 
-
-### Image の場合、
-skinId をクローン側で作るのではなく、本体の保有するskinId を共有したらよさそう。
-drawableIDだけはクローンで作る。
-
-クローン側で本体スプライトを保持しているので、Costumesを参照できるはず。
-クローンを作るとき( new するとき)、クローン作成時には Costumes のコンストラクタに
-親スプライトのインスタンスを渡すことで 親のcostumes をコピーして引き継ぐ。
-
-
-### Sound の場合、
-SoundPlayer をクローン側で作るのではなく、本体の保有するSoundPlayerを共有したらよさそう。
-
-クローン側で本体スプライトを保持しているので、そこから本体のSoundPlayerを参照できるはず。
-
-### Fontデータの場合、
+ 同期型に改良。

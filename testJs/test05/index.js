@@ -25,14 +25,16 @@ Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
     stage.Sound.add( Chill );
     cat = new Lib.Sprite(Cat);
+    cat.Motion.Position.xy = [100,100];
     cat.Image.add( Cat );
-    cat.Looks.Size.scale = {w: 100, h: 100};
+    cat.Looks.Size.scale = {w: 500, h: 500};
 }
 
 Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作
     cat.Event.whenFlag(async function*(){
-        this.Motion.Position.xy = [0, 0];
+        this.Motion.Position.xy = {};
+        this.Looks.Size.scale = {};
         this.Motion.Direction.degree = 60;
         this.Pen.prepare();
         this.Pen.clear();

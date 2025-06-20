@@ -60,13 +60,26 @@ export interface Lib {
     get randomPoint (): TPosition;
     get randomDirection (): number;
     /**
-     * 
+     * ランダム値を得る
      * @param from {number} ランダム範囲の最小値
      * @param to {number} ランダム範囲の最大値
      * @param forceAsDecimal {boolean} False/省略時は整数、True時は10進数
      * @returns 
      */
     getRandomValueInRange( from:number , to:number, forceAsDecimal?:boolean ): number;
+    /**
+     * ランダム値を得る
+     * @param from 
+     * @param to 
+     */
+    random( from:number , to:number ): number;
+    /**
+     * 整数のランダム値を得る
+     * @param from 
+     * @param to 
+     */
+    randomInteger(from:number , to:number ): number;
+
     get Stage (): SStage;
     get Sprite (): SSprite;
     get Utils ();

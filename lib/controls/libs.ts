@@ -169,7 +169,7 @@ export class Libs {
         return direction;
     }
     /**
-     * 
+     * ランダム値を得る
      * @param from {number} ランダム範囲の最小値
      * @param to {number} ランダム範囲の最大値
      * @param forceAsDecimal {boolean} False/省略時は整数、True時は10進数
@@ -177,6 +177,31 @@ export class Libs {
      */
     getRandomValueInRange( from:number , to:number, forceAsDecimal=false ){
         return Utils.randomizeInRange( from , to, forceAsDecimal);
+    }
+    /**
+     * ランダム値を得る
+     * @param from {number} ランダム範囲の最小値
+     * @param to {number} ランダム範囲の最大値
+     * @returns 
+     */
+    randomInRange( from?:number , to?:number ){
+        if(from == undefined && to == undefined){
+            return Utils.randomizeInRange( 0 , 1, false);
+        }else if(from == undefined || to == undefined){
+            throw 'randomInRange パラメータが不足';
+        }else{
+            return Utils.randomizeInRange( from , to, false);
+        }
+        
+    }
+    /**
+     * 整数のランダム値を得る
+     * @param from {number} ランダム範囲の最小値
+     * @param to {number} ランダム範囲の最大値
+     * @returns 
+     */
+    randomInteger( from:number , to:number ){
+        return Utils.randomizeInRange( from , to, true);
     }
     /** @internal */
     get Render () {

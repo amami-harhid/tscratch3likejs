@@ -27,5 +27,5 @@ export interface ISpriteMotionPosition {
     /** 
      * XY座標 
      */
-    set xy( xy: {x:number, y:number}|TPositionArray);
+    set xy( xy: {x?:number, y?:number}|TPositionArray);
 };

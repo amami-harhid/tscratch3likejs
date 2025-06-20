@@ -27,11 +27,17 @@ export class SpriteMotionPosition implements ISpriteMotionPosition {
     set y(y: number) {
         this.entity.$setY(y)
     }
-    set xy( xy: {x:number, y:number} | TPositionArray)  {
-        if('x' in xy) {
-            this.entity.$setXY(xy.x, xy.y);
-        }else{
-            this.entity.$setXY(xy[0], xy[1]);            
+    set xy( xy: {x:number, y:number} | {} | TPositionArray)  {
+        if(Array.isArray(xy)){
+            this.entity.$setXY(xy[0], xy[1]);
+        }else if('x' in xy && 'y' in xy && xy.x && xy.y){
+            this.entity.$setXY(xy.x, xy.y);       
+        }else if('x' in xy && xy.x){
+            this.entity.$setXY(xy.x, 0);       
+        }else if('y' in xy && xy.y){
+            this.entity.$setXY(0, xy.y);       
+        }else {
+            this.entity.$setXY(0, 0);
         }
     }
 

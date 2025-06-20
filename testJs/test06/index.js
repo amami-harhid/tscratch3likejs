@@ -58,6 +58,7 @@ Pg.prepare = async function prepare() {
     await Promise.all(promiseArr);
 
     cat2 = new Lib.Sprite(Cat);
+    cat2.Motion.Position.xy = {};
     await cat2.Font.add( RosetE );
     await cat2.Font.add( Kaisotai );
     await cat2.Font.add( TogeMaruGothic );
@@ -121,7 +122,7 @@ Pg.setting = async function setting() {
     cat2.Event.whenBroadcastReceived('Start', async function*(){
         this.Looks.Size.scale = {w:200, h:200};
         this.Looks.show();
-        this.Motion.Position.xy = {x:0, y:0};
+        this.Motion.Position.xy = {};
         this.Looks.Costume.name = '1';
         for(;;) {
             this.Looks.Costume.next();

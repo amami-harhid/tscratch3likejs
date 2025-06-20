@@ -82,10 +82,16 @@ export class SpriteSize implements ISpriteSize {
      * ```
      */
     set scale( scale : { w:number, h:number} | TScaleArr ) {
-        if( 'w' in scale ){
+        if(Array.isArray(scale)){
+            this.entity.$setScale(scale[0], scale[1]);
+        }else if( 'w' in scale && 'h' in scale && scale.w && scale.h){
             this.entity.$setScale(scale.w, scale.h);
-        }else {
-            this.entity.$setScale(scale[0], scale[1]);            
+        }else if( 'w' in scale && scale.w){
+            this.entity.$setScale(scale.w, 100);
+        }else if( 'h' in scale && scale.h){
+            this.entity.$setScale(100, scale.h);
+        }else{
+            this.entity.$setScale(100, 100);
         }
     }
 
