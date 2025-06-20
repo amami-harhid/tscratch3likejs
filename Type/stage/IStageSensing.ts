@@ -1,4 +1,4 @@
-import { IEntitySensing } from "@Type/entity/IEntitySensing";
+import type { IEntitySensing } from "@Type/entity/IEntitySensing";
 /**
  * Sprite Sensing(調べる)
  */

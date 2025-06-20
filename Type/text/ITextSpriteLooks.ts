@@ -1,5 +1,5 @@
-import { ISpriteLayer } from '../sprite/ISpriteLayer';
-import { ISpriteSize } from '../sprite/ISpriteSize';
+import type { ISpriteLayer } from '../sprite/ISpriteLayer';
+import type { ISpriteSize } from '../sprite/ISpriteSize';
 import type { ISpriteEffect } from '../sprite/ISpriteEffect';
 /**
  * Sprite Looks(見た目)

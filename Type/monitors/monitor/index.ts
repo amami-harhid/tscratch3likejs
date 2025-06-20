@@ -1,4 +1,4 @@
-import { TPosition, TScale } from "@Type/common/typeCommon";
+import type { TPosition, TScale } from "@Type/common/typeCommon";
 
 /**
  * Monitor

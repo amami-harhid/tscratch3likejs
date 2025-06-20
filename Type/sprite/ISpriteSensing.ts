@@ -1,7 +1,7 @@
 import type { ISprite } from ".";
 import type { ISpriteSensingDistance } from "./ISpriteSensingDistance";
 import type { ISpriteDragMode } from "./ISpriteDragMode";
-import { IEntitySensing } from "@Type/entity/IEntitySensing";
+import type { IEntitySensing } from "@Type/entity/IEntitySensing";
 /**
  * Sprite Sensing(調べる)
  */

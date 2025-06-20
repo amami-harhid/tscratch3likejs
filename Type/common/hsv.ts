@@ -1,4 +1,4 @@
-import { NumericRange } from "./numericRange";
+import type { NumericRange } from "./numericRange";
 
 /** 色相範囲 */
 export type Hue = NumericRange<0, 360>;

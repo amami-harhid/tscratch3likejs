@@ -1,4 +1,4 @@
-import { IEntityImage } from '../entity/IEntityImage';
+import type { IEntityImage } from '../entity/IEntityImage';
 /**
  * Sprite Image(イメージ)
  */

@@ -1,4 +1,4 @@
-import { TPosition, TScale } from "../common/typeCommon";
+import type { TPosition, TScale } from "../common/typeCommon";
 
 /**
  * EntityOptions

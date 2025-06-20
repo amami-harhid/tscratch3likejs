@@ -1,5 +1,5 @@
-import { IPenSpriteSize } from './IPenSpriteSize';
-import { IPenSpriteHSVColor } from './IPenSpriteHSVColor';
+import type { IPenSpriteSize } from './IPenSpriteSize';
+import type { IPenSpriteHSVColor } from './IPenSpriteHSVColor';
 /**
  * PenSprite
  * @internal

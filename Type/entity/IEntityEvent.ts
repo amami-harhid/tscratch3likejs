@@ -1,4 +1,4 @@
-import { IEntityBroadCast } from '../entity/IEntityBroadcast';
+import type { IEntityBroadCast } from '../entity/IEntityBroadcast';
 /** イベント */
 export interface IEntityEvent extends IEntityBroadCast {
 

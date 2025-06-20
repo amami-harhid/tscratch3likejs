@@ -1,4 +1,4 @@
-import { TScaleArr } from "../common/typeCommon";
+import type { TScaleArr } from "../common/typeCommon";
 
 /** サイズ */
 export interface ISpriteSize {

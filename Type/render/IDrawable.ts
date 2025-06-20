@@ -1,4 +1,4 @@
-import { IMonitorSkin } from "../monitors/monitor/IMonitorSkin";
+import type { IMonitorSkin } from "../monitors/monitor/IMonitorSkin";
 
 export interface IDrawable {
 

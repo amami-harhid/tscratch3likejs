@@ -1,4 +1,4 @@
-import { TSoundPlayerOption } from '../sound/IAudioEngine';
+import type { TSoundPlayerOption } from '../sound/IAudioEngine';
 
 /** サイズ */
 export interface ISpriteTextToSpeech {

@@ -1,4 +1,4 @@
-import { IMonitor } from "./monitor";
+import type { IMonitor } from "./monitor";
 
 /**
  * Monitors

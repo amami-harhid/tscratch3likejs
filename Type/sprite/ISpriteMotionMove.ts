@@ -1,4 +1,4 @@
-import { ISprite } from '.';
+import type { ISprite } from '.';
 
 export interface ISpriteMotionMove {
     /**

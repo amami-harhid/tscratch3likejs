@@ -1,8 +1,8 @@
 import type { ISpriteMotionPosition } from './ISpriteMotionPosition';
-import { ISpriteMotionMove } from './ISpriteMotionMove';
-import { ISpriteMotionPoint } from './ISpriteMotionPoint';
-import { ISpriteMotionDirection} from './ISpriteMotionDirection';
-import { ISpriteMotionRotation } from './ISpriteMotionRotation';
+import type { ISpriteMotionMove } from './ISpriteMotionMove';
+import type { ISpriteMotionPoint } from './ISpriteMotionPoint';
+import type { ISpriteMotionDirection} from './ISpriteMotionDirection';
+import type { ISpriteMotionRotation } from './ISpriteMotionRotation';
 export interface ISpriteMotion {
 
     get Position(): ISpriteMotionPosition;

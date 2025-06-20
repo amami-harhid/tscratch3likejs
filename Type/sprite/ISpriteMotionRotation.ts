@@ -1,4 +1,4 @@
-import{ RotationStyle } from '../entity/RotationStyle';
+import { RotationStyle } from '../entity/RotationStyle';
 /**
  * 回転方法
  */

@@ -1,8 +1,8 @@
 /**
  * Render
  */
-import { IRenderWebGL } from './IRenderWebGL';
-import { IPgMain } from '../pgMain';
+import type { IRenderWebGL } from './IRenderWebGL';
+import type { IPgMain } from '../pgMain';
 import { StageLayering } from '../stage/CStageLayering';
 
 export type TRender = {

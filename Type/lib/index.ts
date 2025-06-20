@@ -3,22 +3,41 @@ import type { ImageEffective } from "../entity/ImageEffective";
 import { RotationStyle } from "../entity/RotationStyle";
 import { SoundOption } from "../entity/SoundOption";
 import type { I_KEYBOARD_KEYS } from "../io/IKeyboard";
-import { SMonitors } from "../monitors";
+import type { SMonitors } from "../monitors";
 import type { SSprite } from "../sprite";
 import type { SStage } from "../stage";
 import type { TEnv } from "../common/env";
+import type { IMathUtil } from "./mathUtil";
+import type { IUtils } from "./utils";
 
 /**
  * Lib
  */
 export interface Lib {
-
-    get Keyboard ():I_KEYBOARD_KEYS;
-    get ImageEffective (): typeof ImageEffective;
-    get SoundOption (): typeof SoundOption;
-    get RotationStyle (): typeof RotationStyle;
-    get Monitors (): SMonitors;
-    get MathUtil ();
+    /**
+     * キーボード
+     */
+    Keyboard :I_KEYBOARD_KEYS;
+    /**
+     * 画像のオプション
+     */
+    ImageEffective : typeof ImageEffective;
+    /**
+     * 音のオプション
+     */
+    SoundOption: typeof SoundOption;
+    /**
+     * 回転方法
+     */
+    RotationStyle : typeof RotationStyle;
+    /**
+     * モニター
+     */
+    Monitors: SMonitors;
+    /**
+     * Math Utils
+     */
+    MathUtil: IMathUtil;
     /**
      * 指定したkeyが押されているとき TRUE
      * key 省略時は 何かのキーが押されているとき TRUE
@@ -48,17 +67,23 @@ export interface Lib {
     /**
      * ステージ幅
      */
-    get stageWidth (): number;
+    stageWidth: number;
     /**
      * ステージ高さ
      */
-    get stageHeight (): number;
+    stageHeight: number;
     /**
      * mousePosition ( on canvas )
      */
-    get mousePosition (): TPosition;
-    get randomPoint (): TPosition;
-    get randomDirection (): number;
+    mousePosition: TPosition;
+    /**
+     * ステージ上のランダムな位置
+     */
+    randomPoint: TPosition;
+    /**
+     * ランダムな向き
+     */
+    randomDirection (): number;
     /**
      * ランダム値を得る
      * @param from {number} ランダム範囲の最小値
@@ -79,10 +104,18 @@ export interface Lib {
      * @param to 
      */
     randomInteger(from:number , to:number ): number;
-
-    get Stage (): SStage;
-    get Sprite (): SSprite;
-    get Utils ();
+    /**
+     * ステージクラス
+     */
+    Stage: SStage;
+    /**
+     * スプライトクラス
+     */
+    Sprite: SSprite;
+    /**
+     * Utils
+     */
+    Utils: IUtils;
 
     /**
      * 条件成立する間、待つ
@@ -104,5 +137,5 @@ export interface Lib {
     /**
      * Env 
      */
-    get Env():TEnv;
+    Env:TEnv;
 }

@@ -1,4 +1,4 @@
-import { IScratchSoundPlayer, TEffectChain } from "@Type/sound/IAudioEngine";
+import type { IScratchSoundPlayer, TEffectChain } from "@Type/sound/IAudioEngine";
 
 /** 位置 */
 export declare type TPositionCanEmpty = {

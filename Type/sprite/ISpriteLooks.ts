@@ -1,9 +1,9 @@
 import type { ISpriteCostume } from './ISpriteCostume';
 import type { ISpriteBackdrop } from './ISpriteBackdrop';
 import type { ISpriteSize } from './ISpriteSize';
-import { ISpriteLayer } from './ISpriteLayer';
-import { ISpriteEffect } from '@Type/sprite/ISpriteEffect';
-import { ISpriteBubble } from '@Type/sprite/ISpriteBubble';
+import type { ISpriteLayer } from './ISpriteLayer';
+import type { ISpriteEffect } from '@Type/sprite/ISpriteEffect';
+import type { ISpriteBubble } from '@Type/sprite/ISpriteBubble';
 /**
  * Sprite Looks(見た目)
  */

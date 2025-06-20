@@ -37,7 +37,7 @@ export class MathUtil {
      * @param {!number} n Number to wrap.
      * @param {!number} min Minimum limit.
      * @param {!number} max Maximum limit.
-     * @return {!number} Value of n wrapped between min and max.
+     * @return {!number} - Value of n wrapped between min and max.
      */
     static wrapClamp (n: number, min: number, max: number): number {
         const range = (max - min) + 1;

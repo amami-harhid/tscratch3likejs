@@ -1,17 +1,17 @@
 /**
  * Stage
  */
-import { IEntity } from '@Type/entity/IEntity';
-import { TEntityOptions } from '@Type/entity/TEntityOptions';
+import type { IEntity } from '@Type/entity/IEntity';
+import type { TEntityOptions } from '@Type/entity/TEntityOptions';
 //import { ISprite } from '@Type/sprite';
-import { IStageLooks } from './IStageLooks';
-import { IStageControl } from './IStageControl';
-import { IStageSensing } from './IStageSensing';
-import { IStageEvent } from './IStageEvent';
-import { IStageImage } from './IStageImage';
-import { IStageSound } from './IStageSound';
-import { ISvgText } from '@Type/svgText/ISvgText';
-import { IStageFont } from './IStageFont';
+import type { IStageLooks } from './IStageLooks';
+import type { IStageControl } from './IStageControl';
+import type { IStageSensing } from './IStageSensing';
+import type { IStageEvent } from './IStageEvent';
+import type { IStageImage } from './IStageImage';
+import type { IStageSound } from './IStageSound';
+import type { ISvgText } from '@Type/svgText/ISvgText';
+import type { IStageFont } from './IStageFont';
 
 export type TStage = IStage;
 export interface SStage extends IStage{

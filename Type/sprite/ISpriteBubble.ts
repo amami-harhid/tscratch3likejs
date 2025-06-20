@@ -1,4 +1,4 @@
-import { BubbleProperties } from '@Type/sprite/TBubble';
+import type { BubbleProperties } from '@Type/sprite/TBubble';
 
 /** 吹き出し */
 export interface ISpriteBubble {

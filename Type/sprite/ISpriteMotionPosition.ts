@@ -1,4 +1,4 @@
-import { TPositionArray } from "../common/typeCommon";
+import type { TPositionArray } from "../common/typeCommon";
 
 /**
  * Sprite-Motion-Position

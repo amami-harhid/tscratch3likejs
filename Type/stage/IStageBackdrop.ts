@@ -1,5 +1,5 @@
 /** 背景 */
-import { IEntityBackdrop } from "@Type/entity/IEntityBackdrop";
+import type { IEntityBackdrop } from "@Type/entity/IEntityBackdrop";
 /**
  * StageBackdrop
  */

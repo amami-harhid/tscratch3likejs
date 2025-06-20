@@ -1,4 +1,4 @@
-import { Hue, Saturation, Brightness, Transparency } from '../../common/hsv';
+import type { Hue, Saturation, Brightness, Transparency } from '../../common/hsv';
 /**
  * PenSpriteHSVColor
  */

@@ -1,7 +1,7 @@
 /**
  * S3MonitorSkin
  */
-import { IMeasurementProvider } from "../../util/IMeasurementProvider";
+import type { IMeasurementProvider } from "../../util/IMeasurementProvider";
 import type { IDrawable } from "../../render/IDrawable";
 import type { TSize, TVec3 } from "../../common/typeCommon";
 

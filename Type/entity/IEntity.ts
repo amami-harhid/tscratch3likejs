@@ -1,4 +1,4 @@
-import { IRender } from "../render/IRender";
+import type { IRender } from "../render/IRender";
 export declare interface IEntity {
     readonly drawableID: number;
     readonly render: IRender
