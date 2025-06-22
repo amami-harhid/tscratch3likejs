@@ -384,14 +384,24 @@ export class PgMain implements IPgMain {
         if( this.prepare ) {
             const f = this.prepare.bind(this);
             await f();
-            //await Utils.wait(1000/Env.fps); // <=== なぜ1FPS分待つのかな？
-            // テキストSVG化の過程で FONTデータ(base64)を埋め込んでいるが、
-            // そこで 50msec程度はかかる。100msecを待つことでよいかと思う。
-            await Utils.wait(100);
+            // update処理を実施するにあたり遅延させる時間が不明、
+            // よってupdateを繰返すことにする
+            // 繰り返しは緑の旗が押されたときに停止する
+            if( this._stage ){
+                const self = this;
+                const intervalId = setInterval(_=>{
+                    if( self._stage ) {
+                        self._stage.update();
+                        self._stage.draw();
+                    }
+                }, 100);
+                const flag = S3Element.getControlGreenFlag();
+                const clickFunc = async(e:MouseEvent)=>{
+                    clearInterval(intervalId);
+                    flag.removeEventListener('click', clickFunc);
+                };
+                flag.addEventListener("click", clickFunc);                
 
-            if( this._stage ) {
-                this._stage.update();
-                this._stage.draw();
             }
         }
     }
