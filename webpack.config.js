@@ -8,7 +8,7 @@ const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const version = JSON.stringify(require('./package.json').version);
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     context: `${__dirname}/src`,
     entry: {
         'index': path.join(__dirname, '/src', 'index.ts')

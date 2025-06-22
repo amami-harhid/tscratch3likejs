@@ -184,13 +184,13 @@ export class Libs {
      * @param to {number} ランダム範囲の最大値
      * @returns 
      */
-    randomInRange( from?:number , to?:number ){
+    randomDecimal( from?:number , to?:number ){
         if(from == undefined && to == undefined){
-            return Utils.randomizeInRange( 0 , 1, false);
+            return Utils.randomizeInRange( 0 , 1, true);
         }else if(from == undefined || to == undefined){
             throw 'randomInRange パラメータが不足';
         }else{
-            return Utils.randomizeInRange( from , to, false);
+            return Utils.randomizeInRange( from , to, true);
         }
         
     }
@@ -201,7 +201,7 @@ export class Libs {
      * @returns 
      */
     randomInteger( from:number , to:number ){
-        return Utils.randomizeInRange( from , to, true);
+        return Utils.randomizeInRange( from , to, false);
     }
     /** @internal */
     get Render () {

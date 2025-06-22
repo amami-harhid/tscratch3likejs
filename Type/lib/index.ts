@@ -93,13 +93,13 @@ export interface Lib {
      */
     getRandomValueInRange( from:number , to:number, forceAsDecimal?:boolean ): number;
     /**
-     * ランダム値を得る
+     * ランダム値を得る(10進数)
      * @param from 
      * @param to 
      */
-    random( from:number , to:number ): number;
+    randomDecimal( from:number , to:number ): number;
     /**
-     * 整数のランダム値を得る
+     * ランダム値を得る(整数値)
      * @param from 
      * @param to 
      */
