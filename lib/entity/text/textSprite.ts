@@ -1,13 +1,11 @@
 import { Costumes } from '../costumes';
 import { Entity } from '../entity';
-//import { ImageLoader } from '../../importer/imageLoader';
-//import { MeasurementProvider } from '../../util/MeasurementProvider';
 import { StageLayering } from '../../../Type/stage/CStageLayering';
 import { ScratchRenderProperties } from '@Type/render/IRenderWebGL';
 import { TextSpriteControl } from './textControl';
 import { TextSpriteLooks } from './textSpriteLooks';
 import { TextSpriteMotion } from './textSpriteMotion';
-import type { TPosition, TScale } from '@Type/common/typeCommon';
+import type { TScale } from '@Type/common/typeCommon';
 import type { ITextSprite, TextAttributes, ParmFontFace } from '@Type/text';
 import type { ITextSpriteControl } from '@Type/text/ITextSpriteControl';
 import type { ITextSpriteEvent } from '@Type/text/ITextSpriteEvent';
@@ -15,13 +13,7 @@ import type { ITextSpriteLooks } from '@Type/text/ITextSpriteLooks';
 import type { ITextSpriteMotion } from '@Type/text/ITextSpriteMotion';
 import { TextSpriteEvent } from './textSpriteEvent';
 import { ISprite } from '@Type/sprite';
-//import { Utils } from '../../util/utils';
-//import { Env } from '../../env';
-//import { blob } from 'stream/consumers';
 import { FontLoader } from '../../importer/fontLoader';
-
-//const SVGSkin = require('../../../node_modules/scratch-render/src/SVGSkin');
-//const {loadSvgString, serializeSvgToString} = require('scratch-svg-renderer');
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 
@@ -251,13 +243,9 @@ export class TextSprite extends Entity implements ITextSprite{
             +`${this._textAttributes.font_size}px ${this._textAttributes.font}, sans-serif`;
         const fontFamilyCtx  = ((this._textAttributes.font_weight)? this._textAttributes.font_weight: '')
             +`${this._textAttributes.font_size}px "${this._textAttributes.font}", sans-serif`;
-        //const debugCanvas = document.createElement('canvas');
         this.debugCanvas.style.fontFamily = fontFamily;
-        //const debugCtx = this.debugCanvas.getContext('2d',{willReadFrequently:true});
         if(this.debugCtx == undefined) throw 'Unable to get ctx';
-        //let fontFamily = this.getFontFamily();
         this.debugCtx.font = fontFamilyCtx;
-        //const measurementProvider = new MeasurementProvider(debugCtx);
         const mesure = this.debugCtx.measureText(text);
         const width = mesure.width;
         const height = mesure.actualBoundingBoxAscent+mesure.actualBoundingBoxDescent 
@@ -272,18 +260,9 @@ export class TextSprite extends Entity implements ITextSprite{
     private async addSvgImage(svg:SVGSVGElement) : Promise<number>{
         const serializer = new XMLSerializer();
         const svgText = serializer.serializeToString(svg);
-        //console.log(svgText);
         const name = `TextSprite_${this.id}`;
-        // const base64 = Buffer.from(svgText).toString('base64');
-        // const url = 'data:image/svg+xml;charset=utf-8;base64,'+ base64;
-        // const img = await ImageLoader._loadImage(url);
-        //const img = await ImageLoader._svgText(url);
-        //console.log(img);
         if(this.skinId == -1) {
-            //console.log('textSprite before this.costumes.addImage')
             const skinId = await this.costumes.addImageDirectSVG(name, svgText);
-            //await this.costumes.addImage(name, url);
-            //const skinId = this.costumes.getSkinId(name);
             this.render.renderer.updateDrawableSkinId(this.drawableID, skinId);
             return skinId;
         }else{

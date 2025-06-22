@@ -124,7 +124,7 @@ Pg.setting = async function() {
         // 蝶のサイズを 縦横 15% にする
         clone.Looks.Size.scale = {w: 15, h: 15};
         // ランダムな方向へ蝶を向ける
-        clone.Motion.Direction.degree = Lib.randomDirection;
+        clone.Motion.Direction.degree = Lib.randomDirection();
         // ミリ秒。クローンが生きている時間。（およその時間）
         clone.life = 5000;
         // 表示する

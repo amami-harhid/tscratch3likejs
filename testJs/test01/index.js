@@ -20,7 +20,7 @@ const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 Pg.preload = async function preload() {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic01 );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
-    this.Image.load(AssetHost+'/assets/cat.svg', Cat01 );
+    this.Image.load('../../assets/Convertible.png', Cat01 );
     this.Image.load('./assets/blackCat.svg', Cat02 );
 }
 Pg.prepare = async function prepare() {
@@ -64,7 +64,7 @@ Pg.setting = async function setting() {
     cat.Event.whenFlag(async function*(){
         
         this.threadName = 'cat whenFlag Thread [01]';
-        this.Looks.switchCostume(Cat01);
+        this.Looks.Costume.name = Cat01;
         // ずっと繰り返す
         for(;;){
             // 向きを +1 する

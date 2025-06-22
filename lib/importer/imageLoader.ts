@@ -1,7 +1,8 @@
+import { Libs } from "../controls/libs";
+import { Image2Svg } from "./image2Svg";
 /**
  * ImageLoader
  */
-import { Libs } from "../controls/libs";
 export class ImageLoader {
     static libs: Libs;
     /**
@@ -74,12 +75,11 @@ export class ImageLoader {
                         return {name:name, data: _text};    
                     }
                 }else{
+                    // <image>タグを入れたSVGにする
                     const localUrl = image;
-                    let _img = await ImageLoader._loadImage(localUrl);
-                    if(_img == "ERROR"){
-                        throw "イメージローディングエラー。画像データの指定を確認してください。("+localUrl+")";
-                    }
-                    return {name:name,data:_img};
+                    const svgStr = await Image2Svg.createSvg(localUrl);
+                    const rtn = {name: name, data: svgStr};
+                    return rtn;
                 }
             }
         }
