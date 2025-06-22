@@ -14,20 +14,42 @@ const Cat = "Cat";
 
 let stage;
 let cat;
+let text;
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
 Pg.preload = async function preload() {
-    //dthis.Image.load('../../assets/white_backdrop.svg', NeonTunnel );
+    this.Image.load('./assets/Neon Tunnel.png', "Neon" );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
+    this.Font.load('./assets/TogeMaruGothic-700-Bold.woff', "Togemaru");
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
     stage.Sound.add( Chill );
+    stage.Image.add("Neon")
+
     cat = new Lib.Sprite(Cat);
     cat.Motion.Position.xy = [100,100];
     cat.Image.add( Cat );
-    cat.Looks.Size.scale = {w: 500, h: 500};
+    //cat.Looks.Size.scale = {w: 500, h: 500};
+
+    //----------------
+    text = new Lib.Sprite('text');
+    text.Font.add("Togemaru");
+    const fontSize = 35;
+    const fontStyle = 'bold';
+    const color = '#ff0000';
+    const fontFamily = "Togemaru";
+    const text1 = text.SvgText.toSvg(["カラー円盤ゲーム"], fontSize, fontStyle, color, fontFamily);
+    //await stage.Control.wait(0.3);
+    console.log('text.SvgText.add');
+    text.SvgText.add( "Title", text1, fontFamily );
+    //await stage.Control.wait(0.3);
+    // 0.3秒待つと SVGTextを表示する
+    // 0.2秒待つと 表示できない。
+    // fontFamily を指定すると 0.2秒では表示できなかった。
+    // font data を取り出して、defs.appendChild(style)するところで時間がかかっている模様。
+    // --> 実測 48 msec
 }
 
 Pg.setting = async function setting() {

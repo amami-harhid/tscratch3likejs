@@ -46,13 +46,14 @@ export class SvgText implements ISvgText {
         }
         const svgTag = svgDom.documentElement;
         if(fontFamily){
+            const serializer = new XMLSerializer();
             // font データを取得しておく
             const font = this._entity.getFontData(fontFamily);
             if(font){
                 const defs = document.createElementNS(SVG_NS, "defs");
                 const style =  document.createElementNS(SVG_NS, "style");
-                const fontFace = `
-@font-face {
+                const fontFace = 
+`@font-face {
     font-family: '${fontFamily}';
     src: url('${font}');
 }
@@ -79,9 +80,7 @@ export class SvgText implements ISvgText {
                     }
                 }
             }
-            const serializer = new XMLSerializer();
             const svgText = serializer.serializeToString(svgTag);
-            //console.log(svgText);
             this.addImage(name, svgText);
 
         }else{

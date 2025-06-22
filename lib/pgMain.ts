@@ -331,7 +331,7 @@ export class PgMain implements IPgMain {
         mainTmp.style.height = `${innerHeight}px`
 
         document.body.appendChild(mainTmp);
-        await Utils.wait(100);
+        await Utils.wait(100); // <-- 100ms の根拠がわからない
         this._preload();
 
         S3Element.p = this;
@@ -384,7 +384,11 @@ export class PgMain implements IPgMain {
         if( this.prepare ) {
             const f = this.prepare.bind(this);
             await f();
-            await Utils.wait(1000/Env.fps);
+            //await Utils.wait(1000/Env.fps); // <=== なぜ1FPS分待つのかな？
+            // テキストSVG化の過程で FONTデータ(base64)を埋め込んでいるが、
+            // そこで 50msec程度はかかる。100msecを待つことでよいかと思う。
+            await Utils.wait(100);
+
             if( this._stage ) {
                 this._stage.update();
                 this._stage.draw();
