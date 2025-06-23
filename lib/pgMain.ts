@@ -3,7 +3,7 @@
  */
 import { S3Element } from './elements/element';
 // (↑) import S3Element は最初に書く必要がある
-import { Env } from './env';
+//import { Env } from './env';
 import { FontLoader } from './importer/fontLoader';
 import { ImageLoader } from './importer/imageLoader';
 import { Libs } from './controls/libs';
@@ -12,14 +12,15 @@ import { Runtime } from './engine/runtime';
 import { Threads } from './controls/threads';
 import { SoundLoader } from './importer/soundLoader';
 import { Utils } from './util/utils';
-import { Sprite } from './entity/sprite';
+//import { Sprite } from './entity/sprite';
 import { Stage } from './entity/stage';
 
 import type { IPgFont, IPgImage, IPgSound, IPgMain } from '@Type/pgMain';
 import { Monitors } from './monitor/monitors';
+import type { IMonitors } from '@Type/monitors';
 import { ISvgSkin } from '@Type/render/ISvgSkin';
-import { ISkin } from '@Type/render/ISkin';
-import { SoundPlayer } from './sounds/soundPlayer';
+//import { ISkin } from '@Type/render/ISkin';
+//import { SoundPlayer } from './sounds/soundPlayer';
 import type { IAudioEngine, IScratchSoundPlayer, TEffectChain } from '@Type/sound/IAudioEngine';
 
 const AudioEngine = require('scratch-audio');
@@ -55,7 +56,7 @@ export class PgMain implements IPgMain {
     private _stage: Stage|null;
     private _canvas: HTMLCanvasElement|null;
     private _textCanvas: HTMLCanvasElement|null;
-    private _monitors: Monitors|null;
+    private _monitors: Monitors|undefined;
     /**
      * 事前ロード処理動作の定義
      */
@@ -96,7 +97,7 @@ export class PgMain implements IPgMain {
         this._preloadDone = false;
         this._prepaeDone = false;
         this._stage = null;
-        this._monitors = null;
+        //this._monitors = null;
         this.runningGame = false;
         this._canvas = null;
         this._flag = null;
@@ -112,7 +113,7 @@ export class PgMain implements IPgMain {
         this.audioEngine = new AudioEngine();
     }
     /** @internal */
-    get monitors(): Monitors | null {
+    get monitors(): Monitors | undefined {
         return this._monitors;
     }
     /** @internal */
@@ -393,6 +394,9 @@ export class PgMain implements IPgMain {
                     if( self._stage ) {
                         self._stage.update();
                         self._stage.draw();
+                    }
+                    if( self._monitors) {
+                        self._monitors.reposition();
                     }
                 }, 100);
                 const flag = S3Element.getControlGreenFlag();

@@ -34,4 +34,9 @@ export interface IMonitors{
      * 全てのMonitorを描画する
      */
     draw(): void;
+
+    /**
+     * モニターを再配置する
+     */
+    reposition(): void;
 };

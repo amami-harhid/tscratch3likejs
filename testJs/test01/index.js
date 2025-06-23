@@ -24,9 +24,7 @@ Pg.preload = async function preload() {
     this.Image.load('./assets/blackCat.svg', Cat02 );
 }
 Pg.prepare = async function prepare() {
-    console.log('scripts.js  prepare start' )
     // ステージを作る
-    console.log(Lib);
     stage = new Lib.Stage();
     // ステージに背景を追加
     stage.Image.add( Jurassic01 );
@@ -41,16 +39,29 @@ Pg.prepare = async function prepare() {
     cat.Motion.Position.y = 100;
     monitors = new Lib.Monitors();
     monitors.add('M01', '秒数');
-    monitors.add('M02', '回数');
+    monitors.add('M02', '回数2');
+    monitors.add('M03', '回数3');
+    monitors.add('M04', '回数4');
+    monitors.add('M05', '回数5');
+    monitors.add('M06', '回数6');
+    monitors.add('M07', '回数7');
+    monitors.add('M08', '回数8');
+    monitors.add('M09', '回数9');
+    // monitors.add('M04', '回数4');
     const m01 = monitors.get('M01');
     const m02 = monitors.get('M02');
-    m01.position = {x:-240, y:180};
+    const m03 = monitors.get('M03');
+    //m01.position = {x:-240, y:180};
     m01.scale = {w: 150, h:100};
     m01.value = 0;
     //monitors.get('M01').scale = {w: 100, h:100};
-    m02.position = {x:-240, y:150};
+    //m02.position = {x:-240, y:150};
     m02.scale = {w: 100, h:100};
     m02.text = '';
+    m03.scale = {w: 100, h:100};
+    m03.text = '';
+
+    //monitors.reposition();
 }
 let counter = 0;
 Pg.setting = async function setting() {
