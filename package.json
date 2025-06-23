@@ -1,6 +1,6 @@
 {
   "name": "@tscratch3/tscratch3likejs",
-  "version": "1.0.0-beta.12",
+  "version": "1.0.0-beta.13",
   "description": "scratch3-like-js library, written by Typescript",
   "repository": {
     "type": "git",

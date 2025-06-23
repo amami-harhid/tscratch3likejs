@@ -158,6 +158,7 @@ export class Monitors implements IMonitors{
         for(const _monitor of this._monitors){
             if(monitorId === _monitor.monitorId){
                 _monitor.show();
+                _monitor.draw();
                 break;
             }
         }
@@ -171,6 +172,7 @@ export class Monitors implements IMonitors{
         for(const _monitor of this._monitors){
             if(monitorId === _monitor.monitorId){
                 _monitor.hide();
+                _monitor.draw();
                 break;
             }
         }
