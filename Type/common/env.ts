@@ -18,4 +18,10 @@ export type TEnv = {
      * ウインドウサイズ
      */
     readonly WindowSize : {w: number, h: number},
+
+        /**
+     * モニター表示数（縦）
+     */
+    MonitorMaxRowSize: number,
+
 };

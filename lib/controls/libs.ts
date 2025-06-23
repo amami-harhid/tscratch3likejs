@@ -3,9 +3,10 @@
  */
 import { Backdrops } from '../entity/backdrops';
 import { Cast } from '../util/cast';
-import { Controls, Loop } from './controls';
+import { Controls } from './controls';
 import { Costumes } from '../entity/costumes';
 import { Env } from '../env';
+import type { IEnv } from '@Type/env';
 import type {TEnv} from '@Type/common/env';
 import { EventEmitter } from "events";
 import { FunctionChecker } from '../util/functionChecker';

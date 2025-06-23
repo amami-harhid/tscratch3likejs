@@ -5,7 +5,7 @@ import { Monitor } from "./monitor";
 import { Libs } from "../controls/libs";
 import { S3MonitorSkin } from "./s3MonitorSkin";
 import { PgMain } from "../pgMain";
-import { MonitorMaxRowSize } from "./monitorPosition";
+import { Env } from '../env';
 import type { IMonitors } from "@Type/monitors";
 import { IRenderWebGL } from "@Type/render/IRenderWebGL";
 
@@ -76,8 +76,8 @@ export class Monitors implements IMonitors{
         this.draw();
     }
     private _reposition(monitor: Monitor, index: number) : void {
-        const _column = Math.floor( (index) / MonitorMaxRowSize);
-        const _row = (index) % MonitorMaxRowSize;
+        const _column = Math.floor( (index) / Env.MonitorMaxRowSize);
+        const _row = (index) % Env.MonitorMaxRowSize;
         monitor.position.x = 0;
         const size = index+1;
         const sWidth = this._pgMain.stageWidth;
@@ -109,7 +109,7 @@ export class Monitors implements IMonitors{
             }
         }else{
             // ひとつ前の列の同じ行のモニター
-            const idx = size - MonitorMaxRowSize;
+            const idx = size - Env.MonitorMaxRowSize;
             const preColumnMonitor = this._monitors[idx-1];
             // X 座標
             const preColumnMonitorX = preColumnMonitor.position.x;

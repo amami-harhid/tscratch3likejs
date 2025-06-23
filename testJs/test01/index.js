@@ -4,6 +4,9 @@
  */
 import {Pg, Lib} from '../../build/index.js';
 
+const Env = Lib.Env;
+Env.MonitorMaxRowSize = 4;
+
 Pg.title = "【sample01】桜の花びらが舞う"
 
 const Jurassic01 = "Jurassic01";
