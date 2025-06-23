@@ -23,7 +23,7 @@ export class Monitor extends Entity implements IMonitor{
     private _scale: TScale;
     private _dropEnabled: boolean;
     private _moveDistance: TDistance;
-    private _preDraw: boolean;
+    //private _preDraw: boolean;
     /**
      * @constructor
      * @param monitorId {string}
@@ -41,7 +41,7 @@ export class Monitor extends Entity implements IMonitor{
         this._scale = {w: 100, h: 100};
         this._dropEnabled = true;
         this._moveDistance = {};
-        this._preDraw = false;
+        //this._preDraw = false;
         const me = this;
         const runtime = this.pgMain.runtime;
         if(runtime == undefined) throw 'Not Found runtime error';
@@ -70,7 +70,7 @@ export class Monitor extends Entity implements IMonitor{
             if(me._skin)
                 me._skin.dropping = false;
         });
-        this._preDraw = true;
+        //this._preDraw = true;
     }
     get monitorId() {
         return this._monitorId;
@@ -83,9 +83,11 @@ export class Monitor extends Entity implements IMonitor{
             if(Utils.isNumber(_position.x) && Utils.isNumber(_position.y)){                
                 this._position.x = _position.x;
                 this._position.y = _position.y;
-                if(this._preDraw === true){
-                    this._render()
-                }
+                console.log('position', this._position);
+                this._render()
+                // if(this._preDraw === true){
+                //     this._render()
+                // }
             }
         }
     }
@@ -97,9 +99,10 @@ export class Monitor extends Entity implements IMonitor{
             if(Utils.isNumber(_scale.w) && Utils.isNumber(_scale.h)){
                 this._scale.w = _scale.w;
                 this._scale.h = _scale.h;
-                if(this._preDraw === true){
-                    this._render()
-                }
+                this._render();
+                // if(this._preDraw === true){
+                //     this._render()
+                // }
             }
         }
     }
@@ -191,7 +194,7 @@ export class Monitor extends Entity implements IMonitor{
         return {w:width, h:height};
     }
     draw() {
-        this._preDraw = false;
+        //this._preDraw = false;
         if(this._dropEnabled){
             this._drop();
         }

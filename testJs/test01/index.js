@@ -73,7 +73,7 @@ Pg.setting = async function setting() {
      * STARTメッセージを送る
      */
     cat.Event.whenFlag(async function*(){
-        
+        monitors.get('M01').position = {x: 0, y:0};
         this.threadName = 'cat whenFlag Thread [01]';
         this.Looks.Costume.name = Cat01;
         // ずっと繰り返す
