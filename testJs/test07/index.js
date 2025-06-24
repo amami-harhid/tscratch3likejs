@@ -141,7 +141,7 @@ Pg.setting = async function setting() {
                 this.Looks.Costume.next();
             }
             if( this.Sensing.isTouchingToColor('#0000ff')){
-                this.Motion.Position.y += 6;
+                this.Motion.Position.y += 10;
                 this.Motion.Move.steps(5);
                 await this.Control.wait(0.1);
                 this.Looks.Costume.next();
@@ -162,13 +162,25 @@ Pg.setting = async function setting() {
         this.Pen.Size.thickness = 2;
         for(;;) {
             this.Motion.Move.mousePosition();
+            yield;
+        }
+    });
+    pen.Event.whenFlag(async function*(){
+        let penDown = false;
+        for(;;) {
             if(this.Sensing.isMouseDown()) {
-                console.log('mouseDown')
-                this.Pen.down();
+                if(penDown == false){
+                    this.Pen.down();
+                    penDown = true;
+                }
     
             }else{
-                this.Pen.up();
+                if(penDown) {
+                    this.Pen.up();
+                    penDown = false;
+                }
             }
+            
             yield;
         }
     });
