@@ -41,7 +41,7 @@ export class SpriteMotionMove implements ISpriteMotionMove {
      * マウスカーソルの位置へ移動する
      */
     mousePosition() : void {
-        this.entity.$gotoMousePosition
+        this.entity.$gotoMousePosition()
     }
     /**
      * 指定したスプライトの位置へ移動する

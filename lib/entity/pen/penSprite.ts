@@ -117,7 +117,9 @@ export class PenSprite implements IPenSprite {
             console.error(NotPrepareMessage);
             return;
         }
-        this.prepare();
+        if(this._penDown == false) {
+            this.prepare();
+        }
         this._penDown = true;
         this.drawPoint();
     }
