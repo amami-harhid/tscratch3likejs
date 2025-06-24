@@ -39,6 +39,7 @@ export class PenSprite implements IPenSprite {
     private render: Render;
     private _skinId: number
     private _penDown: boolean;
+    private _prepareDone: boolean;
     /** @internal  */
     public _penAttributes: TPenAttributes;
     private _penRgbAttributes: TPenAttributes;
@@ -59,6 +60,7 @@ export class PenSprite implements IPenSprite {
         this._sprite = sprite;
         this.render = sprite.render;
         this._penDown = false;
+        this._prepareDone = false;
         this._penAttributes = {color4f:[240,1,1,1], diameter: 1};
         this._penRgbAttributes = {color4f:[0,0,1,1], diameter: 1};
         this._penSize = 1;
@@ -96,6 +98,7 @@ export class PenSprite implements IPenSprite {
             }
         }
         this.penClear();
+        this._prepareDone = true;
     }
 
     penClear() : void {
@@ -117,7 +120,7 @@ export class PenSprite implements IPenSprite {
             console.error(NotPrepareMessage);
             return;
         }
-        if(this._penDown == false) {
+        if(this._prepareDone == false) {
             this.prepare();
         }
         this._penDown = true;

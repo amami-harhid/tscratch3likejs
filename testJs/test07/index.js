@@ -135,15 +135,15 @@ Pg.setting = async function setting() {
         for(;;) {
             this.Motion.Position.y -= 5;
             if( this.Sensing.isTouchingToColor('#000000')){
-                this.Motion.Position.y += 5;
+                this.Motion.Position.y += 6;
                 this.Motion.Move.steps(5);
-                await this.Control.wait(0.2);
+                await this.Control.wait(0.1);
                 this.Looks.Costume.next();
             }
             if( this.Sensing.isTouchingToColor('#0000ff')){
-                this.Motion.Position.y += 5;
+                this.Motion.Position.y += 6;
                 this.Motion.Move.steps(5);
-                await this.Control.wait(0.2);
+                await this.Control.wait(0.1);
                 this.Looks.Costume.next();
             }
             if( this.Sensing.isTouchingToColor('#ff0019')) {
@@ -159,7 +159,7 @@ Pg.setting = async function setting() {
     });
     pen.Event.whenFlag(async function*(){
         this.Pen.prepare();
-        this.Pen.Size.thickness = 10;
+        this.Pen.Size.thickness = 2;
         for(;;) {
             this.Motion.Move.mousePosition();
             if(this.Sensing.isMouseDown()) {
