@@ -133,25 +133,22 @@ Pg.setting = async function setting() {
         // 表示する
         this.Looks.show();
         for(;;) {
+            if( this.Sensing.isTouchingToColor('#ff0019') || this.Sensing.isTouchingEdge()) {
+                break;
+            }
             this.Motion.Position.y -= 5;
-            if( this.Sensing.isTouchingToColor('#000000')){
-                this.Motion.Position.y += 6;
+            let touch = false;
+            while(this.Sensing.isTouchingToSprites([box1,box2]) || this.Sensing.isTouchingToColor('#0000ff')){
+                this.Motion.Position.y += 5;
+                touch = true;
+                console.log('----2')
+                yield;
+            }
+            if(touch){
                 this.Motion.Move.steps(5);
-                await this.Control.wait(0.1);
-                this.Looks.Costume.next();
             }
-            if( this.Sensing.isTouchingToColor('#0000ff')){
-                this.Motion.Position.y += 10;
-                this.Motion.Move.steps(5);
-                await this.Control.wait(0.1);
-                this.Looks.Costume.next();
-            }
-            if( this.Sensing.isTouchingToColor('#ff0019')) {
-                break;
-            }
-            if( this.Sensing.isTouchingEdge()) {
-                break;
-            }
+            this.Looks.Costume.next();
+            await this.Control.wait(0.1);
             yield;
         }
 
@@ -162,27 +159,13 @@ Pg.setting = async function setting() {
         this.Pen.Size.thickness = 2;
         for(;;) {
             this.Motion.Move.mousePosition();
-            yield;
-        }
-    });
-    pen.Event.whenFlag(async function*(){
-        let penDown = false;
-        for(;;) {
             if(this.Sensing.isMouseDown()) {
-                if(penDown == false){
-                    this.Pen.down();
-                    penDown = true;
-                }
+                this.Pen.down();
     
             }else{
-                if(penDown) {
-                    this.Pen.up();
-                    penDown = false;
-                }
+                this.Pen.up();
             }
-            
             yield;
         }
     });
-
 }

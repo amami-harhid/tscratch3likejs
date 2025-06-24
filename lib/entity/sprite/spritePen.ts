@@ -8,12 +8,16 @@ import type { ISpritePen } from '@Type/sprite/ISpritePen';
 export class SpritePen implements ISpritePen{
 
     private penSprite: PenSprite;
+    private _isPenDown: boolean;
+    private _isPenUp: boolean;
     /**
      * @internal
      * @param entity {Sprite}
      */
     constructor(penSprite: IPenSprite){
         this.penSprite = penSprite as unknown as PenSprite;
+        this._isPenDown = false;
+        this._isPenUp = false;
     }
     prepare(): void {
         this.penSprite.prepare();
@@ -29,10 +33,16 @@ export class SpritePen implements ISpritePen{
         this.penSprite.penClear();
     }
     up(): void {
-        this.penSprite.penUp();
+        if( this._isPenDown == true){
+            this.penSprite.penUp();
+        }
+        this._isPenDown = false;
     }
     down(): void {
-        this.penSprite.penDown();
+        if( this._isPenDown == false){
+            this.penSprite.penDown();
+        }
+        this._isPenDown = true;
     }
     stamp(): void {
         this.penSprite.stamp();

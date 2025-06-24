@@ -33,6 +33,10 @@ export interface ISpriteSensing extends IEntitySensing{
      */
     isTouchingHorizontalEdge(): boolean;
 
+    /**
+     * スプライトに触れていることを判定する
+     * @param sprites 
+     */
     isTouchingToSprites(sprites: ISprite[]): boolean;
 
     /**
