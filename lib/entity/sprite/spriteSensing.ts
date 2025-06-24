@@ -29,6 +29,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns {boolean} キー押下判定
      */
     isKeyDown(key: string) : boolean {
+        if( this.entity.$isAlive() != true ) return false;
         return this.entity.$isKeyDown(key);
     }
     /**
@@ -37,6 +38,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns {boolean} キー押下判定
      */
     isKeyNotDown(key: string) : boolean {
+        if( this.entity.$isAlive() != true ) return false;
         return this.entity.$isKeyNotDown(key);
     }
     /**
@@ -44,6 +46,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns {boolean} - マウスが押されている判定
      */
     isMouseDown() : boolean {
+        if( this.entity.$isAlive() != true ) return false;
         return this.entity.$isMouseDown();
     }
     /**
@@ -80,6 +83,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     isTouchingEdge() : boolean {
+        if( this.entity.$isAlive() != true ) return false;
         this.entity.update();
         return this.entity.$isTouchingEdge();
     }
@@ -88,6 +92,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     isTouchingVirticalEdge() : boolean {
+        if( this.entity.$isAlive() != true ) return false;
         this.entity.update();
         return this.entity.$isTouchingVirticalEdge();
     }
@@ -95,10 +100,12 @@ export class SpriteSensing implements ISpriteSensing {
      * 水平方向の枠に触っていることを判定する
      */
     isTouchingHorizontalEdge(): boolean {
+        if( this.entity.$isAlive() != true ) return false;
         this.entity.update();
         return this.entity.$isTouchingHorizontalEdge();
     }
     isTouchingToSprites(sprites: ISprite[]): boolean {
+        if( this.entity.$isAlive() != true ) return false;
         const _sprites = sprites as unknown as Sprite[];
         return this.entity.$isTouchingTarget(_sprites);
     }
@@ -107,6 +114,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     isNotMouseTouching() : boolean {
+        if( this.entity.$isAlive() != true ) return false;
         return this.entity.$isNotMouseTouching();
     }
     /**
@@ -114,6 +122,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     isMouseTouching(): boolean {
+        if( this.entity.$isAlive() != true ) return false;
         return this.entity.$isMouseTouching();
     }
     /**
@@ -122,6 +131,7 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     getTouchingSprites() : ISprite[] {
+        if( this.entity.$isAlive() != true ) return [];
         const targets: Sprite[] = [this.entity];
         const entities = this.entity.$getTouchingTarget(targets);
         const touchings:Sprite[] = [];
@@ -137,8 +147,11 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     isTouchingToColor(target: string): boolean {
-        this.entity.update();
-        return this.entity.$isTouchingColor(target);
+        if( this.entity.$isAlive() == true ){
+            this.entity.update();
+            return this.entity.$isTouchingColor(target);
+        }
+        return false;
     }
     /**
      * 指定した色(target)に自身の色(mask)が触れたことを判定する
@@ -147,8 +160,11 @@ export class SpriteSensing implements ISpriteSensing {
      * @returns 
      */
     colorIsTouchingToColor(target: string, mask: string):  boolean {
-        this.entity.update();
-        return this.entity.$colorIsTouchingColor(target, mask);
+        if( this.entity.$isAlive() == true ){
+            this.entity.update();
+            return this.entity.$colorIsTouchingColor(target, mask);
+        }
+        return false;
     }
     /**
      * Drag Mode

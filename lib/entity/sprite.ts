@@ -205,9 +205,9 @@ export class Sprite extends Entity implements ISprite {
         }finally{
             this._isAlive = false;
         }
-        if(this.costumes && this.isClone === false){
-            this.costumes.destroyAllSkin();
-        }
+        // if(this.costumes && this.isClone === false){
+        //     this.costumes.destroyAllSkin();
+        // }
 
         this.$delete();
     }
