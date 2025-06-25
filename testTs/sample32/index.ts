@@ -28,6 +28,7 @@ const TogeMaruGothic = 'TogeMaruGothic';
 import { backdrop } from './sub/bacdrop.js';
 import { Texts } from './sub/texts.js';
 import { Texts2 } from './sub/texts2.js';
+import { TAddOption } from "@Type/svgText/ISvgText";
 
 Pg.preload = async function (this: PgMain) {
     this.Sound.load('./assets/gionsyojya.wav', Gion);
@@ -51,8 +52,13 @@ Pg.prepare = async function () {
         const color = 'white';
         const fontSize = 25;
         const fontStyle = 'normal';
-        const svg = cat.SvgText.toSvg(texts, fontSize, fontStyle, color, RosetE);
-        cat.SvgText.add(`${counter}`, svg);
+        const option : TAddOption = {
+            fontFamily: RosetE,
+            color: color,
+            fontSize: fontSize,
+            fontStyle: fontStyle,
+        }
+        cat.SvgText.addTexts(`${counter}`, texts, option);
     }
 
     cat2 = new Lib.Sprite(Cat2);
@@ -67,8 +73,13 @@ Pg.prepare = async function () {
         const color = 'red';
         const fontSize = 15;
         const fontStyle = 'normal';
-        const svg = cat2.SvgText.toSvg(texts, fontSize, fontStyle, color, Kaisotai);
-        cat2.SvgText.add(`${counter}`, svg);
+        const option : TAddOption = {
+            fontFamily: Kaisotai,
+            color: color,
+            fontSize: fontSize,
+            fontStyle: fontStyle,
+        }
+        cat2.SvgText.addTexts(`${counter}`, texts, option);
     }
 
 }

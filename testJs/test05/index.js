@@ -40,10 +40,15 @@ Pg.prepare = async function prepare() {
     const fontStyle = 'bold';
     const color = '#ff0000';
     const fontFamily = "Togemaru";
-    const text1 = text.SvgText.toSvg(["カラー円盤ゲーム"], fontSize, fontStyle, color, fontFamily);
     //await stage.Control.wait(0.3);
-    console.log('text.SvgText.add');
-    text.SvgText.add( "Title", text1, fontFamily );
+    const option = {
+        fontFamily: fontFamily,
+        color: color,
+        fontSize: fontSize,
+        fontStyle: fontStyle,
+    }
+
+    text.SvgText.addTexts( "Title", ["カラー円盤ゲーム"], option );
     //await stage.Control.wait(0.3);
     // 0.3秒待つと SVGTextを表示する
     // 0.2秒待つと 表示できない。

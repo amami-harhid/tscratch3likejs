@@ -42,56 +42,60 @@ Pg.prepare = async function prepare() {
     await stage.Sound.add( Gion );
     await stage.SvgText.add('BackDrop', backdrop);    
     cat = new Lib.Sprite(Cat);
-    cat.Font.add(HarryPotter);
+    cat.Font.add(TogeMaruGothic);
     cat.Looks.hide();
-    const promiseArr = []
     // eslint-disable-next-line loopCheck/s3-loop-plugin
     for(const counter of Lib.Iterator(Texts.length)){
         const texts = Texts[counter];
         const color = 'white';
         const fontSize = 25;
         const fontStyle = 'normal';
-        const svg = cat.SvgText.toSvg(texts, fontSize, fontStyle, color, TogeMaruGothic);
-        const add = cat.SvgText.add(`${counter}`, svg, TogeMaruGothic);
-        promiseArr.push(add);
+        const option = {
+            fontFamily: TogeMaruGothic,
+            color: color,
+            fontSize: fontSize,
+            fontStyle: fontStyle,
+        }
+        cat.SvgText.addTexts(`cat-${counter}`, texts,  option);
     }
-    await Promise.all(promiseArr);
 
     cat2 = new Lib.Sprite(Cat);
     cat2.Motion.Position.xy = {};
-    await cat2.Font.add( RosetE );
     await cat2.Font.add( Kaisotai );
-    await cat2.Font.add( TogeMaruGothic );
     cat2.Looks.hide();
 
-    const promiseArr2 = []
     // eslint-disable-next-line loopCheck/s3-loop-plugin
     for(const counter of Lib.Iterator(Texts2.length)){
         const texts = Texts2[counter];
         const color = 'red';
         const fontSize = 15;
         const fontStyle = 'normal';
-        const svg = cat2.SvgText.toSvg(texts, fontSize, fontStyle, color, Kaisotai);
-        const add = cat2.SvgText.add(`${counter}`, svg, Kaisotai);
-        promiseArr2.push(add);
+        const option = {
+            fontFamily:Kaisotai,
+            color: color,
+            fontSize: fontSize,
+            fontStyle: fontStyle,
+        }
+        cat2.SvgText.addTexts(`cat2-${counter}`, texts, option);
     }
-    await Promise.all(promiseArr2);
 
     cat3 = new Lib.Sprite(Cat);
     await cat3.Font.add( HarryPotter );    
     cat3.Looks.hide();
-    const promiseArr3 = []
     // eslint-disable-next-line loopCheck/s3-loop-plugin
     for(const counter of Lib.Iterator(Texts3.length)){
         const texts = Texts3[counter];
         const color = 'red';
         const fontSize = 12;
         const fontStyle = 'normal';
-        const svg = cat3.SvgText.toSvg(texts, fontSize, fontStyle, color, HarryPotter);
-        const add = cat3.SvgText.add(`${counter}`, svg, HarryPotter);
-        promiseArr3.push(add);
+        const option = {
+            fontFamily: HarryPotter,
+            color: color,
+            fontSize: fontSize,
+            fontStyle: fontStyle,
+        }
+        cat3.SvgText.addTexts(`${counter}`, texts, option);
     }
-    await Promise.all(promiseArr3);
 
 
 }
@@ -123,10 +127,10 @@ Pg.setting = async function setting() {
         this.Looks.Size.scale = {w:200, h:200};
         this.Looks.show();
         this.Motion.Position.xy = {};
-        this.Looks.Costume.name = '1';
+        this.Looks.Costume.name = 'cat2-1';
         for(;;) {
             this.Looks.Costume.next();
-            if(this.Looks.Costume.name == '1') {
+            if(this.Looks.Costume.name == 'cat2-1') {
                 break;
             }
             await this.Control.wait(2);
@@ -135,11 +139,10 @@ Pg.setting = async function setting() {
         this.Event.broadcast('Start2');
     });   
     cat2.Event.whenBroadcastReceived('Start2', async function*(){
-    
         const names = this.Looks.Costume.names;
         for(const _ of Lib.Iterator(names.length*5)) {
-            await this.Control.wait(3);
             this.Looks.Costume.next();
+            await this.Control.wait(3);
             yield;
         }
         for(const _ of Lib.Iterator(10)){
