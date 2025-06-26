@@ -59,4 +59,4 @@ export declare type TVec3 = {
 }
 export declare type S3ImageData = {name:string, data:string|HTMLImageElement, skinId:number};
 export declare type S3SoundData = {name?:string, data?:Uint8Array<ArrayBuffer>, soundPlayer?: IScratchSoundPlayer;effectChain?: TEffectChain};
-export declare type S3FontData = {name?:string, data?:string};
+export declare type S3FontData = {name?:string, data?:string[]};

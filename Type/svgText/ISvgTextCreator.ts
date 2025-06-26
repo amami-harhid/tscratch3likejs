@@ -1,6 +1,6 @@
 export type TSvgOptionFont = {
     fontFamily: string,
-    fontUrl: string,
+    fontUrl: string[],
 }
 export type TSvgOption = {
     font?: TSvgOptionFont,

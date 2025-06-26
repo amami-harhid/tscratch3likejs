@@ -26,7 +26,7 @@ export class TextSprite extends Entity implements ITextSprite{
     private _text: string;
     private costumes: Costumes;
     private _fontFamily: ParmFontFace[];
-    private _fontDatas : {name:string, data: string}[]
+    private _fontDatas : {name:string, data: string[] }[]
     private _padding: number;
     private _textAttributes: TextAttributes;
     private _dirty : boolean;
@@ -113,7 +113,7 @@ export class TextSprite extends Entity implements ITextSprite{
         const svg = this.createSvg(textStr);
         this.skinId = await this.addSvgImage(svg);
     }
-    private async loadFont(font: ParmFontFace): Promise<string> {
+    private async loadFont(font: ParmFontFace): Promise<string[]> {
         const {data} = await FontLoader.fontLoad(font.href, font.font);
         return data;
     }

@@ -75,10 +75,10 @@ export class PgMain implements IPgMain {
     public draw?(): Promise<void>;
     private _preloadImagePromise:Promise<{name:string, data:string|HTMLImageElement}>[];
     private _preloadSoundPromise: Promise<{name:string, data:Uint8Array<ArrayBuffer>}>[];
-    private _preloadFontPromise: Promise<{name:string, data:string}>[];
+    private _preloadFontPromise: Promise<{name:string, data:string[]}>[];
     private _loadedImages: {name?:string, data?:string|HTMLImageElement, skinId?:number};
     private _loadedSounds: {name?:string, data?:Uint8Array<ArrayBuffer>, soundPlayer?: IScratchSoundPlayer, effectChain?: TEffectChain};
-    private _loadedFonts: {name?:string,data?:string};
+    private _loadedFonts: {name?:string,data?:string[]};
     private _preloadDone: boolean;
     private _prepaeDone: boolean;
     private _image: IPgImage;
@@ -133,7 +133,7 @@ export class PgMain implements IPgMain {
         return this._loadedSounds;
     }
     /** @internal */
-    get loadedFonts() {
+    get loadedFonts(): {name?:string, data?:string[]} {
         return this._loadedFonts;
     }
     /** 
@@ -456,23 +456,12 @@ export class PgMain implements IPgMain {
         this._preloadSoundPromise.push(data);
         return data;
     }
-    $loadFont(fontUrl:string, name:string) : Promise<{name:string, data:string}>{
+    $loadFont(fontUrl:string, name:string) : Promise<{name:string, data:string[]}>{
         //console.log('$loadFont', fontUrl, name);
         const font = FontLoader.fontLoad(fontUrl, name);
         this._preloadFontPromise.push(font);
         return font;
     }
-    // spriteClone( src, callback ) {
-    //     if( src instanceof Sprite ) {
-    //         const _src = src;
-    //         _src.$clone().then( async( c ) =>{
-    //             if( callback ) {
-    //                 const _callback = callback.bind( c );
-    //                 _callback();
-    //             }
-    //         });
-    //     }
-    // }
 
     get preloadDone() {
         return this._preloadDone;

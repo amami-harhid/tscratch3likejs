@@ -120,15 +120,15 @@ export class Entity extends EventEmitter implements IEntity{
         this._addFont(_fontData['name'], _fontData['data']);
         return;
     }
-    getFontData(fontFamily:string): string|undefined {
+    getFontData(fontFamily:string): string[] {
         if(this.fontDatas){
             for(const font of this.fontDatas){
-                if(font.name == fontFamily){
-                    return font.data as string;
+                if(font.name == fontFamily && font.data){
+                    return font.data;
                 }
             }
         }
-        return undefined;
+        return [];
     }
 
     constructor (name: string, layer: StageLayering, options:TEntityOptions = {} ){
@@ -485,18 +485,22 @@ export class Entity extends EventEmitter implements IEntity{
         }
         //await costume.addImage(name, image);
     }
-    protected _addFont(name:string ,image:string): void {
+    protected _addFont(name:string ,image:string[]): void {
         if(name == undefined || typeof name != "string"){
             throw "【Font.add】正しい name を指定してください"
         }
         const ImageError = "【Font.add】正しいFONTデータを指定してください";
         if(image == undefined) throw ImageError
-        if(typeof image =="string"){
-            if(image.substring(0,10)!="data:font/")
-                throw ImageError            
+        const validImage: string[] = [];
+        if(image.length>0){
+            for(const _img of image) {
+                if(_img.substring(0,10)=="data:font/") {
+                    validImage.push(_img);
+                }    
+            }
         }
-        if( this.fontDatas) {
-            this.fontDatas.push({name:name,data:image});
+        if( this.fontDatas && validImage.length > 0) {
+            this.fontDatas.push({name:name, data: validImage });
         }
     }
 

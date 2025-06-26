@@ -23,23 +23,41 @@ export class FontLoader {
      * @param name {string} - BlobをBase64化した文字列( data:font/～;base64,～)
      * @returns {Promise<string>}
      */
-    public static async fontLoad(url: string, name: string): Promise<{name:string, data:string}>{
-        //console.log('url=', url);        
-        const data = await FontLoader.makeEmbeddedFontdata(url);
-        await FontLoader.makeFontFace(url, name);
-        return {name: name, data: data};
+    public static async fontLoad(url: string, name: string): Promise<{name:string, data:string[] }>{
+        const datas = await FontLoader.makeEmbeddedFontdata(url);
+        const fontDatas: string[] = []
+        for(const data of datas){
+            await FontLoader.makeFontFace(data, name);
+            fontDatas.push(data);
+        }
+        return {name: name, data: fontDatas};
 
     }
     private static async makeFontFace(url:string, name:string): Promise<void> {
-        const fontFace = new FontFace(name, `url(${url})`);
+        const fontFaceUrl = `url(${url})`;
+        const fontFace = new FontFace(name, fontFaceUrl);
         await fontFace.load();
         document.fonts.add(fontFace);
     }
-    private static async makeEmbeddedFontdata(url: string): Promise<string>{
+    private static async makeEmbeddedFontdata(url: string): Promise<string[]>{
         const response = await fetch(url);
         const blob = await response.blob();
-        const fontData = await FontLoader.blobToBase64(blob);
-        return fontData;
+        const cssFontFace = await blob.text();
+        const matchUrls = cssFontFace.match(/url\(.+?\)/g);
+        if(matchUrls){
+            const fontDatas:string[] = [];
+            for(const _url of matchUrls){
+                const _url2 = _url.replace(/^url\(/,'').replace(/\)/,'');
+                const _response = await fetch(_url2);
+                const blob = await _response.blob();
+                const fontData = await FontLoader.blobToBase64(blob);
+                fontDatas.push(fontData);
+            }
+            return fontDatas;
+        }else{
+            const fontData = await FontLoader.blobToBase64(blob);
+            return [fontData];
+        }
 
     }
     /**

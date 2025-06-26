@@ -22,6 +22,7 @@ Pg.preload = async function preload() {
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
     this.Font.load('./assets/TogeMaruGothic-700-Bold.woff', "Togemaru");
+    this.Font.load('https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap&text='+encodeURIComponent("ゲーム円盤カラ"), "GoogleFont");
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
@@ -35,11 +36,11 @@ Pg.prepare = async function prepare() {
 
     //----------------
     text = new Lib.Sprite('text');
-    text.Font.add("Togemaru");
+    text.Font.add("GoogleFont");
     const fontSize = 35;
     const fontStyle = 'bold';
     const color = '#ff0000';
-    const fontFamily = "Togemaru";
+    const fontFamily = "GoogleFont";
     //await stage.Control.wait(0.3);
     const option = {
         fontFamily: fontFamily,

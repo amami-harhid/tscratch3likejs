@@ -157,7 +157,7 @@ export const svgTextCreator = function(texts: string[], option?: TSvgOption): st
     const _fontStyle = (option && option.fontStyle)? option.fontStyle: 'normal';        
     const mesurer = SvgTextMesure.getInstance();
     const fontFamily = (option && option.font)? option.font.fontFamily: 'sans-serif';
-    const fontUrl = (option && option.font)? option.font.fontUrl: 'sans-serif';
+    const fontUrl = (option && option.font)? option.font.fontUrl: [];
     // 小さい文字のサイズを取得する
     const mesure_small = mesurer.mesure([MesureSmallSizeStr], _fontSize, _fontStyle, fontFamily);
     // 大きい文字のサイズを取得する
@@ -231,12 +231,17 @@ export const svgTextCreator = function(texts: string[], option?: TSvgOption): st
         }
     </style></defs>`;
     let svg2_2 = '';
+    let _fontFamilyUrls = '';
+    for(const url of fontUrl) {
+        _fontFamilyUrls += `url('${url}'),\n`;
+    }
+    const fontFamilyUrls = _fontFamilyUrls.replace(/,\r?\n$/, ';');
     if(fontFamily){
         svg2_2 += `
     <defs><style>
         @font-face {
             font-family: '${fontFamily}';
-            src: url('${fontUrl}');
+            src: ${fontFamilyUrls}
         }
     </style></defs>
 `;
