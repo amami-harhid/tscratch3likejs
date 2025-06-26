@@ -22,7 +22,7 @@ Pg.preload = async function preload() {
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
     this.Font.load('./assets/TogeMaruGothic-700-Bold.woff', "Togemaru");
-    this.Font.load('https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap&text='+encodeURIComponent("ゲーム円盤カラ"), "GoogleFont");
+    this.Font.load('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap&text='+encodeURIComponent("跳ね返る0123456789秒"), "GoogleFont");
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
@@ -37,9 +37,10 @@ Pg.prepare = async function prepare() {
     //----------------
     text = new Lib.Sprite('text');
     text.Font.add("GoogleFont");
-    const fontSize = 35;
+    text.Looks.Layer.gotoBack();
+    const fontSize = 75;
     const fontStyle = 'bold';
-    const color = '#ff0000';
+    const color = '#ffffff';
     const fontFamily = "GoogleFont";
     //await stage.Control.wait(0.3);
     const option = {
@@ -48,8 +49,15 @@ Pg.prepare = async function prepare() {
         fontSize: fontSize,
         fontStyle: fontStyle,
     }
-
-    text.SvgText.addTexts( "Title", ["カラー円盤ゲーム"], option );
+    const texts = [
+        "跳ね返る",
+    ]
+    text.SvgText.addTexts( "Title", texts, option );
+    text.SvgText.addTexts( "0", [`0秒`], option );
+    text.SvgText.addTexts( "1", [`1秒`], option );
+    text.SvgText.addTexts( "2", [`2秒`], option );
+    text.SvgText.addTexts( "3", [`3秒`], option );
+    text.SvgText.addTexts( "4", [`4秒`], option );
     //await stage.Control.wait(0.3);
     // 0.3秒待つと SVGTextを表示する
     // 0.2秒待つと 表示できない。
@@ -75,6 +83,17 @@ Pg.setting = async function setting() {
             this.Motion.Move.ifOnEdgeBounce();
             //this.Looks.Effect.change(Lib.ImageEffective.COLOR, 5);
             this.Pen.stamp();
+            yield;
+        }
+    });
+    text.Event.whenFlag(async function*(){
+        let count = 0;
+        for(;;) {
+            console.log(`${count}秒`)
+            this.Looks.Layer.gotoBack();
+            text.Looks.Costume.next();
+            await this.Control.wait(1);
+            count += 1;
             yield;
         }
     });
