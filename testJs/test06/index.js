@@ -19,7 +19,7 @@ const TogeMaruGothic = 'TogeMaruGothic';
 const HarryPotter = 'HarryPotter';
 const Gion = 'Gion';
 let stage;
-let cat, cat2, cat3;
+let cat, cat2, cat3, cat4;
 const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
 import { Texts } from './sub/texts.js';
@@ -41,6 +41,23 @@ Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
     await stage.Sound.add( Gion );
     await stage.SvgText.add('BackDrop', backdrop);    
+    cat4 = new Lib.Sprite(Cat+4);
+    cat4.Motion.Position.xy = [-200, 150];
+    cat4.Looks.Size.scale = [50, 50];
+    cat4.Font.add(TogeMaruGothic);
+    {
+        const color = 'white';
+        const fontSize = 25;
+        const fontStyle = 'normal';
+        const option = {
+            fontFamily: TogeMaruGothic,
+            color: color,
+            fontSize: fontSize,
+            fontStyle: fontStyle,
+        }
+        cat4.SvgText.addTexts('cat4', ['0秒'], option)
+    }
+
     cat = new Lib.Sprite(Cat);
     cat.Font.add(TogeMaruGothic);
     cat.Looks.hide();
@@ -100,6 +117,24 @@ Pg.prepare = async function prepare() {
 
 }
 Pg.setting = async function setting() {
+    cat4.Event.whenFlag(async function*(){
+        let counter = 0;
+        for(;;) {
+            const color = 'white';
+            const fontSize = 25;
+            const fontStyle = 'normal';
+            const option = {
+                fontFamily: TogeMaruGothic,
+                color: color,
+                fontSize: fontSize,
+                fontStyle: fontStyle,
+            }
+            this.SvgText.replaceTexts('cat4', [`${counter}秒`], option);
+            counter += 1;
+            await this.Control.wait(1);
+            yield;
+        }
+    });
     cat.Event.whenFlag(async function*(){
         this.Looks.show();
         const names = this.Looks.Costume.names;

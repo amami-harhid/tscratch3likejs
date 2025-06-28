@@ -14,6 +14,13 @@ export interface ISvgText {
      */
     addTexts( name: string, text: string[], option?:TAddOption): void;
     /**
+     * 文字列配列をSVG化して画像を更新する
+     * @param name 
+     * @param text 
+     * @param option 
+     */
+    replaceTexts( name: string, text: string[], option?:TAddOption): void;
+    /**
      * SVG文字列を追加する
      * @param name 
      * @param svg 

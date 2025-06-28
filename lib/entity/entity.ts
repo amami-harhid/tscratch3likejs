@@ -452,7 +452,40 @@ export class Entity extends EventEmitter implements IEntity{
         return _allDone;
     }
     /** @internal */
-    public _addImage(name:string ,image:string|HTMLImageElement, costume) {
+    public _updateImage(name:string, image: string|HTMLImageElement, costume) :void {
+
+        if(name == undefined || typeof name != "string"){
+            throw "【Image.update】正しい name を指定してください"
+        }
+        const ImageError = "【Image.update】正しいイメージデータを指定してください";
+        if(image == undefined) throw ImageError
+        if(typeof image =="string"){
+            if(image.substring(0,4)!="<svg")
+                throw ImageError
+        }else{
+            // 文字列(SVG)でないとき
+            if(image.nodeName ){
+                if(image.nodeName && image.nodeName !="IMG")
+                    throw ImageError
+            }else{
+                // imageが 文字列(SVG)でない、または、nodeNameがないとき
+                throw ImageError
+            }            
+        }
+        const {skinId} = this.pgMain.loadedImages[name];
+        if(skinId == -1){
+            this._addImage(name, image, costume);
+        }else{
+            if(typeof image == 'string') {
+                this.render.renderer.updateSVGSkin(skinId, image);
+            }else{
+                this.render.renderer.updateBitmapSkin(skinId, image);
+            }
+        }
+
+    }
+    /** @internal */
+    public _addImage(name:string ,image:string|HTMLImageElement, costume) : void {
         if(name == undefined || typeof name != "string"){
             throw "【Image.add】正しい name を指定してください"
         }

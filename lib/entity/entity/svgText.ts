@@ -34,7 +34,21 @@ export class SvgText implements ISvgText {
             this._entity._addImage(name, image, backdrops);
         }
     }
-    addTexts(name: string, texts: string[], option?: TAddOption): void {
+    private uddateImage(name:string, image:string): void {
+        if(this._entity instanceof Sprite) {
+            const sprite = this._entity as Sprite;
+            const costumes = sprite.costumes;
+            if(sprite.imageDatas){
+                sprite.imageDatas.push({name:name, data:image, skinId:-1});
+            }
+            this._entity._updateImage(name, image, costumes);
+        }else if(this._entity instanceof Stage){
+            const stage = this._entity as Stage;
+            const backdrops = stage.backdrops;
+            this._entity._updateImage(name, image, backdrops);
+        }
+    }
+    private getSvgOption(option? : TAddOption): TSvgOption {
         const svgOption:TSvgOption = {};
         if(option){
             if(option.fontFamily){
@@ -57,6 +71,20 @@ export class SvgText implements ISvgText {
                 svgOption.color = option.color;
             }
         }
+        return svgOption;
+    }
+    replaceTexts(name: string, texts: string[], option?: TAddOption): void {
+        const svgOption:TSvgOption = this.getSvgOption(option);
+        const svgString = this._svgTextCreator.toSvg(texts, svgOption);
+        const parser = new DOMParser();
+        const serializer = new XMLSerializer();
+        let svgDom = parser.parseFromString(svgString, 'text/xml');
+        const svgTag = svgDom.documentElement;
+        const svgText = serializer.serializeToString(svgTag);
+        this.uddateImage(name, svgText);
+    }
+    addTexts(name: string, texts: string[], option?: TAddOption): void {
+        const svgOption:TSvgOption = this.getSvgOption(option);
         const svgString = this._svgTextCreator.toSvg(texts, svgOption);
         //const svgString2 = this._svgTextCreator.toSvg(texts, svgOption.fontSize,svgOption.fontStyle, svgOption.color, (svgOption.font)?svgOption.font.fontFamily:'');
         const parser = new DOMParser();
