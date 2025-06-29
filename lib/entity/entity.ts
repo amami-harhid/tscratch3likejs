@@ -19,7 +19,7 @@ import { ImageEffective } from '../../Type/entity/ImageEffective';
 import { SoundOption } from '../../Type/entity/SoundOption';
 import { PgMain } from '../pgMain';
 import type { TThreadObj } from '../controls/TThreadObj';
-import type { S3FontData, TPosition, TScale } from '@Type/common/typeCommon';
+import type { S3FontData, S3ImageData, TPosition, TScale } from '@Type/common/typeCommon';
 import type { TEntityEffects, TEntityOptions } from '@Type/entity/TEntityOptions';
 import type { TSoundPlayerOption } from '@Type/sound/IAudioEngine';
 import { StageLayering } from '../../Type/stage/CStageLayering';
@@ -453,9 +453,9 @@ export class Entity extends EventEmitter implements IEntity{
     }
     /** @internal */
     public _updateImage(name:string, image: string|HTMLImageElement, costume) :void {
-
+        const NameError = "【Image.update】正しい name を指定してください"
         if(name == undefined || typeof name != "string"){
-            throw "【Image.update】正しい name を指定してください"
+            throw NameError
         }
         const ImageError = "【Image.update】正しいイメージデータを指定してください";
         if(image == undefined) throw ImageError
@@ -472,8 +472,11 @@ export class Entity extends EventEmitter implements IEntity{
                 throw ImageError
             }            
         }
-        const {skinId} = this.pgMain.loadedImages[name];
-        if(skinId == -1){
+        const imageData:S3ImageData = this.pgMain.loadedImages[name];
+        if( imageData == undefined )
+            throw NameError;
+        const skinId = imageData.skinId;
+        if(skinId == undefined || skinId == -1){
             this._addImage(name, image, costume);
         }else{
             if(typeof image == 'string') {

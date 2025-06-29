@@ -7,10 +7,8 @@ import { SvgTextCreator } from './svgTextCreator';
 import { SvgTextMesure } from './svgTexMesure';
 import type { ISvgTextCreator, TSvgOption, TSvgOptionFont } from '@Type/svgText/ISvgTextCreator';
 import type { ISvgTextMesure } from '@Type/svgText/ISvgTextMesure';
+import type { S3ImageData } from '@Type/common/typeCommon';
 
-
-
-const SVG_NS = "http://www.w3.org/2000/svg";
 export class SvgText implements ISvgText {
     private _entity : Entity;
     private _svgTextMesure: ISvgTextMesure;
@@ -81,7 +79,12 @@ export class SvgText implements ISvgText {
         let svgDom = parser.parseFromString(svgString, 'text/xml');
         const svgTag = svgDom.documentElement;
         const svgText = serializer.serializeToString(svgTag);
-        this.uddateImage(name, svgText);
+        const imageData:S3ImageData = this._entity.pgMain.loadedImages[name];
+        if(imageData == undefined || imageData.skinId == undefined || imageData.skinId == -1) {
+            this.addImage(name, svgText);
+        }else{
+            this.uddateImage(name, svgText);
+        }
     }
     addTexts(name: string, texts: string[], option?: TAddOption): void {
         const svgOption:TSvgOption = this.getSvgOption(option);

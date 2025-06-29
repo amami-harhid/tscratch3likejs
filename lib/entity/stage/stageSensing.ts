@@ -61,4 +61,22 @@ export class StageSensing {
     resetTimer() {
         this.entity.$resetTimer();
     }
+
+        /**
+     * マウスタッチしていないことの判定
+     * @returns 
+     */
+    isNotMouseTouching() : boolean {
+        if( this.entity.$isAlive() != true ) return false;
+        return this.entity.$isNotMouseTouching();
+    }
+    /**
+     * マウスタッチしていることの判定
+     * @returns 
+     */
+    isMouseTouching(): boolean {
+        if( this.entity.$isAlive() != true ) return false;
+        return this.entity.$isMouseTouching();
+    }
+
 };
