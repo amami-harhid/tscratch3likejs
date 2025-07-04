@@ -248,29 +248,38 @@ export class Sprite extends Entity implements ISprite {
         if(this.isClone == false){
             if(this.clones == undefined) this.clones = [];
             const newName = `${this.name}_${this.clones.length+1}`;
-            // クローン時にエフェクトを引き継ぐ。
-            // クローン別にエフェクトを設定したいときは
-            // clone() 実行後に 個別に設定すること。
-            // const COLOR = ImageEffective.COLOR;
-            // const FISHEYE = ImageEffective.FISHEYE;
-            // const WHIRL = ImageEffective.WHIRL;
-            // const PIXELATE = ImageEffective.PIXELATE;
-            // const MOSAIC = ImageEffective.MOSAIC;
-            // const BRIGHTNESS = ImageEffective.BRIGHTNESS;
-            // const GHOST = ImageEffective.GHOST;
-            const _options = {
-                'position' : {x: this.$_position.x, y:this.$_position.y}, 
-                'scale' : this.$_scale,
-                'direction' : (this.$_direction)? this.$_direction: 90,
-                'visible': this._visible,
-                COLOR : (this._effect.color)? this._effect.color: 0,
-                FISHEYE : (this._effect.fisheye)? this._effect.fisheye: 0,
-                WHIRL: (this._effect.whirl)? this._effect.whirl: 0,
-                PIXELATE: (this._effect.pixelate)? this._effect.pixelate: 0,
-                MOSAIC: (this._effect.mosaic)? this._effect.mosaic: 0,
-                BRIGHTNESS: (this._effect.brightness)? this._effect.brightness: 0,
-                GHOST: (this._effect.ghost)? this._effect.ghost: 0,
+            const _options: TEntityOptions = {
+                position : {x: this.$_position.x, y:this.$_position.y}, 
+                scale : this.$_scale,
+                direction : (this.$_direction)? this.$_direction: 90,
+                visible: this._visible,
+                effect: {},
             };
+            // クローン時にエフェクトを引き継ぐ。
+            if(_options.effect){
+                if(this._effect.color) {
+                    _options.effect.color = this._effect.color;
+                }
+                if(this._effect.fisheye) {
+                    _options.effect.fisheye = this._effect.fisheye;
+                }
+                if(this._effect.whirl){
+                    _options.effect.whirl = this._effect.whirl;
+                }
+                if(this._effect.pixelate){
+                    _options.effect.pixelate = this._effect.pixelate;
+                }
+                if(this._effect.mosaic){
+                    _options.effect.mosaic = this._effect.mosaic;
+                }
+                if(this._effect.brightness){
+                    _options.effect.brightness = this._effect.brightness;
+                }
+                if(this._effect.ghost){
+                    _options.effect.ghost = this._effect.ghost;
+                }
+
+            }
             const newOptions = Object.assign(_options, options);
             // @ts-ignore this.constructor()エラーを抑止する
             const newSprite = new this.constructor(newName, newOptions);
@@ -279,6 +288,8 @@ export class Sprite extends Entity implements ISprite {
             }else{
                 newSprite.$hide();
             }
+            // 色などの効果を引き継ぐ
+
 
             // デフォでは本体の前に表示されるので、1つ背面へ移動する
             newSprite.$goBackwardLayers(1)

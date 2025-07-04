@@ -119,12 +119,14 @@ Pg.setting = async function setting() {
     // 緑の旗が押されたときの動作    
     dog.Event.whenFlag(async function*(){
         this.Looks.Size.scale = [20,20];
-        // 表示する
+        // 非表示にする
         this.Looks.hide();
         for(;;) {
             const x = Lib.randomInteger(-220, -170);
             this.Motion.Position.xy = [x, 170];
             await this.Control.wait( Lib.randomDecimal(1,3) );
+            this.Looks.Effect.set(Lib.ImageEffective.MOSAIC, 100 - Lib.randomDecimal(20,100));
+            this.Looks.Effect.set(Lib.ImageEffective.GHOST, 100 - Lib.randomDecimal(20,100));
             this.Control.clone();
             yield;
         }
