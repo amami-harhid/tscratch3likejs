@@ -79,7 +79,6 @@ export class ImageLoader {
                     // <image>タグを入れたSVGにする
                     const localUrl = image;
                     const svgStr = await Image2Svg.createSvg(localUrl);
-                    console.log(svgStr)
                     const rtn = {name: name, data: svgStr};
                     return rtn;
                 }
