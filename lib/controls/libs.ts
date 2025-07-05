@@ -330,6 +330,11 @@ export class Libs {
             yield(i);
         }
     }
+    /** ステージ横幅 */
+    static StageWidth:number = Env.StageSize.W;
+    /** ステージ高さ */
+    static StageHeight:number = Env.StageSize.H;
+
     /** @internal */
     static _instance: Libs;
     /** @internal */

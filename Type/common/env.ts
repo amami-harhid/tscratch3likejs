@@ -18,8 +18,12 @@ export type TEnv = {
      * ウインドウサイズ
      */
     readonly WindowSize : {w: number, h: number},
+    /**
+     * ステージサイズ
+     */
+    readonly StageSize: {W: number, H:number},
 
-        /**
+    /**
      * モニター表示数（縦）
      */
     MonitorMaxRowSize: number,

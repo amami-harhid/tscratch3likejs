@@ -1,4 +1,5 @@
 import { Libs } from "../controls/libs";
+import { Env } from "../env";
 import { Image2Svg } from "./image2Svg";
 /**
  * ImageLoader
@@ -68,8 +69,8 @@ export class ImageLoader {
                     const parser = libs.svgParser;
                     const svgDoc = parser.parseFromString(_text);
                     const size = parser.getSize();
-                    if(size.w > 480 && size.h > 360) {
-                        const changed = parser.sizeChange(svgDoc,480,360,translate);
+                    if(size.w > Env.StageSize.W && size.h > Env.StageSize.H) {
+                        const changed = parser.sizeChange(svgDoc,Env.StageSize.W, Env.StageSize.H,translate);
                         return {name:name, data: changed};    
                     }else{
                         return {name:name, data: _text};    
@@ -78,6 +79,7 @@ export class ImageLoader {
                     // <image>タグを入れたSVGにする
                     const localUrl = image;
                     const svgStr = await Image2Svg.createSvg(localUrl);
+                    console.log(svgStr)
                     const rtn = {name: name, data: svgStr};
                     return rtn;
                 }

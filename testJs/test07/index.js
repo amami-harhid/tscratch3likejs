@@ -33,6 +33,7 @@ Pg.preload = async function preload( ) {
     this.Image.load( './assets/dog_a.svg', Constant.DogA );
     this.Image.load( './assets/dog_b.svg', Constant.DogB );
     this.Image.load( './assets/home.svg', Constant.House );
+    this.Image.load('./assets/Xy-grid.png', 'XYGrid');
 }
 
 // --------------------------------
@@ -44,7 +45,8 @@ Pg.prepare = async function prepare() {
     // ステージを作る
     //----------------
     stage = new Lib.Stage();
-
+    stage.Image.add('XYGrid');
+    
     //----------------
     // スプライト（犬）を作る
     //----------------

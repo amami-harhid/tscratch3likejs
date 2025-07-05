@@ -18,4 +18,9 @@ export const Env: TEnv = {
      * ウィンドウサイズ
      */
     WindowSize : {w: innerWidth, h: innerHeight} as const,
+
+    /**
+     * ステージサイズ
+     */
+    StageSize : { W: 480, H: 360} as const,
 };

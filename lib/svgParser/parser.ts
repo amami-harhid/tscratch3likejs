@@ -1,7 +1,8 @@
 /**
  * SVGParser
  */
-import { TPosition, TScale } from "@Type/common/typeCommon";
+import { Env } from "../env";
+import type { TPosition, TScale } from "@Type/common/typeCommon";
 
 export class SVGParser {
     
@@ -58,7 +59,7 @@ export class SVGParser {
      * @param {object} translate 
      * @return {string} 変更後のsvgDoc文字列
      */
-    sizeChange(svgDoc: HTMLElement, w:number=480, h:number=360, 
+    sizeChange(svgDoc: HTMLElement, w:number=Env.StageSize.W, h:number=Env.StageSize.H, 
                     translate:TPosition={x:0, y:0}): string {
         // svgタグ
         svgDoc.setAttribute('width', `${w}px`);

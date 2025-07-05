@@ -3,6 +3,7 @@
  */
 const twgl = require('twgl.js');
 import { EventEmitter } from "events";
+import { Env } from "../env";
 import { MeasurementProvider } from "../util/MeasurementProvider";
 import { MonitorRenderingConstants } from "./s3RenderConstants";
 import type { IDrawable } from "@Type/render/IDrawable";
@@ -12,7 +13,7 @@ import type { TSize, TVec3 } from "@Type/common/typeCommon";
 import { IMonitorSkin } from "@Type/monitors/IMonitorSkin";
 
 const MonitorStyle = {
-    MAX_LINE_WIDTH: 480,  // stage width
+    MAX_LINE_WIDTH: Env.StageSize.W,  // stage width
     PADDING_VALUE_VIRTICAL: 5, // Padding around the value text area
     PADDING: 10, // Padding around the text area
     MIN_WIDTH: 50, // Minimum value area width, in Scratch pixels
