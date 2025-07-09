@@ -12,7 +12,7 @@ import {Cat} from './sub/cat';
 Pg.title = "【Sample31】背景を変えてまつ"
 Env.bubbleScaleLinkedToSprite = true;
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
 import {Constants} from './sub/Constant';
 import { BubbleProperties } from "@Type/sprite/TBubble";
 
@@ -26,11 +26,11 @@ let stage: StageEx;
 let cat: Cat, guideCat: Sprite;
 
 Pg.preload = async function (this: PgMain) {
-    this.Image.load(AssetHost+'/assets/Jurassic.svg', Constants.Jurassic);
-    this.Image.load(AssetHost+'/assets/Jurassic2.svg', Constants.Jurassic2);
-    this.Image.load(AssetHost+'/assets/backdrop.png', Constants.Backdrop);
-    this.Sound.load(AssetHost+'/assets/Chill.wav', Constants.Chill);
-    this.Image.load(AssetHost+'/assets/cat.svg', Constants.Cat01 );
+    this.Image.load(AssetHosts+'/assets/Jurassic.svg', Constants.Jurassic);
+    this.Image.load(AssetHosts+'/assets/Jurassic2.svg', Constants.Jurassic2);
+    this.Image.load(AssetHosts+'/assets/backdrop.png', Constants.Backdrop);
+    this.Sound.load(AssetHosts+'/assets/Chill.wav', Constants.Chill);
+    this.Image.load(AssetHosts+'/assets/cat.svg', Constants.Cat01 );
 }
 Pg.prepare = async function () {
     // create instance

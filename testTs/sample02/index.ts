@@ -9,10 +9,12 @@ const Jurassic = "Jurassic";
 
 let stage:Stage;
 
+const ASSETS_HOST = 'https://amami-harhid.github.io/tscratch3assets';
+
 // 事前ロード処理
 Pg.preload = async function(this:PgMain) {
     this.Image.load('./assets/white.svg', White);
-    this.Image.load('../../assets/Jurassic.svg', Jurassic);
+    this.Image.load( ASSETS_HOST+'/assets/Jurassic.svg', Jurassic);
 }
 // 事前準備処理
 Pg.prepare = async function() {

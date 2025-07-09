@@ -10,8 +10,10 @@ import {Cat} from './sub/cat';
 
 Pg.title = "【Sample29】クラス定義を使う, 背景が変わることをイベントで受け取る"
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 import {Constants} from './sub/Constant';
+
+
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
 
 /**
  * Stage Extra class
@@ -23,10 +25,10 @@ let stage: StageEx;
 let cat: Cat;
 
 Pg.preload = async function (this: PgMain) {
-    this.Image.load(AssetHost+'/assets/Jurassic.svg', Constants.Jurassic);
-    this.Image.load(AssetHost+'/assets/backdrop.png', Constants.Backdrop);
-    this.Sound.load(AssetHost+'/assets/Chill.wav', Constants.Chill);
-    this.Image.load(AssetHost+'/assets/cat.svg', Constants.Cat01 );
+    this.Image.load(AssetHosts+'/assets/Jurassic.svg', Constants.Jurassic);
+    this.Image.load(AssetHosts+'/assets/backdrop.png', Constants.Backdrop);
+    this.Sound.load(AssetHosts+'/assets/Chill.wav', Constants.Chill);
+    this.Image.load(AssetHosts+'/assets/cat.svg', Constants.Cat01 );
 }
 Pg.prepare = async function () {
     // create instance

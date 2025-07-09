@@ -15,10 +15,10 @@ const Cat = "Cat";
 let stage;
 let cat;
 let text;
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHost = "https://amami-harhid.github.io/tscratch3assets";
 
 Pg.preload = async function preload() {
-    this.Image.load('./assets/Neon Tunnel.png', "Neon" );
+    this.Image.load(AssetHost+'/assets/Neon Tunnel.png', "Neon" );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', Cat );
     this.Font.load('./assets/TogeMaruGothic-700-Bold.woff', "Togemaru");

@@ -18,7 +18,7 @@ let stage;
 let cat;
 let monitors;
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHost = "https://amami-harhid.github.io/tscratch3assets";
 
 Pg.preload = async function preload() {
     this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic01 );

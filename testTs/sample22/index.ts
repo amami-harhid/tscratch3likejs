@@ -13,12 +13,12 @@ const Cat:string = "Cat";
 let stage: Stage;
 let cat: Sprite;
 
-const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
 
 Pg.preload = async function preload(this: PgMain) {
-    this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
-    this.Sound.load(`${ASSETS_HOST}/assets/Chill.wav`, Chill);
-    this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat);
+    this.Image.load(`${AssetHosts}/assets/Jurassic.svg`, Jurassic);
+    this.Sound.load(`${AssetHosts}/assets/Chill.wav`, Chill);
+    this.Image.load(`${AssetHosts}/assets/cat.svg`, Cat);
 }
 
 Pg.prepare = async function prepare() {

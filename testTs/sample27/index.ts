@@ -26,14 +26,14 @@ let monitors: Monitors;
 let score: Monitor;
 let seconds: Monitor;
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
 
 Pg.preload = async function preload(this: PgMain) {
-    this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic01 );
-    this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
-    this.Image.load(AssetHost+'/assets/cat.svg', Cat01 );
-    this.Image.load(AssetHost+'/assets/cat2.svg', Cat02 );
-    this.Sound.load('../../assets/Rip.wav', Rip );
+    this.Image.load(AssetHosts+'/assets/Jurassic.svg', Jurassic01 );
+    this.Sound.load(AssetHosts+'/assets/Chill.wav', Chill );
+    this.Image.load(AssetHosts+'/assets/cat.svg', Cat01 );
+    this.Image.load(AssetHosts+'/assets/cat2.svg', Cat02 );
+    this.Sound.load(AssetHosts+'/assets/Rip.wav', Rip );
 }
 Pg.prepare = async function prepare() {
 

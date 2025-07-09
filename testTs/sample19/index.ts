@@ -24,13 +24,13 @@ let cat2: Sprite;
 
 import {bubble, bubbleTextArr, bubble2, bubbleTextArr2} from './bubble'
 
-const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
 
 // 事前ロード処理
 Pg.preload = async function(this: PgMain) {
-    this.Image.load(`${ASSETS_HOST}/assets/Jurassic.svg`, Jurassic);
-    this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat1);
-    this.Image.load(`${ASSETS_HOST}/assets/cat2.svg`, Cat2);
+    this.Image.load(`${AssetHosts}/assets/Jurassic.svg`, Jurassic);
+    this.Image.load(`${AssetHosts}/assets/cat.svg`, Cat1);
+    this.Image.load(`${AssetHosts}/assets/cat2.svg`, Cat2);
 }
 
 // 事前準備処理

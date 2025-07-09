@@ -8,10 +8,12 @@ const ImageNameJurassic = "Jurassic";
 const Chill = "Chill";
 let stage: Stage;
 
+const ASSETS_HOST = 'https://amami-harhid.github.io/tscratch3assets';
+
 // 事前ロード処理
 Pg.preload = async function(this:PgMain) {
-    this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Jurassic.svg', ImageNameJurassic);
-    this.Sound.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Chill.wav', Chill);
+    this.Image.load(ASSETS_HOST+'/assets/Jurassic.svg', ImageNameJurassic);
+    this.Sound.load(ASSETS_HOST+'/assets/Chill.wav', Chill);
 }
 // 事前準備処理
 Pg.prepare = async function() {

@@ -24,7 +24,7 @@ let cat1: Sprite;
 let cat2: Sprite;
 let cat3: Sprite;
 
-const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
+const ASSETS_HOST = 'https://amami-harhid.github.io/tscratch3assets';
 
 // 事前ロード処理
 Pg.preload = async function(this: PgMain) {

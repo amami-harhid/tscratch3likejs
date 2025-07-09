@@ -19,13 +19,15 @@ const SpriteCatName:string = "cat";
 let stage: Stage;
 let cat: Sprite;
 
+const ASSETS_HOST = 'https://amami-harhid.github.io/tscratch3assets';
+
 // 事前ロード処理
 Pg.preload = async function preload(this: PgMain) {
-    this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Jurassic.svg', Jurassic);
-    this.Sound.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Chill.wav', Chill);
-    this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/cat.svg', Cat1);
-    this.Image.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/cat2.svg', Cat2);
-    this.Sound.load('https://amami-harhid.github.io/scratch3likejslib/web/assets/Cat.wav', Mya);
+    this.Image.load(ASSETS_HOST+'/assets/Jurassic.svg', Jurassic);
+    this.Sound.load(ASSETS_HOST+'/assets/Chill.wav', Chill);
+    this.Image.load(ASSETS_HOST+'/assets/cat.svg', Cat1);
+    this.Image.load(ASSETS_HOST+'/assets/cat2.svg', Cat2);
+    this.Sound.load(ASSETS_HOST+'/assets/Cat.wav', Mya);
 }
 // 事前準備処理
 Pg.prepare = async function prepare() {

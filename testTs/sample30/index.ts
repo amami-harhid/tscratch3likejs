@@ -9,7 +9,6 @@ import type {ISprite as Sprite} from "@Type/sprite";
 
 Pg.title = "【Sample30】スプライトをドラッグする(FPS=120)"
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
 
 // FPS = 60に設定する(通常の２倍速)
 Env.fps = 60;
@@ -24,10 +23,12 @@ const Chill = 'Chill';
 /** コスチュームネコ */
 const Cat = 'Cat';
 
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
+
 Pg.preload = async function (this: PgMain) {
-    this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic);
-    this.Sound.load(AssetHost+'/assets/Chill.wav', Chill);
-    this.Image.load(AssetHost+'/assets/cat.svg', Cat );
+    this.Image.load(AssetHosts+'/assets/Jurassic.svg', Jurassic);
+    this.Sound.load(AssetHosts+'/assets/Chill.wav', Chill);
+    this.Image.load(AssetHosts+'/assets/cat.svg', Cat );
 }
 Pg.prepare = async function () {
 

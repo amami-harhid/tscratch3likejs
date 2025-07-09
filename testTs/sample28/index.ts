@@ -23,7 +23,7 @@ let monitors: Monitors;
 let who: Monitor;
 let answer: Monitor;
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
 
 const MonitorId = {
     WHO : 'who',
@@ -31,9 +31,9 @@ const MonitorId = {
 }
 
 Pg.preload = async function preload(this: PgMain) {
-    this.Image.load(AssetHost+'/assets/Jurassic.svg', Jurassic01 );
-    this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
-    this.Image.load(AssetHost+'/assets/cat.svg', Cat01 );
+    this.Image.load(AssetHosts+'/assets/Jurassic.svg', Jurassic01 );
+    this.Sound.load(AssetHosts+'/assets/Chill.wav', Chill );
+    this.Image.load(AssetHosts+'/assets/cat.svg', Cat01 );
     this.Image.load('./assets/blackCat.svg', Cat02 );
 }
 Pg.prepare = async function prepare() {

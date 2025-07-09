@@ -26,18 +26,18 @@ let title: Sprite;
 
 let score = 0;
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
 
 Pg.preload = async function preload(this: PgMain) {
-    this.Image.load('../../assets/Neon Tunnel.png', NeonTunnel );
-    this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
-    this.Image.load(AssetHost+'/assets/ball-a.svg', BallA );
-    this.Image.load('../../assets/Paddle.svg', Paddle );
-    this.Image.load('../../assets/Button3-b.svg', Block );
-    this.Image.load('../../assets/Line.svg', Line );
-    this.Sound.load(AssetHost+'/assets/Pew.wav', Pew);
-    this.Image.load('../../assets/YouWon.svg', YouWon );
-    this.Image.load('../../assets/GameOver.svg', GameOver );
+    this.Image.load(AssetHosts+'/assets/Neon Tunnel.png', NeonTunnel );
+    this.Sound.load(AssetHosts+'/assets/Chill.wav', Chill );
+    this.Image.load(AssetHosts+'/assets/ball-a.svg', BallA );
+    this.Image.load(AssetHosts+'/assets/Paddle.svg', Paddle );
+    this.Image.load(AssetHosts+'/assets/Button3-b.svg', Block );
+    this.Image.load(AssetHosts+'/assets/Line.svg', Line );
+    this.Sound.load(AssetHosts+'/assets/Pew.wav', Pew);
+    this.Image.load(AssetHosts+'/assets/YouWon.svg', YouWon );
+    this.Image.load(AssetHosts+'/assets/GameOver.svg', GameOver );
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();

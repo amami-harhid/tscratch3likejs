@@ -17,12 +17,12 @@ const BallA:string = "BallA";
 let stage: Stage;
 let ball: Sprite
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHosts = 'https://amami-harhid.github.io/tscratch3assets';
 
 Pg.preload = async function preload(this: PgMain) {
-    this.Image.load('../../assets/Neon Tunnel.png', NeonTunnel );
-    this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
-    this.Image.load(AssetHost+'/assets/ball-a.svg', BallA );
+    this.Image.load(AssetHosts+'/assets/Neon Tunnel.png', NeonTunnel );
+    this.Sound.load(AssetHosts+'/assets/Chill.wav', Chill );
+    this.Image.load(AssetHosts+'/assets/ball-a.svg', BallA );
 }
 Pg.prepare = async function prepare() {
 

@@ -12,7 +12,7 @@ const BallA = "BallA";
 
 let stage;
 let ball;
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHost = "https://amami-harhid.github.io/tscratch3assets";
 
 Pg.preload = async function preload() {
     //dthis.Image.load('../../assets/white_backdrop.svg', NeonTunnel );

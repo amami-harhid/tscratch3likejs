@@ -20,7 +20,7 @@ const HarryPotter = 'HarryPotter';
 const Gion = 'Gion';
 let stage;
 let cat, cat2, cat3, cat4;
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHost = "https://amami-harhid.github.io/tscratch3assets";
 
 import { Texts } from './sub/texts.js';
 import { Texts2 } from './sub/texts2.js';

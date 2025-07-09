@@ -24,48 +24,48 @@ let title;
 
 let score = 0;
 
-const AssetHost = "https://amami-harhid.github.io/scratch3likejslib/web";
+const AssetHost = "https://amami-harhid.github.io/tscratch3assets";
 
 Pg.preload = async function preload() {
-    this.Image.load('../../assets/Neon Tunnel.png', NeonTunnel );
+    this.Image.load(AssetHost+'/assets/Neon Tunnel.png', NeonTunnel );
     this.Sound.load(AssetHost+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHost+'/assets/cat.svg', BallA );
-    this.Image.load('../../assets/Paddle.svg', Paddle );
-    this.Image.load('../../assets/Button3-b.svg', Block );
-    this.Image.load('../../assets/Line.svg', Line );
+    this.Image.load(AssetHost+'/assets/Paddle.svg', Paddle );
+    this.Image.load(AssetHost+'/assets/Button3-b.svg', Block );
+    this.Image.load(AssetHost+'/assets/Line.svg', Line );
     this.Sound.load(AssetHost+'/assets/Pew.wav', Pew);
-    this.Image.load('../../assets/YouWon.svg', YouWon );
-    this.Image.load('../../assets/GameOver.svg', GameOver );
+    this.Image.load(AssetHost+'/assets/YouWon.svg', YouWon );
+    this.Image.load(AssetHost+'/assets/GameOver.svg', GameOver );
 }
 Pg.prepare = async function prepare() {
     stage = new Lib.Stage();
-    stage.Image.set( NeonTunnel );
-    stage.Sound.set( Chill );
+    stage.Image.add( NeonTunnel );
+    stage.Sound.add( Chill );
 
     ball = new Lib.Sprite('ball');
-    ball.Image.set( BallA );
+    ball.Image.add( BallA );
     ball.Looks.Size.scale = {w: 50, h: 50};
     ball.Sensing.DragMode.draggable = false; //true;
 
     paddle = new Lib.Sprite("paddle");
     //paddle.visible = false;
-    paddle.Image.set( Paddle );
+    paddle.Image.add( Paddle );
     paddle.Motion.Move.toXY(0, -140);
 
     block = new Lib.Sprite( "block");
-    block.Image.set( Block );
+    block.Image.add( Block );
     block.Sound.add(Pew);
     block.Motion.Move.toXY(-220,-150);
     block.Looks.Size.scale = {w: 20,h: 20};
     block.Looks.hide();
 
     line = new Lib.Sprite( "line" );
-    line.Image.set( Line );
+    line.Image.add( Line );
     line.Motion.Move.toXY(0, -180);
 
     title = new Lib.Sprite("title");
-    title.Image.set(YouWon);
-    title.Image.set(GameOver);
+    title.Image.add(YouWon);
+    title.Image.add(GameOver);
     title.Looks.hide();
 }
 

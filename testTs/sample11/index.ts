@@ -16,7 +16,7 @@ const Cat:string = "Cat";
 let stage: Stage;
 let cat: Sprite;
 
-const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
+const ASSETS_HOST = 'https://amami-harhid.github.io/tscratch3assets';
 
 // 事前ロード処理
 Pg.preload = async function preload(this: PgMain) {

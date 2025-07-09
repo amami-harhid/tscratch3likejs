@@ -22,7 +22,7 @@ const Pew:string = "Pew";
 let stage: Stage;
 let cross: Sprite;
 
-const ASSETS_HOST = 'https://amami-harhid.github.io/scratch3likejslib/web';
+const ASSETS_HOST = 'https://amami-harhid.github.io/tscratch3assets';
 
 // 事前ロード処理
 Pg.preload = async function(this: PgMain) {
