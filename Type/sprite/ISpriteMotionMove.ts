@@ -7,7 +7,7 @@ export interface ISpriteMotionMove {
      */
     steps(steps: number): void;
     /**
-     * 指定座標へ移動する
+     * 指定座標へ移動させる
      * @param x {number} - X座標
      * @param y {number} - Y座標
      */
@@ -17,20 +17,20 @@ export interface ISpriteMotionMove {
      */
     ifOnEdgeBounce(): void;
     /**
-     * ステージ上のランダムな位置へ移動する
+     * ステージ上のどこかに移動させる
      */
     randomPosition(): void;
     /**
-     * マウスカーソルの位置へ移動する
+     * マウスカーソルの位置へ移動させる
      */
     mousePosition() : void;
     /**
-     * 指定したスプライトの位置へ移動する
+     * 指定したスプライトの位置へ移動させる
      * @param target {Sprite} - 指定スプライト
      */
     toSprite(target: ISprite) : void;
     /**
-     * 指定秒数かけて指定座標へ移動する
+     * 指定秒数かけて指定座標へ移動させる
      * @param sec {number} - 秒数
      * @param x {number} - X座標
      * @param y {number} - Y座標
