@@ -3260,6 +3260,19 @@ class Entity extends events__WEBPACK_IMPORTED_MODULE_5__.EventEmitter {
         }
         throw 'sounds undefined error';
     }
+    $getOptionValue(key) {
+        if (this.sounds) {
+            if (key == _Type_entity_SoundOption__WEBPACK_IMPORTED_MODULE_14__.SoundOption.VOLUME) {
+                const volume = this.$getSoundVolume();
+                return volume;
+            }
+            else if (key == _Type_entity_SoundOption__WEBPACK_IMPORTED_MODULE_14__.SoundOption.PITCH) {
+                const pitch = this.$getSoundPitch();
+                return pitch;
+            }
+        }
+        throw 'sounds undefined error';
+    }
     $setSoundVolume(volume) {
         if (this.sounds) {
             this.sounds.volume = volume;
@@ -4478,6 +4491,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   EntitySound: () => (/* binding */ EntitySound)
 /* harmony export */ });
+/* harmony import */ var _Type_entity_SoundOption__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../Type/entity/SoundOption */ "../Type/entity/SoundOption.ts");
+
 /** イベント */
 class EntitySound {
     entity;
@@ -4546,6 +4561,16 @@ class EntitySound {
      */
     stopImmediately() {
         this.entity.$soundStopImmediately();
+    }
+    /** 音量 */
+    get volume() {
+        const volume = this.entity.$getOptionValue(_Type_entity_SoundOption__WEBPACK_IMPORTED_MODULE_0__.SoundOption.VOLUME);
+        return volume;
+    }
+    /** ピッチ */
+    get pitch() {
+        const pitch = this.entity.$getOptionValue(_Type_entity_SoundOption__WEBPACK_IMPORTED_MODULE_0__.SoundOption.PITCH);
+        return pitch;
     }
 }
 
@@ -102948,7 +102973,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Version: () => (/* binding */ Version)
 /* harmony export */ });
-const Version = ( false) ? 0 : "1.0.0-beta.28";
+const Version = ( false) ? 0 : "1.0.0-beta.29";
 
 
 /***/ })

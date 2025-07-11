@@ -677,6 +677,19 @@ export class Entity extends EventEmitter implements IEntity{
         } 
         throw 'sounds undefined error';
     }
+    public $getOptionValue(key:SoundOption): number {
+        if(this.sounds ){
+            if( key == SoundOption.VOLUME ){
+                const volume = this.$getSoundVolume();
+                return volume;
+            }else if(key == SoundOption.PITCH ){
+                const pitch = this.$getSoundPitch();
+                return pitch;
+            }
+
+        }
+        throw 'sounds undefined error';
+    }
     protected $setSoundVolume(volume) {
         if ( this.sounds ) {
             this.sounds.volume = volume;

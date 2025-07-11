@@ -72,4 +72,15 @@ export class EntitySound implements IEntitySound {
     stopImmediately(): void {
         this.entity.$soundStopImmediately();
     }
+    /** 音量 */
+    get volume() : number {
+        const volume = this.entity.$getOptionValue(SoundOption.VOLUME);
+        return volume;
+    }
+    /** ピッチ */
+    get pitch() : number {
+        const pitch = this.entity.$getOptionValue(SoundOption.PITCH);
+        return pitch;
+
+    }
 }

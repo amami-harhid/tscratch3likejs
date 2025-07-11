@@ -46,4 +46,8 @@ export interface IEntitySound {
      * 鳴っている音を「すぐに」止める
      */
     stopImmediately(): void;
+    /** 音量 */
+    readonly volume: number;
+    /** ピッチ */
+    readonly pitch: number;
 }
