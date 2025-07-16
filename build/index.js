@@ -650,7 +650,7 @@ class Libs {
         }
         throw `unable calculate mouse position`;
     }
-    get randomPoint() {
+    get randomPosition() {
         const randomPointX = (Math.random() - 0.5) * this.p.stageWidth;
         const randomPointY = (Math.random() - 0.5) * this.p.stageHeight;
         return { x: randomPointX, y: randomPointY };
@@ -102973,7 +102973,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Version: () => (/* binding */ Version)
 /* harmony export */ });
-const Version = ( false) ? 0 : "1.0.0-beta.29";
+const Version = ( false) ? 0 : "1.0.0-beta.30";
 
 
 /***/ })

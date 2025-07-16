@@ -67,23 +67,23 @@ export interface Lib {
     /**
      * ステージ幅
      */
-    stageWidth: number;
+    readonly tageWidth: number;
     /**
      * ステージ高さ
      */
-    stageHeight: number;
+    readonly stageHeight: number;
     /**
      * mousePosition ( on canvas )
      */
-    mousePosition: TPosition;
+    readonly mousePosition: TPosition;
     /**
      * ステージ上のランダムな位置
      */
-    randomPoint: TPosition;
+    readonly randomPosition: TPosition;
     /**
      * ランダムな向き
      */
-    randomDirection (): number;
+    readonly randomDirection : number;
     /**
      * ランダム値を得る
      * @param from {number} ランダム範囲の最小値

@@ -157,7 +157,7 @@ export class Libs {
         }
         throw `unable calculate mouse position`;
     }
-    get randomPoint () {
+    get randomPosition () {
         const randomPointX = (Math.random()-0.5)*this.p.stageWidth;
         const randomPointY = (Math.random()-0.5)*this.p.stageHeight;
         return { x: randomPointX, y: randomPointY };
