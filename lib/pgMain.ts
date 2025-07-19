@@ -380,7 +380,7 @@ export class PgMain implements IPgMain {
     }
 
     async _prepare () {
-
+        this.stage = new this._libs.Stage();
         // prepareメソッドの実行を開始する
         if( this.prepare ) {
             const f = this.prepare.bind(this);

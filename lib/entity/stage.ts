@@ -47,7 +47,7 @@ export class Stage extends Entity implements IStage{
     private _Pen: IStagePen;
     private _SvgText: ISvgText;
     private _Font: IStageFont;
-    constructor( options:TEntityOptions ) {
+    constructor( options:TEntityOptions={} ) {
         if(typeof options == "string") throw "new Stage() パラメータはオブジェクト型のみ"
         super( "stage", StageLayering.BACKGROUND_LAYER, options );
         this.isSprite = false;

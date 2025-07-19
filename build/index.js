@@ -8766,7 +8766,7 @@ class Stage extends _entity__WEBPACK_IMPORTED_MODULE_6__.Entity {
     _Pen;
     _SvgText;
     _Font;
-    constructor(options) {
+    constructor(options = {}) {
         if (typeof options == "string")
             throw "new Stage() パラメータはオブジェクト型のみ";
         super("stage", _Type_stage_CStageLayering__WEBPACK_IMPORTED_MODULE_8__.StageLayering.BACKGROUND_LAYER, options);
@@ -13007,6 +13007,7 @@ class PgMain {
         }
     }
     async _prepare() {
+        this.stage = new this._libs.Stage();
         // prepareメソッドの実行を開始する
         if (this.prepare) {
             const f = this.prepare.bind(this);
@@ -102973,7 +102974,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Version: () => (/* binding */ Version)
 /* harmony export */ });
-const Version = ( false) ? 0 : "1.0.0-beta.30";
+const Version = ( false) ? 0 : "1.0.0-beta.31";
 
 
 /***/ })

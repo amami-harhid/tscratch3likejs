@@ -1,3 +1,4 @@
+import { IStage as Stage } from "@Type/stage";
 export declare interface IPgImage {
     /** ロード処理 */
     load(path:string, name:string, translate?:{x:number,y:number}): Promise<void>;
@@ -15,6 +16,8 @@ export declare interface IPgFont {
 export interface IPgMain {
     /** タイトル */
     title: string;
+    /** ステージ */
+    readonly stage: Stage;
     /** 事前ロード処理をするところ */
     preload?() : Promise<void>;
     /** 事前準備処理をするところ */
