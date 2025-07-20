@@ -1,3 +1,5 @@
+import { IStage } from ".";
+
 /**
  * Sprite Control(制御)
  */
@@ -58,12 +60,12 @@ export interface IStageControl {
      */
     stopThisScript() : void;
     /**
-     * このスプライトの他のスクリプトを停止する
+     * ステージの他のスクリプトを停止する
      * ```ts
-     *  // 同じスプライトの他のスクリプトを停止する
-     *  this.Control.stopOtherScripts();
+     *  // ステージの他のスクリプトを停止する
+     *  this.Control.stopOtherScripts(this);
      * ```
      */
-    stopOtherScripts() : void;
+    stopOtherScripts(stage: IStage) : void;
 
 };
