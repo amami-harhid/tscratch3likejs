@@ -5,7 +5,7 @@ import { SoundOption } from "../entity/SoundOption";
 import type { I_KEYBOARD_KEYS } from "../io/IKeyboard";
 import type { SMonitors } from "../monitors";
 import type { SSprite } from "../sprite";
-import type { SStage } from "../stage";
+//import type { SStage } from "../stage";
 import type { TEnv } from "../common/env";
 import type { IMathUtil } from "./mathUtil";
 import type { IUtils } from "./utils";
@@ -17,27 +17,27 @@ export interface Lib {
     /**
      * キーボード
      */
-    Keyboard :I_KEYBOARD_KEYS;
+    readonly Keyboard :I_KEYBOARD_KEYS;
     /**
      * 画像のオプション
      */
-    ImageEffective : typeof ImageEffective;
+    readonly ImageEffective : typeof ImageEffective;
     /**
      * 音のオプション
      */
-    SoundOption: typeof SoundOption;
+    readonly SoundOption: typeof SoundOption;
     /**
      * 回転方法
      */
-    RotationStyle : typeof RotationStyle;
+    readonly RotationStyle : typeof RotationStyle;
     /**
      * モニター
      */
-    Monitors: SMonitors;
+    readonly Monitors: SMonitors;
     /**
      * Math Utils
      */
-    MathUtil: IMathUtil;
+    readonly MathUtil: IMathUtil;
     /**
      * 指定したkeyが押されているとき TRUE
      * key 省略時は 何かのキーが押されているとき TRUE
@@ -104,18 +104,18 @@ export interface Lib {
      * @param to 
      */
     randomInteger(from:number , to:number ): number;
-    /**
-     * ステージクラス
-     */
-    Stage: SStage;
+    // /**
+    //  * ステージクラス
+    //  */
+    // readonly Stage: SStage;
     /**
      * スプライトクラス
      */
-    Sprite: SSprite;
+    readonly Sprite: SSprite;
     /**
      * Utils
      */
-    Utils: IUtils;
+    readonly Utils: IUtils;
 
     /**
      * 条件成立する間、待つ
@@ -137,5 +137,5 @@ export interface Lib {
     /**
      * Env 
      */
-    Env:TEnv;
+    readonly Env:TEnv;
 }
