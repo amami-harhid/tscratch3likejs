@@ -57,6 +57,18 @@ export interface ISpriteSize {
      */
     set scale(scale:{w:number,h:number}|TScaleArr);
 
+    /** 
+     * 大きさ 
+     * 横/縦の大きさが違うときは小さいほうを返す 
+     */
+    get size(): number;
+
+    /** 
+     * 大きさ
+     * 横/縦に同じ大きさを設定する 
+     */
+    set size(size:number);
+
     /**
      * 自分自身の縦横表示サイズを得る
      * @returns dimensions {w: number, h: number}

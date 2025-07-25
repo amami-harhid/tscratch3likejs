@@ -94,6 +94,23 @@ export class SpriteSize implements ISpriteSize {
             this.entity.$setScale(100, 100);
         }
     }
+    /** 
+     * 大きさ 
+     */
+    get size(): number {
+        const {w, h} = this.entity.$getCurrentSize();
+        if(w>h){
+            return h;
+        }
+        return w;
+    }
+
+    /** 
+     * 大きさ 
+     */
+    set size(size: number) {
+        this.entity.$setScale(size, size);
+    }
 
     /**
      * 自分自身の縦横表示サイズを得る

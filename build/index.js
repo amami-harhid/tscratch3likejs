@@ -8615,6 +8615,22 @@ class SpriteSize {
         }
     }
     /**
+     * 大きさ
+     */
+    get size() {
+        const { w, h } = this.entity.$getCurrentSize();
+        if (w > h) {
+            return h;
+        }
+        return w;
+    }
+    /**
+     * 大きさ
+     */
+    set size(size) {
+        this.entity.$setScale(size, size);
+    }
+    /**
      * 自分自身の縦横表示サイズを得る
      * @returns dimensions {w: number, h: number}
      * ```ts
@@ -9798,14 +9814,12 @@ __webpack_require__.r(__webpack_exports__);
 /** サイズ */
 class TextSpriteSize {
     entity;
-    drawingDimension;
     /**
      * @internal
      * @param entity {TextSprite}
      */
     constructor(entity) {
         this.entity = entity;
-        this.drawingDimension = { w: 0, h: 0 };
     }
     /**
      * 横サイズ
@@ -9876,6 +9890,22 @@ class TextSpriteSize {
      */
     set scale(scale) {
         this.entity.$setScale(scale.w, scale.h);
+    }
+    /**
+     * 大きさ
+     */
+    get size() {
+        const { w, h } = this.entity.$getCurrentSize();
+        if (w > h) {
+            return h;
+        }
+        return w;
+    }
+    /**
+     * 大きさ
+     */
+    set size(size) {
+        this.entity.$setScale(size, size);
     }
     /**
      * 自分自身の縦横表示サイズを得る
@@ -102974,7 +103004,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Version: () => (/* binding */ Version)
 /* harmony export */ });
-const Version = ( false) ? 0 : "1.0.0-beta.31";
+const Version = ( false) ? 0 : "1.0.0-beta.34";
 
 
 /***/ })

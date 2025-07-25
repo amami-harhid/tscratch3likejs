@@ -1,17 +1,16 @@
+import type { ISpriteSize } from '@Type/sprite/ISpriteSize';
 import { TextSprite } from './textSprite';
 
 /** サイズ */
-export class TextSpriteSize {
+export class TextSpriteSize implements ISpriteSize {
 
     private entity: TextSprite;
-    private drawingDimension: {w: number, h: number};
     /**
      * @internal
      * @param entity {TextSprite}
      */
     constructor(entity:TextSprite){
         this.entity = entity;
-        this.drawingDimension = {w:0, h:0};
     }
     /**
      * 横サイズ
@@ -84,6 +83,22 @@ export class TextSpriteSize {
         this.entity.$setScale(scale.w, scale.h);
     }
 
+    /**
+     * 大きさ
+     */
+    get size() : number {
+        const {w, h} = this.entity.$getCurrentSize();
+        if(w>h){
+            return h;
+        }
+        return w;
+    }
+    /**
+     * 大きさ
+     */
+    set size(size:number) {
+        this.entity.$setScale(size, size);
+    }
     /**
      * 自分自身の縦横表示サイズを得る
      * @returns dimensions {w: number, h: number}
