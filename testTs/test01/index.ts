@@ -14,7 +14,8 @@ const ASSETS_HOST = 'https://amami-harhid.github.io/tscratch3assets';
 /**
  * Cat Sprite Class
  */
-let cat: Sprite
+let cat: Sprite;
+let cat2: Sprite;
 
 const Cat = 'cat';
 const White = 'white';
@@ -24,11 +25,15 @@ Pg.preload = async function (this: PgMain) {
     this.Image.load('./assets/white.svg', White);
 }
 Pg.prepare = async function (this: PgMain) {
-    //this.stage.Image.add(White);
+    this.stage.Image.add(White);
     // create instance
-    cat = new Lib.Sprite(Cat);
+    cat = new Lib.Sprite();
     cat.Image.add( Cat );
     cat.Looks.hide();
+    cat2 = new Lib.Sprite();
+    cat2.Image.add( Cat );
+    cat2.Motion.Position.xy = [100,100];
+    cat2.Sensing.DragMode.draggable = true;
 
 }
 
@@ -37,9 +42,9 @@ Pg.setting = async function (this: PgMain) {
     cat.Event.whenFlag(async function(this:Sprite){
         this.Looks.show();
         console.log('黒い鼻が白い背景に触れた？');
-        const color = '#ffffff';
-        const mask = '#001026';
-        const ColorIsTouchingTo = this.Sensing.Color.colorIsTouchingTo(color, mask);
+        const targetColor = '#ffffff';
+        const ownColor = '#001026';
+        const ColorIsTouchingTo = this.Sensing.Color.isTouchingBy(ownColor, targetColor);
         console.log(`ColorIsTouchingTo=${ColorIsTouchingTo}`);
     });
     this.stage.Event.whenFlag(async function(this:Stage){
@@ -82,13 +87,13 @@ Pg.setting = async function (this: PgMain) {
         await this.Control.wait(1);
         console.log('白い背景に触れた？');
         await this.Control.wait(1);
-        const color = '#ffffff';
-        const IsTouchingTo = this.Sensing.Color.isTouchingTo(color);
+        const targetColor = '#ffffff';
+        const IsTouchingTo = this.Sensing.Color.isTouching(targetColor);
         console.log(`IsTouchingTo=${IsTouchingTo}`);
         console.log('黒い鼻が白い背景に触れた？');
         await this.Control.wait(1);
-        const mask = '#001026';
-        const ColorIsTouchingTo = this.Sensing.Color.colorIsTouchingTo(color, mask);
+        const selfColor = '#001026';
+        const ColorIsTouchingTo = this.Sensing.Color.isTouchingBy(selfColor, targetColor);
         console.log(`ColorIsTouchingTo=${ColorIsTouchingTo}`);
         await this.Control.wait(1);
         this.Sensing.DragMode.draggable = true;
@@ -110,4 +115,32 @@ Pg.setting = async function (this: PgMain) {
         const IsTouchingVirtical = this.Sensing.Edge.isTouchingVirtical;
         console.log(`IsTouchingVirtical=${IsTouchingVirtical}`);
     });
+    cat.Event.whenKeyPressed(Lib.Keyboard.LEFT, async function*(this:Sprite){
+        for(;;) {
+            const distance = this.Sensing.Mouse.distance;
+            const degree = this.Sensing.Mouse.degree;
+            console.log(`Mouse distance=${distance}, degree=${degree}`);
+            if(this.Sensing.Mouse.isTouching){
+                break;
+            }          
+            yield;
+        }
+    });
+    cat.Event.whenKeyPressed(Lib.Keyboard.RIGHT, async function*(this:Sprite){
+        for(;;) {
+            const distance = this.Sensing.Sprite.distance(cat2);
+            const degree = this.Sensing.Sprite.degree(cat2);
+            const touching = this.Sensing.Sprite.getTouching();
+            console.log(`Cat2 distance=${distance}, degree=${degree}`);
+            if(touching.length>0){
+                console.log('Touching sprite');
+                console.log(touching[0]);
+            }
+            if(this.Sensing.Mouse.isTouching){
+                break;
+            }          
+            yield;
+        }
+    });
+
 }

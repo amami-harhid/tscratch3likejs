@@ -10,11 +10,11 @@ export interface ISpriteSensingMouse extends IEntitySensingMouse{
      */
     readonly isTouching: boolean;
 
-    /**
-     * マウスタッチしていないことの判定
-     * @returns 
-     */
-    readonly isNotTouching : boolean;
+    // /**
+    //  * マウスタッチしていないことの判定
+    //  * @returns 
+    //  */
+    // readonly isNotTouching : boolean;
 
     /**
      * マウスカーソルまでの距離

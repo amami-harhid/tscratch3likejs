@@ -8390,7 +8390,7 @@ class SpriteSensingColor {
      * @param target {string} - 色,先頭#,16進数
      * @returns
      */
-    isTouchingTo(target) {
+    isTouching(target) {
         if (this.entity.$isAlive() == true) {
             this.entity.update();
             return this.entity.$isTouchingColor(target);
@@ -8399,11 +8399,11 @@ class SpriteSensingColor {
     }
     /**
      * 指定した色(target)に自身の色(mask)が触れたことを判定する
-     * @param target {string} - 色,先頭#,16進数
      * @param mask {string} - 色,先頭#,16進数
+     * @param target {string} - 色,先頭#,16進数
      * @returns
      */
-    colorIsTouchingTo(target, mask) {
+    isTouchingBy(mask, target) {
         if (this.entity.$isAlive() == true) {
             this.entity.update();
             return this.entity.$colorIsTouchingColor(target, mask);
@@ -8728,8 +8728,8 @@ class SpriteSensingSprite {
     getTouching() {
         if (this.entity.$isAlive() != true)
             return [];
-        const targets = [this.entity];
-        const entities = this.entity.$getTouchingTarget(targets);
+        const targetSprites = this.entity.pgMain.stage.$sprites;
+        const entities = this.entity.$getTouchingTarget(targetSprites);
         const touchings = [];
         for (const entity of entities) {
             touchings.push(entity);
@@ -103380,7 +103380,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Version: () => (/* binding */ Version)
 /* harmony export */ });
-const Version = ( false) ? 0 : "1.0.0-beta.35";
+const Version = ( false) ? 0 : "1.0.0-beta.37";
 
 
 /***/ })

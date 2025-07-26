@@ -45,8 +45,8 @@ export class SpriteSensingSprite implements ISpriteSensingSprite {
      */
     getTouching() : ISprite[] {
         if( this.entity.$isAlive() != true ) return [];
-        const targets: Sprite[] = [this.entity];
-        const entities = this.entity.$getTouchingTarget(targets);
+        const targetSprites = this.entity.pgMain.stage.$sprites;
+        const entities = this.entity.$getTouchingTarget(targetSprites);
         const touchings:Sprite[] = [];
         for(const entity of entities){
             touchings.push( entity as Sprite );

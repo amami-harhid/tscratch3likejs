@@ -930,7 +930,7 @@ export class Entity extends EventEmitter implements IEntity{
     /** @internal */
     public $getTouchingTarget(targets: Entity[]): Entity[] {
         const src = this;
-        const touchingTragets: Entity[] = []
+        const touchingTragets: Entity[] = [];
         if(Array.isArray(targets)){
             for(const t of targets){
                 const touching = this.$isTouchingTargetToTarget(src,t);
