@@ -51,10 +51,10 @@ Pg.setting = async function (this: PgMain) {
         const answer = await this.Sensing.askAndWait('TestQuestion');
         console.log(`answer=${answer}`);
         await this.Control.wait(3);
-        const SpaceDown = this.Sensing.Key.isKeyDown(Lib.Keyboard.SPACE);
+        const SpaceDown = this.Sensing.Key.isDown(Lib.Keyboard.SPACE);
         console.log(`SpaceDown=${SpaceDown}`);
         await this.Control.wait(1);
-        const SpaceNotDown = this.Sensing.Key.isKeyNotDown(Lib.Keyboard.SPACE);
+        const SpaceNotDown = this.Sensing.Key.isNotDown(Lib.Keyboard.SPACE);
         console.log(`SpaceNotDown=${SpaceNotDown}`);
         await this.Control.wait(1);
         const MouseIsDown = this.Sensing.Mouse.isDown;
@@ -79,8 +79,8 @@ Pg.setting = async function (this: PgMain) {
         console.log(`answer=${answer}`);
         console.log('スペースキーを押してください');
         await this.Control.wait(1);
-        const IsKeyDown = this.Sensing.Key.isKeyDown(Lib.Keyboard.SPACE);
-        const IsKeyNotDown = this.Sensing.Key.isKeyNotDown(Lib.Keyboard.SPACE);
+        const IsKeyDown = this.Sensing.Key.isDown(Lib.Keyboard.SPACE);
+        const IsKeyNotDown = this.Sensing.Key.isNotDown(Lib.Keyboard.SPACE);
         await this.Control.wait(1);
         console.log(`IsKeyDown=${IsKeyDown}`);
         console.log(`IsKeyNotDown=${IsKeyNotDown}`);

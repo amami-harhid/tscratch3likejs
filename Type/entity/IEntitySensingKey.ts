@@ -7,12 +7,12 @@ export interface IEntitySensingKey {
      * @param key {string}
      * @returns {boolean} キー押下判定
      */
-    isKeyDown(key: string) : boolean;
+    isDown(key: string) : boolean;
     /**
      * キーが押されていないことの判定
      * @param key {string}
      * @returns {boolean} キー押下判定
      */
-    isKeyNotDown(key: string) : boolean;
+    isNotDown(key: string) : boolean;
 
 };

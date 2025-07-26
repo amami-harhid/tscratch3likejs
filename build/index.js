@@ -8564,7 +8564,7 @@ class SpriteSensingKey {
      * @param key {string}
      * @returns {boolean} キー押下判定
      */
-    isKeyDown(key) {
+    isDown(key) {
         if (this.entity.$isAlive() != true)
             return false;
         return this.entity.$isKeyDown(key);
@@ -8574,7 +8574,7 @@ class SpriteSensingKey {
      * @param key {string}
      * @returns {boolean} キー押下判定
      */
-    isKeyNotDown(key) {
+    isNotDown(key) {
         if (this.entity.$isAlive() != true)
             return false;
         return this.entity.$isKeyNotDown(key);
@@ -10042,7 +10042,7 @@ class StageSensingKey {
      * @param key {string}
      * @returns {boolean} キー押下判定
      */
-    isKeyDown(key) {
+    isDown(key) {
         return this.entity.$isKeyDown(key);
     }
     /**
@@ -10050,7 +10050,7 @@ class StageSensingKey {
      * @param key {string}
      * @returns {boolean} キー押下判定
      */
-    isKeyNotDown(key) {
+    isNotDown(key) {
         return this.entity.$isKeyNotDown(key);
     }
 }
@@ -103380,7 +103380,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Version: () => (/* binding */ Version)
 /* harmony export */ });
-const Version = ( false) ? 0 : "1.0.0-beta.37";
+const Version = ( false) ? 0 : "1.0.0-beta.38";
 
 
 /***/ })

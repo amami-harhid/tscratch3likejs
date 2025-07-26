@@ -20,7 +20,7 @@ export class Cat extends Lib.Sprite {
      */
     setting() {
         // this.Eventの thisは、Cat
-        const isKeyADown = ()=>this.Sensing.isKeyDown('A');
+        const isKeyADown = ()=>this.Sensing.Key.isDown('A');
 
         this.Event.whenFlag( async function(this:Cat) {
             this.Motion.Move.toXY(0, 0);

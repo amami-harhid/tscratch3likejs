@@ -138,26 +138,26 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // オレンジの植物の色にふれたとき
-            if(this.Sensing.Color.isTouchingTo(ColorPlantOrange)){
+            if(this.Sensing.Color.isTouching(ColorPlantOrange)){
                 this.Sensing.Timer.reset();
                 //カウントアップ
                 score.value += 1;
                 // 音を鳴らす
                 this.Sound.play( Rip );
                 // オレンジの植物の色にふれている間、待つ
-                while(this.Sensing.Color.isTouchingTo(ColorPlantOrange)){
+                while(this.Sensing.Color.isTouching(ColorPlantOrange)){
                     yield;
                 }
             }
             // 雲の色にふれたとき
-            if(this.Sensing.Color.isTouchingTo(ColorCloud)){
+            if(this.Sensing.Color.isTouching(ColorCloud)){
                 this.Sensing.Timer.reset();
                 //カウントアップ
                 score.value += 1;
                 // 音を鳴らす
                 this.Sound.play( Rip );
                 // 雲の色にふれている間、待つ
-                while(this.Sensing.Color.isTouchingTo(ColorCloud)){
+                while(this.Sensing.Color.isTouching(ColorCloud)){
                     yield;
                 }
             }

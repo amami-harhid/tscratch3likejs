@@ -20,7 +20,7 @@ export class StageSensingKey implements IEntitySensingKey {
      * @param key {string}
      * @returns {boolean} キー押下判定
      */
-    isKeyDown(key: string) : boolean {
+    isDown(key: string) : boolean {
         return this.entity.$isKeyDown(key);
     }
     /**
@@ -28,7 +28,7 @@ export class StageSensingKey implements IEntitySensingKey {
      * @param key {string}
      * @returns {boolean} キー押下判定
      */
-    isKeyNotDown(key: string) : boolean {
+    isNotDown(key: string) : boolean {
         return this.entity.$isKeyNotDown(key);
     }
 
