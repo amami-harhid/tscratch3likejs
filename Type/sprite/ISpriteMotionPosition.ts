@@ -1,7 +1,7 @@
 import type { TPositionArray } from "../common/typeCommon";
 
 /**
- * Sprite-Motion-Position
+ * スプライトの動き（位置）
  */
 export interface ISpriteMotionPosition {
     /** 

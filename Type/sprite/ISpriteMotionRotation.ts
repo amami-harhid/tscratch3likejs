@@ -1,6 +1,6 @@
 import { RotationStyle } from '../entity/RotationStyle';
 /**
- * 回転方法
+ * スプライトの動き（回転方法）
  */
 export interface ISpriteMotionRotation {
     /**

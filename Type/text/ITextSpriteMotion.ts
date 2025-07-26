@@ -1,6 +1,9 @@
 import type { ISpriteMotionPosition } from '../sprite/ISpriteMotionPosition';
 import type { ITextSpriteMotionMove } from './ITextSpriteMotionMove';
 import type { ISpriteMotionDirection} from '../sprite/ISpriteMotionDirection';
+/**
+ * テキストの動き
+ */
 export interface ITextSpriteMotion {
 
     get Position(): ISpriteMotionPosition;

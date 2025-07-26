@@ -3,6 +3,9 @@ import type { ISpriteMotionMove } from './ISpriteMotionMove';
 import type { ISpriteMotionPoint } from './ISpriteMotionPoint';
 import type { ISpriteMotionDirection} from './ISpriteMotionDirection';
 import type { ISpriteMotionRotation } from './ISpriteMotionRotation';
+/**
+ * スプライトの動き
+ */
 export interface ISpriteMotion {
 
     get Position(): ISpriteMotionPosition;

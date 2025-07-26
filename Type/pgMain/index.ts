@@ -1,4 +1,4 @@
-import { IStage as Stage } from "@Type/stage";
+import type { IStage as Stage } from "@Type/stage";
 export declare interface IPgImage {
     /** ロード処理 */
     load(path:string, name:string, translate?:{x:number,y:number}): Promise<void>;

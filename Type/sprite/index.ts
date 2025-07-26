@@ -6,8 +6,6 @@ import type { ISpriteControl } from './ISpriteControl';
 import type { ISpriteSound } from './ISpriteSound';
 import type { ISpriteImage } from './ISpriteImage';
 import type { ISpriteFont } from './ISpriteFont';
-// import type { ISpriteCostume } from './ISpriteCostume';
-// import type { ISpriteBackdrop } from './ISpriteBackdrop';
 import type { ISpriteSensing } from './ISpriteSensing';
 import type { ISpriteEvent } from './ISpriteEvent';
 import type { ISpriteTextToSpeech } from './ISpriteTextToSpeech';

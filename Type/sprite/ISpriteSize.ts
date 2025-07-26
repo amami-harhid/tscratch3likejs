@@ -1,6 +1,8 @@
 import type { TScaleArr } from "../common/typeCommon";
 
-/** サイズ */
+/**
+ * スプライトのサイズ
+ */
 export interface ISpriteSize {
 
     /**

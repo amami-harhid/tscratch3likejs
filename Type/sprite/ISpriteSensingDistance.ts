@@ -1,5 +1,8 @@
 import type { ISprite } from ".";
 /** 距離 */
+/**
+ * スプライト調べる（距離）
+ */
 export interface ISpriteSensingDistance {
 
     /**

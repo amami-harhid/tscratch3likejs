@@ -1,4 +1,7 @@
 import type { ISprite } from '.';
+/**
+ * スプライトの動き（向かせる）
+ */
 export interface ISpriteMotionPoint {
     /**
      * マウスカーソルへ向く

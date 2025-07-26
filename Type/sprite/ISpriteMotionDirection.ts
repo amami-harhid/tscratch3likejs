@@ -1,3 +1,6 @@
+/**
+ * スプライトの動き（向き)
+ */
 export interface ISpriteMotionDirection {
     /**
      * 向き

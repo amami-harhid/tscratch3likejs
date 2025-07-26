@@ -1,4 +1,4 @@
-import { IStage } from ".";
+import type { IStage } from ".";
 
 /**
  * Sprite Control(制御)

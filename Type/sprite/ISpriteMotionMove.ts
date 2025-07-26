@@ -1,5 +1,8 @@
 import type { ISprite } from '.';
 
+/**
+ * スプライトの動き（動かす）
+ */
 export interface ISpriteMotionMove {
     /**
      * ステップ数分、進ませる

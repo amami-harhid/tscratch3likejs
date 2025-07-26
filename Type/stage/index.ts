@@ -3,7 +3,6 @@
  */
 import type { IEntity } from '@Type/entity/IEntity';
 import type { TEntityOptions } from '@Type/entity/TEntityOptions';
-//import { ISprite } from '@Type/sprite';
 import type { IStageLooks } from './IStageLooks';
 import type { IStageControl } from './IStageControl';
 import type { IStageSensing } from './IStageSensing';
