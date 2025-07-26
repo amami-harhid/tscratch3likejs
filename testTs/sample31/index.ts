@@ -32,7 +32,7 @@ Pg.preload = async function (this: PgMain) {
     this.Sound.load(AssetHosts+'/assets/Chill.wav', Constants.Chill);
     this.Image.load(AssetHosts+'/assets/cat.svg', Constants.Cat01 );
 }
-Pg.prepare = async function () {
+Pg.prepare = async function (this: PgMain) {
     // create instance
     stage = new StageEx();
     // execute stage prepare

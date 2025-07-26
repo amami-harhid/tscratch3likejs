@@ -35,10 +35,10 @@ Pg.preload = async function preload(this: PgMain) {
     this.Image.load(AssetHosts+'/assets/cat2.svg', Cat02 );
     this.Sound.load(AssetHosts+'/assets/Rip.wav', Rip );
 }
-Pg.prepare = async function prepare() {
+Pg.prepare = async function prepare(this: PgMain) {
 
     // ステージを作る
-    stage = new Lib.Stage();
+    stage = this.stage;
     // ステージに背景を追加
     stage.Image.add( Jurassic01 );
     // Chill を追加
@@ -107,7 +107,7 @@ Pg.setting = async function setting() {
      * マウスカーソルへ向かって進む
      */
     cat.Event.whenBroadcastReceived('START', async function*(this:Sprite){
-        this.Sensing.resetTimer();
+        this.Sensing.Timer.reset();
         // ずっと繰り返し、マウスカーソルへ向いて進む
         for(;;){
             // マウスカーソルへ向く
@@ -119,8 +119,8 @@ Pg.setting = async function setting() {
             const mx = this.Sensing.Mouse.x;
             const my = this.Sensing.Mouse.y;
             console.log(`x=${x}, y=${y}, mx=${mx},my=${my}`);
-            if(this.Sensing.isMouseDown()) {
-                const timer = this.Sensing.timer;
+            if(this.Sensing.Mouse.isDown ) {
+                const timer = this.Sensing.Timer.timer;
                 console.log('マウスダウン検出 timer='+timer);
                 //break;
             }
@@ -138,26 +138,26 @@ Pg.setting = async function setting() {
         // ずっと繰り返す
         for(;;){
             // オレンジの植物の色にふれたとき
-            if(await this.Sensing.isTouchingToColor(ColorPlantOrange)){
-                this.Sensing.resetTimer();
+            if(this.Sensing.Color.isTouchingTo(ColorPlantOrange)){
+                this.Sensing.Timer.reset();
                 //カウントアップ
                 score.value += 1;
                 // 音を鳴らす
                 this.Sound.play( Rip );
                 // オレンジの植物の色にふれている間、待つ
-                while(await this.Sensing.isTouchingToColor(ColorPlantOrange)){
+                while(this.Sensing.Color.isTouchingTo(ColorPlantOrange)){
                     yield;
                 }
             }
             // 雲の色にふれたとき
-            if(await this.Sensing.isTouchingToColor(ColorCloud)){
-                this.Sensing.resetTimer();
+            if(this.Sensing.Color.isTouchingTo(ColorCloud)){
+                this.Sensing.Timer.reset();
                 //カウントアップ
                 score.value += 1;
                 // 音を鳴らす
                 this.Sound.play( Rip );
                 // 雲の色にふれている間、待つ
-                while(await this.Sensing.isTouchingToColor(ColorCloud)){
+                while(this.Sensing.Color.isTouchingTo(ColorCloud)){
                     yield;
                 }
             }

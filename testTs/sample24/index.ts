@@ -24,10 +24,10 @@ Pg.preload = async function preload(this: PgMain) {
     this.Sound.load(AssetHosts+'/assets/Chill.wav', Chill );
     this.Image.load(AssetHosts+'/assets/ball-a.svg', BallA );
 }
-Pg.prepare = async function prepare() {
+Pg.prepare = async function prepare(this: PgMain) {
 
     // ステージを作る
-    stage = new Lib.Stage();
+    stage = this.stage;
     // ステージに背景を追加
     stage.Image.add( NeonTunnel );
     // Chill を追加

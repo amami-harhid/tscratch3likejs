@@ -26,8 +26,8 @@ Pg.preload = async function preload(this: PgMain) {
     this.Sound.load(ASSETS_HOST+'/assets/Cat.wav', Mya);
 }
 // 事前準備処理
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this:PgMain) {
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
     cat = new Lib.Sprite( "Cat" );
@@ -90,7 +90,7 @@ Pg.setting = async function setting() {
             // 端に触れたら跳ね返る
             this.Motion.Move.ifOnEdgeBounce();
             // 端にタッチしたとき
-            if(this.Sensing.isTouchingEdge() ){
+            if(this.Sensing.Edge.isTouching ){
                 // ミャーと鳴く。
                 this.Sound.play(Mya)
             }        

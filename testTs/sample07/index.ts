@@ -25,8 +25,8 @@ Pg.preload = async function preload(this: PgMain) {
     this.Image.load(ASSETS_HOST+'/assets/cat.svg', Cat);
 }
 // 事前準備処理
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this:PgMain) {
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill);
     cat = new Lib.Sprite( SpriteCatName );

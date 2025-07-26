@@ -34,9 +34,9 @@ Pg.preload = async function(this: PgMain) {
 }
 
 // 事前準備処理
-Pg.prepare = async function prepare() {
+Pg.prepare = async function prepare(this: PgMain) {
 
-    stage = new Lib.Stage();
+    stage = this.stage;
     stage.Image.add( Jurassic );
 
     cat = new Lib.Sprite("Cat");
@@ -132,7 +132,7 @@ Pg.setting = async function setting() {
             // フキダシテキスト配列からランダムな要素を取り出す
             const text = bubbleTextArr[ Math.ceil(Math.random() * bubbleTextArr.length) - 1 ];
             // 端についたとき
-            if( this.Sensing.isTouchingEdge() ) {
+            if( this.Sensing.Edge.isTouching ) {
                 // 0, 1 を入れ替える
                 counter += 1;
                 counter = counter % 2;

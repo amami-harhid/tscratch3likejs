@@ -5,7 +5,7 @@ import { SoundOption } from "../entity/SoundOption";
 import type { I_KEYBOARD_KEYS } from "../io/IKeyboard";
 import type { SMonitors } from "../monitors";
 import type { SSprite } from "../sprite";
-//import type { SStage } from "../stage";
+import type { SStage } from "../stage";
 import type { TEnv } from "../common/env";
 import type { IMathUtil } from "./mathUtil";
 import type { IUtils } from "./utils";
@@ -67,7 +67,7 @@ export interface Lib {
     /**
      * ステージ幅
      */
-    readonly tageWidth: number;
+    readonly stageWidth: number;
     /**
      * ステージ高さ
      */
@@ -104,10 +104,10 @@ export interface Lib {
      * @param to 
      */
     randomInteger(from:number , to:number ): number;
-    // /**
-    //  * ステージクラス
-    //  */
-    // readonly Stage: SStage;
+    /**
+     * ステージクラス
+    */
+    readonly Stage: SStage;
     /**
      * スプライトクラス
      */

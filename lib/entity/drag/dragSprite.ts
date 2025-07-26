@@ -104,7 +104,7 @@ export class DragSprite {
     async update() : Promise<void> {
         const sprite = this.sprite;
         if(this.draggable === false) return;
-        if(this.dragging === false && sprite.Sensing.isMouseTouching()) {
+        if(this.dragging === false && sprite.Sensing.Mouse.isTouching) {
             const mouse = this.p.stage.mouse;
             if(!mouse.down) return;
             if(this.drag == null) {

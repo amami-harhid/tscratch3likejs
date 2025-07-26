@@ -40,8 +40,8 @@ Pg.preload = async function preload(this: PgMain) {
     this.Image.load(`${AssetHosts}/assets/cat.svg`, Cat);
 }
 
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this: PgMain) {
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");
@@ -95,12 +95,12 @@ Pg.setting = async function setting() {
     // ネコにさわったらお話する
     cat.Event.whenFlag( async function*( this: Sprite ){
         while(true){
-            if( this.Sensing.isMouseTouching() ) {
+            if( this.Sensing.Mouse.isTouching ) {
                 this.Event.broadcast('SPEAK', OTTO);
                 
                 // 「送って待つ」ではないので次のループに進ませないように、
                 // 「マウスタッチしない迄待つ」をする。
-                await this.Control.waitWhile( ()=>this.Sensing.isMouseTouching() ); 
+                await this.Control.waitWhile( ()=>this.Sensing.Mouse.isTouching ); 
             }
             yield;
         }

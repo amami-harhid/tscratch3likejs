@@ -988,8 +988,8 @@ export class Entity extends EventEmitter implements IEntity{
             maskRgb && typeof maskRgb === 'string' && maskRgb.substring(0, 1) === '#'
         ){
             const _renderer = this.render.renderer;
-            const _targetRgb = this._libs.Cast.toRgbColorObject(targetRgb);
-            const _maskRgb = this._libs.Cast.toRgbColorObject(maskRgb);
+            const _targetRgb = this._libs.Cast.toRgbColorList(targetRgb);
+            const _maskRgb = this._libs.Cast.toRgbColorList(maskRgb);
             return _renderer.isTouchingColor(this.drawableID, 
                                     _targetRgb, 
                                     _maskRgb);
@@ -1488,9 +1488,11 @@ export class Entity extends EventEmitter implements IEntity{
     
     }
     /**
-     * カーソルの位置へ向く
+     * マウスカーソルへの向き
+     * @internal
+     * @returns 
      */
-    protected pointTowardsMouseCursol(): void {
+    public degreeTowardsMouseCursol(): number {
         // CANVAS 外に出てら ポインターを向かない。
         const mousePosition = this._libs.mousePosition;
         const targetX = mousePosition.x;
@@ -1501,6 +1503,13 @@ export class Entity extends EventEmitter implements IEntity{
         if(direction > 180) {
             direction -= 360;
         }
+        return direction;
+    }
+    /**
+     * カーソルの位置へ向く
+     */
+    protected pointTowardsMouseCursol(): void {
+        let direction = this.degreeTowardsMouseCursol();
         this.$_direction = direction;
     }
     /**

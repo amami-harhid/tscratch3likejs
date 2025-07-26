@@ -58,10 +58,11 @@ Pg.preload = async function preload(this: PgMain) {
 
 }
 
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this: PgMain) {
+    stage = this.stage;
     stage.Image.add( Constant.Jurassic );
     stage.Sound.add( Constant.Chill );
+
     sprite = new Lib.Sprite("sprite");
     sprite.Looks.hide(); // 非表示
     sprite.Image.add( Constant.Apple );

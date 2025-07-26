@@ -25,8 +25,8 @@ Pg.preload = async function preload(this: PgMain) {
     this.Image.load(`${ASSETS_HOST}/assets/cat.svg`, Cat);
 }
 // 事前準備処理
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this:PgMain) {
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");
@@ -60,7 +60,7 @@ Pg.setting = async function setting() {
             // 1秒待つ
             await this.Control.wait(1);
             // 場所をランダムに決める
-            const randomPoint = Lib.randomPoint;
+            const randomPoint = Lib.randomPosition;
             // 1秒で決めた場所へ移動する
             await this.Motion.Move.glideTo(1,  randomPoint.x, randomPoint.y);
             yield;

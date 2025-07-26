@@ -1,4 +1,4 @@
-import {Pg, Lib} from "../../s3lib-importer";
+import {Pg} from "../../s3lib-importer";
 import type {IPgMain as PgMain} from "@Type/pgMain";
 import type {IStage as Stage} from "@Type/stage";
 
@@ -17,8 +17,8 @@ Pg.preload = async function(this:PgMain) {
     this.Image.load( ASSETS_HOST+'/assets/Jurassic.svg', Jurassic);
 }
 // 事前準備処理
-Pg.prepare = async function() {
-    stage = new Lib.Stage();
+Pg.prepare = async function(this: PgMain) {
+    stage = this.stage;
     stage.Image.add( White );
     stage.Image.add( Jurassic );
     stage.Looks.Backdrop.name = White;

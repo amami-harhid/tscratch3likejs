@@ -1,3 +1,6 @@
+import type { IEntitySensingMouse } from './IEntitySensingMouse';
+import type { IEntitySensingKey } from './IEntitySensingKey';
+import type { IEntitySensingTimer } from './IEntitySensingTimer';
 /**
  * Entity Sensing(調べる)
  */
@@ -8,35 +11,18 @@ export interface IEntitySensing {
      * @returns {Promise<string>} - answer
      */
     askAndWait(question:string): Promise<string>;
-    /**
-     * キーが押されていることの判定
-     * @param key {string}
-     * @returns {boolean} キー押下判定
-     */
-    isKeyDown(key: string) : boolean;
-    /**
-     * キーが押されていないことの判定
-     * @param key {string}
-     * @returns {boolean} キー押下判定
-     */
-    isKeyNotDown(key: string) : boolean;
-    /**
-     * マウスが押されていることの判定
-     * @returns {boolean} - マウスが押されている判定
-     */
-    isMouseDown() : boolean;
-    /**
-     * マウス情報
-     */
-    get Mouse() : {x:number, y:number};
 
     /**
-     * タイマー値
+     * マウス関連
      */
-    get timer() : number;
-    /**
-     * タイマーリセット
-     */
-    resetTimer(): void;
+    readonly Mouse: IEntitySensingMouse;
 
+    /**
+     * キーボード関連
+     */
+    readonly Key : IEntitySensingKey;
+    /**
+     * タイマー関連
+     */
+    readonly Timer : IEntitySensingTimer;
 };

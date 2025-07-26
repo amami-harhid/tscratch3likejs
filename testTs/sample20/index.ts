@@ -40,8 +40,8 @@ Pg.preload = async function(this: PgMain) {
 }
 
 // 事前準備処理
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this: PgMain) {
+    stage = this.stage;
     stage.Image.add( BackDrop );
 
     cat = new Lib.Sprite("Cat");
@@ -123,7 +123,7 @@ Pg.setting = async function setting() {
         self.Motion.Direction.degree += 180; // 反対方向へ
         for(;;){
             self.Motion.Move.steps(5);
-            if(self.Sensing.isTouchingEdge()) {
+            if(self.Sensing.Edge.isTouching ) {
                 break;
             }
             yield;
@@ -145,7 +145,7 @@ Pg.setting = async function setting() {
         self.Motion.Direction.degree += 180; // 反対方向へ
         for(;;){
             self.Motion.Move.steps(5);
-            if(self.Sensing.isTouchingEdge()) {
+            if(self.Sensing.Edge.isTouching ) {
                 break;
             }
             yield;

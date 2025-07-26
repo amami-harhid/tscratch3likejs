@@ -37,9 +37,9 @@ Pg.preload = async function (this: PgMain) {
     this.Font.load('/assets/fonts/TogeMaruGothic-700-Bold.woff', TogeMaruGothic);
 
 }
-Pg.prepare = async function () {
+Pg.prepare = async function (this: PgMain) {
     // create instance
-    stage = new Lib.Stage();
+    stage = this.stage;
     stage.Sound.add( Gion );
     stage.SvgText.add('BackDrop', backdrop);   
 

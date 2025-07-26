@@ -27,9 +27,9 @@ Pg.preload = async function(this: PgMain) {
 }
 
 // 事前準備処理
-Pg.prepare = async function prepare() {
+Pg.prepare = async function prepare(this: PgMain) {
     
-    stage = new Lib.Stage();
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
 

@@ -21,8 +21,8 @@ Pg.preload = async function preload(this: PgMain) {
     this.Image.load(`${AssetHosts}/assets/cat.svg`, Cat);
 }
 
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this: PgMain) {
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
     const scale: TScale = {w:200,h:200};
@@ -47,7 +47,7 @@ Pg.setting = async function setting() {
         const properties = {'pitch': 2, 'volume': 100}
         this.TextToSpeech.setSpeechProperties(NANINANI_TYPE,properties,'male');
         while(true){
-            if( this.Sensing.isMouseTouching() ) {
+            if( this.Sensing.Mouse.isTouching ) {
                 this.Looks.Bubble.say(words);
                 await this.Event.broadcastAndWait('SPEECH', words, NANINANI_TYPE);
                 

@@ -39,8 +39,8 @@ Pg.preload = async function preload(this: PgMain) {
     this.Image.load(AssetHosts+'/assets/YouWon.svg', YouWon );
     this.Image.load(AssetHosts+'/assets/GameOver.svg', GameOver );
 }
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this: PgMain) {
+    stage = this.stage;
     stage.Image.add( NeonTunnel );
     stage.Sound.add( Chill );
     ball = new Lib.Sprite();
@@ -100,7 +100,7 @@ Pg.setting = async function setting() {
         for(;;){
             this.Motion.Move.steps(BallSpeed);
             this.Motion.Move.ifOnEdgeBounce();
-            if(this.Sensing.isTouchingEdge()){
+            if(this.Sensing.Edge.isTouching ){
                 const randomDegree = Lib.getRandomValueInRange(-25, 25);
                 this.Motion.Direction.degree += randomDegree;    
             }
@@ -111,7 +111,7 @@ Pg.setting = async function setting() {
     ball.Event.whenBroadcastReceived('Start', async function*(this:Sprite){
         for(;;){
             // パドルに触れたとき跳ね返る
-            if( this.Sensing.isTouchingToSprites([paddle])){
+            if( this.Sensing.Sprite.isTouching([paddle])){
                 const degree = this.Motion.Direction.degree;
                 const paddleDemensions = paddle.Looks.Size.drawingSize;
                 const paddleLimitWidth = paddleDemensions.w * 0.3;
@@ -138,7 +138,7 @@ Pg.setting = async function setting() {
     line.Event.whenFlag(async function*(this:Sprite){
         this.Motion.Move.toXY(0, -180);
         for(;;){
-            if( this.Sensing.isTouchingToSprites([ball])){
+            if( this.Sensing.Sprite.isTouching([ball])){
                 // Ball に触れたとき
                 this.Event.broadcast(GameOver);
                 // このスクリプトを止める
@@ -193,7 +193,7 @@ Pg.setting = async function setting() {
     block.Control.whenCloned(async function*(this:Sprite){
         this.Looks.show();
         for(;;){
-            if(this.Sensing.isTouchingToSprites([ball])){
+            if(this.Sensing.Sprite.isTouching([ball])){
                 score += 1;
                 this.Event.broadcast('ballTouch');
                 this.Sound.play(Pew);

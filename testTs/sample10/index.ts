@@ -27,8 +27,8 @@ Pg.preload = async function preload(this: PgMain) {
     this.Sound.load(ASSETS_HOST+'/assets/Cat.wav', Mya);
 }
 // 事前準備処理
-Pg.prepare = async function prepare() {
-    stage = new Lib.Stage();
+Pg.prepare = async function prepare(this:PgMain) {
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");
@@ -77,10 +77,10 @@ Pg.setting = async function setting() {
         // 次をずっと繰り返す
         for(;;){
             // マウスカーソルでタッチしたら、クローンを作る
-            if( this.Sensing.isMouseTouching() ) {
+            if( this.Sensing.Mouse.isTouching ) {
                 this.Control.clone();
                 // マウスタッチしている間、待つ
-                await this.Control.waitWhile( ()=>this.Sensing.isMouseTouching() ); 
+                await this.Control.waitWhile( ()=>this.Sensing.Mouse.isTouching ); 
             }
             yield;
         }
@@ -100,7 +100,7 @@ Pg.setting = async function setting() {
             this.Motion.Move.steps( steps );
             // 端に触れたら跳ね返る
             this.Motion.Move.ifOnEdgeBounce();
-            if(this.Sensing.isTouchingEdge() ){
+            if(this.Sensing.Edge.isTouching ){
                 // ミャーと鳴く。
                 this.Sound.play(Mya)
             }

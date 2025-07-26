@@ -35,9 +35,9 @@ Pg.preload = async function(this: PgMain) {
 }
 
 // 事前準備処理
-Pg.prepare = async function() {
+Pg.prepare = async function(this: PgMain) {
     // ステージを作る
-    stage = new Lib.Stage();
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
     // 十字を作る
@@ -83,11 +83,11 @@ Pg.setting = async function() {
         // ずっと繰り返す
         for(;;){
             // マウスカーソルに触ったとき
-            if( this.Sensing.isMouseTouching() ){
+            if( this.Sensing.Mouse.isTouching ){
                 // 次のコスチュームへ切り替える
                 this.Looks.Costume.next();
                 // マウスタッチしている間、待つ
-                await this.Control.waitWhile( ()=>this.Sensing.isMouseTouching());
+                await this.Control.waitWhile( ()=>this.Sensing.Mouse.isTouching);
                 // 次のコスチュームへ切り替える(元のコスチュームへ戻す)
                 this.Looks.Costume.next();
             }
@@ -99,7 +99,7 @@ Pg.setting = async function() {
         // ずっと繰り返す
         for(;;){
             // マウスカーソルに触ったとき( this は cross である)
-            if ( this.Sensing.isMouseTouching() ) {
+            if ( this.Sensing.Mouse.isTouching ) {
                 // 蝶のクローンを作る
                 butterfly.Control.clone();
                 // 下をコメントアウトすると、十字にさわっている間は クローンを作り続ける
@@ -124,7 +124,7 @@ Pg.setting = async function() {
         // 蝶のサイズを 縦横 15% にする
         clone.Looks.Size.scale = {w: 15, h: 15};
         // ランダムな方向へ蝶を向ける
-        clone.Motion.Direction.degree = Lib.randomDirection();
+        clone.Motion.Direction.degree = Lib.randomDirection;
         // ミリ秒。クローンが生きている時間。（およその時間）
         clone.life = 5000;
         // 表示する
@@ -169,7 +169,7 @@ Pg.setting = async function() {
         // ずっと繰り返す
         for(;;){
             // ランダムな位置を取得する
-            const randomPoint = Lib.randomPoint;
+            const randomPoint = Lib.randomPosition;
             // 取得した位置へ１秒で移動する
             await clone.Motion.Move.glideTo(5, randomPoint.x, randomPoint.y);
             // lifeが尽きたら『繰り返し』を抜ける

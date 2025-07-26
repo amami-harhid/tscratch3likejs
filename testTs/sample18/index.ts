@@ -34,9 +34,9 @@ Pg.preload = async function(this: PgMain) {
 }
 
 // 事前準備処理
-Pg.prepare = async function prepare() {
+Pg.prepare = async function prepare(this: PgMain) {
     // ステージを作る
-    stage = new Lib.Stage();
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
     // 十字を作る
@@ -137,7 +137,7 @@ Pg.setting = async function setting() {
         for(;;){
             this.Motion.Position.y += 15; // 15ずつ上昇する
             // 端にふれたとき
-            if(this.Sensing.isTouchingEdge()){
+            if(this.Sensing.Edge.isTouching ){
                 // 隠す
                 this.Looks.hide();
                 // 繰り返しを抜ける
@@ -160,7 +160,7 @@ Pg.setting = async function setting() {
             // 右へ回転する
             this.Motion.Direction.degree += TURN_RIGHT_DEGREE;
             // 端に触れたとき
-            if(this.Sensing.isTouchingEdge()){
+            if(this.Sensing.Edge.isTouching ){
                 // 音を鳴らす
                 this.Sound.play(Pew);
                 // 繰り返しを抜ける

@@ -838,12 +838,10 @@ export class Sprite extends Entity implements ISprite {
     }
     /**
      * @internal
-     * 指定したスプライトへ向く
-     * @param {Sprite} target 
-     * @returns {void}
+     * @param target 
+     * @returns 
      */
-    $pointToTarget( target: Sprite): void {
-        if(!this.$isAlive()) return;
+    public degreeToTarget( target: Sprite ): number {
 
         let dx = target.$_position.x - this.$_position.x;
         let dy = target.$_position.y - this.$_position.y;
@@ -852,6 +850,17 @@ export class Sprite extends Entity implements ISprite {
         if(direction > 180) {
             direction -= 360;
         }
+        return direction;
+    }
+    /**
+     * @internal
+     * 指定したスプライトへ向く
+     * @param {Sprite} target 
+     * @returns {void}
+     */
+    $pointToTarget( target: Sprite): void {
+        if(!this.$isAlive()) return;
+        let direction = this.degreeToTarget(target);
         this.$pointInDirection( direction );
     }
     /**

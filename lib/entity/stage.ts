@@ -110,9 +110,7 @@ export class Stage extends Entity implements IStage{
             me.mouse.y = e.offsetY;
             me.mouse.down = false;
             e.stopPropagation();
-        })
-  
-        this.pgMain.stage = this;
+        });
         this._Control = new StageControl(this);
         this._Looks = new StageLooks(this);
         this._Event = new StageEvent(this);
@@ -121,6 +119,8 @@ export class Stage extends Entity implements IStage{
         this._SvgText = new SvgText(this);
         this._Pen = new StagePen(this);
         this._Font = new StageFont(this);
+        // 上書き
+        this.pgMain.stage = this;
     }
     /** @internal */
     get $sprites (): Sprite[] {

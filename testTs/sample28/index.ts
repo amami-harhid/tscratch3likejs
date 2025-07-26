@@ -36,10 +36,10 @@ Pg.preload = async function preload(this: PgMain) {
     this.Image.load(AssetHosts+'/assets/cat.svg', Cat01 );
     this.Image.load('./assets/blackCat.svg', Cat02 );
 }
-Pg.prepare = async function prepare() {
+Pg.prepare = async function prepare(this: PgMain) {
 
     // ステージを作る
-    stage = new Lib.Stage();
+    stage = this.stage;
     // ステージに背景を追加
     stage.Image.add( Jurassic01 );
     // Chill を追加

@@ -2515,7 +2515,7 @@ class DragSprite {
         const sprite = this.sprite;
         if (this.draggable === false)
             return;
-        if (this.dragging === false && sprite.Sensing.isMouseTouching()) {
+        if (this.dragging === false && sprite.Sensing.Mouse.isTouching) {
             const mouse = this.p.stage.mouse;
             if (!mouse.down)
                 return;
@@ -3563,8 +3563,8 @@ class Entity extends events__WEBPACK_IMPORTED_MODULE_5__.EventEmitter {
             targetRgb && typeof targetRgb === 'string' && targetRgb.substring(0, 1) === '#' &&
             maskRgb && typeof maskRgb === 'string' && maskRgb.substring(0, 1) === '#') {
             const _renderer = this.render.renderer;
-            const _targetRgb = this._libs.Cast.toRgbColorObject(targetRgb);
-            const _maskRgb = this._libs.Cast.toRgbColorObject(maskRgb);
+            const _targetRgb = this._libs.Cast.toRgbColorList(targetRgb);
+            const _maskRgb = this._libs.Cast.toRgbColorList(maskRgb);
             return _renderer.isTouchingColor(this.drawableID, _targetRgb, _maskRgb);
         }
         return false;
@@ -4041,9 +4041,11 @@ class Entity extends events__WEBPACK_IMPORTED_MODULE_5__.EventEmitter {
         }
     }
     /**
-     * カーソルの位置へ向く
+     * マウスカーソルへの向き
+     * @internal
+     * @returns
      */
-    pointTowardsMouseCursol() {
+    degreeTowardsMouseCursol() {
         // CANVAS 外に出てら ポインターを向かない。
         const mousePosition = this._libs.mousePosition;
         const targetX = mousePosition.x;
@@ -4054,6 +4056,13 @@ class Entity extends events__WEBPACK_IMPORTED_MODULE_5__.EventEmitter {
         if (direction > 180) {
             direction -= 360;
         }
+        return direction;
+    }
+    /**
+     * カーソルの位置へ向く
+     */
+    pointTowardsMouseCursol() {
+        let direction = this.degreeTowardsMouseCursol();
         this.$_direction = direction;
     }
     /**
@@ -6438,6 +6447,20 @@ class Sprite extends _entity__WEBPACK_IMPORTED_MODULE_2__.Entity {
     }
     /**
      * @internal
+     * @param target
+     * @returns
+     */
+    degreeToTarget(target) {
+        let dx = target.$_position.x - this.$_position.x;
+        let dy = target.$_position.y - this.$_position.y;
+        let direction = 90 - _util_math_util__WEBPACK_IMPORTED_MODULE_4__.MathUtil.radToDeg(Math.atan2(dy, dx));
+        if (direction > 180) {
+            direction -= 360;
+        }
+        return direction;
+    }
+    /**
+     * @internal
      * 指定したスプライトへ向く
      * @param {Sprite} target
      * @returns {void}
@@ -6445,12 +6468,7 @@ class Sprite extends _entity__WEBPACK_IMPORTED_MODULE_2__.Entity {
     $pointToTarget(target) {
         if (!this.$isAlive())
             return;
-        let dx = target.$_position.x - this.$_position.x;
-        let dy = target.$_position.y - this.$_position.y;
-        let direction = 90 - _util_math_util__WEBPACK_IMPORTED_MODULE_4__.MathUtil.radToDeg(Math.atan2(dy, dx));
-        if (direction > 180) {
-            direction -= 360;
-        }
+        let direction = this.degreeToTarget(target);
         this.$pointInDirection(direction);
     }
     /**
@@ -8261,17 +8279,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   SpriteSensing: () => (/* binding */ SpriteSensing)
 /* harmony export */ });
+/* harmony import */ var _spriteSensingTimer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./spriteSensingTimer */ "../lib/entity/sprite/spriteSensingTimer.ts");
+/* harmony import */ var _spriteSensingMouse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./spriteSensingMouse */ "../lib/entity/sprite/spriteSensingMouse.ts");
+/* harmony import */ var _spriteSensingKey__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./spriteSensingKey */ "../lib/entity/sprite/spriteSensingKey.ts");
+/* harmony import */ var _spriteSensingEdge__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./spriteSensingEdge */ "../lib/entity/sprite/spriteSensingEdge.ts");
+/* harmony import */ var _spriteSensingColor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./spriteSensingColor */ "../lib/entity/sprite/spriteSensingColor.ts");
+/* harmony import */ var _spriteSensingSprite__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./spriteSensingSprite */ "../lib/entity/sprite/spriteSensingSprite.ts");
+
+
+
+
+
+
 /**
  * Sprite Sensing(調べる)
  */
 class SpriteSensing {
     entity;
+    mouse;
+    timer;
+    key;
+    edge;
+    color;
+    sprite;
     /**
      * @internal
      * @param entity {Sprite}
      */
     constructor(entity) {
         this.entity = entity;
+        this.mouse = new _spriteSensingMouse__WEBPACK_IMPORTED_MODULE_1__.SpriteSensingMouse(entity);
+        this.timer = new _spriteSensingTimer__WEBPACK_IMPORTED_MODULE_0__.SpriteSensingTimer(entity);
+        this.key = new _spriteSensingKey__WEBPACK_IMPORTED_MODULE_2__.SpriteSensingKey(entity);
+        this.edge = new _spriteSensingEdge__WEBPACK_IMPORTED_MODULE_3__.SpriteSensingEdge(entity);
+        this.color = new _spriteSensingColor__WEBPACK_IMPORTED_MODULE_4__.SpriteSensingColor(entity);
+        this.sprite = new _spriteSensingSprite__WEBPACK_IMPORTED_MODULE_5__.SpriteSensingSprite(entity);
     }
     /**
      * 質問をして答えを待つ
@@ -8283,138 +8325,72 @@ class SpriteSensing {
         return answer;
     }
     /**
-     * キーが押されていることの判定
-     * @param key {string}
-     * @returns {boolean} キー押下判定
-     */
-    isKeyDown(key) {
-        if (this.entity.$isAlive() != true)
-            return false;
-        return this.entity.$isKeyDown(key);
-    }
-    /**
-     * キーが押されていないことの判定
-     * @param key {string}
-     * @returns {boolean} キー押下判定
-     */
-    isKeyNotDown(key) {
-        if (this.entity.$isAlive() != true)
-            return false;
-        return this.entity.$isKeyNotDown(key);
-    }
-    /**
-     * マウスが押されていることの判定
-     * @returns {boolean} - マウスが押されている判定
-     */
-    isMouseDown() {
-        if (this.entity.$isAlive() != true)
-            return false;
-        return this.entity.$isMouseDown();
-    }
-    /**
      * マウス情報
      */
     get Mouse() {
-        return this.entity.Mouse;
+        return this.mouse;
     }
     /**
-     * 距離
-     * 使用例：マウスポインターとの距離
-     * this.Sensing.Distance.mousePointer
-     * 使用例：他スプライトとの距離
-     * this.Sensing.Distance.to( otherSprite )
+     * Key関連
      */
-    get Distance() {
-        return this.entity.Distance;
+    get Key() {
+        return this.key;
     }
     /**
-     * タイマー値
+     * タイマー関連
      */
-    get timer() {
-        return this.entity.$timer;
+    get Timer() {
+        return this.timer;
+    }
+    get Edge() {
+        return this.edge;
+    }
+    get Color() {
+        return this.color;
+    }
+    get Sprite() {
+        return this.sprite;
     }
     /**
-     * タイマーリセット
+     * Drag Mode
      */
-    resetTimer() {
-        this.entity.$resetTimer();
+    get DragMode() {
+        return this.entity.DragMode;
     }
+}
+;
+
+
+/***/ }),
+
+/***/ "../lib/entity/sprite/spriteSensingColor.ts":
+/*!**************************************************!*\
+  !*** ../lib/entity/sprite/spriteSensingColor.ts ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SpriteSensingColor: () => (/* binding */ SpriteSensingColor)
+/* harmony export */ });
+/**
+ * Sprite Sensing(調べる) Color
+ */
+class SpriteSensingColor {
+    entity;
     /**
-     * 枠に触っていることの判定
-     * @returns
+     * @internal
+     * @param entity {Sprite}
      */
-    isTouchingEdge() {
-        if (this.entity.$isAlive() != true)
-            return false;
-        this.entity.update();
-        return this.entity.$isTouchingEdge();
-    }
-    /**
-     * 縦の枠に触っていることを判定する
-     * @returns
-     */
-    isTouchingVirticalEdge() {
-        if (this.entity.$isAlive() != true)
-            return false;
-        this.entity.update();
-        return this.entity.$isTouchingVirticalEdge();
-    }
-    /**
-     * 水平方向の枠に触っていることを判定する
-     */
-    isTouchingHorizontalEdge() {
-        if (this.entity.$isAlive() != true)
-            return false;
-        this.entity.update();
-        return this.entity.$isTouchingHorizontalEdge();
-    }
-    isTouchingToSprites(sprites) {
-        if (this.entity.$isAlive() != true)
-            return false;
-        const _sprites = sprites;
-        return this.entity.$isTouchingTarget(_sprites);
-    }
-    /**
-     * マウスタッチしていないことの判定
-     * @returns
-     */
-    isNotMouseTouching() {
-        if (this.entity.$isAlive() != true)
-            return false;
-        return this.entity.$isNotMouseTouching();
-    }
-    /**
-     * マウスタッチしていることの判定
-     * @returns
-     */
-    isMouseTouching() {
-        if (this.entity.$isAlive() != true)
-            return false;
-        return this.entity.$isMouseTouching();
-    }
-    /**
-     * 自分に触れているスプライトを配列にして返す
-     * @param targets
-     * @returns
-     */
-    getTouchingSprites() {
-        if (this.entity.$isAlive() != true)
-            return [];
-        const targets = [this.entity];
-        const entities = this.entity.$getTouchingTarget(targets);
-        const touchings = [];
-        for (const entity of entities) {
-            touchings.push(entity);
-        }
-        const _touchings = touchings;
-        return _touchings;
+    constructor(entity) {
+        this.entity = entity;
     }
     /**
      * 指定した色に触れたことを判定する
      * @param target {string} - 色,先頭#,16進数
      * @returns
      */
-    isTouchingToColor(target) {
+    isTouchingTo(target) {
         if (this.entity.$isAlive() == true) {
             this.entity.update();
             return this.entity.$isTouchingColor(target);
@@ -8427,18 +8403,12 @@ class SpriteSensing {
      * @param mask {string} - 色,先頭#,16進数
      * @returns
      */
-    colorIsTouchingToColor(target, mask) {
+    colorIsTouchingTo(target, mask) {
         if (this.entity.$isAlive() == true) {
             this.entity.update();
             return this.entity.$colorIsTouchingColor(target, mask);
         }
         return false;
-    }
-    /**
-     * Drag Mode
-     */
-    get DragMode() {
-        return this.entity.DragMode;
     }
 }
 ;
@@ -8506,6 +8476,309 @@ class SpriteSensingDistance {
         return -1;
     }
 }
+
+
+/***/ }),
+
+/***/ "../lib/entity/sprite/spriteSensingEdge.ts":
+/*!*************************************************!*\
+  !*** ../lib/entity/sprite/spriteSensingEdge.ts ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SpriteSensingEdge: () => (/* binding */ SpriteSensingEdge)
+/* harmony export */ });
+/**
+ * Sprite Sensing(調べる) Edge
+ */
+class SpriteSensingEdge {
+    entity;
+    /**
+     * @internal
+     * @param entity {Sprite}
+     */
+    constructor(entity) {
+        this.entity = entity;
+    }
+    /**
+     * 枠に触っていることの判定
+     * @returns
+     */
+    get isTouching() {
+        if (this.entity.$isAlive() != true)
+            return false;
+        this.entity.update();
+        return this.entity.$isTouchingEdge();
+    }
+    /**
+     * 縦の枠に触っていることを判定する
+     * @returns
+     */
+    get isTouchingVirtical() {
+        if (this.entity.$isAlive() != true)
+            return false;
+        this.entity.update();
+        return this.entity.$isTouchingVirticalEdge();
+    }
+    /**
+     * 水平方向の枠に触っていることを判定する
+     */
+    get isTouchingHorizontal() {
+        if (this.entity.$isAlive() != true)
+            return false;
+        this.entity.update();
+        return this.entity.$isTouchingHorizontalEdge();
+    }
+}
+;
+
+
+/***/ }),
+
+/***/ "../lib/entity/sprite/spriteSensingKey.ts":
+/*!************************************************!*\
+  !*** ../lib/entity/sprite/spriteSensingKey.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SpriteSensingKey: () => (/* binding */ SpriteSensingKey)
+/* harmony export */ });
+/**
+ * Sprite Sensing(調べる) Key
+ */
+class SpriteSensingKey {
+    entity;
+    /**
+     * @internal
+     * @param entity {Sprite}
+     */
+    constructor(entity) {
+        this.entity = entity;
+    }
+    /**
+     * キーが押されていることの判定
+     * @param key {string}
+     * @returns {boolean} キー押下判定
+     */
+    isKeyDown(key) {
+        if (this.entity.$isAlive() != true)
+            return false;
+        return this.entity.$isKeyDown(key);
+    }
+    /**
+     * キーが押されていないことの判定
+     * @param key {string}
+     * @returns {boolean} キー押下判定
+     */
+    isKeyNotDown(key) {
+        if (this.entity.$isAlive() != true)
+            return false;
+        return this.entity.$isKeyNotDown(key);
+    }
+}
+;
+
+
+/***/ }),
+
+/***/ "../lib/entity/sprite/spriteSensingMouse.ts":
+/*!**************************************************!*\
+  !*** ../lib/entity/sprite/spriteSensingMouse.ts ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SpriteSensingMouse: () => (/* binding */ SpriteSensingMouse)
+/* harmony export */ });
+/* harmony import */ var _spriteSensingDistance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./spriteSensingDistance */ "../lib/entity/sprite/spriteSensingDistance.ts");
+
+/**
+ * Sprite Sensing(調べる) Mouse
+ */
+class SpriteSensingMouse {
+    entity;
+    Distance;
+    /**
+     * @internal
+     * @param entity {Sprite}
+     */
+    constructor(entity) {
+        this.entity = entity;
+        this.Distance = new _spriteSensingDistance__WEBPACK_IMPORTED_MODULE_0__.SpriteSensingDistance(entity);
+    }
+    /**
+     * マウスが押されていることの判定
+     * @returns {boolean} - マウスが押されている判定
+     */
+    get isDown() {
+        if (this.entity.$isAlive() != true)
+            return false;
+        return this.entity.$isMouseDown();
+    }
+    /**
+     * マウス情報(x座標)
+     */
+    get x() {
+        return this.entity.Mouse.x;
+    }
+    /**
+     * マウス情報(y座標)
+     */
+    get y() {
+        return this.entity.Mouse.y;
+    }
+    /**
+     * 距離
+     * 使用例：マウスポインターとの距離
+     * this.Sensing.Distance.mousePointer
+     * 使用例：他スプライトとの距離
+     * this.Sensing.Distance.to( otherSprite )
+     */
+    get distance() {
+        return this.Distance.mousePointer();
+    }
+    /**
+     * マウスカーソルへの向き
+     */
+    get degree() {
+        return this.entity.degreeTowardsMouseCursol();
+    }
+    /**
+     * マウスタッチしていないことの判定
+     * @returns
+     */
+    get isNotTouching() {
+        if (this.entity.$isAlive() != true)
+            return false;
+        return this.entity.$isNotMouseTouching();
+    }
+    /**
+     * マウスタッチしていることの判定
+     * @returns
+     */
+    get isTouching() {
+        if (this.entity.$isAlive() != true)
+            return false;
+        return this.entity.$isMouseTouching();
+    }
+}
+;
+
+
+/***/ }),
+
+/***/ "../lib/entity/sprite/spriteSensingSprite.ts":
+/*!***************************************************!*\
+  !*** ../lib/entity/sprite/spriteSensingSprite.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SpriteSensingSprite: () => (/* binding */ SpriteSensingSprite)
+/* harmony export */ });
+/* harmony import */ var _spriteSensingDistance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./spriteSensingDistance */ "../lib/entity/sprite/spriteSensingDistance.ts");
+
+/**
+ * Sprite Sensing(調べる) Sprite
+ */
+class SpriteSensingSprite {
+    entity;
+    Distance;
+    /**
+     * @internal
+     * @param entity {Sprite}
+     */
+    constructor(entity) {
+        this.entity = entity;
+        this.Distance = new _spriteSensingDistance__WEBPACK_IMPORTED_MODULE_0__.SpriteSensingDistance(entity);
+    }
+    isTouching(sprites) {
+        if (this.entity.$isAlive() != true)
+            return false;
+        const _sprites = sprites;
+        return this.entity.$isTouchingTarget(_sprites);
+    }
+    /**
+     * スプライトまでの距離
+     * @param target
+     * @returns
+     */
+    distance(target) {
+        return this.Distance.to(target);
+    }
+    /**
+     * スプライトへの向き
+     * @param target
+     */
+    degree(target) {
+        const _target = target;
+        return this.entity.degreeToTarget(_target);
+    }
+    /**
+     * 自分に触れているスプライトを配列にして返す
+     * @param targets
+     * @returns
+     */
+    getTouching() {
+        if (this.entity.$isAlive() != true)
+            return [];
+        const targets = [this.entity];
+        const entities = this.entity.$getTouchingTarget(targets);
+        const touchings = [];
+        for (const entity of entities) {
+            touchings.push(entity);
+        }
+        const _touchings = touchings;
+        return _touchings;
+    }
+}
+;
+
+
+/***/ }),
+
+/***/ "../lib/entity/sprite/spriteSensingTimer.ts":
+/*!**************************************************!*\
+  !*** ../lib/entity/sprite/spriteSensingTimer.ts ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SpriteSensingTimer: () => (/* binding */ SpriteSensingTimer)
+/* harmony export */ });
+/**
+ * Sprite Sensing(調べる) Timer
+ */
+class SpriteSensingTimer {
+    entity;
+    /**
+     * @internal
+     * @param entity {Sprite}
+     */
+    constructor(entity) {
+        this.entity = entity;
+    }
+    /**
+     * タイマー値
+     */
+    get timer() {
+        return this.entity.$timer;
+    }
+    /**
+     * タイマーリセット
+     */
+    reset() {
+        this.entity.$resetTimer();
+    }
+}
+;
 
 
 /***/ }),
@@ -8842,7 +9115,6 @@ class Stage extends _entity__WEBPACK_IMPORTED_MODULE_6__.Entity {
             me.mouse.down = false;
             e.stopPropagation();
         });
-        this.pgMain.stage = this;
         this._Control = new _stage_stageControl__WEBPACK_IMPORTED_MODULE_1__.StageControl(this);
         this._Looks = new _stage_stageLooks__WEBPACK_IMPORTED_MODULE_2__.StageLooks(this);
         this._Event = new _stage_stageEvent__WEBPACK_IMPORTED_MODULE_3__.StageEvent(this);
@@ -8851,6 +9123,8 @@ class Stage extends _entity__WEBPACK_IMPORTED_MODULE_6__.Entity {
         this._SvgText = new _entity_svgText__WEBPACK_IMPORTED_MODULE_10__.SvgText(this);
         this._Pen = new _stage_stagePen__WEBPACK_IMPORTED_MODULE_9__.StagePen(this);
         this._Font = new _stage_stageFont__WEBPACK_IMPORTED_MODULE_11__.StageFont(this);
+        // 上書き
+        this.pgMain.stage = this;
     }
     /** @internal */
     get $sprites() {
@@ -9684,17 +9958,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   StageSensing: () => (/* binding */ StageSensing)
 /* harmony export */ });
+/* harmony import */ var _stageSensingKey__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./stageSensingKey */ "../lib/entity/stage/stageSensingKey.ts");
+/* harmony import */ var _stageSensingMouse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stageSensingMouse */ "../lib/entity/stage/stageSensingMouse.ts");
+/* harmony import */ var _stageSensingTimer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stageSensingTimer */ "../lib/entity/stage/stageSensingTimer.ts");
+
+
+
 /**
  * Stage Sensing(調べる)
  */
 class StageSensing {
     entity;
+    key;
+    mouse;
+    timer;
     /**
      * @internal
      * @param entity {Stage}
      */
     constructor(entity) {
         this.entity = entity;
+        this.key = new _stageSensingKey__WEBPACK_IMPORTED_MODULE_0__.StageSensingKey(entity);
+        this.mouse = new _stageSensingMouse__WEBPACK_IMPORTED_MODULE_1__.StageSensingMouse(entity);
+        this.timer = new _stageSensingTimer__WEBPACK_IMPORTED_MODULE_2__.StageSensingTimer(entity);
     }
     /**
      * 質問をする
@@ -9704,6 +9990,52 @@ class StageSensing {
     async askAndWait(question) {
         const answer = await this.entity.$askAndWait(question);
         return answer;
+    }
+    /**
+     * Key 関連
+     */
+    get Key() {
+        return this.key;
+    }
+    /**
+     * マウス関連
+     */
+    get Mouse() {
+        return this.mouse;
+    }
+    /**
+     * タイマー関連
+     */
+    get Timer() {
+        return this.timer;
+    }
+}
+;
+
+
+/***/ }),
+
+/***/ "../lib/entity/stage/stageSensingKey.ts":
+/*!**********************************************!*\
+  !*** ../lib/entity/stage/stageSensingKey.ts ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StageSensingKey: () => (/* binding */ StageSensingKey)
+/* harmony export */ });
+/**
+ * Stage Sensing(調べる) Key
+ */
+class StageSensingKey {
+    entity;
+    /**
+     * @internal
+     * @param entity {Stage}
+     */
+    constructor(entity) {
+        this.entity = entity;
     }
     /**
      * キーが押されていることの判定
@@ -9721,18 +10053,80 @@ class StageSensing {
     isKeyNotDown(key) {
         return this.entity.$isKeyNotDown(key);
     }
+}
+;
+
+
+/***/ }),
+
+/***/ "../lib/entity/stage/stageSensingMouse.ts":
+/*!************************************************!*\
+  !*** ../lib/entity/stage/stageSensingMouse.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StageSensingMouse: () => (/* binding */ StageSensingMouse)
+/* harmony export */ });
+/**
+ * Stage Sensing(調べる) Mouse
+ */
+class StageSensingMouse {
+    entity;
+    /**
+     * @internal
+     * @param entity {Stage}
+     */
+    constructor(entity) {
+        this.entity = entity;
+    }
     /**
      * マウスが押されていることの判定
      * @returns {boolean} - マウスが押されている判定
      */
-    isMouseDown() {
+    get isDown() {
         return this.entity.$isMouseDown();
     }
     /**
-     * マウス情報
+     * マウス情報 (x座標)
      */
-    get Mouse() {
-        return this.entity.Mouse;
+    get x() {
+        return this.entity.Mouse.x;
+    }
+    /**
+     * マウス情報 (y座標)
+     */
+    get y() {
+        return this.entity.Mouse.y;
+    }
+}
+;
+
+
+/***/ }),
+
+/***/ "../lib/entity/stage/stageSensingTimer.ts":
+/*!************************************************!*\
+  !*** ../lib/entity/stage/stageSensingTimer.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   StageSensingTimer: () => (/* binding */ StageSensingTimer)
+/* harmony export */ });
+/**
+ * Stage Sensing(調べる) Timer
+ */
+class StageSensingTimer {
+    entity;
+    /**
+     * @internal
+     * @param entity {Stage}
+     */
+    constructor(entity) {
+        this.entity = entity;
     }
     /**
      * タイマー値
@@ -9743,26 +10137,8 @@ class StageSensing {
     /**
      * タイマーリセット
      */
-    resetTimer() {
+    reset() {
         this.entity.$resetTimer();
-    }
-    /**
- * マウスタッチしていないことの判定
- * @returns
- */
-    isNotMouseTouching() {
-        if (this.entity.$isAlive() != true)
-            return false;
-        return this.entity.$isNotMouseTouching();
-    }
-    /**
-     * マウスタッチしていることの判定
-     * @returns
-     */
-    isMouseTouching() {
-        if (this.entity.$isAlive() != true)
-            return false;
-        return this.entity.$isMouseTouching();
     }
 }
 ;
@@ -103004,7 +103380,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Version: () => (/* binding */ Version)
 /* harmony export */ });
-const Version = ( false) ? 0 : "1.0.0-beta.34";
+const Version = ( false) ? 0 : "1.0.0-beta.35";
 
 
 /***/ })

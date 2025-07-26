@@ -28,8 +28,8 @@ Pg.preload = async function(this: PgMain) {
 }
 
 // 事前準備処理
-Pg.prepare = async function() {
-    stage = new Lib.Stage();
+Pg.prepare = async function(this:PgMain) {
+    stage = this.stage;
     stage.Image.add( Jurassic );
     stage.Sound.add( Chill );
     cat = new Lib.Sprite("Cat");

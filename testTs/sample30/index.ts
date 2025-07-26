@@ -30,10 +30,10 @@ Pg.preload = async function (this: PgMain) {
     this.Sound.load(AssetHosts+'/assets/Chill.wav', Chill);
     this.Image.load(AssetHosts+'/assets/cat.svg', Cat );
 }
-Pg.prepare = async function () {
+Pg.prepare = async function (this: PgMain) {
 
     // ステージを作成
-    stage = new Lib.Stage();
+    stage = this.stage;
     // 背景追加
     stage.Sound.add(Chill);
 
